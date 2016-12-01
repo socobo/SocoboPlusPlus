@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "node dist/server.js",
+    "start-prod": "npm run build && node dist/server.js",
     "start-dev": "nodemon dist/server.js",
     "watch": "gulp watch",
     "build": "gulp build",
