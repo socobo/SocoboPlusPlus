@@ -5,7 +5,7 @@ import * as http from "http";
 
 
 class Server {
-  private static readonly PORT: number = 8282;
+  private readonly PORT: number = 8282;
   private _app: express.Application;
   private _server: http.Server;
   private _port: number;
@@ -27,7 +27,7 @@ class Server {
   }
 
   private _config (): void {
-    this._port = process.env.PORT || Server.PORT;
+    this._port = process.env.PORT || this.PORT;
     this._app.use(cors());
     this._app.use(bodyParser.urlencoded({ extended: true }));
     this._app.use(bodyParser.json());
