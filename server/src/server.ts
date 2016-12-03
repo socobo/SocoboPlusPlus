@@ -61,4 +61,4 @@ class Server {
 // creater server class
 let server = Server.bootstrap();
 // export application
-export = server.app;
+export default server.app;
