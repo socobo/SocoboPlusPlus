@@ -5,8 +5,10 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "outDir": "./dist"
   },
+  "compileOnSave": true,
   "include": [
     "src/**/*"
   ],
