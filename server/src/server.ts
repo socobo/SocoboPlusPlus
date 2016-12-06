@@ -6,6 +6,10 @@ import * as pgPromise from "pg-promise";
 
 import { Config } from "./config";
 
+import { UserService } from "./logic/services/user.service";
+
+import { UsersRouteV1 } from "./routes/api/v1/users/index";
+
 
 class Server {
   private _app: express.Application;
@@ -18,8 +22,8 @@ class Server {
     this._createServer();
     this._configDatabase();
     this._configServer();
-    this._routesFrontend();
-    this._routesApi();
+    this._configFrontendRoutes();
+    this._configApiRoutes();
     this._listen();
   }
 
@@ -47,31 +51,26 @@ class Server {
     this._app.use(bodyParser.json());
   }
 
-  private _routesFrontend (): void {
+  private _configFrontendRoutes (): void {
+    // create new router
     let router: express.Router = express.Router();
-
+    // ToDo: Serve frontend dist folder
     router.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
       res.status(200).json({message: "This route is reserved to deliver the frontend!"});
     });
-
+    // set path for frontend
     this._app.use(router);
   }
 
-  private _routesApi (): void {
+  private _configApiRoutes (): void {
+    // create new router
     let router: express.Router = express.Router();
-
-    router.get("/api/v1/users", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      this._db.many("SELECT * FROM Socobo_User")
-        .then((data:any[]) => {
-          res.status(200).json(data);
-        })
-        .catch((error:any) => {
-          // return error
-          return next(error);
-        });
-    });
-
-    this._app.use(router);
+    // init user service
+    const userService = new UserService(this._db);
+    // init users route
+    const usersApiV1Route = new UsersRouteV1(userService, router);
+    // set users route to path
+    this._app.use("/api/v1/users", usersApiV1Route.getUsers());
   }
 
   private _listen (): void {
