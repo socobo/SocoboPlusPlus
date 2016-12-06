@@ -18,6 +18,7 @@ class Server {
     this._createServer();
     this._configDatabase();
     this._configServer();
+    this._routesFrontend();
     this._routesApi();
     this._listen();
   }
@@ -46,14 +47,31 @@ class Server {
     this._app.use(bodyParser.json());
   }
 
-  private _routesApi (): void {
+  private _routesFrontend (): void {
     let router: express.Router = express.Router();
 
     router.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      res.status(200).json({message: "Backend Server is ready to rock!"});
+      res.status(200).json({message: "This route is reserved to deliver the frontend!"});
     });
 
-    this.app.use(router);
+    this._app.use(router);
+  }
+
+  private _routesApi (): void {
+    let router: express.Router = express.Router();
+
+    router.get("/api/v1/users", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      this._db.many("SELECT * FROM Socobo_User")
+        .then((data:any[]) => {
+          res.status(200).json(data);
+        })
+        .catch((error:any) => {
+          // return error
+          return next(error);
+        });
+    });
+
+    this._app.use(router);
   }
 
   private _listen (): void {

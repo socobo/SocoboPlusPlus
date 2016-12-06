@@ -37,6 +37,7 @@
     "chai": "~3.5.0",
     "chai-http": "~3.0.0",
     "ts-node": "~1.7.0",
+    "@types/pg-promise": "~0.0.28",
     "pg-promise": "~5.4.7"
   }
 }
