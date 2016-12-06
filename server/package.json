@@ -8,8 +8,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "start:p": "npm run tsc && npm run serve",
-    "start:d": "npm run tsc && concurrently \"npm run tsc:w\" \"npm run serve:w\"",
+    "start:p": "npm-run-all tsc serve",
+    "start:d": "npm-run-all tsc --parallel tsc:w serve:w",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "serve": "node dist/server.js",
@@ -19,9 +19,10 @@
     "clean:a": "rm -r dist/ node_modules/"
   },
   "dependencies": {
-    "express": "~4.14.0",
     "body-parser": "~1.15.2",
-    "cors": "~2.8.1"
+    "cors": "~2.8.1",
+    "express": "~4.14.0",
+    "npm-run-all": "^3.1.2"
   },
   "devDependencies": {
     "@types/express": "~4.0.34",
