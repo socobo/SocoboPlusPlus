@@ -2,19 +2,14 @@
 the final stack :-)
 
 ## Backend
-2 terminal sessions needed for development!
-- #1 session - compile TypeScipt to JavaScript after changes
+run development server
 ```bash
-npm run watch
-```
-- #2 session - restart server after file changes
-```bash
-npm run start-dev
+npm run start:d
 ```
 
 run production server
 ```bash
-npm run start-prod
+npm run start:p
 ```
 
 run tests
