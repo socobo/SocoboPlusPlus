@@ -3,11 +3,11 @@ import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as http from "http";
 import * as pgPromise from "pg-promise";
-
+// server config
 import { Config } from "./config";
-
+// server services
 import { UserService } from "./logic/services/user.service";
-
+// server routes
 import { UsersRouteV1 } from "./routes/api/v1/users/index";
 
 
@@ -37,9 +37,9 @@ class Server {
 
   private _configDatabase (): void {    
     // init pgPromise
-    const pgp = pgPromise();
+    const pgp: pgPromise.IMain = pgPromise();
     // setup connectionString
-    const connectionString = process.env.DATABASE_URL || Config.DATABASE_URL;
+    const connectionString: string = process.env.DATABASE_URL || Config.DATABASE_URL;
     // init db
     this._db = pgp(connectionString);
   }
@@ -66,11 +66,11 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init user service
-    const userService = new UserService(this._db);
+    const userService: UserService = new UserService(this._db);
     // init users route
-    const usersApiV1Route = new UsersRouteV1(userService, router);
+    const usersApiV1Route: UsersRouteV1 = new UsersRouteV1(userService, router);
     // set users route to path
-    this._app.use("/api/v1/users", usersApiV1Route.getUsers());
+    this._app.use("/api/v1/users", usersApiV1Route.createRoutes());
   }
 
   private _listen (): void {
@@ -89,6 +89,6 @@ class Server {
 }
 
 // creater server class
-let server = Server.bootstrap();
+let server: Server = Server.bootstrap();
 // export application
 export default server.app;
