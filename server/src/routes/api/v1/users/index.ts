@@ -3,12 +3,7 @@ import { UserService } from "./../../../../logic/services/user.service";
 import { SocoboUser } from "./../../../../models/socobouser";
 
 export class UsersRouteV1 {
-  private _userService: UserService;
-  private _router: Router; 
-
-  constructor (userService: UserService, router: Router) {
-    this._userService = userService;
-    this._router = router;
+  constructor (private _userService: UserService, private _router: Router) {
   }
 
   createRoutes (): Router {
