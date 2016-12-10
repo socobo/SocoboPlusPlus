@@ -1,3 +1,5 @@
+.npm-debug.log
+
 #backend
 server/node_modules
 server/dist
