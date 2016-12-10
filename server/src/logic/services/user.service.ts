@@ -3,8 +3,7 @@ import { SocoboUser } from "./../../models/socobouser";
 
 
 export class UserService {
-  constructor (private _db: IDatabase<any>) {
-  }
+  constructor (private _db: IDatabase<any>) {}
 
   getAllUsers (): Promise<SocoboUser[]> {
       return this._db.many("SELECT * FROM Socobo_User");
