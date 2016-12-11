@@ -6,6 +6,10 @@
   "author": {
     "name": "flashback2k14"
   },
+  "contributors": [
+    "hetec",
+    "lyio"
+  ],
   "license": "MIT",
   "scripts": {
     "start:p": "npm-run-all tsc --parallel serve open:b",
