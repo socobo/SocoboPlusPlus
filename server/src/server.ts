@@ -3,6 +3,7 @@ import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as http from "http";
 import * as pgPromise from "pg-promise";
+import * as path from "path";
 // server config
 import { Config } from "./config";
 // server services
@@ -52,14 +53,8 @@ class Server {
   }
 
   private _configFrontendRoutes (): void {
-    // create new router
-    let router: express.Router = express.Router();
-    // ToDo: Serve frontend dist folder
-    router.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      res.status(200).json({message: "This route is reserved to deliver the frontend!"});
-    });
-    // set path for frontend
-    this._app.use(router);
+    // serve frontend from server/dist/public
+    this._app.use(express.static(path.join(__dirname, "public")));
   }
 
   private _configApiRoutes (): void {
