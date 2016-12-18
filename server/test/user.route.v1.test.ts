@@ -32,13 +32,17 @@ describe("User Route v1", () => {
     chai.request(Server).get("/api/v1/users")
       .then(res => {
         expect(res.type).to.eql("application/json");
-      });
+      })
+      .catch(err => console.error(err));
   });
 
   it("route /api/v1/users should return 2 users", () => {
     chai.request(Server).get("/api/v1/users")
       .then(res => {
         expect(res.body).to.deep.equal(this.users);
+      })
+      .catch(err => {
+        expect(err.message).to.deep.equal("The 'AllUsers' Request are failed!");
       });
   });
 
@@ -46,6 +50,9 @@ describe("User Route v1", () => {
     chai.request(Server).get("/api/v1/users/1")
       .then(res => {
         expect(res.body).to.deep.equal(this.users[0]);
+      })
+      .catch(err => {
+        expect(err.message).to.deep.equal("The 'GetUserById' Request with the Id: 1 are failed!");
       });
   });
 
@@ -56,6 +63,9 @@ describe("User Route v1", () => {
             expect(res.body).to.haveOwnProperty("id");
             expect(res.body).to.haveOwnProperty("username");
             expect(res.body).to.haveOwnProperty("password");
+          })
+          .catch(err => {
+            expect(err.message).to.deep.equal("The 'GetUserById' Request with the Id: 1 are failed!");
           }); 
   });
 });

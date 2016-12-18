@@ -6,9 +6,13 @@
   "author": {
     "name": "flashback2k14"
   },
+  "contributors": [
+    "hetec",
+    "lyio"
+  ],
   "license": "MIT",
   "scripts": {
-    "start:p": "npm-run-all tsc serve",
+    "start:p": "npm-run-all tsc --parallel serve open:b",
     "start:d": "npm-run-all tsc --parallel tsc:w serve:w",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
@@ -17,7 +21,8 @@
     "test": "mocha --reporter spec --compilers ts:ts-node/register test/**/*.test.ts",
     "clean": "rm -r dist/",
     "clean:a": "rm -r dist/ node_modules/",
-    "setup:db": "cd ./sql && ./automate-creation.sh"
+    "setup:db": "cd ./sql && ./automate-creation.sh",
+    "open:b": "open http://localhost:8282"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
