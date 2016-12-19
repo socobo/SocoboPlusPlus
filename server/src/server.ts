@@ -4,6 +4,7 @@ import * as cors from "cors";
 import * as http from "http";
 import * as pgPromise from "pg-promise";
 import * as path from "path";
+let winston = require('winston');
 // server config
 import { Config } from "./config";
 // server services
@@ -21,6 +22,7 @@ class Server {
   constructor () {
     this._createApp();
     this._createServer();
+    this._configLogging();
     this._configDatabase();
     this._configServer();
     this._configFrontendRoutes();
@@ -34,6 +36,17 @@ class Server {
 
   private _createServer (): void {
     this._server = http.createServer(this._app);
+  }
+
+  private _configLogging() :void {
+    winston.configure({
+      transports: [
+        new (winston.transports.File)({
+          filename: 'server.log.json'
+        }),
+        new (winston.transports.Console)()
+      ]
+    })
   }
 
   private _configDatabase (): void {    
@@ -70,7 +83,7 @@ class Server {
 
   private _listen (): void {
     this._server.listen(this._port, () => {
-      console.log(`Server is running under PORT: ${this._port}`);
+      winston.info(`Server started on PORT: ${this._port}`);
     });
   }
 
