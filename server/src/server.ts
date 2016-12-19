@@ -10,6 +10,7 @@ import { Config } from "./config";
 import { UserService } from "./logic/services/user.service";
 // server routes
 import { UsersRouteV1 } from "./routes/api/v1/users/index";
+import { LogsRouteV1 } from "./routes/api/v1/logs/index";
 
 
 class Server {
@@ -58,14 +59,25 @@ class Server {
   }
 
   private _configApiRoutes (): void {
+    // set routes to paths
+    this._app.use("/api/v1/users", this.__usersRoute());
+    this._app.use("/api/v1/logs", this.__logsRoute());
+  }
+
+  private __usersRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init user service
     const userService: UserService = new UserService(this._db);
-    // init users route
-    const usersApiV1Route: UsersRouteV1 = new UsersRouteV1(userService, router);
-    // set users route to path
-    this._app.use("/api/v1/users", usersApiV1Route.createRoutes());
+    // init and return users route
+    return new UsersRouteV1(userService, router).createRoutes();
+  }
+
+  private __logsRoute (): express.Router {
+    // create new router
+    let router: express.Router = express.Router();
+    // init and return logs route
+    return new LogsRouteV1(router).createRoutes();
   }
 
   private _listen (): void {
