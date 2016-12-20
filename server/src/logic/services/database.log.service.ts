@@ -1,5 +1,5 @@
 import { DatabaseErrorLog } from "./../../models/databaseerrorlog";
-let winston = require('winston')
+import * as winston from "winston";
 
 export class DatabaseLogService {
 
@@ -15,7 +15,7 @@ export class DatabaseLogService {
     log.message = msg;
 
     this.errorLogs.push(log);
-    winston.error(log);
+    winston.error(msg, log);
   }
 
   static getErrors (): DatabaseErrorLog[] {

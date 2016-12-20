@@ -25,6 +25,7 @@
     "open:b": "open http://localhost:8282"
   },
   "dependencies": {
+    "@types/winston": "0.0.32",
     "body-parser": "~1.15.2",
     "cors": "~2.8.1",
     "express": "~4.14.0",

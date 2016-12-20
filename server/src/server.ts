@@ -4,7 +4,7 @@ import * as cors from "cors";
 import * as http from "http";
 import * as pgPromise from "pg-promise";
 import * as path from "path";
-let winston = require('winston');
+import * as winston from "winston";
 // server config
 import { Config } from "./config";
 // server services

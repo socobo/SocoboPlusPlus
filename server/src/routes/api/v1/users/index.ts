@@ -3,7 +3,6 @@ import { UserService } from "./../../../../logic/services/user.service";
 import { SocoboUser } from "./../../../../models/socobouser";
 import { BackendError } from "./../../../../models/backenderror";
 import { ErrorUtils } from "./../../../../utils/ErrorUtils";
-let winston = require('winston');
 
 export class UsersRouteV1 {
   constructor (private _userService: UserService, private _router: Router) {
@@ -34,9 +33,6 @@ export class UsersRouteV1 {
             res.status(500)
                 .json(new BackendError(`Internal Server Error`, error));
           }
-
-
-
         });
     });
 
