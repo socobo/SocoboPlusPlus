@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { DatabaseLogService } from "./../../../../logic/services/database.log.service";
+import { LogService } from "./../../../../logic/services/log.service";
 
 export class LogsRouteV1 {
   constructor (private _router: Router) {}
@@ -7,7 +7,7 @@ export class LogsRouteV1 {
   createRoutes (): Router {
     // get all errors
     this._router.get("/errors/database", (req: Request, res: Response, next: NextFunction) => {
-      res.status(200).json(DatabaseLogService.getErrors());
+      res.status(200).json(LogService.getErrors());
     });
 
     // return Router to use in server.ts

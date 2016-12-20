@@ -1,7 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { UserService } from "./../../../../logic/services/user.service";
 import { SocoboUser } from "./../../../../models/socobouser";
-import { BackendError } from "./../../../../models/backenderror";
+import { ApiError } from "./../../../../models/api-error";
+import { DbError } from "./../../../../models/db-error";
 import { ErrorUtils } from "./../../../../utils/ErrorUtils";
 
 export class UsersRouteV1 {
@@ -16,7 +17,7 @@ export class UsersRouteV1 {
           res.status(200).json(result)})
         .catch((error: any) => {
           res.status(500)
-              .json(new BackendError("Internal Server Error", error));
+              .json(new ApiError("Internal Server Error", error).forResponse());
         });
     });
 
@@ -28,10 +29,10 @@ export class UsersRouteV1 {
         .catch((error: any) => {
           if(ErrorUtils.notFoundError(error)){
             res.status(404)
-                .json(new BackendError(`The requested user with the id: ${id} does not exist!`, error));
+                .json(new DbError(`The requested user with the id: ${id} does not exist!`, error).forResponse());
           }else{
             res.status(500)
-                .json(new BackendError(`Internal Server Error`, error));
+                .json(new ApiError(`Internal Server Error`, error).forResponse());
           }
         });
     });
