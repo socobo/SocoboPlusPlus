@@ -17,7 +17,7 @@ export class UsersRouteV1 {
           res.status(200).json(result)})
         .catch((error: any) => {
           res.status(500)
-              .json(new BackendError("The 'AllUsers' Request are failed!", error));
+              .json(new BackendError("Internal Server Error", error));
         });
     });
 
@@ -29,7 +29,7 @@ export class UsersRouteV1 {
         .catch((error: any) => {
           if(ErrorUtils.notFoundError(error)){
             res.status(404)
-                .json(new BackendError(`The 'GetUserById' Request with the Id: ${id} are failed!`, error));
+                .json(new BackendError(`The requested user with the id: ${id} does not exist!`, error));
           }else{
             res.status(500)
                 .json(new BackendError(`Internal Server Error`, error));
