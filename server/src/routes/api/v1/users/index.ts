@@ -24,13 +24,14 @@ export class UsersRouteV1 {
     // get user by id
     this._router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
       let id: number = req.params.id;
+
       this._userService.getUserById(id)
         .then((result: SocoboUser) => res.status(200).json(result))
         .catch((error: any) => {
-          if(ErrorUtils.notFoundError(error)){
+          if (ErrorUtils.notFoundError(error)) {
             res.status(404)
                 .json(new DbError(`The requested user with the id: ${id} does not exist!`, error).forResponse());
-          }else{
+          } else {
             res.status(500)
                 .json(new ApiError(`Internal Server Error`, error).forResponse());
           }

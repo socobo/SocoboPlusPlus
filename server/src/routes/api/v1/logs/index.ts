@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { LogService } from "./../../../../logic/services/log.service";
+import { LogService } from "./../../../../logic/services/logging.service";
 
 export class LogsRouteV1 {
   constructor (private _router: Router) {}
