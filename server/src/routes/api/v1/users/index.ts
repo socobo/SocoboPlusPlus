@@ -2,18 +2,22 @@ import { Router, Request, Response, NextFunction } from "express";
 import { UserService } from "./../../../../logic/services/user.service";
 import { SocoboUser } from "./../../../../models/socobouser";
 import { BackendError } from "./../../../../models/backenderror";
+import { ErrorUtils } from "./../../../../utils/ErrorUtils";
+let winston = require('winston');
 
 export class UsersRouteV1 {
-  constructor (private _userService: UserService, private _router: Router) {}
+  constructor (private _userService: UserService, private _router: Router) {
+  }
 
   createRoutes (): Router {
     // get all users
     this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
       this._userService.getAllUsers()
-        .then((result: SocoboUser[]) => res.status(200).json(result))
+        .then((result: SocoboUser[]) => {
+          res.status(200).json(result)})
         .catch((error: any) => {
-          res.status(400)
-                .json(new BackendError("The 'AllUsers' Request are failed!", error));
+          res.status(500)
+              .json(new BackendError("The 'AllUsers' Request are failed!", error));
         });
     });
 
@@ -23,8 +27,16 @@ export class UsersRouteV1 {
       this._userService.getUserById(id)
         .then((result: SocoboUser) => res.status(200).json(result))
         .catch((error: any) => {
-          res.status(400)
+          if(ErrorUtils.notFoundError(error)){
+            res.status(404)
                 .json(new BackendError(`The 'GetUserById' Request with the Id: ${id} are failed!`, error));
+          }else{
+            res.status(500)
+                .json(new BackendError(`Internal Server Error`, error));
+          }
+
+
+
         });
     });
 
