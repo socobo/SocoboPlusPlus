@@ -3,7 +3,7 @@ import { UserService } from "./../../../../logic/services/user.service";
 import { SocoboUser } from "./../../../../models/socobouser";
 import { ApiError } from "./../../../../models/api-error";
 import { DbError } from "./../../../../models/db-error";
-import { ErrorUtils } from "./../../../../utils/ErrorUtils";
+import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
 
 export class UsersRouteV1 {
   constructor (private _userService: UserService, private _router: Router) {
