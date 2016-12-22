@@ -12,25 +12,26 @@
   ],
   "license": "MIT",
   "scripts": {
-    "start:p": "npm-run-all tsc --parallel serve open:b",
-    "start:d": "npm-run-all tsc --parallel tsc:w serve:w",
+    "start:p": "npm-run-all create:l tsc --parallel serve open:b",
+    "start:d": "npm-run-all create:l tsc --parallel tsc:w serve:w",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "serve": "node dist/server.js",
     "serve:w": "nodemon dist/server.js",
     "test": "mocha --reporter spec --compilers ts:ts-node/register test/**/*.test.ts",
+    "create:l": "mkdir -p logs",
     "clean": "rm -r dist/",
-    "clean:a": "rm -r dist/ node_modules/",
+    "clean:l": "rm -r logs/",
+    "clean:a": "rm -r dist/ node_modules/ logs/",
     "setup:db": "cd ./sql && ./automate-creation.sh",
     "open:b": "open http://localhost:8282"
   },
   "dependencies": {
-    "@types/winston": "0.0.32",
     "body-parser": "~1.15.2",
     "cors": "~2.8.1",
     "express": "~4.14.0",
-    "npm-run-all": "^3.1.2",
-    "winston": "^2.3.0"
+    "npm-run-all": "~3.1.2",
+    "winston": "~2.3.0"
   },
   "devDependencies": {
     "@types/express": "~4.0.34",
@@ -40,6 +41,7 @@
     "@types/chai": "~3.4.34",
     "@types/chai-http": "~0.0.29",
     "@types/pg-promise": "~0.0.28",
+    "@types/winston": "~0.0.32",
     "nodemon": "~1.11.0",
     "ts-node": "~1.7.0",
     "typescript": "~2.1.4",

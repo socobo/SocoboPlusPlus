@@ -13,8 +13,7 @@ export class UsersRouteV1 {
     // get all users
     this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
       this._userService.getAllUsers()
-        .then((result: SocoboUser[]) => {
-          res.status(200).json(result)})
+        .then((result: SocoboUser[]) => res.status(200).json(result))
         .catch((error: any) => {
           res.status(500)
               .json(new ApiError("Internal Server Error", error).forResponse());
@@ -28,7 +27,7 @@ export class UsersRouteV1 {
       this._userService.getUserById(id)
         .then((result: SocoboUser) => res.status(200).json(result))
         .catch((error: any) => {
-          if (ErrorUtils.notFoundError(error)) {
+          if (ErrorUtils.notFound(error)) {
             res.status(404)
                 .json(new DbError(`The requested user with the id: ${id} does not exist!`, error).forResponse());
           } else {

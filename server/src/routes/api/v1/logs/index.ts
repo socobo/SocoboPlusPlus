@@ -6,7 +6,7 @@ export class LogsRouteV1 {
 
   createRoutes (): Router {
     // get all errors
-    this._router.get("/errors/database", (req: Request, res: Response, next: NextFunction) => {
+    this._router.get("/errors", (req: Request, res: Response, next: NextFunction) => {
       res.status(200).json(LogService.getErrors());
     });
 

@@ -4,18 +4,20 @@ export class ApiError {
   private timestamp: number;
   private name: string;
   private stackTrace: string;
+  private message: string;
 
-  constructor (private message: string, error: any) {
+  constructor (message: string, error: any) {
     this.timestamp = Date.now();
     this.name = error.name;
     this.stackTrace = error.stack;
+    this.message = message;
     // add error to Log Object
     LogService.addError(this.message, this);
   }
 
-  public forResponse(){
+  forResponse(): Object {
     return {
-      'message': this.message
+      "message": this.message
     }
   }
 }

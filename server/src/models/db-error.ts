@@ -1,12 +1,12 @@
 import { LogService } from "./../logic/services/logging.service";
 import { ApiError } from "./api-error";
 
-export class DbError extends ApiError{
+export class DbError extends ApiError {
 
-private query: string;
+  private query: string;
 
-constructor (message: string, error: any) {
+  constructor (message: string, error: any) {
     super(message, error);
     this.query = error.query;
-}
+  }
 }

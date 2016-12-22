@@ -39,15 +39,15 @@ class Server {
     this._server = http.createServer(this._app);
   }
 
-  private _configLogging() :void {
+  private _configLogging (): void {
     winston.configure({
       transports: [
-        new (winston.transports.File)({
-          filename: 'server.log.json'
+        new (winston.transports.File) ({
+          filename: "logs/server.log.json"
         }),
-        new (winston.transports.Console)()
+        new (winston.transports.Console) ()
       ]
-    })
+    });
   }
 
   private _configDatabase (): void {    

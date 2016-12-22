@@ -1,11 +1,10 @@
-import * as pgPromise from "pg-promise";
+import { errors } from "pg-promise";
 
-let errorCode = pgPromise.errors.queryResultErrorCode;
+let errorCode = errors.queryResultErrorCode;
 
-export class ErrorUtils{
+export class ErrorUtils {
 
-    static notFoundError(err: any): boolean {
-        return err.code ===  errorCode.noData;
-    }
-
+  static notFound (err: any): boolean {
+    return err.code === errorCode.noData;
+  }
 }

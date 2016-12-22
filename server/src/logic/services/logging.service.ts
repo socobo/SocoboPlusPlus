@@ -5,7 +5,7 @@ export class LogService {
 
   static errorLogs: Array<ApiError> = new Array<ApiError>();
 
-  static addError (msg: string, error: any): void {
+  static addError (msg: string, error: ApiError): void {
     this.errorLogs.push(error);
     winston.error(msg, error);
   }
