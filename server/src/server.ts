@@ -39,15 +39,27 @@ class Server {
     this._server = http.createServer(this._app);
   }
 
-  private _configLogging() :void {
-    winston.configure({
-      transports: [
-        new (winston.transports.File)({
-          filename: 'server.log.json'
-        }),
-        new (winston.transports.Console)()
-      ]
-    })
+  private _configLogging (): void {
+    // check environment
+    if ((process.env.NODE_ENV || Config.NODE_ENV) !== "test") {
+      winston.configure({
+        transports: [
+          new (winston.transports.File) ({
+            filename: "logs/server.log.json"
+          }),
+          new (winston.transports.Console) ()
+        ]
+      });
+    } else {
+      winston.configure({
+        transports: [
+          new (winston.transports.File) ({
+            filename: "logs/server.test.log.json"
+          }),
+          new (winston.transports.Console) ()
+        ]
+      });
+    }
   }
 
   private _configDatabase (): void {    
