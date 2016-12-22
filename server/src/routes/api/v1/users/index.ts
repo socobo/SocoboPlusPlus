@@ -15,8 +15,9 @@ export class UsersRouteV1 {
       this._userService.getAllUsers()
         .then((result: SocoboUser[]) => res.status(200).json(result))
         .catch((error: any) => {
-          res.status(500)
-              .json(new ApiError("Internal Server Error", error).forResponse());
+          res.status(500).json(
+              new ApiError("Internal Server Error", UserService.name, 
+                            "getAllUsers()", error).forResponse());
         });
     });
 
@@ -28,11 +29,13 @@ export class UsersRouteV1 {
         .then((result: SocoboUser) => res.status(200).json(result))
         .catch((error: any) => {
           if (ErrorUtils.notFound(error)) {
-            res.status(404)
-                .json(new DbError(`The requested user with the id: ${id} does not exist!`, error).forResponse());
+            res.status(404).json(
+                new DbError(`The requested user with the id: ${id} does not exist!`, 
+                              UserService.name, "getUserById(id)", error).forResponse());
           } else {
-            res.status(500)
-                .json(new ApiError(`Internal Server Error`, error).forResponse());
+            res.status(500).json(
+                new ApiError(`Internal Server Error`, UserService.name, 
+                              "getUserById(id)", error).forResponse());
           }
         });
     });
