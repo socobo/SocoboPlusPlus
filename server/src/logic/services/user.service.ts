@@ -8,7 +8,7 @@ export class UserService {
   getAllUsers (): Promise<SocoboUser[]> {
       let query: string = `
         SELECT
-            id, username, email, 
+            id, username, email, image,
             hasTermsAccepted, isAdmin, provider 
         FROM Socobo_User`;
       return this._db.many(query);
@@ -17,7 +17,7 @@ export class UserService {
   getUserById (id: number): Promise<SocoboUser> {
       let query: string = `
         SELECT
-            id, username, email, 
+            id, username, email, image,
             hasTermsAccepted, isAdmin, provider 
         FROM Socobo_User
         WHERE id=$1`;
