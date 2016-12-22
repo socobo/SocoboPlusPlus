@@ -3,6 +3,7 @@ export class SocoboUser {
   username: string;
   email: string;
   password: string;
+  image: string;
   hasTermsAccepted: boolean;
   isAdmin: boolean;
   provider: string;

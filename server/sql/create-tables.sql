@@ -5,6 +5,7 @@ CREATE TABLE Socobo_User (
   username VARCHAR,
   email VARCHAR,
   password VARCHAR,
+  image VARCHAR,
   hasTermsAccepted BOOLEAN,
   isAdmin BOOLEAN,
   provider VARCHAR
