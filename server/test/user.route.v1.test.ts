@@ -1,3 +1,5 @@
+process.env.NODE_ENV = "test";
+
 import * as mocha from "mocha";
 import * as chai from "chai";
 import chaiHttp = require("chai-http");
@@ -23,7 +25,7 @@ describe("User Route v1", () => {
     user2.username = "MaxMustermann";
     user2.password = "SuperMegaSecure";
 
-    this.users = [user1, user2];
+    users = [user1, user2];
 
     done();
   });
@@ -39,7 +41,7 @@ describe("User Route v1", () => {
   it("route /api/v1/users should return 2 users", () => {
     chai.request(Server).get("/api/v1/users")
       .then(res => {
-        expect(res.body).to.deep.equal(this.users);
+        expect(res.body).to.deep.equal(users);
       })
       .catch(err => {
         expect(err.message).to.deep.equal("The 'AllUsers' Request are failed!");
@@ -49,7 +51,7 @@ describe("User Route v1", () => {
   it("route /api/v1/users/1 sholud return one user", () => {
     chai.request(Server).get("/api/v1/users/1")
       .then(res => {
-        expect(res.body).to.deep.equal(this.users[0]);
+        expect(res.body).to.deep.equal(users[0]);
       })
       .catch(err => {
         expect(err.message).to.deep.equal("The 'GetUserById' Request with the Id: 1 are failed!");
