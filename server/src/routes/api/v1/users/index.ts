@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { UserService } from "./../../../../logic/services/user.service";
-import { SocoboUser } from "./../../../../models/socobouser";
-import { ApiError } from "./../../../../models/api-error";
-import { DbError } from "./../../../../models/db-error";
+import { SocoboUser } from "./../../../../models/socoboUser";
+import { ApiError } from "./../../../../models/apiError";
+import { DbError } from "./../../../../models/dbError";
 import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
 
 export class UsersRouteV1 {
