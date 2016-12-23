@@ -1,4 +1,3 @@
-import { JwtAuthStrategy } from './logic/strategies/jwt.strategy';
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
@@ -6,7 +5,6 @@ import * as http from "http";
 import * as pgPromise from "pg-promise";
 import * as path from "path";
 import * as winston from "winston";
-import * as passport from "passport";
 // server config
 import { Config } from "./config";
 // server services
@@ -28,7 +26,6 @@ class Server {
     this._configLogging();
     this._configDatabase();
     this._configServer();
-    this._configPassport();
     this._configFrontendRoutes();
     this._configApiRoutes();
     this._listen();
@@ -79,11 +76,6 @@ class Server {
     this._app.use(cors());
     this._app.use(bodyParser.urlencoded({ extended: true }));
     this._app.use(bodyParser.json());
-  }
-
-  private _configPassport(): void {
-    this._app.use(passport.initialize());
-    new JwtAuthStrategy(passport, new UserService(this._db)).setup();
   }
 
   private _configFrontendRoutes (): void {
