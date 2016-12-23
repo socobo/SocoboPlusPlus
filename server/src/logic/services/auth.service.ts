@@ -1,6 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { UserService } from "./user.service";
 import { CryptoUtils } from "./../utils/cryptoUtils";
+import { ErrorUtils } from "./../utils/errorUtils";
 import { Config } from "./../../config";
 import { ApiError, DbError, SocoboUser } from "./../../models/index";
 
@@ -55,34 +56,41 @@ export class AuthService {
           if (user) {
             return reject(new Error("Email is already registered. Please use another one."));
           }
-          // hash password
-          CryptoUtils.hashPassword(password)
-            .then((hashedPassword: string) => {
-              // create new user object
-              let user: SocoboUser = new SocoboUser();
-              user.username = email.split("@")[0];
-              user.email = email;
-              user.password = hashedPassword;
-              user.image = "http://placehold.it/350x150";
-              user.hasTermsAccepted = true;
-              user.isAdmin = false;
-              user.provider = "email";
-              // save user into database
-              this._userService.save(user)
-                .then((result: any) => {
-                  // set id to user object
-                  user.id = result.id;
-                  // return data
-                  resolve(user);
-                })
-                // catch some saving errors
-                .catch((error: any) => reject(error))
-            })
-            // catch some hash errors
-            .catch((error: any) => reject(error));
         })
         // catch some database errors
-        .catch((error: any) => reject(error));
+        .catch((error: any) => {
+          // check if no data was found
+          if (ErrorUtils.notFound(error)) {
+            // hash password
+            CryptoUtils.hashPassword(password)
+              .then((hashedPassword: string) => {
+                // create new user object
+                let user: SocoboUser = new SocoboUser();
+                user.username = email.split("@")[0];
+                user.email = email;
+                user.password = hashedPassword;
+                user.image = "http://placehold.it/350x150";
+                user.hasTermsAccepted = true;
+                user.isAdmin = false;
+                user.provider = "email";
+                // save user into database
+                this._userService.save(user)
+                  .then((result: any) => {
+                    // set id to user object
+                    user.id = result.id;
+                    // return data
+                    resolve(user);
+                  })
+                  // catch some saving errors
+                  .catch((error: any) => reject(error))
+              })
+              // catch some hash errors
+              .catch((error: any) => reject(error));
+          } else {
+            // return database errors
+            reject(error); 
+          }
+        });
     });
   }
 }
