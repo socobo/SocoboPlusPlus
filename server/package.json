@@ -44,6 +44,10 @@
     "@types/pg-promise": "~0.0.28",
     "@types/winston": "~0.0.32",
     "@types/sinon": "~1.16.33",
+    "@types/bcrypt": "~1.0.0",
+    "@types/passport": "~0.2.35",
+    "@types/passport-jwt": "~2.0.19",
+    "@types/jsonwebtoken": "~7.1.33",
     "nodemon": "~1.11.0",
     "ts-node": "~1.7.0",
     "typescript": "~2.1.4",
@@ -52,6 +56,10 @@
     "chai-http": "~3.0.0",
     "pg-promise": "~5.4.7",
     "sinon": "~1.17.6",
-    "winston-spy": "~0.2.0"
+    "winston-spy": "~0.2.0",
+    "bcrypt": "~1.0.1",
+    "passport": "~0.3.2",
+    "passport-jwt": "~2.2.1",
+    "jsonwebtoken": "~7.2.1"
   }
 }
