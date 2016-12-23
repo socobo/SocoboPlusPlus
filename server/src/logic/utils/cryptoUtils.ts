@@ -1,5 +1,5 @@
 import * as bcrypt from "bcrypt";
-import { ApiError } from './../../models/apiError';
+import { ApiError } from "./../../models/apiError";
 
 
 export class CryptoUtils {

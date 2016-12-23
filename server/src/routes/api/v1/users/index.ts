@@ -1,17 +1,16 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { UserService } from "./../../../../logic/services/user.service";
-import { SocoboUser } from "./../../../../models/socoboUser";
-import { ApiError } from "./../../../../models/apiError";
-import { DbError } from "./../../../../models/dbError";
+import { AuthUtils } from "./../../../../logic/utils/authUtils";
 import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
+import { ApiError, DbError, SocoboUser } from "./../../../../models/index";
+
 
 export class UsersRouteV1 {
-  constructor (private _userService: UserService, private _router: Router) {
-  }
+  constructor (private _userService: UserService, private _router: Router) {}
 
   createRoutes (): Router {
     // get all users
-    this._router.get("/", (req: Request, res: Response, next: NextFunction) => {
+    this._router.get("/", AuthUtils.checkState, (req: Request, res: Response, next: NextFunction) => {
       this._userService.getAllUsers()
         .then((result: SocoboUser[]) => res.status(200).json(result))
         .catch((error: any) => {
@@ -22,7 +21,7 @@ export class UsersRouteV1 {
     });
 
     // get user by id
-    this._router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
+    this._router.get("/:id", AuthUtils.checkState, (req: Request, res: Response, next: NextFunction) => {
       let id: number = req.params.id;
 
       this._userService.getUserById(id)

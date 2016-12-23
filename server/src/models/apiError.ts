@@ -1,5 +1,6 @@
 import { LogService } from "./../logic/services/logging.service";
 
+
 export class ApiError {
   private timestamp: number;
   private name: string;

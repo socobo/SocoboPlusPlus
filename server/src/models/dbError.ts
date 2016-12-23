@@ -1,6 +1,7 @@
 import { LogService } from "./../logic/services/logging.service";
 import { ApiError } from "./apiError";
 
+
 export class DbError extends ApiError {
 
   private query: string;
