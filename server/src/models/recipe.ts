@@ -1,5 +1,13 @@
+import { SocoboUser } from './socobouser'
+
 export class Recipe {
 
-    constructor(public title: string){}
+    public description: string;
+    public imageUrl: string;
+    private created: number;
 
+    constructor(
+        public title: string,
+        public userId: number){
+    }
 }
