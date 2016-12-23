@@ -23,8 +23,8 @@ export class RecipeService {
         return this._db.one(this._GET_BY_ID, [id]);
     }
 
-    save(recipe: Recipe): Promise<number> {
-        return this._db.tx((t) => {
+    save(recipe: Recipe): Promise<any> {
+        return this._db.tx(() => {
             return this._db.one(this._SAVE, [
                 recipe.title, 
                 recipe.userId, 
