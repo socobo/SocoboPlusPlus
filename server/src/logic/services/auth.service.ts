@@ -15,14 +15,14 @@ export class AuthService {
         .then((user: SocoboUser) => {
           // check if the user was found
           if (!user) {
-            return reject("Authentication failed. User not found.");
+            return reject(new Error("Authentication failed. User not found."));
           }
           // check if the provided password match the users password
           CryptoUtils.comparePasswords(password, user.password)
             .then((passwordMatch: boolean) => {
               // if not match reject JWT creation
               if (!passwordMatch) {
-                reject("Authentication failed. Wrong password.");
+                return reject(new Error("Authentication failed. Wrong password."));
               }
               // generate the JWT
               jwt.sign(user, Config.TOKEN_SECRET, {
@@ -30,7 +30,7 @@ export class AuthService {
               }, (err, token) => {
                 // check if some error occurs inside JWT creation
                 if (err) {
-                  return reject(`Authentication failed. Error message: ${err.message}.`);
+                  return reject(new Error(`Authentication failed. Error message: ${err.message}.`));
                 }
                 // remove password before return user object
                 delete user.password;
