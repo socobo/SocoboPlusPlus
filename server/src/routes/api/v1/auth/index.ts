@@ -15,11 +15,11 @@ export class AuthRouteV1 {
         .catch((error: any) => {
           if (ErrorUtils.notFound(error)) {
             res.status(404).json(
-                new DbError(`The user login is failed!`, AuthService.name, 
+                new DbError(`The user login is failed - ${error.message}!`, AuthService.name, 
                               "login(email,password)", error).forResponse());
           } else {
             res.status(500).json(
-                new ApiError(`Internal Server Error`, AuthService.name, 
+                new ApiError(`Internal Server Error: ${error.message}`, AuthService.name, 
                               "login(email,password)", error).forResponse());
           }
         });
@@ -32,11 +32,11 @@ export class AuthRouteV1 {
         .catch((error: any) => {
           if (ErrorUtils.notFound(error)) {
             res.status(404).json(
-                new DbError(`The user registration is failed!`, AuthService.name, 
+                new DbError(`The user registration is failed - ${error.message}!`, AuthService.name, 
                               "register(email,password)", error).forResponse());
           } else {
             res.status(500).json(
-                new ApiError(`Internal Server Error`, AuthService.name, 
+                new ApiError(`Internal Server Error: ${error.message}`, AuthService.name, 
                               "register(email,password)", error).forResponse());
           }
         });

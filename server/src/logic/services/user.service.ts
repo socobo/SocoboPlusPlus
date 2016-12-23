@@ -26,7 +26,7 @@ export class UserService {
 
   getUserByEmail (email: string): Promise<SocoboUser> {
     let query: string = "SELECT * FROM Socobo_User Where email=$1";
-    return this._db.one(query, name); 
+    return this._db.one(query, email); 
   }
 
   save (user: SocoboUser): Promise<Object> {

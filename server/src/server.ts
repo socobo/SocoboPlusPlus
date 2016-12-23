@@ -1,3 +1,4 @@
+import { CryptoUtils } from "./logic/utils/cryptoUtils";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
@@ -8,8 +9,10 @@ import * as winston from "winston";
 // server config
 import { Config } from "./config";
 // server services
+import { AuthService } from "./logic/services/auth.service";
 import { UserService } from "./logic/services/user.service";
 // server routes
+import { AuthRouteV1 } from "./routes/api/v1/auth/index";
 import { UsersRouteV1 } from "./routes/api/v1/users/index";
 import { LogsRouteV1 } from "./routes/api/v1/logs/index";
 
@@ -20,26 +23,43 @@ class Server {
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
 
+  private _userService: UserService;
+  private _authService: AuthService;
+
   constructor () {
-    this._createApp();
-    this._createServer();
-    this._configLogging();
-    this._configDatabase();
-    this._configServer();
-    this._configFrontendRoutes();
-    this._configApiRoutes();
+    this._create();
+    this._config();
+    this._services();
+    this._routes();
     this._listen();
   }
 
-  private _createApp (): void {
+  /**
+   * CREATION
+   */
+  private _create (): void {
+    this.__createApp();
+    this.__createServer();
+  }
+
+  private __createApp (): void {
     this._app = express();
   }
 
-  private _createServer (): void {
+  private __createServer (): void {
     this._server = http.createServer(this._app);
   }
 
-  private _configLogging (): void {
+  /**
+   * CONFIGURATION
+   */
+  private _config (): void {
+    this.__configLogging();
+    this.__configDatabase();
+    this.__configServer();
+  }
+
+  private __configLogging (): void {
     // check environment
     if ((process.env.NODE_ENV || Config.NODE_ENV) !== "test") {
       winston.configure({
@@ -62,7 +82,7 @@ class Server {
     }
   }
 
-  private _configDatabase (): void {    
+  private __configDatabase (): void {
     // init pgPromise
     const pgp: pgPromise.IMain = pgPromise();
     // setup connectionString
@@ -71,34 +91,58 @@ class Server {
     this._db = pgp(connectionString);
   }
 
-  private _configServer (): void {
+  private __configServer (): void {
     this._port = process.env.PORT || Config.PORT;
     this._app.use(cors());
     this._app.use(bodyParser.urlencoded({ extended: true }));
     this._app.use(bodyParser.json());
   }
 
-  private _configFrontendRoutes (): void {
+  /**
+   * SERVICES
+   */
+  private _services (): void {
+    // init user service
+    this._userService = new UserService(this._db);
+    // init auth service
+    this._authService = new AuthService(this._userService);
+  }
+
+  /**
+   * ROUTES
+   */
+  private _routes (): void {
+    this.__frontendRoutes();
+    this.__apiRoutes();
+  }
+
+  private __frontendRoutes (): void {
     // serve frontend from server/dist/public
     this._app.use(express.static(path.join(__dirname, "public")));
   }
 
-  private _configApiRoutes (): void {
+  private __apiRoutes (): void {
     // set routes to paths
-    this._app.use("/api/v1/users", this.__usersRoute());
-    this._app.use("/api/v1/logs", this.__logsRoute());
+    this._app.use("/api/v1/auth", this.___authRoute());
+    this._app.use("/api/v1/users", this.___usersRoute());
+    this._app.use("/api/v1/logs", this.___logsRoute());
   }
 
-  private __usersRoute (): express.Router {
+  private ___authRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
-    // init user service
-    const userService: UserService = new UserService(this._db);
-    // init and return users route
-    return new UsersRouteV1(userService, router).createRoutes();
+    // init and return auth route
+    return new AuthRouteV1(this._authService, router).createRoutes();
   }
 
-  private __logsRoute (): express.Router {
+  private ___usersRoute (): express.Router {
+    // create new router
+    let router: express.Router = express.Router();
+    // init and return users route
+    return new UsersRouteV1(this._userService, router).createRoutes();
+  }
+
+  private ___logsRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return logs route
@@ -111,6 +155,9 @@ class Server {
     });
   }
 
+  /**
+   * PUBLIC API
+   */
   public get app (): express.Application {
     return this._app;
   }
