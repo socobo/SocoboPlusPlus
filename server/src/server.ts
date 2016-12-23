@@ -8,8 +8,10 @@ import * as path from "path";
 import { Config } from "./config";
 // server services
 import { UserService } from "./logic/services/user.service";
+import { RecipeService } from "./logic/services/recipe.service";
 // server routes
 import { UsersRouteV1 } from "./routes/api/v1/users/index";
+import { RecipeRouteV1 } from "./routes/api/v1/recipes/index";
 
 
 class Server {
@@ -25,6 +27,7 @@ class Server {
     this._configServer();
     this._configFrontendRoutes();
     this._configApiRoutes();
+    this._configRecipeRoutes();
     this._listen();
   }
 
@@ -68,6 +71,16 @@ class Server {
     this._app.use("/api/v1/users", usersApiV1Route.createRoutes());
   }
 
+  private _configRecipeRoutes(): void {
+    // create new router
+    let router: express.Router = express.Router();
+    // init user service
+    const recipeService: RecipeService = new RecipeService(this._db); 
+    // init users route
+    const recipeApiV1Route: RecipeRouteV1 = new RecipeRouteV1(recipeService, router);
+    // set users route to path
+    this._app.use("/api/v1/recipes", recipeApiV1Route.createRoutes());
+  }
   private _listen (): void {
     this._server.listen(this._port, () => {
       console.log(`Server is running under PORT: ${this._port}`);
