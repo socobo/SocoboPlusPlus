@@ -30,15 +30,9 @@ export class AuthRouteV1 {
       this._authService.register(req.body.email, req.body.password)
         .then((result: SocoboUser) => res.status(200).json(result))
         .catch((error: any) => {
-          if (ErrorUtils.notFound(error)) {
-            res.status(404).json(
-                new DbError(`The user registration is failed - ${error.message}!`, AuthService.name, 
-                              "register(email,password)", error).forResponse());
-          } else {
-            res.status(500).json(
-                new ApiError(`Internal Server Error: ${error.message}`, AuthService.name, 
-                              "register(email,password)", error).forResponse());
-          }
+          res.status(500).json(
+              new ApiError(`Internal Server Error: ${error.message}`, AuthService.name, 
+                            "register(email,password)", error).forResponse());
         });
     });
 
