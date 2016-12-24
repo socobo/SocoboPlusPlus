@@ -1,7 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { AuthService } from "./../../../../logic/services/auth.service";
 import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
-import { ApiError, DbError, SocoboUser } from "./../../../../models/index";
+import { 
+  ApiError, DbError, SocoboUser, LoginResult 
+} from "./../../../../models/index";
 
 
 export class AuthRouteV1 {
@@ -9,9 +11,14 @@ export class AuthRouteV1 {
 
   createRoutes (): Router {
     // login the user
-    this._router.post("/login", (req: Request, res: Response, next: NextFunction) => {
-      this._authService.login(req.body.email, req.body.password)
-        .then((result: SocoboUser) => res.status(200).json(result))
+    this._router.post("/login", this.checkLoginRequest, (req: Request, res: Response, next: NextFunction) => {
+      // get data from request
+      let isEmailLogin: boolean = req.body.isEmailLogin;
+      let usernameOrEmail: string = isEmailLogin ? req.body.email : req.body.username;
+      let password: string = req.body.password;
+
+      this._authService.login(isEmailLogin, usernameOrEmail, password)
+        .then((result: LoginResult) => res.status(200).json(result))
         .catch((error: any) => {
           if (ErrorUtils.notFound(error)) {
             res.status(404).json(
@@ -37,5 +44,25 @@ export class AuthRouteV1 {
     });
 
     return this._router;
+  }
+
+  private checkLoginRequest (req: Request, res: Response, next: NextFunction): any {
+
+    let hasEmailProperty: boolean = req.body.hasOwnProperty("email");
+    let hasUsernameProperty: boolean = req.body.hasOwnProperty("username");
+
+    if (!hasEmailProperty && !hasUsernameProperty) {
+      res.status(500).json(
+        new ApiError("Request Body doesn't have a Username or Email Address!", AuthRouteV1.name, 
+                      "post('/login')", new Error("No Username or Email provided!")).forResponse());
+    }
+
+    if (hasEmailProperty) {
+      req.body.isEmailLogin = true;
+    } else {
+      req.body.isEmailLogin = false;
+    }
+
+    next();
   }
 }

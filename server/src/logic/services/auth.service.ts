@@ -3,16 +3,26 @@ import { UserService } from "./user.service";
 import { CryptoUtils } from "./../utils/cryptoUtils";
 import { ErrorUtils } from "./../utils/errorUtils";
 import { Config } from "./../../config";
-import { ApiError, DbError, SocoboUser } from "./../../models/index";
+import { 
+  ApiError, DbError, SocoboUser, LoginResult 
+} from "./../../models/index";
 
 
 export class AuthService {
   constructor (private _userService: UserService) {}
 
-  login (email: string, password: string): Promise<Object> {
+  login (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<LoginResult> {
     return new Promise((resolve, reject) => {
-      // search for the user by provided email
-      this._userService.getUserByEmail(email)
+      // create promise holder
+      let loginPromise: Promise<SocoboUser>;
+      // search for the user by provided email or username
+      if (isEmailLogin) {
+        loginPromise = this._userService.getUserByEmail(usernameOrEmail);
+      } else {
+        loginPromise = this._userService.getUserByUsername(usernameOrEmail);
+      }
+      // login the user or reject
+      loginPromise
         .then((user: SocoboUser) => {
           // check if the user was found
           if (!user) {
@@ -31,12 +41,13 @@ export class AuthService {
               }, (err, token) => {
                 // check if some error occurs inside JWT creation
                 if (err) {
-                  return reject(new Error(`Authentication failed. Error message: ${err.message}.`));
+                  return reject(new Error(`Authentication failed. 
+                                            Error message: ${err.message}.`));
                 }
                 // remove password before return user object
                 delete user.password;
                 // return data
-                resolve({token, user});
+                resolve(new LoginResult(token, user));
               });
             })
             // catch some compare errors
