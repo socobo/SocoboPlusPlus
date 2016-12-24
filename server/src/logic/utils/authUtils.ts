@@ -5,7 +5,7 @@ import { Config } from "./../../config";
 
 export class AuthUtils {
 
-  static checkState (req: any, res: Response, next: NextFunction) {
+  static checkState (req: any, res: Response, next: NextFunction): any {
     // get token from request
     const token = req.body.token 
                     || req.query.token 
