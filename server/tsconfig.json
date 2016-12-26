@@ -7,7 +7,8 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "lib": ["es2015", "dom"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "experimentalDecorators": true
   },
   "compileOnSave": true,
   "include": [

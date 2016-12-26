@@ -5,23 +5,21 @@ import { Recipe } from "./../../../../models/recipe";
 import { DbError } from "./../../../../models/db-error";
 import { ApiError } from "./../../../../models/api-error";
 import { ValidationError } from "./../../../../models/validation-error";
-import expressValidator = require("express-validator");
-import { RecipeValidation } from "./../../../../models/recipe.validation";
-import { Validator } from "./../../../../middleware/validator";
+import { ApiValidator } from "./../../../../middleware/validator";
+
+//import {Validator} from "class-validator";
+
 
 export class RecipeRouteV1 {
 
     constructor(private _recipeService: RecipeService, private _router: Router) {}
 
     createRoutes(){
-
-        this._router.use(expressValidator());
-
         this._router.post("/", 
-        new Validator(new RecipeValidation()).getValidator(),
+        new ApiValidator().apiValidator(Recipe),
         (req: Request, res: Response) => {
             let recipe: Recipe = req.body as Recipe;
-
+            
             this._recipeService.save(recipe)
             .then((result:any) => {
                 recipe.id = result.id;

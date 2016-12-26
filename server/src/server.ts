@@ -1,3 +1,4 @@
+require('es6-shim')
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
@@ -16,6 +17,7 @@ import { UsersRouteV1 } from "./routes/api/v1/users/index";
 import { RecipeRouteV1 } from "./routes/api/v1/recipes/index";
 
 import { LogsRouteV1 } from "./routes/api/v1/logs/index";
+
 
 
 

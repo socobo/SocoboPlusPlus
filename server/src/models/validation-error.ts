@@ -1,6 +1,5 @@
 import { LogService } from "./../logic/services/logging.service";
 import { ApiError } from "./api-error";
-import expressValidator = require("express-validator");
 
 export class ValidationError extends ApiError {
 
