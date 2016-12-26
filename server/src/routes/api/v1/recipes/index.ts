@@ -12,11 +12,11 @@ import { ApiValidator } from "./../../../../middleware/validator";
 
 export class RecipeRouteV1 {
 
-    constructor(private _recipeService: RecipeService, private _router: Router) {}
+    constructor(private _recipeService: RecipeService, private _router: Router, private _validator: ApiValidator) {}
 
     createRoutes(){
         this._router.post("/", 
-        new ApiValidator().apiValidator(Recipe),
+        this._validator.apiValidator(Recipe),
         (req: Request, res: Response) => {
             let recipe: Recipe = req.body as Recipe;
             

@@ -8,6 +8,8 @@ import * as path from "path";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
+// validator
+import { ApiValidator } from "./middleware/validator";
 // server services
 import { UserService } from "./logic/services/user.service";
 import { RecipeService } from "./logic/services/recipe.service";
@@ -26,6 +28,7 @@ class Server {
   private _server: http.Server;
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
+  private _validator = new ApiValidator();
 
   constructor () {
     this._createApp();
@@ -119,7 +122,7 @@ class Server {
     // init user service
     const recipeService: RecipeService = new RecipeService(this._db); 
     // init users route
-    const recipeApiV1Route: RecipeRouteV1 = new RecipeRouteV1(recipeService, router);
+    const recipeApiV1Route: RecipeRouteV1 = new RecipeRouteV1(recipeService, router, this._validator);
     // set users route to path
     this._app.use("/api/v1/recipes", recipeApiV1Route.createRoutes());
   }
