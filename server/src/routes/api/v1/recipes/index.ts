@@ -4,13 +4,22 @@ import { ErrorUtils } from "./../../../../logic/utils/errorUtils"
 import { Recipe } from "./../../../../models/recipe";
 import { DbError } from "./../../../../models/db-error";
 import { ApiError } from "./../../../../models/api-error";
+import { ValidationError } from "./../../../../models/validation-error";
+import expressValidator = require("express-validator");
+import { RecipeValidation } from "./../../../../models/recipe.validation";
+import { Validator } from "./../../../../middleware/validator";
 
 export class RecipeRouteV1 {
 
     constructor(private _recipeService: RecipeService, private _router: Router) {}
 
     createRoutes(){
-        this._router.post("/", (req: Request, res: Response) => {
+
+        this._router.use(expressValidator());
+
+        this._router.post("/", 
+        new Validator(new RecipeValidation()).getValidator(),
+        (req: Request, res: Response) => {
             let recipe: Recipe = req.body as Recipe;
 
             this._recipeService.save(recipe)

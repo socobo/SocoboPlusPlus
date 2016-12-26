@@ -1,12 +1,13 @@
 import { LogService } from "./../logic/services/logging.service";
 
 export class ApiError {
+  
+  public message: string;
+  public source: string;
+  public sourceMethod: string;
   private timestamp: number;
   private name: string;
   private stackTrace: string;
-  private message: string;
-  private source: string;
-  private sourceMethod: string;
 
   constructor (
     message: string, source: string, 
