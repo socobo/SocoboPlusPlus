@@ -23,7 +23,7 @@ export class ApiError {
     LogService.addError(this.message, this);
   }
 
-  forResponse(): Object {
+  forResponse (): Object {
     return {
       "message": this.message,
       "source": this.source,

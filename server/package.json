@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "body-parser": "~1.15.2",
-    "class-validator": "^0.6.6",
+    "class-validator": "~0.6.6",
     "cors": "~2.8.1",
-    "es6-shim": "^0.35.2",
+    "es6-shim": "~0.35.2",
     "express": "~4.14.0",
     "npm-run-all": "~3.1.2",
     "winston": "~2.3.0"

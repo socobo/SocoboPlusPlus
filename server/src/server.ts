@@ -1,4 +1,4 @@
-require('es6-shim')
+import "es6-shim";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
@@ -15,12 +15,8 @@ import { UserService } from "./logic/services/user.service";
 import { RecipeService } from "./logic/services/recipe.service";
 // server routes
 import { UsersRouteV1 } from "./routes/api/v1/users/index";
-
 import { RecipeRouteV1 } from "./routes/api/v1/recipes/index";
-
 import { LogsRouteV1 } from "./routes/api/v1/logs/index";
-
-
 
 
 class Server {
@@ -38,7 +34,6 @@ class Server {
     this._configServer();
     this._configFrontendRoutes();
     this._configApiRoutes();
-    this._configRecipeRoutes();
     this._listen();
   }
 
@@ -73,7 +68,7 @@ class Server {
     }
   }
 
-  private _configDatabase (): void {    
+  private _configDatabase (): void {
     // init pgPromise
     const pgp: pgPromise.IMain = pgPromise();
     // setup connectionString
@@ -98,6 +93,7 @@ class Server {
     // set routes to paths
     this._app.use("/api/v1/users", this.__usersRoute());
     this._app.use("/api/v1/logs", this.__logsRoute());
+    this._app.use("/api/v1/recipes", this.__recipeRoute());
   }
 
   private __usersRoute (): express.Router {
@@ -116,16 +112,15 @@ class Server {
     return new LogsRouteV1(router).createRoutes();
   }
 
-  private _configRecipeRoutes(): void {
+  private __recipeRoute(): express.Router {
     // create new router
     let router: express.Router = express.Router();
-    // init user service
+    // init recipe service
     const recipeService: RecipeService = new RecipeService(this._db); 
-    // init users route
-    const recipeApiV1Route: RecipeRouteV1 = new RecipeRouteV1(recipeService, router, this._validator);
-    // set users route to path
-    this._app.use("/api/v1/recipes", recipeApiV1Route.createRoutes());
+    // init and return recipe route
+    return new RecipeRouteV1(recipeService, router, this._validator).createRoutes();
   }
+  
   private _listen (): void {
     this._server.listen(this._port, () => {
       winston.info(`Server started on PORT: ${this._port}`);
