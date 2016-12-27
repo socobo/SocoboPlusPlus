@@ -16,7 +16,15 @@ export class RecipeRouteV1 {
 
     createRoutes(){
         this._router.post("/", 
-        this._validator.apiValidator(Recipe),
+        (req: Request, res: Response, next: NextFunction) => {
+            new ApiValidator().validate(Recipe, req)
+            .then((error: ValidationError) => {
+                res.status(400).json(error)
+            })
+            .catch(() => {
+                next();
+            })
+        },
         (req: Request, res: Response) => {
             let recipe: Recipe = req.body as Recipe;
             
