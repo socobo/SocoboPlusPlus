@@ -1,9 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
+import { validate } from "class-validator"
 import { ValidationError } from "./../models/validation-error";
 
-import {validate, Contains, IsInt, Length, IsEmail, IsFQDN, IsDate} from "class-validator"
 
-export class ApiValidator{
+export class ApiValidator {
 
     validate<T>(type: {new(): T}, req: Request): Promise<any>{
         return new Promise<any>((resolve: any, reject: any) => {

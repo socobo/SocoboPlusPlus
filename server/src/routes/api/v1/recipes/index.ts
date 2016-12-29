@@ -7,8 +7,6 @@ import { ApiError } from "./../../../../models/api-error";
 import { ValidationError } from "./../../../../models/validation-error";
 import { ApiValidator } from "./../../../../middleware/validator";
 
-//import {Validator} from "class-validator";
-
 
 export class RecipeRouteV1 {
 
@@ -54,8 +52,8 @@ export class RecipeRouteV1 {
                     RecipeService.name, 'getById()', error).forResponse());
                 }
             });
-        })
+    });
 
-        return this._router;
-    }
+    return this._router;
+  }
 }
