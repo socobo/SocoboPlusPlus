@@ -12,19 +12,17 @@ export class AuthRouteV1 {
   createRoutes (): Router {
     // login the user
     this._router.post("/login", this.checkLoginRequest, (req: Request, res: Response, next: NextFunction) => {
-      // get data from request
+
       let isEmailLogin: boolean = req.body.isEmailLogin;
       let usernameOrEmail: string = isEmailLogin ? req.body.email : req.body.username;
       let password: string = req.body.password;
 
       this._authService.login(isEmailLogin, usernameOrEmail, password)
-        .then((result: LoginResult) => {
-          res.status(200).json(result);
-        })
+        .then((result: LoginResult) => res.status(200).json(result))
         .catch((error: any) => {
           if (ErrorUtils.notFound(error)) {
             res.status(404).json(
-                new DbError(`The user login is failed - '${error.message}'!`, AuthService.name, 
+                new DbError(`The given Username or Email was not found - '${error.message}'!`, AuthService.name, 
                               "login(email,password)", error).forResponse());
           } else {
             res.status(500).json(
@@ -35,8 +33,13 @@ export class AuthRouteV1 {
     });
 
     // register the user
-    this._router.post("/register", (req: Request, res: Response, next: NextFunction) => {
-      this._authService.register(req.body.email, req.body.password)
+    this._router.post("/register", this.checkLoginRequest, (req: Request, res: Response, next: NextFunction) => {
+      
+      let isEmailLogin: boolean = req.body.isEmailLogin;
+      let usernameOrEmail: string = isEmailLogin ? req.body.email : req.body.username;
+      let password: string = req.body.password;
+
+      this._authService.register(isEmailLogin, usernameOrEmail, password)
         .then((result: SocoboUser) => res.status(200).json(result))
         .catch((error: any) => {
           res.status(500).json(
