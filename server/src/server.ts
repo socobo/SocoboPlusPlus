@@ -1,4 +1,3 @@
-import { CryptoUtils } from "./logic/utils/cryptoUtils";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
@@ -8,6 +7,8 @@ import * as path from "path";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
+// server utils
+import { CryptoUtils } from "./logic/utils/cryptoUtils";
 // server services
 import { AuthService } from "./logic/services/auth.service";
 import { UserService } from "./logic/services/user.service";
@@ -23,12 +24,15 @@ class Server {
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
 
+  private _cryptoUtils: CryptoUtils;
+
   private _userService: UserService;
   private _authService: AuthService;
 
   constructor () {
     this._create();
     this._config();
+    this._utils();
     this._services();
     this._routes();
     this._listen();
@@ -99,13 +103,20 @@ class Server {
   }
 
   /**
+   * UTILS
+   */
+  private _utils (): void {
+    this._cryptoUtils = new CryptoUtils();
+  }
+
+  /**
    * SERVICES
    */
   private _services (): void {
     // init user service
     this._userService = new UserService(this._db);
     // init auth service
-    this._authService = new AuthService(this._userService);
+    this._authService = new AuthService(this._userService, this._cryptoUtils);
   }
 
   /**

@@ -4,7 +4,7 @@ import { ApiError } from "./../../models/apiError";
 
 export class CryptoUtils {
 
-  static hashPassword (userPassword: string): Promise<string> {
+  hashPassword (userPassword: string): Promise<string> {
     return new Promise((resolve, reject) => {
       bcrypt.genSalt(10, (err, salt) => {
         if (err) {
@@ -24,7 +24,7 @@ export class CryptoUtils {
     });
   }
 
-  static comparePasswords (firstPw: string, secondPw: string): Promise<boolean> {
+  comparePasswords (firstPw: string, secondPw: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       bcrypt.compare(firstPw, secondPw, (err, isMatch) => {
         if (err) {

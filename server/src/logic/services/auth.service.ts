@@ -9,7 +9,10 @@ import {
 
 
 export class AuthService {
-  constructor (private _userService: UserService) {}
+  constructor (
+    private _userService: UserService, 
+    private _cryptoUtils: CryptoUtils
+  ) {}
 
   login (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<LoginResult> {
     return new Promise((resolve, reject) => {
@@ -29,14 +32,14 @@ export class AuthService {
             return reject(new Error("Authentication failed. User not found."));
           }
           // check if the provided password match the users password
-          CryptoUtils.comparePasswords(password, user.password)
+          this._cryptoUtils.comparePasswords(password, user.password)
             .then((passwordMatch: boolean) => {
               // if not match reject JWT creation
               if (!passwordMatch) {
                 return reject(new Error("Authentication failed. Wrong password."));
               }
               // generate the JWT
-              jwt.sign(user.forSigning(), Config.TOKEN_SECRET, {
+              jwt.sign(user.forSigning(),  Config.TOKEN_SECRET, {
                 expiresIn: Config.TOKEN_EXPIRATION
               }, (err, token) => {
                 // check if some error occurs inside JWT creation
@@ -73,7 +76,7 @@ export class AuthService {
           // check if no data was found
           if (ErrorUtils.notFound(error)) {
             // hash password
-            CryptoUtils.hashPassword(password)
+            this._cryptoUtils.hashPassword(password)
               .then((hashedPassword: string) => {
                 // create new user object
                 let user: SocoboUser = new SocoboUser();
