@@ -26,6 +26,7 @@ export class RecipeRouteV1 {
         (req: Request, res: Response) => {
             let recipe: Recipe = req.body as Recipe;
             
+            recipe.created = Date.now();
             this._recipeService.save(recipe)
             .then((result:any) => {
                 recipe.id = result.id;

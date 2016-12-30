@@ -11,6 +11,6 @@ export class Recipe {
   public userId: number;
   public description: string;
   public imageUrl: string;
-  private created: number;
+  public created: number;
 
 }

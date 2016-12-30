@@ -1,13 +1,12 @@
 import * as mocha from "mocha";
 import * as chai from "chai"; 
 import * as sinon from "sinon";
-
 import {Router, Request, Response, NextFunction } from "express";
+
 import { ApiValidator } from "./../src/middleware/Validator"
 import { Recipe } from "./../src/models/Recipe"
 import { ValidationError } from "./../src/models/validation-error";
-import {validate, Contains, IsInt, Length, IsEmail, IsFQDN, IsDate} from "class-validator"
-import {EventEmitter} from 'events';
+
 let mocks = require("node-mocks-http")
 require("mocha-as-promised")();
 var chaiAsPromised = require("chai-as-promised");

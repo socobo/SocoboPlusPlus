@@ -7,6 +7,7 @@ export class RecipeService {
   private _GET_BY_ID: string = `select * 
                                 from recipes
                                 where recipes.id = $1`;
+
   private _SAVE: string = `insert into recipes(
                              title,
                              userId,
@@ -19,7 +20,6 @@ export class RecipeService {
   constructor (private _db: IDatabase<any>) {}
 
   getById (id: number): Promise<Recipe> {
-    console.log("ID", id);
     return this._db.one(this._GET_BY_ID, [id]);
   }
 
@@ -30,7 +30,7 @@ export class RecipeService {
         recipe.userId,
         recipe.description,
         recipe.imageUrl,
-        new Date()]);
+        recipe.created]);
     });
   }
 
