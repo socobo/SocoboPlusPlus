@@ -36,8 +36,8 @@ export class AuthService {
                 return reject(new Error("Authentication failed. Wrong password."));
               }
               // generate the JWT
-              jwt.sign(user, Config.TOKEN_SECRET, {
-                expiresIn: "1d"
+              jwt.sign(user.forSigning(), Config.TOKEN_SECRET, {
+                expiresIn: Config.TOKEN_EXPIRATION
               }, (err, token) => {
                 // check if some error occurs inside JWT creation
                 if (err) {
