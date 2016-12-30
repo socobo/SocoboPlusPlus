@@ -4,11 +4,12 @@ import { CryptoUtils } from "./../utils/cryptoUtils";
 import { ErrorUtils } from "./../utils/errorUtils";
 import { Config } from "./../../config";
 import { 
-  ApiError, DbError, SocoboUser, LoginResult 
+  ApiError, DbError, SocoboUser, ComparePwResult, LoginResult
 } from "./../../models/index";
 
 
 export class AuthService {
+
   constructor (
     private _userService: UserService, 
     private _cryptoUtils: CryptoUtils
@@ -16,48 +17,51 @@ export class AuthService {
 
   login (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<LoginResult> {
     return new Promise((resolve, reject) => {
-      // create promise holder
-      let loginPromise: Promise<SocoboUser>;
-      // search for the user by provided email or username
-      if (isEmailLogin) {
-        loginPromise = this._userService.getUserByEmail(usernameOrEmail);
-      } else {
-        loginPromise = this._userService.getUserByUsername(usernameOrEmail);
-      }
-      // login the user or reject
-      loginPromise
-        .then((user: SocoboUser) => {
-          // check if the user was found
-          if (!user) {
-            return reject(new Error("Authentication failed. User not found."));
-          }
-          // check if the provided password match the users password
-          this._cryptoUtils.comparePasswords(password, user.password)
-            .then((passwordMatch: boolean) => {
-              // if not match reject JWT creation
-              if (!passwordMatch) {
-                return reject(new Error("Authentication failed. Wrong password."));
-              }
-              // generate the JWT
-              jwt.sign(user.forSigning(), (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
-                expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION)
-              }, (err, token) => {
-                // check if some error occurs inside JWT creation
-                if (err) {
-                  return reject(new Error(`Authentication failed. 
-                                            Error message: ${err.message}.`));
-                }
-                // remove password before return user object
-                delete user.password;
-                // return data
-                resolve(new LoginResult(token, user));
-              });
-            })
-            // catch some compare errors
-            .catch((error: any) => reject(error));
-        })
-        // catch some database errors
+      this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
+        .then((user: SocoboUser) => this._validateUser(user))
+        .then((foundUser: SocoboUser) => this._cryptoUtils.comparePasswords(password, foundUser))
+        .then((compareResult: ComparePwResult) => this._validateComparePasswords(compareResult.isPasswordMatch, compareResult.user))
+        .then((user: SocoboUser) => resolve(this._createLoginResult(user)))
         .catch((error: any) => reject(error));
+    });
+  }
+
+  private _getUserFromDatabase (isEmailLogin: boolean, usernameOrEmail: string): Promise<SocoboUser> {
+    if (isEmailLogin) {
+      return this._userService.getUserByEmail(usernameOrEmail); 
+    }
+    return this._userService.getUserByUsername(usernameOrEmail);
+  }
+
+  private _validateUser (user: SocoboUser): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      if (!user) {
+        return reject(new Error("Authentication failed. User not found."));
+      }
+      resolve(user);
+    });
+  }
+
+  private _validateComparePasswords (compareSuccessful: boolean, foundUser: SocoboUser): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      if (!compareSuccessful) {
+        return reject(new Error("Authentication failed. Wrong password."));
+      }
+      resolve(foundUser);
+    });
+  }
+
+  private _createLoginResult (foundUser: SocoboUser): Promise<LoginResult> {
+    return new Promise((resolve, reject) => {
+      jwt.sign(foundUser, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
+        expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION)
+      }, (err, token) => {
+        if (err) {
+          return reject(new Error(`Authentication failed. Error message: ${err.message}.`));
+        }
+        delete foundUser.password;
+        resolve(new LoginResult(token, foundUser));
+      });
     });
   }
 
