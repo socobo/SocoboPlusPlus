@@ -1,5 +1,5 @@
 import * as bcrypt from "bcrypt";
-import { ApiError } from "./../../models/apiError";
+import { ApiError, ComparePwResult, SocoboUser } from "./../../models/index";
 
 
 export class CryptoUtils {
@@ -24,14 +24,14 @@ export class CryptoUtils {
     });
   }
 
-  comparePasswords (firstPw: string, secondPw: string): Promise<boolean> {
+  comparePasswords (firstPw: string, user: SocoboUser): Promise<ComparePwResult> {
     return new Promise((resolve, reject) => {
-      bcrypt.compare(firstPw, secondPw, (err, isMatch) => {
+      bcrypt.compare(firstPw, user.password, (err, isMatch) => {
         if (err) {
           return reject(new ApiError("Error by comparing Passwords.", CryptoUtils.name, 
                                       "comparePasswords(firstPw,secondPw)", err));
         }
-        resolve(isMatch);
+        resolve(new ComparePwResult(isMatch, user));
       });
     });
   }

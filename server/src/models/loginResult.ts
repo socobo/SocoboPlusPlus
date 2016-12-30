@@ -1,5 +1,6 @@
 import { SocoboUser } from "./socoboUser";
 
+
 export class LoginResult {
   private token: string;
   private user: SocoboUser;

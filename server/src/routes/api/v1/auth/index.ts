@@ -18,11 +18,13 @@ export class AuthRouteV1 {
       let password: string = req.body.password;
 
       this._authService.login(isEmailLogin, usernameOrEmail, password)
-        .then((result: LoginResult) => res.status(200).json(result))
+        .then((result: LoginResult) => {
+          res.status(200).json(result);
+        })
         .catch((error: any) => {
           if (ErrorUtils.notFound(error)) {
             res.status(404).json(
-                new DbError(`The user login is failed - ${error.message}!`, AuthService.name, 
+                new DbError(`The user login is failed - '${error.message}'!`, AuthService.name, 
                               "login(email,password)", error).forResponse());
           } else {
             res.status(500).json(
