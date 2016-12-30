@@ -18,8 +18,13 @@ describe("LogService", () => {
   before(done => {
     spy = sinon.spy();
 
-    winston.remove(winston.transports.Console);
-    winston.remove(winston.transports.File);
+    try{
+      winston.remove(winston.transports.Console);
+      winston.remove(winston.transports.File);
+    }catch(error){
+      // Winston throws an error if the Transport is not attached to the current instance
+      console.log(error);
+    }
 
     winston.add(SpyLogger, { spy: spy });
 
