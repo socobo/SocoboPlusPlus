@@ -7,4 +7,13 @@ export class SocoboUser {
   hasTermsAccepted: boolean;
   isAdmin: boolean;
   provider: string;
+
+  forSigning (): Object {
+    return {
+      id: this.id,
+      username: this.username,
+      email: this.email,
+      isAdmin: this.isAdmin
+    };
+  }
 }
