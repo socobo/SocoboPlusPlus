@@ -38,15 +38,15 @@ class Server {
    * CREATION
    */
   private _create (): void {
-    this.__createApp();
-    this.__createServer();
+    this._createApp();
+    this._createServer();
   }
 
-  private __createApp (): void {
+  private _createApp (): void {
     this._app = express();
   }
 
-  private __createServer (): void {
+  private _createServer (): void {
     this._server = http.createServer(this._app);
   }
 
@@ -54,12 +54,12 @@ class Server {
    * CONFIGURATION
    */
   private _config (): void {
-    this.__configLogging();
-    this.__configDatabase();
-    this.__configServer();
+    this._configLogging();
+    this._configDatabase();
+    this._configServer();
   }
 
-  private __configLogging (): void {
+  private _configLogging (): void {
     // check environment
     if ((process.env.NODE_ENV || Config.NODE_ENV) !== "test") {
       winston.configure({
@@ -82,7 +82,7 @@ class Server {
     }
   }
 
-  private __configDatabase (): void {
+  private _configDatabase (): void {
     // init pgPromise
     const pgp: pgPromise.IMain = pgPromise();
     // setup connectionString
@@ -91,7 +91,7 @@ class Server {
     this._db = pgp(connectionString);
   }
 
-  private __configServer (): void {
+  private _configServer (): void {
     this._port = process.env.PORT || Config.PORT;
     this._app.use(cors());
     this._app.use(bodyParser.urlencoded({ extended: true }));
@@ -112,37 +112,37 @@ class Server {
    * ROUTES
    */
   private _routes (): void {
-    this.__frontendRoutes();
-    this.__apiRoutes();
+    this._frontendRoutes();
+    this._apiRoutes();
   }
 
-  private __frontendRoutes (): void {
+  private _frontendRoutes (): void {
     // serve frontend from server/dist/public
     this._app.use(express.static(path.join(__dirname, "public")));
   }
 
-  private __apiRoutes (): void {
+  private _apiRoutes (): void {
     // set routes to paths
-    this._app.use("/api/v1/auth", this.___authRoute());
-    this._app.use("/api/v1/users", this.___usersRoute());
-    this._app.use("/api/v1/logs", this.___logsRoute());
+    this._app.use("/api/v1/auth", this._authRoute());
+    this._app.use("/api/v1/users", this._usersRoute());
+    this._app.use("/api/v1/logs", this._logsRoute());
   }
 
-  private ___authRoute (): express.Router {
+  private _authRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return auth route
     return new AuthRouteV1(this._authService, router).createRoutes();
   }
 
-  private ___usersRoute (): express.Router {
+  private _usersRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return users route
     return new UsersRouteV1(this._userService, router).createRoutes();
   }
 
-  private ___logsRoute (): express.Router {
+  private _logsRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return logs route
