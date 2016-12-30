@@ -65,7 +65,7 @@ class Server {
       winston.configure({
         transports: [
           new (winston.transports.File) ({
-            filename: "logs/server.log.json"
+            filename: "server/logs/server.log.json"
           }),
           new (winston.transports.Console) ()
         ]
@@ -74,7 +74,7 @@ class Server {
       winston.configure({
         transports: [
           new (winston.transports.File) ({
-            filename: "logs/server.test.log.json"
+            filename: "server/logs/server.test.log.json"
           }),
           new (winston.transports.Console) ()
         ]
