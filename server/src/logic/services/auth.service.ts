@@ -65,50 +65,58 @@ export class AuthService {
     });
   }
 
-  register (email: string, password: string): Promise<SocoboUser> {
+  register (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
-      // search for the user by provided email
-      this._userService.getUserByEmail(email)
-        .then((user: SocoboUser) => {
-          // check if the user was found
-          if (user) {
-            return reject(new Error("Email is already registered. Please use another one."));
-          }
-        })
-        // catch some database errors
+      this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
+        .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
         .catch((error: any) => {
-          // check if no data was found
           if (ErrorUtils.notFound(error)) {
-            // hash password
             this._cryptoUtils.hashPassword(password)
-              .then((hashedPassword: string) => {
-                // create new user object
-                let user: SocoboUser = new SocoboUser();
-                user.username = email.split("@")[0];
-                user.email = email;
-                user.password = hashedPassword;
-                user.image = "http://placehold.it/350x150";
-                user.hasTermsAccepted = true;
-                user.isAdmin = false;
-                user.provider = "email";
-                // save user into database
-                this._userService.save(user)
-                  .then((result: any) => {
-                    // set id to user object
-                    user.id = result.id;
-                    // return data
-                    resolve(user);
-                  })
-                  // catch some saving errors
-                  .catch((error: any) => reject(error))
-              })
-              // catch some hash errors
-              .catch((error: any) => reject(error));
+              .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail))
+              .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
+              .catch((error: any) => reject(error))
           } else {
-            // return database errors
-            reject(error); 
+            reject(error);
           }
         });
+    });
+  }
+
+  private _checkIfUserIsAlreadyRegistered (user: SocoboUser): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (user) {
+        return reject(new Error("Email or Username is already registered. Please use another one."));
+      }
+      resolve();
+    });
+  }
+
+  private _createNewUser (hashedPassword: string, usernameOrEmail: string): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      if (hashedPassword.length <= 0) {
+        return reject(new Error("Hashed Password length is <= 0"));
+      }
+      let user: SocoboUser = new SocoboUser();
+      user.username = usernameOrEmail.includes("@") ? usernameOrEmail.split("@")[0] : usernameOrEmail;
+      user.email = usernameOrEmail.includes("@") ? usernameOrEmail : "";
+      user.password = hashedPassword;
+      user.image = "http://placehold.it/350x150";
+      user.hasTermsAccepted = true;
+      user.isAdmin = false;
+      user.provider = "email";
+      resolve(user);
+    });
+  }
+
+  private _returnSavedUser (user: SocoboUser): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      this._userService.save(user)
+        .then((result: any) => {
+          user.id = result.id;
+          delete user.password;
+          resolve(user);
+        })
+        .catch((error: any) => reject(error))
     });
   }
 }
