@@ -2,7 +2,9 @@ import * as jwt from "jsonwebtoken";
 import { Router, Request, Response, NextFunction } from "express";
 import { Config } from "./../../config";
 
-
+/**
+ * Rewrite as Promise Middleware --> checkValidToken()
+ */
 export class AuthUtils {
 
   static checkState (req: any, res: Response, next: NextFunction): any {
@@ -13,7 +15,7 @@ export class AuthUtils {
     // check if token is available
     if (token) {
       // verify token
-      jwt.verify(token, Config.TOKEN_SECRET, (err: any, decoded: any)  => {
+      jwt.verify(token, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), (err: any, decoded: any)  => {
         // error handling
         if (err) {
           // setup error message
