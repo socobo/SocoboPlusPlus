@@ -2,7 +2,9 @@ import { Router, Request, Response, NextFunction } from "express";
 import { UserService } from "./../../../../logic/services/user.service";
 import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
 import { AuthValidator } from "./../../../../logic/middleware/authValidator";
-import { ApiError, DbError, SocoboUser } from "./../../../../models/index";
+import { 
+  ApiError, DbError, SocoboUser 
+} from "./../../../../models/index";
 
 
 export class UsersRouteV1 {

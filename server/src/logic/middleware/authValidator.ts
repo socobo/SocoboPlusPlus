@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken"; 
 import { Request, Response, NextFunction } from "express";
-import { ApiError } from "./../../models/apiError";
+import { ApiError } from "./../../models/index";
 import { Config } from "./../../config";
 
 

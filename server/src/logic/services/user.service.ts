@@ -1,5 +1,5 @@
 import { IDatabase } from "pg-promise";
-import { SocoboUser } from "./../../models/socoboUser";
+import { SocoboUser } from "./../../models/index";
 
 
 export class UserService {
