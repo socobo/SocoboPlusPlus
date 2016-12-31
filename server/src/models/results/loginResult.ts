@@ -1,4 +1,4 @@
-import { SocoboUser } from "./socoboUser";
+import { SocoboUser } from "./../database/socoboUser";
 
 
 export class LoginResult {

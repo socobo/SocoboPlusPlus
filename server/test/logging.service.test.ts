@@ -4,8 +4,9 @@ import * as mocha from "mocha";
 import * as chai from "chai"; 
 
 import { LogService } from "./../src/logic/services/logging.service";
-import { ApiError } from "./../src/models/apiError";
-import { DbError } from "./../src/models/dbError";
+import { 
+  ApiError, DbError 
+} from "./../src/models/index";
 
 import * as winston from "winston";
 import * as sinon from "sinon";

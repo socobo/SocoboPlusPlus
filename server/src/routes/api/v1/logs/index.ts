@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { LogService } from "./../../../../logic/services/logging.service";
 import { AuthValidator } from "./../../../../logic/middleware/authValidator";
-import { ApiError } from "./../../../../models/apiError";
+import { ApiError } from "./../../../../models/index";
 
 
 export class LogsRouteV1 {

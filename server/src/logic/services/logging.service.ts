@@ -1,5 +1,5 @@
 import * as winston from "winston";
-import { ApiError } from "./../../models/apiError";
+import { ApiError } from "./../../models/index";
 
 
 export class LogService {
