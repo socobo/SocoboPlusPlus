@@ -3,7 +3,7 @@ import { AuthService } from "./../../../../logic/services/auth.service";
 import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
 import { AuthValidator } from "./../../../../logic/middleware/authValidator";
 import { 
-  ApiError, DbError, SocoboUser, LoginResult 
+  ApiError, DbError, SocoboUser, LoginResult, ExtractRequestBodyResult
 } from "./../../../../models/index";
 
 
@@ -25,11 +25,12 @@ export class AuthRouteV1 {
       },
       (req: Request, res: Response, next: NextFunction) => {
 
-      let isEmailLogin: boolean = req.body.isEmailLogin;
-      let usernameOrEmail: string = isEmailLogin ? req.body.email : req.body.username;
-      let password: string = req.body.password;
-
-      this._authService.login(isEmailLogin, usernameOrEmail, password)
+      this._extractRequestBody(req)
+        .then((result: ExtractRequestBodyResult) => {
+          return this._authService.login(result.isEmailLogin, 
+                                         result.usernameOrEmail, 
+                                         result.password); 
+        })
         .then((result: LoginResult) => res.status(200).json(result))
         .catch((error: any) => {
           if (ErrorUtils.notFound(error)) {
@@ -52,12 +53,13 @@ export class AuthRouteV1 {
           .catch((err: ApiError) => res.status(400).json(err));
       },
       (req: Request, res: Response, next: NextFunction) => {
-      
-      let isEmailLogin: boolean = req.body.isEmailLogin;
-      let usernameOrEmail: string = isEmailLogin ? req.body.email : req.body.username;
-      let password: string = req.body.password;
-
-      this._authService.register(isEmailLogin, usernameOrEmail, password)
+    
+      this._extractRequestBody(req)
+        .then((result: ExtractRequestBodyResult) => {
+          return this._authService.register(result.isEmailLogin, 
+                                            result.usernameOrEmail, 
+                                            result.password); 
+        })
         .then((result: SocoboUser) => res.status(200).json(result))
         .catch((error: any) => {
           res.status(500).json(
@@ -67,5 +69,20 @@ export class AuthRouteV1 {
     });
 
     return this._router;
+  }
+
+  private _extractRequestBody (req: Request): Promise<ExtractRequestBodyResult> {
+    return new Promise((resolve, reject) => {
+      try {
+        resolve(new ExtractRequestBodyResult(
+          req.body.isEmailLogin,
+          (req.body.isEmailLogin ? req.body.email : req.body.username)
+          ,req.body.password)
+        );
+      } catch(err) {
+        reject(new ApiError("Something went wrong with Extracting Request Boby.",
+                              AuthRouteV1.name, "_extractRequestBody(req)", err));
+      }
+    });
   }
 }

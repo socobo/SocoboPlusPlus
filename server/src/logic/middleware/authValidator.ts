@@ -26,9 +26,6 @@ export class AuthValidator {
     });
   }
 
-  /**
-   * Rewrite as Promise Middleware --> checkValidToken()
-   */
   checkValidToken (req: Request): Promise<any> {
     return new Promise((resolve, reject) => {
 
