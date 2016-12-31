@@ -7,6 +7,8 @@ import * as path from "path";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
+// server middleware
+import { AuthValidator } from "./logic/middleware/authValidator";
 // server utils
 import { CryptoUtils } from "./logic/utils/cryptoUtils";
 // server services
@@ -24,6 +26,8 @@ class Server {
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
 
+  private _authValidator: AuthValidator;
+
   private _cryptoUtils: CryptoUtils;
 
   private _userService: UserService;
@@ -32,6 +36,7 @@ class Server {
   constructor () {
     this._create();
     this._config();
+    this._middleware();
     this._utils();
     this._services();
     this._routes();
@@ -103,6 +108,13 @@ class Server {
   }
 
   /**
+   * MIDDLEWARE
+   */
+  private _middleware (): void {
+    this._authValidator = new AuthValidator();
+  }
+
+  /**
    * UTILS
    */
   private _utils (): void {
@@ -143,7 +155,8 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return auth route
-    return new AuthRouteV1(this._authService, router).createRoutes();
+    return new AuthRouteV1(this._authService, router, 
+                            this._authValidator).createRoutes();
   }
 
   private _usersRoute (): express.Router {
