@@ -163,14 +163,15 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return users route
-    return new UsersRouteV1(this._userService, router).createRoutes();
+    return new UsersRouteV1(this._userService, router, 
+                              this._authValidator).createRoutes();
   }
 
   private _logsRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return logs route
-    return new LogsRouteV1(router).createRoutes();
+    return new LogsRouteV1(router, this._authValidator).createRoutes();
   }
 
   private _listen (): void {
