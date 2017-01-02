@@ -10,12 +10,15 @@ import * as winston from "winston";
 import { Config } from "./config";
 // validator
 import { ApiValidator } from "./middleware/validator";
+//handler
+import { ValidationHandler } from "./routes/api/v1/validation/validation.handler";
+import { RecipeHandler } from "./routes/api/v1/recipes/recipe.handler";
 // server services
 import { UserService } from "./logic/services/user.service";
 import { RecipeService } from "./logic/services/recipe.service";
 // server routes
 import { UsersRouteV1 } from "./routes/api/v1/users/index";
-import { RecipeRouteV1 } from "./routes/api/v1/recipes/index";
+import { RecipeRouteV1 } from "./routes/api/v1/recipes/recipe.routes";
 import { LogsRouteV1 } from "./routes/api/v1/logs/index";
 
 
@@ -24,7 +27,7 @@ class Server {
   private _server: http.Server;
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
-  private _validator = new ApiValidator();
+  private _validationHandler = new ValidationHandler(new ApiValidator());
 
   constructor () {
     this._createApp();
@@ -117,8 +120,10 @@ class Server {
     let router: express.Router = express.Router();
     // init recipe service
     const recipeService: RecipeService = new RecipeService(this._db); 
+    // init handler
+    const recipeHandler: RecipeHandler = new RecipeHandler(recipeService);
     // init and return recipe route
-    return new RecipeRouteV1(recipeService, router, this._validator).createRoutes();
+    return new RecipeRouteV1(router, recipeHandler, this._validationHandler).createRoutes();
   }
   
   private _listen (): void {

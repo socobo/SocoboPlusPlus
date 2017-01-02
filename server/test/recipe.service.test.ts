@@ -44,7 +44,7 @@ describe("RecipeService", () => {
 		stubTx.returns(Promise.resolve("TEST"));
 
 		stub = sinon.stub(db, "one").returns(Promise.resolve("TEST"))
-		
+
 		let service = new RecipeService(db);
 
 		let recipe: Recipe = new Recipe()
@@ -52,7 +52,8 @@ describe("RecipeService", () => {
 		recipe.description = "TestDesc";
 		recipe.userId = 1;
 		recipe.imageUrl = "testUrl";
-		recipe.created = 9999
+		let date = new Date("9999")
+		recipe.created = date;
 
 		return service.save(recipe).then((value) => {
 			chai.expect(stub.calledWith(`insert into recipes(
@@ -62,7 +63,7 @@ describe("RecipeService", () => {
                              imageUrl,
                              created)
                            values($1, $2, $3, $4, $5)
-                           returning id`, ["Test", 1, "TestDesc", "testUrl", 9999])).to.be.true;
+                           returning id`, ["Test", 1, "TestDesc", "testUrl", date])).to.be.true;
 		})
 	})
 })
