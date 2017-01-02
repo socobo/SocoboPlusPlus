@@ -25,7 +25,7 @@ export class UsersRouteV1 {
       },
       (req: Request, res: Response, next: NextFunction) => {
 
-        this._userService.getAllUsers()
+        this._userService.getAll()
           .then((result: SocoboUser[]) => res.status(200).json(result))
           .catch((error: any) => {
             res.status(500).json(
