@@ -38,7 +38,7 @@ export class RecipeHandler{
 				recipe.id = result.id;
 				console.log("RECIPE", recipe);
 				
-				res.status(200).json(recipe)
+				res.status(201).json(recipe)
 		}).catch(error => {
 				res.status(500).json(new DbError('Error during adding the new recipe',
 				RecipeService.name, 'save()', error).forResponse());
