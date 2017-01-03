@@ -17,9 +17,9 @@ import { RecipeHandler } from "./routes/api/v1/recipes/recipe.handler";
 import { UserService } from "./logic/services/user.service";
 import { RecipeService } from "./logic/services/recipe.service";
 // server routes
-import { UsersRouteV1 } from "./routes/api/v1/users/index";
+import { UsersRouteV1 } from "./routes/api/v1/users/user.routes";
 import { RecipeRouteV1 } from "./routes/api/v1/recipes/recipe.routes";
-import { LogsRouteV1 } from "./routes/api/v1/logs/index";
+import { LogsRouteV1 } from "./routes/api/v1/logs/log.routes";
 
 
 class Server {
