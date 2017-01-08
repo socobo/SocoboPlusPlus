@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS socobo_test;
+CREATE DATABASE socobo_test;

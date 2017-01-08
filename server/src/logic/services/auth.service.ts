@@ -89,6 +89,8 @@ export class AuthService {
                   .then((result: any) => {
                     // set id to user object
                     user.id = result.id;
+                    // remove password before return user object
+                    delete user.password;
                     // return data
                     resolve(user);
                   })

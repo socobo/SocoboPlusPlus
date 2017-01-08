@@ -24,7 +24,9 @@
     "clean": "rm -r dist/",
     "clean:l": "rm -r logs/",
     "clean:a": "rm -r dist/ node_modules/ logs/",
-    "setup:db": "cd ./sql && ./automate-creation.sh",
+    "setup:db:p": "cd ./sql && ./automate-creation.sh",
+    "setup:db:d": "cd ./sql && ./automate-creation.sh -d",
+    "setup:db:t": "cd ./sql && ./automate-creation.sh -t",
     "open:b": "open http://localhost:8282"
   },
   "dependencies": {
