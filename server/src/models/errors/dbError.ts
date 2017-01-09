@@ -1,4 +1,4 @@
-import { LogService } from "./../logic/services/logging.service";
+import { LogService } from "./../../logic/services/logging.service";
 import { ApiError } from "./apiError";
 
 

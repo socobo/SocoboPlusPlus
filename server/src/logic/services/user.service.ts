@@ -1,11 +1,11 @@
 import { IDatabase } from "pg-promise";
-import { SocoboUser } from "./../../models/socoboUser";
+import { SocoboUser } from "./../../models/index";
 
 
 export class UserService {
   constructor (private _db: IDatabase<any>) {}
 
-  getAllUsers (): Promise<SocoboUser[]> {
+  getAll (): Promise<SocoboUser[]> {
     let query: string = `
         SELECT
             id, username, email, image,
@@ -41,8 +41,11 @@ export class UserService {
       VALUES
         ($1, $2, $3, $4, $5, $6, $7)
       RETURNING id`;
-    return this._db.one(query, [user.username, user.email, user.password, 
-                                user.image, user.hasTermsAccepted, 
-                                user.isAdmin, user.provider]);
+
+    return this._db.tx(() => {
+      return this._db.one(query, [user.username, user.email, user.password, 
+                                  user.image, user.hasTermsAccepted, 
+                                  user.isAdmin, user.provider]);
+    });
   }
 }

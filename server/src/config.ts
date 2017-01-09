@@ -7,4 +7,6 @@ export class Config {
   static PORT: number = 8282;
   static NODE_ENV: string = "development";
   static TOKEN_SECRET: string = "!*sdkfduf487387478478hhuhudf#28458//(/)##+993";
+  static TOKEN_EXPIRATION: string = "1d";
+  static TOKEN_HEADER: string = "x-access-token";
 }

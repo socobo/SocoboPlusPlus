@@ -1,42 +1,63 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { UserService } from "./../../../../logic/services/user.service";
-import { AuthUtils } from "./../../../../logic/utils/authUtils";
 import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
-import { ApiError, DbError, SocoboUser } from "./../../../../models/index";
+import { AuthValidator } from "./../../../../logic/middleware/authValidator";
+import { 
+  ApiError, DbError, SocoboUser 
+} from "./../../../../models/index";
 
 
 export class UsersRouteV1 {
-  constructor (private _userService: UserService, private _router: Router) {}
+
+  constructor (
+    private _userService: UserService, 
+    private _router: Router,
+    private _authValidator: AuthValidator
+  ) {}
 
   createRoutes (): Router {
     // get all users
-    this._router.get("/", AuthUtils.checkState, (req: Request, res: Response, next: NextFunction) => {
-      this._userService.getAllUsers()
-        .then((result: SocoboUser[]) => res.status(200).json(result))
-        .catch((error: any) => {
-          res.status(500).json(
-              new ApiError("Internal Server Error", UserService.name, 
-                            "getAllUsers()", error).forResponse());
-        });
+    this._router.get("/", 
+      (req: Request, res: Response, next: NextFunction) => {
+        this._authValidator.checkValidToken(req)
+          .then(() => next())
+          .catch((err: ApiError) => res.status(400).json(err));
+      },
+      (req: Request, res: Response, next: NextFunction) => {
+
+        this._userService.getAll()
+          .then((result: SocoboUser[]) => res.status(200).json(result))
+          .catch((error: any) => {
+            res.status(500).json(
+                new ApiError("Internal Server Error", UserService.name, 
+                              "getAllUsers()", error).forResponse());
+          });
     });
 
     // get user by id
-    this._router.get("/:id", AuthUtils.checkState, (req: Request, res: Response, next: NextFunction) => {
-      let id: number = req.params.id;
+    this._router.get("/:id", 
+      (req: Request, res: Response, next: NextFunction) => {
+        this._authValidator.checkValidToken(req)
+          .then(() => next())
+          .catch((err: ApiError) => res.status(400).json(err));
+      },
+      (req: Request, res: Response, next: NextFunction) => {
 
-      this._userService.getUserById(id)
-        .then((result: SocoboUser) => res.status(200).json(result))
-        .catch((error: any) => {
-          if (ErrorUtils.notFound(error)) {
-            res.status(404).json(
-                new DbError(`The requested user with the id: ${id} does not exist!`, 
-                              UserService.name, "getUserById(id)", error).forResponse());
-          } else {
-            res.status(500).json(
-                new ApiError(`Internal Server Error`, UserService.name, 
-                              "getUserById(id)", error).forResponse());
-          }
-        });
+        let id: number = req.params.id;
+
+        this._userService.getUserById(id)
+          .then((result: SocoboUser) => res.status(200).json(result))
+          .catch((error: any) => {
+            if (ErrorUtils.notFound(error)) {
+              res.status(404).json(
+                  new DbError(`The requested user with the id: ${id} does not exist!`, 
+                                UserService.name, "getUserById(id)", error).forResponse());
+            } else {
+              res.status(500).json(
+                  new ApiError(`Internal Server Error`, UserService.name, 
+                                "getUserById(id)", error).forResponse());
+            }
+          });
     });
 
     // return Router to use in server.ts

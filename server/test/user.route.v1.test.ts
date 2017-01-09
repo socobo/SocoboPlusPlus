@@ -5,7 +5,7 @@ import * as chai from "chai";
 import chaiHttp = require("chai-http");
 
 import Server from "./../src/server";
-import { SocoboUser } from "./../src/models/socobouser";
+import { SocoboUser } from "./../src/models/index";
 
 chai.use(chaiHttp);
 const expect = chai.expect;

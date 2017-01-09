@@ -4,106 +4,119 @@ import { CryptoUtils } from "./../utils/cryptoUtils";
 import { ErrorUtils } from "./../utils/errorUtils";
 import { Config } from "./../../config";
 import { 
-  ApiError, DbError, SocoboUser, LoginResult 
+  ApiError, DbError, SocoboUser, ComparePwResult, LoginResult
 } from "./../../models/index";
 
 
 export class AuthService {
-  constructor (private _userService: UserService) {}
+
+  constructor (
+    private _userService: UserService, 
+    private _cryptoUtils: CryptoUtils
+  ) {}
 
   login (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<LoginResult> {
     return new Promise((resolve, reject) => {
-      // create promise holder
-      let loginPromise: Promise<SocoboUser>;
-      // search for the user by provided email or username
-      if (isEmailLogin) {
-        loginPromise = this._userService.getUserByEmail(usernameOrEmail);
-      } else {
-        loginPromise = this._userService.getUserByUsername(usernameOrEmail);
-      }
-      // login the user or reject
-      loginPromise
-        .then((user: SocoboUser) => {
-          // check if the user was found
-          if (!user) {
-            return reject(new Error("Authentication failed. User not found."));
-          }
-          // check if the provided password match the users password
-          CryptoUtils.comparePasswords(password, user.password)
-            .then((passwordMatch: boolean) => {
-              // if not match reject JWT creation
-              if (!passwordMatch) {
-                return reject(new Error("Authentication failed. Wrong password."));
-              }
-              // generate the JWT
-              jwt.sign(user, Config.TOKEN_SECRET, {
-                expiresIn: "1d"
-              }, (err, token) => {
-                // check if some error occurs inside JWT creation
-                if (err) {
-                  return reject(new Error(`Authentication failed. 
-                                            Error message: ${err.message}.`));
-                }
-                // remove password before return user object
-                delete user.password;
-                // return data
-                resolve(new LoginResult(token, user));
-              });
-            })
-            // catch some compare errors
-            .catch((error: any) => reject(error));
-        })
-        // catch some database errors
+      this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
+        .then((user: SocoboUser) => this._validateUser(user))
+        .then((foundUser: SocoboUser) => this._cryptoUtils.comparePasswords(password, foundUser))
+        .then((compareResult: ComparePwResult) => this._validateComparePasswords(compareResult.isPasswordMatch, compareResult.user))
+        .then((user: SocoboUser) => resolve(this._createLoginResult(user)))
         .catch((error: any) => reject(error));
     });
   }
 
-  register (email: string, password: string): Promise<SocoboUser> {
+  private _getUserFromDatabase (isEmailLogin: boolean, usernameOrEmail: string): Promise<SocoboUser> {
+    if (isEmailLogin) {
+      return this._userService.getUserByEmail(usernameOrEmail); 
+    }
+    return this._userService.getUserByUsername(usernameOrEmail);
+  }
+
+  private _validateUser (user: SocoboUser): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
-      // search for the user by provided email
-      this._userService.getUserByEmail(email)
-        .then((user: SocoboUser) => {
-          // check if the user was found
-          if (user) {
-            return reject(new Error("Email is already registered. Please use another one."));
-          }
-        })
-        // catch some database errors
+      if (!user) {
+        return reject(new Error("Authentication failed. User not found."));
+      }
+      resolve(user);
+    });
+  }
+
+  private _validateComparePasswords (compareSuccessful: boolean, foundUser: SocoboUser): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      if (!compareSuccessful) {
+        return reject(new Error("Authentication failed. Wrong password."));
+      }
+      resolve(foundUser);
+    });
+  }
+
+  private _createLoginResult (foundUser: SocoboUser): Promise<LoginResult> {
+    return new Promise((resolve, reject) => {
+      jwt.sign(foundUser, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
+        expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION)
+      }, (err, token) => {
+        if (err) {
+          return reject(new Error(`Authentication failed. Error message: ${err.message}.`));
+        }
+        delete foundUser.password;
+        resolve(new LoginResult(token, foundUser));
+      });
+    });
+  }
+
+  register (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
+        .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
         .catch((error: any) => {
-          // check if no data was found
           if (ErrorUtils.notFound(error)) {
-            // hash password
-            CryptoUtils.hashPassword(password)
-              .then((hashedPassword: string) => {
-                // create new user object
-                let user: SocoboUser = new SocoboUser();
-                user.username = email.split("@")[0];
-                user.email = email;
-                user.password = hashedPassword;
-                user.image = "http://placehold.it/350x150";
-                user.hasTermsAccepted = true;
-                user.isAdmin = false;
-                user.provider = "email";
-                // save user into database
-                this._userService.save(user)
-                  .then((result: any) => {
-                    // set id to user object
-                    user.id = result.id;
-                    // remove password before return user object
-                    delete user.password;
-                    // return data
-                    resolve(user);
-                  })
-                  // catch some saving errors
-                  .catch((error: any) => reject(error))
-              })
-              // catch some hash errors
-              .catch((error: any) => reject(error));
+            this._cryptoUtils.hashPassword(password)
+              .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail))
+              .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
+              .catch((error: any) => reject(error))
           } else {
-            // return database errors
-            reject(error); 
+            reject(error);
           }
         });
+    });
+  }
+
+  private _checkIfUserIsAlreadyRegistered (user: SocoboUser): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (user) {
+        return reject(new Error("Email or Username is already registered. Please use another one."));
+      }
+      resolve();
+    });
+  }
+
+  private _createNewUser (hashedPassword: string, usernameOrEmail: string): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      if (hashedPassword.length <= 0) {
+        return reject(new Error("Hashed Password length is <= 0"));
+      }
+      let user: SocoboUser = new SocoboUser();
+      user.username = usernameOrEmail.includes("@") ? usernameOrEmail.split("@")[0] : usernameOrEmail;
+      user.email = usernameOrEmail.includes("@") ? usernameOrEmail : "";
+      user.password = hashedPassword;
+      user.image = "http://placehold.it/350x150";
+      user.hasTermsAccepted = true;
+      user.isAdmin = false;
+      user.provider = "email";
+      resolve(user);
+    });
+  }
+
+  private _returnSavedUser (user: SocoboUser): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      this._userService.save(user)
+        .then((result: any) => {
+          user.id = result.id;
+          delete user.password;
+          resolve(user);
+        })
+        .catch((error: any) => reject(error))
     });
   }
 }

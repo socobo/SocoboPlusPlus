@@ -7,6 +7,10 @@ import * as path from "path";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
+// server middleware
+import { AuthValidator } from "./logic/middleware/authValidator";
+// server utils
+import { CryptoUtils } from "./logic/utils/cryptoUtils";
 // server services
 import { AuthService } from "./logic/services/auth.service";
 import { UserService } from "./logic/services/user.service";
@@ -22,12 +26,18 @@ class Server {
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
 
+  private _authValidator: AuthValidator;
+
+  private _cryptoUtils: CryptoUtils;
+
   private _userService: UserService;
   private _authService: AuthService;
 
   constructor () {
     this._create();
     this._config();
+    this._middleware();
+    this._utils();
     this._services();
     this._routes();
     this._listen();
@@ -37,15 +47,15 @@ class Server {
    * CREATION
    */
   private _create (): void {
-    this.__createApp();
-    this.__createServer();
+    this._createApp();
+    this._createServer();
   }
 
-  private __createApp (): void {
+  private _createApp (): void {
     this._app = express();
   }
 
-  private __createServer (): void {
+  private _createServer (): void {
     this._server = http.createServer(this._app);
   }
 
@@ -53,12 +63,12 @@ class Server {
    * CONFIGURATION
    */
   private _config (): void {
-    this.__configLogging();
-    this.__configDatabase();
-    this.__configServer();
+    this._configLogging();
+    this._configDatabase();
+    this._configServer();
   }
 
-  private __configLogging (): void {
+  private _configLogging (): void {
     // check environment and setup winston
     switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
       case "test":
@@ -99,7 +109,7 @@ class Server {
     }
   }
 
-  private __configDatabase (): void {
+  private _configDatabase (): void {
     // init pgPromise
     const pgp: pgPromise.IMain = pgPromise();
     // declare connectionString
@@ -125,11 +135,25 @@ class Server {
     this._db = pgp(connectionString);
   }
 
-  private __configServer (): void {
+  private _configServer (): void {
     this._port = process.env.PORT || Config.PORT;
     this._app.use(cors());
     this._app.use(bodyParser.urlencoded({ extended: true }));
     this._app.use(bodyParser.json());
+  }
+
+  /**
+   * MIDDLEWARE
+   */
+  private _middleware (): void {
+    this._authValidator = new AuthValidator();
+  }
+
+  /**
+   * UTILS
+   */
+  private _utils (): void {
+    this._cryptoUtils = new CryptoUtils();
   }
 
   /**
@@ -139,48 +163,50 @@ class Server {
     // init user service
     this._userService = new UserService(this._db);
     // init auth service
-    this._authService = new AuthService(this._userService);
+    this._authService = new AuthService(this._userService, this._cryptoUtils);
   }
 
   /**
    * ROUTES
    */
   private _routes (): void {
-    this.__frontendRoutes();
-    this.__apiRoutes();
+    this._frontendRoutes();
+    this._apiRoutes();
   }
 
-  private __frontendRoutes (): void {
+  private _frontendRoutes (): void {
     // serve frontend from server/dist/public
     this._app.use(express.static(path.join(__dirname, "public")));
   }
 
-  private __apiRoutes (): void {
+  private _apiRoutes (): void {
     // set routes to paths
-    this._app.use("/api/v1/auth", this.___authRoute());
-    this._app.use("/api/v1/users", this.___usersRoute());
-    this._app.use("/api/v1/logs", this.___logsRoute());
+    this._app.use("/api/v1/auth", this._authRoute());
+    this._app.use("/api/v1/users", this._usersRoute());
+    this._app.use("/api/v1/logs", this._logsRoute());
   }
 
-  private ___authRoute (): express.Router {
+  private _authRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return auth route
-    return new AuthRouteV1(this._authService, router).createRoutes();
+    return new AuthRouteV1(this._authService, router, 
+                            this._authValidator).createRoutes();
   }
 
-  private ___usersRoute (): express.Router {
+  private _usersRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return users route
-    return new UsersRouteV1(this._userService, router).createRoutes();
+    return new UsersRouteV1(this._userService, router, 
+                              this._authValidator).createRoutes();
   }
 
-  private ___logsRoute (): express.Router {
+  private _logsRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return logs route
-    return new LogsRouteV1(router).createRoutes();
+    return new LogsRouteV1(router, this._authValidator).createRoutes();
   }
 
   private _listen (): void {
