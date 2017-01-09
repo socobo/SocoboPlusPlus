@@ -41,6 +41,7 @@ export class UserService {
       VALUES
         ($1, $2, $3, $4, $5, $6, $7)
       RETURNING id`;
+
     return this._db.tx(() => {
       return this._db.one(query, [user.username, user.email, user.password, 
                                   user.image, user.hasTermsAccepted, 

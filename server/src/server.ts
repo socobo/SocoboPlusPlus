@@ -69,33 +69,68 @@ class Server {
   }
 
   private _configLogging (): void {
-    // check environment
-    if ((process.env.NODE_ENV || Config.NODE_ENV) !== "test") {
-      winston.configure({
-        transports: [
-          new (winston.transports.File) ({
-            filename: `${process.cwd()}/logs/server.log.json`
-          }),
-          new (winston.transports.Console) ()
-        ]
-      });
-    } else {
-      winston.configure({
-        transports: [
-          new (winston.transports.File) ({
-            filename: `${process.cwd()}/logs/server.test.log.json`
-          }),
-          new (winston.transports.Console) ()
-        ]
-      });
+    // check environment and setup winston
+    switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
+      case "test":
+        winston.configure({
+          transports: [
+            new (winston.transports.File) ({
+              filename: "logs/server.test.log.json"
+            }),
+            new (winston.transports.Console) ()
+          ]
+        });
+        break;
+
+      case "development":
+        winston.configure({
+          transports: [
+            new (winston.transports.File) ({
+              filename: "logs/server.dev.log.json"
+            }),
+            new (winston.transports.Console) ()
+          ]
+        });
+        break;
+
+      case "production":
+        winston.configure({
+          transports: [
+            new (winston.transports.File) ({
+              filename: "logs/server.log.json"
+            }),
+            new (winston.transports.Console) ()
+          ]
+        });
+        break;
+      
+      default:
+        throw new Error("NODE_ENV is not known!");
     }
   }
 
   private _configDatabase (): void {
     // init pgPromise
     const pgp: pgPromise.IMain = pgPromise();
-    // setup connectionString
-    const connectionString: string = process.env.DATABASE_URL || Config.DATABASE_URL;
+    // declare connectionString
+    let connectionString: string;
+    // check environment and init connectionString
+    switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
+      case "test":
+        connectionString = process.env.DATABASE_URL_TEST || Config.DATABASE_URL_TEST;
+        break;
+
+      case "development":
+        connectionString = process.env.DATABASE_URL_DEV || Config.DATABASE_URL_DEV;
+        break;
+
+      case "production":
+        connectionString = process.env.DATABASE_URL || Config.DATABASE_URL;
+        break;
+
+      default:
+        throw new Error("NODE_ENV is not known!");
+    }
     // init db
     this._db = pgp(connectionString);
   }
