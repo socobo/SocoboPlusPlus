@@ -1,5 +1,5 @@
-import { LogService } from "./../../logic/services/logging.service";
-import { ApiError } from "./apiError";
+import { LogService } from "./../../logic/services/index";
+import { ApiError } from "./../index";
 
 
 export class DbError extends ApiError {

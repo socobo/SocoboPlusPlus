@@ -3,6 +3,7 @@ import { SocoboUser } from "./../../models/index";
 
 
 export class UserService {
+  
   constructor (private _db: IDatabase<any>) {}
 
   getAll (): Promise<SocoboUser[]> {
