@@ -3,14 +3,13 @@ process.env.NODE_ENV = "test";
 import * as mocha from "mocha";
 import * as chai from "chai"; 
 
-import { LogService } from "./../src/logic/services/logging.service";
-import { 
-  ApiError, DbError 
-} from "./../src/models/index";
-
 import * as winston from "winston";
 import * as sinon from "sinon";
 const SpyLogger = require("winston-spy"); 
+
+import { LogService } from "./../src/logic/services/log.service";
+import { ApiError, DbError } from "./../src/models/index";
+
 
 describe("LogService", () => {
   
@@ -28,8 +27,8 @@ describe("LogService", () => {
   });
 
   it("Error Log should contain newly created errors", () => {
-    let apiError: ApiError = new ApiError("Api Error Test Message", "LoggingServiceTest", "Method1()", new Error());
-    let dbError: DbError = new DbError("Db Error Test Message", "LoggingServiceTest", "Method2()", new Error());
+    let apiError: ApiError = new ApiError("Api Error Test Message", "LogServiceTest", "Method1()", new Error());
+    let dbError: DbError = new DbError("Db Error Test Message", "LogServiceTest", "Method2()", new Error());
 
     let errors: ApiError[] = LogService.getErrors();
 
@@ -38,15 +37,15 @@ describe("LogService", () => {
   });
 
   it("Error Log should printed to the console and write to log file", () => {
-    let apiError: ApiError = new ApiError("Api Error Test Message", "LoggingServiceTest", "Method1()", new Error());
+    let apiError: ApiError = new ApiError("Api Error Test Message", "LogServiceTest", "Method1()", new Error());
 
     chai.assert(spy.called);
     chai.assert(spy.calledWith("error", "Api Error Test Message"));
   });
 
   it("Logged errors should contain all needed properties", () => {
-    let apiError: ApiError = new ApiError("Api Error Test Message", "LoggingServiceTest", "Method1()", new Error());
-    let dbError: DbError = new DbError("Db Error Test Message", "LoggingServiceTest", "Method2()", new Error());
+    let apiError: ApiError = new ApiError("Api Error Test Message", "LogServiceTest", "Method1()", new Error());
+    let dbError: DbError = new DbError("Db Error Test Message", "LogServiceTest", "Method2()", new Error());
 
     let errors: ApiError[] = LogService.getErrors();
 

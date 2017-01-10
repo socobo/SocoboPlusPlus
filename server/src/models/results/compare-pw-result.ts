@@ -1,4 +1,4 @@
-import { SocoboUser } from "./../database/socobouser";
+import { SocoboUser } from "./../index";
 
 
 export class ComparePwResult {

@@ -1,13 +1,14 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { AuthService } from "./../../../../logic/services/auth.service";
-import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
-import { AuthValidator } from "./../../../../logic/middleware/authValidator";
+import { AuthService } from "./../../../../logic/services/index";
+import { ErrorUtils } from "./../../../../logic/utils/index";
+import { AuthValidator } from "./../../../../logic/middleware/index";
 import { 
-  ApiError, DbError, SocoboUser, LoginResult, ExtractRequestBodyResult
+  ApiError, DbError, SocoboUser, 
+  LoginResponse, ExtractRequestBodyResult
 } from "./../../../../models/index";
 
 
-export class AuthRouteV1 {
+export class AuthRoute {
 
   constructor (
     private _authService: AuthService, 
@@ -30,12 +31,12 @@ export class AuthRouteV1 {
                                           result.usernameOrEmail, 
                                           result.password); 
           })
-          .then((result: LoginResult) => res.status(200).json(result))
+          .then((result: LoginResponse) => res.status(200).json(result))
           .catch((error: any) => {
             if (ErrorUtils.notFound(error)) {
               res.status(404).json(
-                  new DbError(`The given Username or Email was not found - '${error.message}'!`, AuthService.name, 
-                                "login(email,password)", error).forResponse());
+                  new DbError(`The given Username or Email was not found - '${error.message}'!`, 
+                                AuthService.name, "login(email,password)", error).forResponse());
             } else {
               res.status(500).json(
                   new ApiError(`Internal Server Error: ${error.message}`, AuthService.name, 
@@ -77,7 +78,7 @@ export class AuthRouteV1 {
                         ,req.body.password));
       } catch (err) {
         reject(new ApiError("Something went wrong with Extracting Request Boby.",
-                              AuthRouteV1.name, "_extractRequestBody(req)", err));
+                              AuthRoute.name, "_extractRequestBody(req)", err));
       }
     });
   }

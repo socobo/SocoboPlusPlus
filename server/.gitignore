@@ -1,4 +1,4 @@
 npm-debug.log
-logs/
+logs/*.json
 node_modules/
 dist/
