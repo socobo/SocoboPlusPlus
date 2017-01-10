@@ -11,12 +11,19 @@ export class AuthValidator {
     return new Promise((resolve, reject) => {
       let hasEmailProperty: boolean = req.body.hasOwnProperty("email");
       let hasUsernameProperty: boolean = req.body.hasOwnProperty("username");
+      let hasPasswordProperty: boolean = req.body.hasOwnProperty("password");
 
       if (!hasEmailProperty && !hasUsernameProperty) {
-        let e = new ApiError(ERRORS.VAL_MISSING_PW_EMAIL);
+        let e = new ApiError(ERRORS.VAL_MISSING_USERNAME_EMAIL);
         e.source = AuthValidator.name;
         e.sourceMethod = "checkRequest(..)"
-        return reject(e.forResponse());
+        return reject(e);
+      }
+      if (!hasPasswordProperty){
+        let e = new ApiError(ERRORS.VAL_MISSING_PASSWORD);
+        e.source = AuthValidator.name;
+        e.sourceMethod = "checkRequest(..)"
+        return reject(e);
       }
 
       if (hasEmailProperty) {
@@ -43,19 +50,16 @@ export class AuthValidator {
                     (err: any, decoded: any)  => {
 
           if (err) {
-            let msg = "Failed to authenticate token.";
             let e;
             if (err.name === "TokenExpiredError") {
               e = new ApiError(ERRORS.AUTH_TOKEN_EXPIRED);
               e.source = AuthValidator.name;
               e.sourceMethod = "checkRequest(..)"
-              //msg = `${msg} Token expired at ${err.expiredAt}`;
             }
             if (err.name === "JsonWebTokenError") {
               e = new ApiError(ERRORS.AUTH_TOKEN_ERROR);
               e.source = AuthValidator.name;
               e.sourceMethod = "checkRequest(..)"
-              //msg = `${msg} Error message: ${err.message}`;
             }
             return reject(e)
           }

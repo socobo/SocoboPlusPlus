@@ -67,9 +67,14 @@ export class ERRORS {
 		messageKey: "auth.password.missmatch",
 		statusCode: 401
 	}
-	static VAL_MISSING_PW_EMAIL: ErrorType = {
+	static VAL_MISSING_USERNAME_EMAIL: ErrorType = {
 		code: "30001",
-		messageKey: "validation.missing.password.and.email",
+		messageKey: "validation.missing.username.and.email",
+		statusCode: 400
+	}
+	static VAL_MISSING_PASSWORD: ErrorType = {
+		code: "30001",
+		messageKey: "validation.missing.password",
 		statusCode: 400
 	}
 }
