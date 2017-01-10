@@ -1,5 +1,4 @@
-
-import { LogService } from "./../../logic/services/logging.service";
+import { LogService } from "./../../logic/services/index";
 import { ERROR_MESSAGES } from "../../error-messages"
 import { ERRORS } from "../../errors"
 import { ErrorType } from "./../index";

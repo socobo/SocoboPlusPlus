@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { LogService } from "./../../../../logic/services/logging.service";
-import { AuthValidator } from "./../../../../logic/middleware/authValidator";
+import { LogService } from "./../../../../logic/services/index";
+import { AuthValidator } from "./../../../../logic/middleware/index";
 import { ApiError } from "./../../../../models/index";
 
 
-export class LogsRouteV1 {
+export class LogRoute {
   constructor (
     private _router: Router,
     private _authValidator: AuthValidator

@@ -1,13 +1,14 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { AuthService } from "./../../../../logic/services/auth.service";
-import { ErrorUtils } from "./../../../../logic/utils/errorUtils";
-import { AuthValidator } from "./../../../../logic/middleware/authValidator";
+import { AuthService } from "./../../../../logic/services/index";
+import { ErrorUtils } from "./../../../../logic/utils/index";
+import { AuthValidator } from "./../../../../logic/middleware/index";
 import { 
-  ApiError, DbError, SocoboUser, LoginResult, ExtractRequestBodyResult
+  ApiError, DbError, SocoboUser, 
+  LoginResponse, ExtractRequestBodyResult
 } from "./../../../../models/index";
 import { ERRORS } from "./../../../../errors"
 
-export class AuthRouteV1 {
+export class AuthRoute {
 
   constructor (
     private _authService: AuthService, 
@@ -30,7 +31,7 @@ export class AuthRouteV1 {
                                           result.usernameOrEmail, 
                                           result.password); 
           })
-          .then((result: LoginResult) => res.status(200).json(result))
+          .then((result: LoginResponse) => res.status(200).json(result))
           .catch((error: ApiError) => {
             res.status(error.statusCode).json(error.forResponse())
           });
@@ -67,7 +68,7 @@ export class AuthRouteV1 {
                         ,req.body.password));
       } catch (err) {
         let e = new ApiError(ERRORS.REQUEST_BODY);
-        e.source = AuthRouteV1.name;
+        e.source = AuthRoute.name;
         e.sourceMethod = "_extractRequestBody(..)";
         e.error = err
         reject(e);

@@ -8,16 +8,17 @@ import * as winston from "winston";
 // server config
 import { Config } from "./config";
 // server middleware
-import { AuthValidator } from "./logic/middleware/authValidator";
+import { AuthValidator } from "./logic/middleware/index";
 // server utils
-import { CryptoUtils } from "./logic/utils/cryptoUtils";
+import { CryptoUtils } from "./logic/utils/index";
 // server services
-import { AuthService } from "./logic/services/auth.service";
-import { UserService } from "./logic/services/user.service";
+import { 
+  AuthService, UserService 
+} from "./logic/services/index";
 // server routes
-import { AuthRouteV1 } from "./routes/api/v1/auth/index";
-import { UsersRouteV1 } from "./routes/api/v1/users/index";
-import { LogsRouteV1 } from "./routes/api/v1/logs/index";
+import { 
+  AuthRoute, LogRoute, UsersRoute 
+} from "./routes/api/v1/index";
 
 
 class Server {
@@ -75,7 +76,7 @@ class Server {
         winston.configure({
           transports: [
             new (winston.transports.File) ({
-              filename: "logs/server.test.log.json"
+              filename: `${process.cwd()}/logs/server.test.log.json`
             }),
             new (winston.transports.Console) ()
           ]
@@ -86,7 +87,7 @@ class Server {
         winston.configure({
           transports: [
             new (winston.transports.File) ({
-              filename: "logs/server.dev.log.json"
+              filename: `${process.cwd()}/logs/server.dev.log.json`
             }),
             new (winston.transports.Console) ()
           ]
@@ -97,7 +98,7 @@ class Server {
         winston.configure({
           transports: [
             new (winston.transports.File) ({
-              filename: "logs/server.log.json"
+              filename: `${process.cwd()}/logs/server.log.json`
             }),
             new (winston.transports.Console) ()
           ]
@@ -190,7 +191,7 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return auth route
-    return new AuthRouteV1(this._authService, router, 
+    return new AuthRoute(this._authService, router, 
                             this._authValidator).createRoutes();
   }
 
@@ -198,7 +199,7 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return users route
-    return new UsersRouteV1(this._userService, router, 
+    return new UsersRoute(this._userService, router, 
                               this._authValidator).createRoutes();
   }
 
@@ -206,7 +207,7 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return logs route
-    return new LogsRouteV1(router, this._authValidator).createRoutes();
+    return new LogRoute(router, this._authValidator).createRoutes();
   }
 
   private _listen (): void {

@@ -1,10 +1,14 @@
 import * as jwt from "jsonwebtoken";
-import { UserService } from "./user.service";
-import { CryptoUtils } from "./../utils/cryptoUtils";
-import { ErrorUtils } from "./../utils/errorUtils";
 import { Config } from "./../../config";
+import {
+  UserService 
+} from "./index";
 import { 
-  ApiError, DbError, SocoboUser, ComparePwResult, LoginResult
+  CryptoUtils, ErrorUtils 
+} from "./../utils/index";
+import { 
+  ApiError, DbError, SocoboUser, 
+  ComparePwResult, LoginResponse
 } from "./../../models/index";
 import { ERRORS } from "./../../errors"
 export class AuthService {
@@ -14,7 +18,7 @@ export class AuthService {
     private _cryptoUtils: CryptoUtils
   ) {}
 
-  login (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<LoginResult> {
+  login (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
       this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
         .then((user: SocoboUser) => this._validateUser(user))
@@ -72,7 +76,7 @@ export class AuthService {
     });
   }
 
-  private _createLoginResult (foundUser: SocoboUser): Promise<LoginResult> {
+  private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
       jwt.sign(foundUser, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
         expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION)
@@ -85,7 +89,7 @@ export class AuthService {
           return reject(e);
         }
         delete foundUser.password;
-        resolve(new LoginResult(token, foundUser));
+        resolve(new LoginResponse(token, foundUser));
       });
     });
   }

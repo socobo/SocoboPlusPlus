@@ -1,6 +1,6 @@
-import { SocoboUser } from "./../database/socoboUser";
+import { SocoboUser } from "./../index";
 
-export class LoginResult {
+export class LoginResponse {
   private token: string;
   private user: SocoboUser;
 
