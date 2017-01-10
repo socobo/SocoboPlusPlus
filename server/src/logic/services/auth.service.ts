@@ -26,22 +26,18 @@ export class AuthService {
         .then((compareResult: ComparePwResult) => this._validateComparePasswords(compareResult.isPasswordMatch, compareResult.user))
         .then((user: SocoboUser) => resolve(this._createLoginResult(user)))
         .catch((error: any) => {
-          let e: DbError;
           if (ErrorUtils.notFound(error)) {
-            e = new DbError(ERRORS.USER_NOT_FOUND);
+            let e = new DbError(ERRORS.USER_NOT_FOUND);
             e.source = AuthService.name;
             e.sourceMethod = "login(..)"
             e.error = error
             e.query = error.query
             reject(e)
           } else {
-            e = new DbError(ERRORS.INTERNAL_SERVER_ERROR);
-            e.source = AuthService.name;
-            e.sourceMethod = "login(..)"
-            e.error = error
-            e.query = error.query
+            let e = ErrorUtils.handleError(error, AuthService.name, "login()")
+            reject(e)
           }
-          reject(e)});
+        });
     });
   }
 
@@ -69,7 +65,7 @@ export class AuthService {
       if (!compareSuccessful) {
         let e = new ApiError(ERRORS.AUTH_WRONG_PASSWORD);
         e.source = AuthService.name;
-        e.sourceMethod = "_validateComparePasswords(..)"
+        e.sourceMethod = "_validateComparePasswords(..)"        
         return reject(e);
       }
       resolve(foundUser);
