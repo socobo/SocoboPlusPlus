@@ -6,6 +6,7 @@ import {
   ApiError, DbError, SocoboUser 
 } from "./../../../../models/index";
 
+import { ERRORS } from "./../../../../errors";
 
 export class UsersRouteV1 {
 
@@ -28,9 +29,12 @@ export class UsersRouteV1 {
         this._userService.getAll()
           .then((result: SocoboUser[]) => res.status(200).json(result))
           .catch((error: any) => {
-            res.status(500).json(
-                new ApiError("Internal Server Error", UserService.name, 
-                              "getAllUsers()", error).forResponse());
+            let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+            e.source = UserService.name;
+            e.sourceMethod = "getAllUsers()";
+            e.error = error;
+            res.status(e.statusCode).json(
+              e.forResponse());
           });
     });
 
@@ -49,13 +53,20 @@ export class UsersRouteV1 {
           .then((result: SocoboUser) => res.status(200).json(result))
           .catch((error: any) => {
             if (ErrorUtils.notFound(error)) {
-              res.status(404).json(
-                  new DbError(`The requested user with the id: ${id} does not exist!`, 
-                                UserService.name, "getUserById(id)", error).forResponse());
+              let e = new DbError(ERRORS.USER_NOT_FOUND)
+              e.source = UserService.name;
+              e.sourceMethod = "getUserById(id)";
+              e.error = error;
+              e.query = error.query;
+              res.status(e.statusCode).json(
+                e.forResponse());
             } else {
-              res.status(500).json(
-                  new ApiError(`Internal Server Error`, UserService.name, 
-                                "getUserById(id)", error).forResponse());
+              let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+              e.source = UserService.name;
+              e.sourceMethod = "getUserById(id)";
+              e.error = error;
+              res.status(e.statusCode).json(
+                e.forResponse());
             }
           });
     });

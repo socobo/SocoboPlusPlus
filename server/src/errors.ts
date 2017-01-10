@@ -4,6 +4,7 @@ import { ErrorType } from "./models/error-type"
  * 0 => Internal server error
  * 1 => User errors
  * 2 => Auth errors
+ * 3 => Validation errors
  */
 export class ERRORS {
 	static INTERNAL_SERVER_ERROR: ErrorType = {
@@ -39,11 +40,36 @@ export class ERRORS {
 	static AUTH_WRONG_PASSWORD: ErrorType = {
 		code: "20001",
 		messageKey: "auth.wrong.password",
-		statusCode: 400
+		statusCode: 401
 	}
 	static AUTH_USED_PASSWORD_EMAIL: ErrorType = {
 		code: "20002",
 		messageKey: "auth.used.email.or.password",
+		statusCode: 400
+	}
+	static AUTH_TOKEN_EXPIRED: ErrorType = {
+		code: "20003",
+		messageKey: "auth.token.expired",
+		statusCode: 401
+	}
+	static AUTH_TOKEN_MISSING: ErrorType = {
+		code: "20004",
+		messageKey: "auth.token.missing",
+		statusCode: 401
+	}
+	static AUTH_TOKEN_ERROR: ErrorType = {
+		code: "20005",
+		messageKey: "auth.token.error",
+		statusCode: 401
+	}
+	static AUTH_PW_MISSMATCH: ErrorType = {
+		code: "20006",
+		messageKey: "auth.password.missmatch",
+		statusCode: 401
+	}
+	static VAL_MISSING_PW_EMAIL: ErrorType = {
+		code: "30001",
+		messageKey: "validation.missing.password.and.email",
 		statusCode: 400
 	}
 }

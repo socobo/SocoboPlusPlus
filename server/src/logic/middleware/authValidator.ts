@@ -2,6 +2,7 @@ import * as jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { ApiError } from "./../../models/index";
 import { Config } from "./../../config";
+import { ERRORS } from "./../../errors"
 
 
 export class AuthValidator {
@@ -12,8 +13,10 @@ export class AuthValidator {
       let hasUsernameProperty: boolean = req.body.hasOwnProperty("username");
 
       if (!hasEmailProperty && !hasUsernameProperty) {
-        return reject(new ApiError("Request Body doesn't have a Username or Email Address!", AuthValidator.name, 
-                                    "checkRequest(req)", new Error("No Username or Email provided!")).forResponse());
+        let e = new ApiError(ERRORS.VAL_MISSING_PW_EMAIL);
+        e.source = AuthValidator.name;
+        e.sourceMethod = "checkRequest(..)"
+        return reject(e.forResponse());
       }
 
       if (hasEmailProperty) {
@@ -41,20 +44,30 @@ export class AuthValidator {
 
           if (err) {
             let msg = "Failed to authenticate token.";
+            let e;
             if (err.name === "TokenExpiredError") {
-              msg = `${msg} Token expired at ${err.expiredAt}`;
+              e = new ApiError(ERRORS.AUTH_TOKEN_EXPIRED);
+              e.source = AuthValidator.name;
+              e.sourceMethod = "checkRequest(..)"
+              //msg = `${msg} Token expired at ${err.expiredAt}`;
             }
             if (err.name === "JsonWebTokenError") {
-              msg = `${msg} Error message: ${err.message}`;
+              e = new ApiError(ERRORS.AUTH_TOKEN_ERROR);
+              e.source = AuthValidator.name;
+              e.sourceMethod = "checkRequest(..)"
+              //msg = `${msg} Error message: ${err.message}`;
             }
-            return reject(new ApiError(msg, AuthValidator.name, "checkValidToken(req)", err));
+            return reject(e)
           }
           
           req.body.decoded = decoded;
           resolve();
         });
       } else {
-        return reject(new ApiError("No token provided.", AuthValidator.name, "checkValidToken(req)", new Error()));
+        let e = new ApiError(ERRORS.AUTH_TOKEN_MISSING);
+        e.source = AuthValidator.name;
+        e.sourceMethod = "checkRequest(..)"
+        return reject(e);
       }
     });
   }
