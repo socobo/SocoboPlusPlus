@@ -4,7 +4,7 @@ import { AuthValidator } from "./../../../../logic/middleware/index";
 import { ApiError } from "./../../../../models/index";
 
 
-export class LogsV1Route {
+export class LogRoute {
   constructor (
     private _router: Router,
     private _authValidator: AuthValidator

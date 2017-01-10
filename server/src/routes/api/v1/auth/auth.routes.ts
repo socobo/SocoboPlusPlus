@@ -8,7 +8,7 @@ import {
 } from "./../../../../models/index";
 
 
-export class AuthV1Route {
+export class AuthRoute {
 
   constructor (
     private _authService: AuthService, 
@@ -78,7 +78,7 @@ export class AuthV1Route {
                         ,req.body.password));
       } catch (err) {
         reject(new ApiError("Something went wrong with Extracting Request Boby.",
-                              AuthV1Route.name, "_extractRequestBody(req)", err));
+                              AuthRoute.name, "_extractRequestBody(req)", err));
       }
     });
   }

@@ -17,7 +17,7 @@ import {
 } from "./logic/services/index";
 // server routes
 import { 
-  AuthV1Route, LogsV1Route, UsersV1Route 
+  AuthRoute, LogRoute, UsersRoute 
 } from "./routes/api/v1/index";
 
 
@@ -191,7 +191,7 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return auth route
-    return new AuthV1Route(this._authService, router, 
+    return new AuthRoute(this._authService, router, 
                             this._authValidator).createRoutes();
   }
 
@@ -199,7 +199,7 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return users route
-    return new UsersV1Route(this._userService, router, 
+    return new UsersRoute(this._userService, router, 
                               this._authValidator).createRoutes();
   }
 
@@ -207,7 +207,7 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return logs route
-    return new LogsV1Route(router, this._authValidator).createRoutes();
+    return new LogRoute(router, this._authValidator).createRoutes();
   }
 
   private _listen (): void {

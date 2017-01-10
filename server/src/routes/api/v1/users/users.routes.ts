@@ -7,7 +7,7 @@ import {
 } from "./../../../../models/index";
 
 
-export class UsersV1Route {
+export class UsersRoute {
 
   constructor (
     private _userService: UserService, 

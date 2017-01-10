@@ -1,3 +1,3 @@
-export * from "./auth/auth-v1.route";
-export * from "./logs/logs-v1.route";
-export * from "./users/users-v1.route";
+export * from "./auth/auth.routes";
+export * from "./logs/log.routes";
+export * from "./users/users.routes";
