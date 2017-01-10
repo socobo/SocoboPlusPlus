@@ -1,4 +1,4 @@
-import { ErrorType } from "./models/error-type"
+import { ErrorType } from "./models/index"
 /**
  * First digit indicates the type:
  * 0 => Internal server error

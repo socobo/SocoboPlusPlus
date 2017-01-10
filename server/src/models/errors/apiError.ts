@@ -2,7 +2,7 @@
 import { LogService } from "./../../logic/services/logging.service";
 import { ERROR_MESSAGES } from "../../error-messages"
 import { ERRORS } from "../../errors"
-import { ErrorType } from "./../error-type"
+import { ErrorType } from "./../index";
 
 export class ApiError extends Error{
   timestamp: number;

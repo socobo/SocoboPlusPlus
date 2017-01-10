@@ -4,3 +4,4 @@ export * from "./database/socobouser";
 export * from "./results/loginResult";
 export * from "./results/comparePwResult";
 export * from "./results/extractRequestBodyResult";
+export * from "./errors/error-type"
