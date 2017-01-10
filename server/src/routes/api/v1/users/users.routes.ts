@@ -22,7 +22,7 @@ export class UsersRoute {
       (req: Request, res: Response, next: NextFunction) => {
         this._authValidator.checkValidToken(req)
           .then(() => next())
-          .catch((err: ApiError) => res.status(400).json(err));
+          .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
       },
       (req: Request, res: Response, next: NextFunction) => {
 
@@ -43,7 +43,7 @@ export class UsersRoute {
       (req: Request, res: Response, next: NextFunction) => {
         this._authValidator.checkValidToken(req)
           .then(() => next())
-          .catch((err: ApiError) => res.status(400).json(err));
+          .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
       },
       (req: Request, res: Response, next: NextFunction) => {
 

@@ -5,11 +5,10 @@ import { ErrorType } from "./../index";
 
 export class ApiError extends Error{
   timestamp: number;
-  name: string;
   statusCode: number;
   code: string;
-  stackTrace: string;
   message: string;
+  name = ApiError.name;
   source = "";
   sourceMethod = "";
   error = new Error();
@@ -28,12 +27,8 @@ export class ApiError extends Error{
     return ERROR_MESSAGES[messageKey];
   }
 
-  logError = (name: string, stack: string) => {
-    LogService.addError(this.message, this);
-  }
-
   forResponse = (): Object => {
-    this.logError(this.error.name, this.error.stack)
+    LogService.addError(this.message, this);
     return {
       "message": this.message,
       "source": this.source,

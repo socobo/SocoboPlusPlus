@@ -31,7 +31,6 @@ describe("LogService", () => {
   });
 
   it("Error Log should contain newly created errors", () => {
-<<<<<<< HEAD:server/test/logging.service.test.ts
 
     let apiError = new ApiError(ERRORS.INTERNAL_SERVER_ERROR);
     apiError.source = "LoggingServiceTest";
@@ -42,10 +41,6 @@ describe("LogService", () => {
     dbError.source = "LoggingServiceTest";
     dbError.sourceMethod = "Method1()";
     dbError.forResponse()
-=======
-    let apiError: ApiError = new ApiError("Api Error Test Message", "LogServiceTest", "Method1()", new Error());
-    let dbError: DbError = new DbError("Db Error Test Message", "LogServiceTest", "Method2()", new Error());
->>>>>>> 26-improve-naming-of-files-and-classes:server/test/log.service.test.ts
 
     let errors: ApiError[] = LogService.getErrors();
 
@@ -54,21 +49,16 @@ describe("LogService", () => {
   });
 
   it("Error Log should printed to the console and write to log file", () => {
-<<<<<<< HEAD:server/test/logging.service.test.ts
     let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR);
     e.source = "LoggingServiceTest";
     e.sourceMethod = "Method1()";
     e.forResponse()
-=======
-    let apiError: ApiError = new ApiError("Api Error Test Message", "LogServiceTest", "Method1()", new Error());
->>>>>>> 26-improve-naming-of-files-and-classes:server/test/log.service.test.ts
 
     chai.assert(spy.called);
     chai.assert(spy.calledWith("error", "Internal server error"));
   });
 
   it("Logged errors should contain all needed properties", () => {
-<<<<<<< HEAD:server/test/logging.service.test.ts
 
     let apiError = new ApiError(ERRORS.INTERNAL_SERVER_ERROR);
     apiError.source = "LoggingServiceTest";
@@ -79,10 +69,6 @@ describe("LogService", () => {
     dbError.source = "LoggingServiceTest";
     dbError.sourceMethod = "Method1()";
     dbError.forResponse()
-=======
-    let apiError: ApiError = new ApiError("Api Error Test Message", "LogServiceTest", "Method1()", new Error());
-    let dbError: DbError = new DbError("Db Error Test Message", "LogServiceTest", "Method2()", new Error());
->>>>>>> 26-improve-naming-of-files-and-classes:server/test/log.service.test.ts
 
     let errors: ApiError[] = LogService.getErrors();
 

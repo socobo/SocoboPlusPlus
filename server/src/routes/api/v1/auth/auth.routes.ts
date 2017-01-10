@@ -22,7 +22,7 @@ export class AuthRoute {
       (req: Request, res: Response, next: NextFunction) => {
         this._authValidator.checkRequest(req)
           .then(() => next())
-          .catch((err: ApiError) => res.status(400).json(err));
+          .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
       },
       (req: Request, res: Response, next: NextFunction) => {
         this._extractRequestBody(req)
@@ -32,7 +32,7 @@ export class AuthRoute {
                                           result.password); 
           })
           .then((result: LoginResponse) => res.status(200).json(result))
-          .catch((error: ApiError) => {
+          .catch((error: any) => {
             res.status(error.statusCode).json(error.forResponse())
           });
     });
@@ -42,7 +42,7 @@ export class AuthRoute {
       (req: Request, res: Response, next: NextFunction) => {
         this._authValidator.checkRequest(req)
           .then(() => next())
-          .catch((err: ApiError) => res.status(400).json(err));
+          .catch((error: any) => res.status(error.statusCode).json(error.forResponse()));
       },
       (req: Request, res: Response, next: NextFunction) => {
         this._extractRequestBody(req)
@@ -52,7 +52,7 @@ export class AuthRoute {
                                               result.password); 
           })
           .then((result: SocoboUser) => res.status(200).json(result))
-          .catch((error: ApiError) => {
+          .catch((error: any) => {
             res.status(error.statusCode).json(error.forResponse());
           });
     });
