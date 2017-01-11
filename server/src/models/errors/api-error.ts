@@ -17,14 +17,22 @@ export class ApiError extends Error{
     errorType: ErrorType
   ) {
     super();
-    this.message = this.resolveMessage(errorType.messageKey);
+    this.message = this.resolveMessage(
+      errorType.messageKey, 
+      errorType.messageArgs);
     this.statusCode = errorType.statusCode;
     this.code = errorType.code;
     this.timestamp = Date.now();
   }
 
-  public resolveMessage = (messageKey: string): string => {
-    return ERROR_MESSAGES[messageKey];
+  private resolveMessage = (messageKey: string, args: string[]): string => {
+    let msg: string = ERROR_MESSAGES[messageKey];
+    let argCounter = 0
+    for (let arg of args) {
+      msg = msg.replace(`{${argCounter}}`, arg);
+      argCounter ++;
+    }
+    return msg;
   }
 
   forResponse = (): Object => {

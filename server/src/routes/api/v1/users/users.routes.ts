@@ -53,7 +53,7 @@ export class UsersRoute {
           .then((result: SocoboUser) => res.status(200).json(result))
           .catch((error: any) => {
             if (ErrorUtils.notFound(error)) {
-              let e = new DbError(ERRORS.USER_NOT_FOUND)
+              let e = new DbError(ERRORS.USER_NOT_FOUND.withArgs(id.toString()))
               e.source = UserService.name;
               e.sourceMethod = "getUserById(id)";
               e.error = error;
