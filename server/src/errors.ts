@@ -1,7 +1,7 @@
 import { ErrorType } from "./models/index"
 /**
  * First digit indicates the type:
- * 0 => Internal server error
+ * 0 => Generic errors
  * 1 => User errors
  * 2 => Auth errors
  * 3 => Validation errors
@@ -10,21 +10,6 @@ export class ERRORS {
 	static INTERNAL_SERVER_ERROR: ErrorType = {
 		code: "00001",
 		messageKey: "internal.error",
-		statusCode: 500
-	}
-	static NO_HASHED_PASSWORD: ErrorType = {
-		code: "00002",
-		messageKey: "internal.no.password.hash",
-		statusCode: 500
-	}
-	static PW_HASH_GENERATION: ErrorType = {
-		code: "00003",
-		messageKey: "internal.error.create.salt",
-		statusCode: 500
-	}
-	static SALT_GENERATION: ErrorType = {
-		code: "00004",
-		messageKey: "internal.error.create.hash",
 		statusCode: 500
 	}
 	static REQUEST_BODY: ErrorType = {
@@ -66,6 +51,21 @@ export class ERRORS {
 		code: "20006",
 		messageKey: "auth.password.missmatch",
 		statusCode: 401
+	}
+	static AUTH_NO_HASHED_PASSWORD: ErrorType = {
+		code: "20007",
+		messageKey: "internal.no.password.hash",
+		statusCode: 500
+	}
+	static AUTH_PW_HASH_GENERATION: ErrorType = {
+		code: "20008",
+		messageKey: "internal.error.create.salt",
+		statusCode: 500
+	}
+	static AUTH_SALT_GENERATION: ErrorType = {
+		code: "20009",
+		messageKey: "internal.error.create.hash",
+		statusCode: 500
 	}
 	static VAL_MISSING_USERNAME_EMAIL: ErrorType = {
 		code: "30001",

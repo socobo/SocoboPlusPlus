@@ -122,7 +122,7 @@ export class AuthService {
   private _createNewUser (hashedPassword: string, usernameOrEmail: string): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       if (hashedPassword.length <= 0) {
-        let e = new ApiError(ERRORS.NO_HASHED_PASSWORD);
+        let e = new ApiError(ERRORS.AUTH_NO_HASHED_PASSWORD);
         e.source = AuthService.name;
         e.sourceMethod = "_createNewUser(..)";
         return reject(e);

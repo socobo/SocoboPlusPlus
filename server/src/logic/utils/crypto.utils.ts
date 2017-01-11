@@ -11,7 +11,7 @@ export class CryptoUtils {
     return new Promise((resolve, reject) => {
       bcrypt.genSalt(10, (err, salt) => {
         if (err) {
-          let e = new ApiError(ERRORS.SALT_GENERATION);
+          let e = new ApiError(ERRORS.AUTH_SALT_GENERATION);
           e.source = CryptoUtils.name;
           e.sourceMethod = "hashPassword(..)";
           e.error = err
@@ -19,7 +19,7 @@ export class CryptoUtils {
         }
         bcrypt.hash(userPassword, salt, (err, hash) => {
             if (err) {
-              let e = new ApiError(ERRORS.PW_HASH_GENERATION);
+              let e = new ApiError(ERRORS.AUTH_PW_HASH_GENERATION);
               e.source = CryptoUtils.name;
               e.sourceMethod = "hashPassword(..)";
               e.error = err
