@@ -66,10 +66,10 @@ export class AuthRoute {
                         (req.body.isEmailLogin ? req.body.email : req.body.username)
                         ,req.body.password));
       } catch (err) {
-        let e = new ApiError(ERRORS.REQUEST_BODY);
-        e.source = AuthRoute.name;
-        e.sourceMethod = "_extractRequestBody(..)";
-        e.error = err
+        let e = new ApiError(ERRORS.REQUEST_BODY)
+          .addSource(AuthRoute.name)
+          .addSourceMethod("_extractRequestBody(..)")
+          .addCause(err);
         reject(e);
       }
     });

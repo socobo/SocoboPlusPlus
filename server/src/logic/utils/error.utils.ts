@@ -15,10 +15,10 @@ export class ErrorUtils {
       return error;
     }
     // Use an ApiError as wrapper for a generic error
-    let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR);
-    e.source = source;
-    e.sourceMethod = sourceMethod;
-    e.error = error;
+    let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+      .addSource(source)
+      .addSourceMethod(sourceMethod)
+      .addCause(error);
     return e;
   }
 }

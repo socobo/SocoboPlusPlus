@@ -11,18 +11,18 @@ export class CryptoUtils {
     return new Promise((resolve, reject) => {
       bcrypt.genSalt(10, (err, salt) => {
         if (err) {
-          let e = new ApiError(ERRORS.AUTH_SALT_GENERATION);
-          e.source = CryptoUtils.name;
-          e.sourceMethod = "hashPassword(..)";
-          e.error = err
+          let e = new ApiError(ERRORS.AUTH_SALT_GENERATION)
+            .addSource(CryptoUtils.name)
+            .addSourceMethod("hashPassword(..)")
+            .addCause(err);
           return reject(e);
         }
         bcrypt.hash(userPassword, salt, (err, hash) => {
             if (err) {
-              let e = new ApiError(ERRORS.AUTH_PW_HASH_GENERATION);
-              e.source = CryptoUtils.name;
-              e.sourceMethod = "hashPassword(..)";
-              e.error = err
+              let e = new ApiError(ERRORS.AUTH_PW_HASH_GENERATION)
+                .addSource(CryptoUtils.name)
+                .addSourceMethod("hashPassword(..)")
+                .addCause(err);
               return reject(e);
             }
             resolve(hash);
@@ -35,10 +35,10 @@ export class CryptoUtils {
     return new Promise((resolve, reject) => {
       bcrypt.compare(firstPw, user.password, (err, isMatch) => {
         if (err) {
-          let e = new ApiError(ERRORS.AUTH_PW_MISSMATCH);
-          e.source = CryptoUtils.name;
-          e.sourceMethod = "comparePasswords(..)";
-          e.error = err
+          let e = new ApiError(ERRORS.AUTH_PW_MISSMATCH)
+            .addSource(CryptoUtils.name)
+            .addSourceMethod("comparePasswords(..)")
+            .addCause(err);
           return reject(e);
         }
         resolve(new ComparePwResult(isMatch, user));

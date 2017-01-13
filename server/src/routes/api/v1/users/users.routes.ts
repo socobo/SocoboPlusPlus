@@ -27,10 +27,11 @@ export class UsersRoute {
         this._userService.getAll()
           .then((result: SocoboUser[]) => res.status(200).json(result))
           .catch((error: any) => {
-            let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
-            e.source = UserService.name;
-            e.sourceMethod = "getAllUsers()";
-            e.error = error;
+            let e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
+              .addSource(UserService.name)
+              .addSourceMethod("getAllUsers(..)")
+              .addCause(error)
+              .addQuery(error.query);
             res.status(e.statusCode).json(
               e.forResponse());
           });
@@ -56,17 +57,14 @@ export class UsersRoute {
                 .addSourceMethod("getUserById(id)")
                 .addCause(error)
                 .addQuery(error.query);
-              // e.source = UserService.name;
-              // e.sourceMethod = "getUserById(id)";
-              // e.error = error;
-              // e.query = error.query;
               res.status(e.statusCode).json(
                 e.forResponse());
             } else {
-              let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
-              e.source = UserService.name;
-              e.sourceMethod = "getUserById(id)";
-              e.error = error;
+              let e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
+                .addSource(UserService.name)
+                .addSourceMethod("getUserById(id)")
+                .addCause(error)
+                .addQuery(error.query);
               res.status(e.statusCode).json(
                 e.forResponse());
             }

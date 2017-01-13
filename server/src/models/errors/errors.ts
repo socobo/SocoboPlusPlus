@@ -67,6 +67,11 @@ export class ERRORS {
 		"internal.error.create.hash",
 		500
 	);
+	static AUTH_NOT_REGISTERED = new ErrorType(
+		"20010",
+		"auth.user.not.registerd",
+		401
+	);
 	static VAL_MISSING_USERNAME_EMAIL = new ErrorType(
 		"30001",
 		"validation.missing.username.and.email",

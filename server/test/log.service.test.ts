@@ -48,9 +48,9 @@ describe("LogService", () => {
   });
 
   it("Error Log should printed to the console and write to log file", () => {
-    let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR);
-    e.source = "LoggingServiceTest";
-    e.sourceMethod = "Method1()";
+    let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+      .addSource("LoggingServiceTest")
+      .addSourceMethod("Method1()");
     e.forResponse()
 
     chai.assert(spy.called);
@@ -59,14 +59,14 @@ describe("LogService", () => {
 
   it("Logged errors should contain all needed properties", () => {
 
-    let apiError = new ApiError(ERRORS.INTERNAL_SERVER_ERROR);
-    apiError.source = "LoggingServiceTest";
-    apiError.sourceMethod = "Method1()";
+    let apiError = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+      .addSource("LoggingServiceTest")
+      .addSourceMethod("Method1()");
     apiError.forResponse()
 
-    let dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR);
-    dbError.source = "LoggingServiceTest";
-    dbError.sourceMethod = "Method1()";
+    let dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
+      .addSource("LoggingServiceTest")
+      .addSourceMethod("Method1()");
     dbError.forResponse()
 
     let errors: ApiError[] = LogService.getErrors();
