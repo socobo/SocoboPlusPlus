@@ -4,11 +4,12 @@ import { ERRORS } from "../index"
 import { ErrorType } from "./../index";
 
 export class ApiError extends Error{
+  message: string;
+  name = ApiError.name;
+
   timestamp: number;
   statusCode: number;
   code: string;
-  message: string;
-  name = ApiError.name;
   source = "";
   sourceMethod = "";
   error = new Error();
@@ -42,5 +43,21 @@ export class ApiError extends Error{
       "source": this.source,
       "method": this.sourceMethod
     }
+  }
+
+  addSource = (source: string): this => {
+    this.source = source;
+    return this;
+  }
+
+  addSourceMethod = (sourceMethod: string): this => {
+    this.sourceMethod = sourceMethod;
+    return this;
+  }
+
+  addCause = (error: Error): this => {
+    this.error = error;
+    this.name = error.name
+    return this;
   }
 }

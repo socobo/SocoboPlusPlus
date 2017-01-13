@@ -12,4 +12,9 @@ export class DbError extends ApiError {
   ) {
     super(errorType);
   }
+
+  addQuery = (query: string): DbError => {
+    this.query = query;
+    return this;
+  }
 }

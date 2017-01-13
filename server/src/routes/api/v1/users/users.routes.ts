@@ -52,10 +52,14 @@ export class UsersRoute {
           .catch((error: any) => {
             if (ErrorUtils.notFound(error)) {
               let e = new DbError(ERRORS.USER_NOT_FOUND.withArgs(id.toString()))
-              e.source = UserService.name;
-              e.sourceMethod = "getUserById(id)";
-              e.error = error;
-              e.query = error.query;
+                .addSource(UserService.name)
+                .addSourceMethod("getUserById(id)")
+                .addCause(error)
+                .addQuery(error.query);
+              // e.source = UserService.name;
+              // e.sourceMethod = "getUserById(id)";
+              // e.error = error;
+              // e.query = error.query;
               res.status(e.statusCode).json(
                 e.forResponse());
             } else {
