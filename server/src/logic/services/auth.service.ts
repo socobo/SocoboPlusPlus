@@ -8,9 +8,8 @@ import {
 } from "./../utils/index";
 import { 
   ApiError, DbError, SocoboUser, 
-  ComparePwResult, LoginResponse
+  ComparePwResult, LoginResponse, ERRORS
 } from "./../../models/index";
-import { ERRORS } from "./../../errors"
 export class AuthService {
 
   constructor (

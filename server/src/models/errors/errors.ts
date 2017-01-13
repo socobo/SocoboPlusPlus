@@ -1,4 +1,4 @@
-import { ErrorType } from "./models/index"
+import { ErrorType } from "./../index"
 /**
  * First digit indicates the type:
  * 0 => Generic errors

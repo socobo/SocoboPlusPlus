@@ -5,9 +5,8 @@ import * as chai from "chai";
 
 import { LogService } from "./../src/logic/services/log.service";
 import { 
-  ApiError, DbError 
+  ApiError, DbError, ERRORS
 } from "./../src/models/index";
-import { ERRORS } from "./../src/errors"
 
 import * as winston from "winston";
 import * as sinon from "sinon";

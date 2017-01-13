@@ -3,10 +3,8 @@ import { UserService } from "./../../../../logic/services/user.service";
 import { ErrorUtils } from "./../../../../logic/utils/index";
 import { AuthValidator } from "./../../../../logic/middleware/index";
 import { 
-  ApiError, DbError, SocoboUser 
+  ApiError, DbError, SocoboUser, ERRORS 
 } from "./../../../../models/index";
-
-import { ERRORS } from "./../../../../errors";
 
 export class UsersRoute {
 

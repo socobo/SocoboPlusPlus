@@ -4,9 +4,8 @@ import { ErrorUtils } from "./../../../../logic/utils/index";
 import { AuthValidator } from "./../../../../logic/middleware/index";
 import { 
   ApiError, DbError, SocoboUser, 
-  LoginResponse, ExtractRequestBodyResult
+  LoginResponse, ExtractRequestBodyResult, ERRORS
 } from "./../../../../models/index";
-import { ERRORS } from "./../../../../errors"
 
 export class AuthRoute {
 

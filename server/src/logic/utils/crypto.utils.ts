@@ -2,7 +2,7 @@ import * as bcrypt from "bcrypt";
 import { 
   ApiError, ComparePwResult, SocoboUser 
 } from "./../../models/index";
-import { ERRORS } from "./../../errors"
+import { ERRORS } from "./../../models/index"
 
 
 export class CryptoUtils {

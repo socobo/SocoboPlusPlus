@@ -1,6 +1,6 @@
 import { errors } from "pg-promise";
 import { ApiError } from "./../../models/index"
-import { ERRORS } from "./../../errors"
+import { ERRORS } from "./../../models/index"
 
 let errorCode = errors.queryResultErrorCode;
 

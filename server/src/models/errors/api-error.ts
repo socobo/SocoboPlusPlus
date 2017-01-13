@@ -1,6 +1,6 @@
 import { LogService } from "./../../logic/services/index";
-import { ERROR_MESSAGES } from "../../error-messages"
-import { ERRORS } from "../../errors"
+import { ERROR_MESSAGES } from "../../i18n/error-messages"
+import { ERRORS } from "../index"
 import { ErrorType } from "./../index";
 
 export class ApiError extends Error{
