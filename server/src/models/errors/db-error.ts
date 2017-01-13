@@ -3,6 +3,7 @@ import { LogService } from "./../../logic/services/index";
 
 
 export class DbError extends ApiError {
+  name = DbError.name;
 
   query: string = "";
   error = new Error()

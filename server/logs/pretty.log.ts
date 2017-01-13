@@ -1,5 +1,0 @@
-imp
-
-(function(){
-
-})
