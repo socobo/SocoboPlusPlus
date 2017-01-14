@@ -144,7 +144,6 @@ export class AuthService {
       this._userService.save(user)
         .then((result: any) => {
           user.id = result.id;
-          user.username = `${user.username}${10000 + user.id}`
           delete user.password;
           resolve(user);
         })
