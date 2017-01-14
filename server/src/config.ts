@@ -9,4 +9,5 @@ export class Config {
   static TOKEN_SECRET: string = "!*sdkfduf487387478478hhuhudf#28458//(/)##+993";
   static TOKEN_EXPIRATION: string = "1d";
   static TOKEN_HEADER: string = "x-access-token";
+  static DEFAULT_USER_IMAGE: string = "http://placehold.it/350x150";
 }
