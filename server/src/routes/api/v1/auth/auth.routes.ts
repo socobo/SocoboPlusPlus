@@ -50,7 +50,7 @@ export class AuthRoute {
                                               result.usernameOrEmail, 
                                               result.password); 
           })
-          .then((result: SocoboUser) => res.status(200).json(result))
+          .then((result: SocoboUser) => res.status(201).json(result))
           .catch((error: any) => {
             res.status(error.statusCode).json(error.forResponse());
           });
