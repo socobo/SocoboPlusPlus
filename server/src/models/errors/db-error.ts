@@ -1,16 +1,21 @@
+import { ApiError, ErrorType } from "./../index";
 import { LogService } from "./../../logic/services/index";
-import { ApiError } from "./../index";
 
 
 export class DbError extends ApiError {
+  name = DbError.name;
 
-  private query: string;
+  query: string = "";
+  error = new Error()
 
   constructor (
-    message: string, source: string, 
-    sourceMethod: string, error: any
+    errorType: ErrorType
   ) {
-    super(message, source, sourceMethod, error);
-    this.query = error.query;
+    super(errorType);
+  }
+
+  addQuery = (query: string): DbError => {
+    this.query = query;
+    return this;
   }
 }

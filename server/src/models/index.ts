@@ -1,5 +1,7 @@
+export * from "./errors/error-type";
 export * from "./errors/api-error";
 export * from "./errors/db-error";
+export * from "./errors/errors";
 export * from "./database/socobo-user";
 export * from "./responses/login-response";
 export * from "./results/compare-pw-result";

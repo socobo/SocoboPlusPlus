@@ -4,9 +4,8 @@ import { ErrorUtils } from "./../../../../logic/utils/index";
 import { AuthValidator } from "./../../../../logic/middleware/index";
 import { 
   ApiError, DbError, SocoboUser, 
-  LoginResponse, ExtractRequestBodyResult
+  LoginResponse, ExtractRequestBodyResult, ERRORS
 } from "./../../../../models/index";
-
 
 export class AuthRoute {
 
@@ -22,7 +21,7 @@ export class AuthRoute {
       (req: Request, res: Response, next: NextFunction) => {
         this._authValidator.checkRequest(req)
           .then(() => next())
-          .catch((err: ApiError) => res.status(400).json(err));
+          .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
       },
       (req: Request, res: Response, next: NextFunction) => {
         this._extractRequestBody(req)
@@ -33,15 +32,7 @@ export class AuthRoute {
           })
           .then((result: LoginResponse) => res.status(200).json(result))
           .catch((error: any) => {
-            if (ErrorUtils.notFound(error)) {
-              res.status(404).json(
-                  new DbError(`The given Username or Email was not found - '${error.message}'!`, 
-                                AuthService.name, "login(email,password)", error).forResponse());
-            } else {
-              res.status(500).json(
-                  new ApiError(`Internal Server Error: ${error.message}`, AuthService.name, 
-                                "login(email,password)", error).forResponse());
-            }
+            res.status(error.statusCode).json(error.forResponse())
           });
     });
 
@@ -50,7 +41,7 @@ export class AuthRoute {
       (req: Request, res: Response, next: NextFunction) => {
         this._authValidator.checkRequest(req)
           .then(() => next())
-          .catch((err: ApiError) => res.status(400).json(err));
+          .catch((error: any) => res.status(error.statusCode).json(error.forResponse()));
       },
       (req: Request, res: Response, next: NextFunction) => {
         this._extractRequestBody(req)
@@ -61,9 +52,7 @@ export class AuthRoute {
           })
           .then((result: SocoboUser) => res.status(200).json(result))
           .catch((error: any) => {
-            res.status(500).json(
-                new ApiError(`Internal Server Error: ${error.message}`, AuthService.name, 
-                              "register(email,password)", error).forResponse());
+            res.status(error.statusCode).json(error.forResponse());
           });
     });
 
@@ -77,8 +66,11 @@ export class AuthRoute {
                         (req.body.isEmailLogin ? req.body.email : req.body.username)
                         ,req.body.password));
       } catch (err) {
-        reject(new ApiError("Something went wrong with Extracting Request Boby.",
-                              AuthRoute.name, "_extractRequestBody(req)", err));
+        let e = new ApiError(ERRORS.REQUEST_BODY)
+          .addSource(AuthRoute.name)
+          .addSourceMethod("_extractRequestBody(..)")
+          .addCause(err);
+        reject(e);
       }
     });
   }

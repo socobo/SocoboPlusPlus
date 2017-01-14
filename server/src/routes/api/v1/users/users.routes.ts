@@ -3,9 +3,8 @@ import { UserService } from "./../../../../logic/services/user.service";
 import { ErrorUtils } from "./../../../../logic/utils/index";
 import { AuthValidator } from "./../../../../logic/middleware/index";
 import { 
-  ApiError, DbError, SocoboUser 
+  ApiError, DbError, SocoboUser, ERRORS 
 } from "./../../../../models/index";
-
 
 export class UsersRoute {
 
@@ -21,16 +20,20 @@ export class UsersRoute {
       (req: Request, res: Response, next: NextFunction) => {
         this._authValidator.checkValidToken(req)
           .then(() => next())
-          .catch((err: ApiError) => res.status(400).json(err));
+          .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
       },
       (req: Request, res: Response, next: NextFunction) => {
 
         this._userService.getAll()
           .then((result: SocoboUser[]) => res.status(200).json(result))
           .catch((error: any) => {
-            res.status(500).json(
-                new ApiError("Internal Server Error", UserService.name, 
-                              "getAllUsers()", error).forResponse());
+            let e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
+              .addSource(UserService.name)
+              .addSourceMethod("getAllUsers(..)")
+              .addCause(error)
+              .addQuery(error.query);
+            res.status(e.statusCode).json(
+              e.forResponse());
           });
     });
 
@@ -39,7 +42,7 @@ export class UsersRoute {
       (req: Request, res: Response, next: NextFunction) => {
         this._authValidator.checkValidToken(req)
           .then(() => next())
-          .catch((err: ApiError) => res.status(400).json(err));
+          .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
       },
       (req: Request, res: Response, next: NextFunction) => {
 
@@ -49,13 +52,21 @@ export class UsersRoute {
           .then((result: SocoboUser) => res.status(200).json(result))
           .catch((error: any) => {
             if (ErrorUtils.notFound(error)) {
-              res.status(404).json(
-                  new DbError(`The requested user with the id: ${id} does not exist!`, 
-                                UserService.name, "getUserById(id)", error).forResponse());
+              let e = new DbError(ERRORS.USER_NOT_FOUND.withArgs(id.toString()))
+                .addSource(UserService.name)
+                .addSourceMethod("getUserById(id)")
+                .addCause(error)
+                .addQuery(error.query);
+              res.status(e.statusCode).json(
+                e.forResponse());
             } else {
-              res.status(500).json(
-                  new ApiError(`Internal Server Error`, UserService.name, 
-                                "getUserById(id)", error).forResponse());
+              let e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
+                .addSource(UserService.name)
+                .addSourceMethod("getUserById(id)")
+                .addCause(error)
+                .addQuery(error.query);
+              res.status(e.statusCode).json(
+                e.forResponse());
             }
           });
     });

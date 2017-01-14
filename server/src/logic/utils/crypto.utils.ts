@@ -2,6 +2,7 @@ import * as bcrypt from "bcrypt";
 import { 
   ApiError, ComparePwResult, SocoboUser 
 } from "./../../models/index";
+import { ERRORS } from "./../../models/index"
 
 
 export class CryptoUtils {
@@ -10,15 +11,19 @@ export class CryptoUtils {
     return new Promise((resolve, reject) => {
       bcrypt.genSalt(10, (err, salt) => {
         if (err) {
-          return reject(new ApiError("Error by Generating the Salt value.", 
-                                      CryptoUtils.name, 
-                                      "hashPassword(userPassword)", err));
+          let e = new ApiError(ERRORS.AUTH_SALT_GENERATION)
+            .addSource(CryptoUtils.name)
+            .addSourceMethod("hashPassword(..)")
+            .addCause(err);
+          return reject(e);
         }
         bcrypt.hash(userPassword, salt, (err, hash) => {
             if (err) {
-              return reject(new ApiError("Error by Generating the hashed Password.", 
-                                          CryptoUtils.name, 
-                                          "hashPassword(userPassword)", err));
+              let e = new ApiError(ERRORS.AUTH_PW_HASH_GENERATION)
+                .addSource(CryptoUtils.name)
+                .addSourceMethod("hashPassword(..)")
+                .addCause(err);
+              return reject(e);
             }
             resolve(hash);
         });
@@ -30,8 +35,11 @@ export class CryptoUtils {
     return new Promise((resolve, reject) => {
       bcrypt.compare(firstPw, user.password, (err, isMatch) => {
         if (err) {
-          return reject(new ApiError("Error by comparing Passwords.", CryptoUtils.name, 
-                                      "comparePasswords(firstPw,secondPw)", err));
+          let e = new ApiError(ERRORS.AUTH_PW_MISSMATCH)
+            .addSource(CryptoUtils.name)
+            .addSourceMethod("comparePasswords(..)")
+            .addCause(err);
+          return reject(e);
         }
         resolve(new ComparePwResult(isMatch, user));
       });

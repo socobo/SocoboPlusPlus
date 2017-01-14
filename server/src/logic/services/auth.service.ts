@@ -8,10 +8,8 @@ import {
 } from "./../utils/index";
 import { 
   ApiError, DbError, SocoboUser, 
-  ComparePwResult, LoginResponse
+  ComparePwResult, LoginResponse, ERRORS
 } from "./../../models/index";
-
-
 export class AuthService {
 
   constructor (
@@ -26,7 +24,19 @@ export class AuthService {
         .then((foundUser: SocoboUser) => this._cryptoUtils.comparePasswords(password, foundUser))
         .then((compareResult: ComparePwResult) => this._validateComparePasswords(compareResult.isPasswordMatch, compareResult.user))
         .then((user: SocoboUser) => resolve(this._createLoginResult(user)))
-        .catch((error: any) => reject(error));
+        .catch((error: any) => {
+          if (ErrorUtils.notFound(error)) {
+            let e = new DbError(ERRORS.AUTH_NOT_REGISTERED.withArgs(usernameOrEmail))
+              .addSource(AuthService.name)
+              .addSourceMethod("login(..)")
+              .addCause(error)
+              .addQuery(error.query);
+            reject(e)
+          } else {
+            let e = ErrorUtils.handleError(error, AuthService.name, "login()")
+            reject(e)
+          }
+        });
     });
   }
 
@@ -40,7 +50,10 @@ export class AuthService {
   private _validateUser (user: SocoboUser): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       if (!user) {
-        return reject(new Error("Authentication failed. User not found."));
+        let e = new ApiError(ERRORS.USER_NOT_FOUND.withArgs("provided email or username"))
+          .addSource(AuthService.name)
+          .addSourceMethod("_validateUser(..)");
+        return reject(e);
       }
       resolve(user);
     });
@@ -49,7 +62,10 @@ export class AuthService {
   private _validateComparePasswords (compareSuccessful: boolean, foundUser: SocoboUser): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       if (!compareSuccessful) {
-        return reject(new Error("Authentication failed. Wrong password."));
+        let e = new ApiError(ERRORS.AUTH_WRONG_PASSWORD)
+          .addSource(AuthService.name)
+          .addSourceMethod("_validateComparePasswords(..)");       
+        return reject(e);
       }
       resolve(foundUser);
     });
@@ -61,7 +77,11 @@ export class AuthService {
         expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION)
       }, (err, token) => {
         if (err) {
-          return reject(new Error(`Authentication failed. Error message: ${err.message}.`));
+          let e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+            .addSource(AuthService.name)
+            .addSourceMethod("_createLoginResult(..)")
+            .addCause(err);
+          return reject(e);
         }
         delete foundUser.password;
         resolve(new LoginResponse(token, foundUser));
@@ -89,7 +109,10 @@ export class AuthService {
   private _checkIfUserIsAlreadyRegistered (user: SocoboUser): Promise<any> {
     return new Promise((resolve, reject) => {
       if (user) {
-        return reject(new Error("Email or Username is already registered. Please use another one."));
+        let e = new ApiError(ERRORS.AUTH_USED_PASSWORD_EMAIL)
+          .addSource(AuthService.name)
+          .addSourceMethod("register(..)");
+        return reject(e);
       }
       resolve();
     });
@@ -98,7 +121,10 @@ export class AuthService {
   private _createNewUser (hashedPassword: string, usernameOrEmail: string): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       if (hashedPassword.length <= 0) {
-        return reject(new Error("Hashed Password length is <= 0"));
+        let e = new ApiError(ERRORS.AUTH_NO_HASHED_PASSWORD)
+          .addSource(AuthService.name)
+          .addSourceMethod("_createNewUser(..)");
+        return reject(e);
       }
       let user: SocoboUser = new SocoboUser();
       user.username = usernameOrEmail.includes("@") ? usernameOrEmail.split("@")[0] : usernameOrEmail;
