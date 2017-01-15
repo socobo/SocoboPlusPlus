@@ -6,8 +6,9 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "lib": ["es2015", "dom"],
-    "outDir": "./dist"
+    "sourceRoot": "./src",
+    "outDir": "./dist",
+    "lib": ["es2015", "dom"]
   },
   "compileOnSave": true,
   "include": [
