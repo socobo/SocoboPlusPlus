@@ -126,14 +126,15 @@ export class AuthService {
           .addSourceMethod("_createNewUser(..)");
         return reject(e);
       }
-      let user: SocoboUser = new SocoboUser();
-      user.username = usernameOrEmail.includes("@") ? usernameOrEmail.split("@")[0] : usernameOrEmail;
-      user.email = usernameOrEmail.includes("@") ? usernameOrEmail : "";
-      user.password = hashedPassword;
-      user.image = "http://placehold.it/350x150";
-      user.hasTermsAccepted = true;
-      user.isAdmin = false;
-      user.provider = "email";
+      let user: SocoboUser = new SocoboUser()
+        .addUsername(usernameOrEmail.includes("@") ? usernameOrEmail.split("@")[0] : usernameOrEmail)
+        .addEmail(usernameOrEmail.includes("@") ? usernameOrEmail : "")
+        .addPassword(hashedPassword)
+        .addImage((process.env.DEFAULT_USER_IMAGE || Config.DEFAULT_USER_IMAGE))
+        .addHasTermsAccepted(true)
+        .addIsAdmin(true)
+        .addProvider("email")
+        .addDates()
       resolve(user);
     });
   }
