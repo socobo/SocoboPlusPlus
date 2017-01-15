@@ -204,7 +204,7 @@ describe("Recipe Handler", () => {
     });
 	});
 
-	it("save should return 200 OK if it was successful", (done) => {
+	it("save should return 201 CREATED if it was successful", (done) => {
 		
 		getByIdStub = sinon.stub(recipeService, "save").returns(Promise.resolve({id: 1}));
 
@@ -212,7 +212,7 @@ describe("Recipe Handler", () => {
 		recipeHandler.save(req, res);
 		
 		res.on("end", function() {
-			chai.expect(res.statusCode).to.be.equal(200);
+			chai.expect(res.statusCode).to.be.equal(201);
 			done();
     });
 	});
