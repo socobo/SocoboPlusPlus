@@ -1,14 +1,13 @@
 {
   "name": "socobo-backend",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Backend for Socobo",
   "private": true,
   "author": {
     "name": "flashback2k14"
   },
   "contributors": [
-    "hetec",
-    "lyio"
+    "hetec"
   ],
   "license": "MIT",
   "scripts": {
