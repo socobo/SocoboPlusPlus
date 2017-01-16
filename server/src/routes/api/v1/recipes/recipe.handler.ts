@@ -24,24 +24,11 @@ export class RecipeHandler{
 	save = (req: Request, res: Response) => {
 		let recipe: Recipe = req.body as Recipe;
 		recipe.created = new Date();
-		this._userService.getUserById(recipe.userId).catch(error => {
-			if (ErrorUtils.notFound(error)) {
-				let e = new DbError(ERRORS.USER_NOT_FOUND.withArgs(recipe.userId.toString()))
-					.addSource(UserService.name)
-					.addSourceMethod("getUserById(id)")
-					.addCause(error)
-					.addQuery(error.query);
-				res.status(e.statusCode).json(
-					e.forResponse());
-			} else {
-				let e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-					.addSource(UserService.name)
-					.addSourceMethod("getUserById(id)")
-					.addCause(error)
-					.addQuery(error.query);
-				res.status(e.statusCode).json(
-					e.forResponse());
-			}
+		this._userService.getUserById(recipe.userId).then(user => {
+			console.log("USER", user);
+			
+		}).catch(e => {
+			res.status(e.statusCode).json(e.forResponse());
 		})
 		this._recipeService.save(recipe)
 		.then((result:any) => {

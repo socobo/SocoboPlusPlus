@@ -22,26 +22,14 @@ export class RecipeService {
 
   getById (id: number): Promise<Recipe> {
     let promise = this._db.one(this._GET_BY_ID, [id])
-    return promise.then(recipe => {
-      return Promise.resolve(recipe)
-    }).catch(error => {
-      let e: DbError;
-      if (ErrorUtils.notFound(error)) {
-        e = new DbError(ERRORS.RECIPE_NOT_FOUND.withArgs(id.toString()))
-          .addSource(RecipeService.name)
-          .addSourceMethod("getById()")
-          .addCause(error)
-          .addQuery(error.query);
-        return Promise.reject(e);
-      }else{
-        e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-          .addSource(RecipeService.name)
-          .addSourceMethod("getById()")
-          .addCause(error)
-          .addQuery(error.query);
-        return Promise.reject(e);
-      }
-    })
+    return promise.catch(error => {
+      return ErrorUtils.handleDbNotFound(
+        error,
+        "id",
+        id.toString(),
+        RecipeService.name,
+        "getById(..)");
+    });
   }
 
   save (recipe: Recipe): Promise<any> {
@@ -52,15 +40,11 @@ export class RecipeService {
         recipe.description,
         recipe.imageUrl,
         recipe.created]);
-    }).then(result => {
-      return Promise.resolve(result);
     }).catch(error => {
-      let e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-        .addSource(RecipeService.name)
-        .addSourceMethod("save()")
-        .addCause(error)
-        .addQuery(error.query);
-      return Promise.reject(e)
-    })
+      return ErrorUtils.handleDbError(
+        error,
+        RecipeService.name,
+        "save(..)");
+    });
   }
 }

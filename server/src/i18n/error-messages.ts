@@ -1,6 +1,6 @@
 export const ERROR_MESSAGES: any = {
-	"user.not.found": "User with id {0} could not be found",
-	"recipe.not.found": "Recipe with id {0} could not be found",
+	"user.not.found": "User with {0} {1} could not be found",
+	"recipe.not.found": "Recipe with {0} {1} could not be found",
 	"auth.wrong.password": "Authentication failed. Wrong password",
 	"auth.used.email.or.password": "Email or Username is already registered. Please use another one.",
 	"auth.token.expired": "Token expired",

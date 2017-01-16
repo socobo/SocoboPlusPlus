@@ -50,7 +50,7 @@ export class AuthService {
   private _validateUser (user: SocoboUser): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       if (!user) {
-        let e = new ApiError(ERRORS.USER_NOT_FOUND.withArgs("provided email or username"))
+        let e = new ApiError(ERRORS.USER_NOT_FOUND.withArgs("provided email or","username"))
           .addSource(AuthService.name)
           .addSourceMethod("_validateUser(..)");
         return reject(e);
