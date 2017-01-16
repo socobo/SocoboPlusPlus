@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { validate } from "class-validator"
-import { ValidationError } from "./../models/validation-error";
+import { ValidationError, ERRORS } from "./../../models/index";
 
 
 export class ApiValidator {
@@ -16,14 +16,20 @@ export class ApiValidator {
             
             validate(objectToValidate).then(errors => {
                 if(errors.length > 0){
-                    resolve(new ValidationError('Validation failed',
-                    "Validator", 'validate()', errors).forResponse())
+                    let e = new ValidationError(ERRORS.VAL_INVALID_INPUT)
+                        .addSource("ApiValidator")
+                        .addSourceMethod("validate(..)")
+                        .addValidationErrors(errors);
+                    resolve(e);
                 }else{
                     reject()
                 }
             }).catch(error => {
-                resolve(new ValidationError('Validation failed',
-                "Validator", 'validate()', error).forResponse())
+                let e = new ValidationError(ERRORS.VAL_INVALID_INPUT)
+                    .addSource("ApiValidator")
+                    .addSourceMethod("validate(..)")
+                    .addCause(error)
+                resolve(e);
             })
         })
     }

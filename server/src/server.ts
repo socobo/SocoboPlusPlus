@@ -8,18 +8,23 @@ import * as path from "path";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
-// validator
-import { ApiValidator } from "./middleware/validator";
 //handler
 import { ValidationHandler } from "./routes/api/v1/validation/validation.handler";
 import { RecipeHandler } from "./routes/api/v1/recipes/recipe.handler";
 // server services
-import { UserService } from "./logic/services/user.service";
 import { RecipeService } from "./logic/services/recipe.service";
+// server middleware
+import { AuthValidator, ApiValidator } from "./logic/middleware/index";
+// server utils
+import { CryptoUtils } from "./logic/utils/index";
+// server services
+import { 
+  AuthService, UserService 
+} from "./logic/services/index";
 // server routes
-import { UsersRouteV1 } from "./routes/api/v1/users/user.routes";
-import { RecipeRouteV1 } from "./routes/api/v1/recipes/recipe.routes";
-import { LogsRouteV1 } from "./routes/api/v1/logs/log.routes";
+import { 
+  AuthRoute, LogRoute, UsersRoute , RecipeRoute
+} from "./routes/api/v1/index";
 
 
 class Server {
@@ -29,15 +34,29 @@ class Server {
   private _db: pgPromise.IDatabase<any>;
   private _validationHandler = new ValidationHandler(new ApiValidator());
 
+  private _authValidator: AuthValidator;
+
+  private _cryptoUtils: CryptoUtils;
+
+  private _userService: UserService;
+  private _authService: AuthService;
+
   constructor () {
+    this._create();
+    this._config();
+    this._middleware();
+    this._utils();
+    this._services();
+    this._routes();
+    this._listen();
+  }
+
+  /**
+   * CREATION
+   */
+  private _create (): void {
     this._createApp();
     this._createServer();
-    this._configLogging();
-    this._configDatabase();
-    this._configServer();
-    this._configFrontendRoutes();
-    this._configApiRoutes();
-    this._listen();
   }
 
   private _createApp (): void {
@@ -48,34 +67,78 @@ class Server {
     this._server = http.createServer(this._app);
   }
 
+  /**
+   * CONFIGURATION
+   */
+  private _config (): void {
+    this._configLogging();
+    this._configDatabase();
+    this._configServer();
+  }
+
   private _configLogging (): void {
-    // check environment
-    if ((process.env.NODE_ENV || Config.NODE_ENV) !== "test") {
-      winston.configure({
-        transports: [
-          new (winston.transports.File) ({
-            filename: "logs/server.log.json"
-          }),
-          new (winston.transports.Console) ()
-        ]
-      });
-    } else {
-      winston.configure({
-        transports: [
-          new (winston.transports.File) ({
-            filename: "logs/server.test.log.json"
-          }),
-          new (winston.transports.Console) ()
-        ]
-      });
+    // check environment and setup winston
+    switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
+      case "test":
+        winston.configure({
+          transports: [
+            new (winston.transports.File) ({
+              filename: `${process.cwd()}/logs/server.test.log.json`
+            }),
+            new (winston.transports.Console) ()
+          ]
+        });
+        break;
+
+      case "development":
+        winston.configure({
+          transports: [
+            new (winston.transports.File) ({
+              filename: `${process.cwd()}/logs/server.dev.log.json`
+            }),
+            new (winston.transports.Console) ()
+          ]
+        });
+        break;
+
+      case "production":
+        winston.configure({
+          transports: [
+            new (winston.transports.File) ({
+              filename: `${process.cwd()}/logs/server.log.json`
+            }),
+            new (winston.transports.Console) ()
+          ]
+        });
+        break;
+      
+      default:
+        throw new Error("NODE_ENV is not known!");
     }
   }
 
   private _configDatabase (): void {
     // init pgPromise
     const pgp: pgPromise.IMain = pgPromise();
-    // setup connectionString
-    const connectionString: string = process.env.DATABASE_URL || Config.DATABASE_URL;
+    // declare connectionString
+    let connectionString: string;
+    // check environment and init connectionString
+    switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
+      case "test":
+        connectionString = process.env.DATABASE_URL_TEST || Config.DATABASE_URL_TEST;
+        break;
+
+      case "development":
+        connectionString = process.env.DATABASE_URL_DEV || Config.DATABASE_URL_DEV;
+        break;
+
+      case "production":
+        connectionString = process.env.DATABASE_URL || Config.DATABASE_URL;
+        break;
+
+      default:
+        throw new Error("NODE_ENV is not known!");
+    }
     // init db
     this._db = pgp(connectionString);
   }
@@ -87,32 +150,72 @@ class Server {
     this._app.use(bodyParser.json());
   }
 
-  private _configFrontendRoutes (): void {
+  /**
+   * MIDDLEWARE
+   */
+  private _middleware (): void {
+    this._authValidator = new AuthValidator();
+  }
+
+  /**
+   * UTILS
+   */
+  private _utils (): void {
+    this._cryptoUtils = new CryptoUtils();
+  }
+
+  /**
+   * SERVICES
+   */
+  private _services (): void {
+    // init user service
+    this._userService = new UserService(this._db);
+    // init auth service
+    this._authService = new AuthService(this._userService, this._cryptoUtils);
+  }
+
+  /**
+   * ROUTES
+   */
+  private _routes (): void {
+    this._frontendRoutes();
+    this._apiRoutes();
+  }
+
+  private _frontendRoutes (): void {
     // serve frontend from server/dist/public
     this._app.use(express.static(path.join(__dirname, "public")));
   }
 
-  private _configApiRoutes (): void {
+  private _apiRoutes (): void {
     // set routes to paths
-    this._app.use("/api/v1/users", this.__usersRoute());
-    this._app.use("/api/v1/logs", this.__logsRoute());
     this._app.use("/api/v1/recipes", this.__recipeRoute());
+    this._app.use("/api/v1/auth", this._authRoute());
+    this._app.use("/api/v1/users", this._usersRoute());
+    this._app.use("/api/v1/logs", this._logsRoute());
   }
 
-  private __usersRoute (): express.Router {
+  private _authRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
-    // init user service
-    const userService: UserService = new UserService(this._db);
-    // init and return users route
-    return new UsersRouteV1(userService, router).createRoutes();
+    // init and return auth route
+    return new AuthRoute(this._authService, router, 
+                            this._authValidator).createRoutes();
   }
 
-  private __logsRoute (): express.Router {
+  private _usersRoute (): express.Router {
+    // create new router
+    let router: express.Router = express.Router();
+    // init and return users route
+    return new UsersRoute(this._userService, router, 
+                              this._authValidator).createRoutes();
+  }
+
+  private _logsRoute (): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return logs route
-    return new LogsRouteV1(router).createRoutes();
+    return new LogRoute(router, this._authValidator).createRoutes();
   }
 
   private __recipeRoute(): express.Router {
@@ -123,7 +226,7 @@ class Server {
     // init handler
     const recipeHandler: RecipeHandler = new RecipeHandler(recipeService);
     // init and return recipe route
-    return new RecipeRouteV1(router, recipeHandler, this._validationHandler).createRoutes();
+    return new RecipeRoute(router, recipeHandler, this._validationHandler).createRoutes();
   }
   
   private _listen (): void {
@@ -132,6 +235,9 @@ class Server {
     });
   }
 
+  /**
+   * PUBLIC API
+   */
   public get app (): express.Application {
     return this._app;
   }

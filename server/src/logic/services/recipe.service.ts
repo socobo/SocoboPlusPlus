@@ -1,5 +1,5 @@
 import { IDatabase } from "pg-promise";
-import { Recipe } from "./../../models/recipe"
+import { Recipe } from "./../../models/index"
 
 
 export class RecipeService {

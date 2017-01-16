@@ -1,14 +1,13 @@
 {
   "name": "socobo-backend",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Backend for Socobo",
   "private": true,
   "author": {
     "name": "flashback2k14"
   },
   "contributors": [
-    "hetec",
-    "lyio"
+    "hetec"
   ],
   "license": "MIT",
   "scripts": {
@@ -18,14 +17,16 @@
     "tsc:w": "tsc -w",
     "serve": "node dist/server.js",
     "serve:w": "nodemon dist/server.js",
-    "test": "npm-run-all create:l test:m test:i",
+    "test": "npm-run-all setup:db:t create:l test:m",
     "test:m": "mocha --reporter spec --compilers ts:ts-node/register test/**/*.test.ts",
     "test:i": "mocha --reporter spec --compilers ts:ts-node/register integration-test/**/*.test.ts",
     "create:l": "mkdir -p logs",
     "clean": "rm -r dist/",
     "clean:l": "rm -r logs/",
     "clean:a": "rm -r dist/ node_modules/ logs/",
-    "setup:db": "cd ./sql && ./automate-creation.sh",
+    "setup:db:p": "cd ./sql && ./automate-creation.sh",
+    "setup:db:d": "cd ./sql && ./automate-creation.sh -d",
+    "setup:db:t": "cd ./sql && ./automate-creation.sh -t",
     "open:b": "open http://localhost:8282"
   },
   "dependencies": {
@@ -46,18 +47,21 @@
     "@types/mocha": "~2.2.33",
     "@types/pg-promise": "~0.0.28",
     "@types/sinon": "~1.16.33",
-    "@types/winston": "~0.0.32",
+    "@types/bcrypt": "~1.0.0",
+    "@types/jsonwebtoken": "~7.1.33",
+    "nodemon": "~1.11.0",
+    "ts-node": "~1.7.0",
+    "typescript": "~2.1.4",
     "chai": "~3.5.0",
     "chai-as-promised": "^6.0.0",
     "chai-http": "~3.0.0",
     "mocha": "~3.2.0",
     "mocha-as-promised": "~2.0.0",
     "node-mocks-http": "~1.5.5",
-    "nodemon": "~1.11.0",
     "pg-promise": "~5.4.7",
     "sinon": "~1.17.6",
-    "ts-node": "~1.7.0",
-    "typescript": "~2.1.4",
-    "winston-spy": "~0.2.0"
+    "winston-spy": "~0.2.0",
+    "bcrypt": "~1.0.1",
+    "jsonwebtoken": "~7.2.1"
   }
 }

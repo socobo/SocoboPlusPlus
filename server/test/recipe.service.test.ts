@@ -4,10 +4,9 @@ import * as sinon from "sinon";
 import { IDatabase } from "pg-promise";
 import * as pgPromise from "pg-promise";
 
-import { ApiValidator } from "./../src/middleware/Validator"
-import { ValidationError } from "./../src/models/validation-error";
-import { Recipe } from "./../src/models/Recipe"
-import { RecipeService } from "./../src/logic/services/recipe.service"
+import { ApiValidator } from "./../src/logic/middleware/index";
+import { ValidationError, Recipe } from "./../src/models/index";
+import { RecipeService } from "./../src/logic/services/index";
 
 require("mocha-as-promised")();
 var chaiAsPromised = require("chai-as-promised");

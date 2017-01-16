@@ -5,10 +5,9 @@ import { Request, Response, NextFunction } from "express";
 import * as express from "express";
 import { errors } from "pg-promise";
 
-import { Recipe } from "./../src/models/Recipe"
-import { RecipeService } from "./../src/logic/services/recipe.service"
+import { RecipeService } from "./../src/logic/services/index"
 import { RecipeHandler } from "./../src/routes/api/v1/recipes/recipe.handler"
-import { ApiError } from "./../src/models/api-error";
+import { ApiError, Recipe } from "./../src/models/index";
 import Server from "./../src/server";
 
 let mocks = require("node-mocks-http")
@@ -92,7 +91,7 @@ describe("Recipe Handler", () => {
     });
 	});
 
-	it("getById should return correct error response on 500 Internal Server Error", (done) => {
+	it("getById should return correct error response if a 500 Internal Server Error occurs", (done) => {
 
 		getByIdStub = sinon.stub(recipeService, "getById").returns(Promise.reject(new Error("TestError")));
 
@@ -103,7 +102,7 @@ describe("Recipe Handler", () => {
 			var data = JSON.parse( res._getData() );
 			chai.expect(data).to.be.deep.equal(
 				{
-					"message": "Error during adding the new recipe",
+					"message": "Internal server error",
 					"source": "RecipeService",
 					"method": "getById()"
 				}
@@ -143,7 +142,7 @@ describe("Recipe Handler", () => {
 
 				chai.expect(data).to.be.deep.equal(
 					{
-						"message": "The recipe for the id 42 does not exist",
+						"message": "Recipe with id 42 could not be found",
 						"source": "RecipeService",
 						"method": "getById()"
 					}
@@ -204,7 +203,7 @@ describe("Recipe Handler", () => {
     });
 	});
 
-	it("save should return 201 CREATED if it was successful", (done) => {
+	it("save should return 201 CREATED if the creation was successful", (done) => {
 		
 		getByIdStub = sinon.stub(recipeService, "save").returns(Promise.resolve({id: 1}));
 
@@ -217,7 +216,7 @@ describe("Recipe Handler", () => {
     });
 	});
 
-	it("save should return 500 Internal Server Error if the resource was not found", (done) => {
+	it("save should return 500 Internal Server Error if the creation failes", (done) => {
 
 		getByIdStub = sinon.stub(recipeService, "save").returns(Promise.reject("TestError"));
 
@@ -230,7 +229,7 @@ describe("Recipe Handler", () => {
     });
 	});
 
-	it("save should return correct error response on 500 Not Found", (done) => {
+	it("save should return correct error response if a 500 Internal server error occurs", (done) => {
 
 		getByIdStub = sinon.stub(recipeService, "save").returns(Promise.reject("TestError"));
 
@@ -241,7 +240,7 @@ describe("Recipe Handler", () => {
 			var data = JSON.parse( res._getData() );
 			chai.expect(data).to.be.deep.equal(
 				{
-					"message": "Error during adding the new recipe",
+					"message": "Internal server error",
 					"source": "RecipeService",
 					"method": "save()"
 				}

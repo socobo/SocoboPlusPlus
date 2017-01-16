@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, Length } from "class-validator"
-import { SocoboUser } from './socobouser'
+import { SocoboUser } from './../index'
 
 export class Recipe {
 

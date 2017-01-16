@@ -1,11 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { RecipeService } from "./../../../../logic/services/recipe.service";
-import { ErrorUtils } from "./../../../../logic/utils/errorUtils"
-import { Recipe } from "./../../../../models/recipe";
-import { DbError } from "./../../../../models/db-error";
-import { ApiError } from "./../../../../models/api-error";
-import { ValidationError } from "./../../../../models/validation-error";
-import { ApiValidator } from "./../../../../middleware/validator";
+import { Recipe, DbError, ApiError, ValidationError } from "./../../../../models/index";
+import { ApiValidator } from "./../../../../logic/middleware/index";
 
 export class ValidationHandler{
 
@@ -14,7 +9,7 @@ export class ValidationHandler{
 	validate = (req: Request, res: Response, next: NextFunction) => {
 		this._validator.validate(Recipe, req)
 		.then((error: ValidationError) => {
-				res.status(400).json(error)
+				res.status(error.statusCode).json(error.forResponse())
 		})
 		.catch(() => {
 				next();

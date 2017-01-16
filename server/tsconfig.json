@@ -6,9 +6,10 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "lib": ["es2015", "dom"],
+    "experimentalDecorators": true,
+    "sourceRoot": "./src",
     "outDir": "./dist",
-    "experimentalDecorators": true
+    "lib": ["es2015", "dom"]
   },
   "compileOnSave": true,
   "include": [

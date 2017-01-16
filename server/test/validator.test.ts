@@ -3,9 +3,8 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 import {Router, Request, Response, NextFunction } from "express";
 
-import { ApiValidator } from "./../src/middleware/Validator"
-import { Recipe } from "./../src/models/Recipe"
-import { ValidationError } from "./../src/models/validation-error";
+import { ApiValidator } from "./../src/logic/middleware/index"
+import { Recipe, ValidationError } from "./../src/models/index"
 
 let mocks = require("node-mocks-http")
 require("mocha-as-promised")();
@@ -57,9 +56,9 @@ describe('ApiValidator', function(){
 
 		let prom: any = new ApiValidator().validate(Recipe,req);
 		return Promise.all([
-			prom.should.eventually.have.property('message', 'Validation failed'),
-			prom.should.eventually.have.property('method', 'validate()'),
-			prom.should.eventually.have.property('source', 'Validator')]);
+			prom.should.eventually.have.property('message', 'The provided input is invalid'),
+			prom.should.eventually.have.property('sourceMethod', 'validate(..)'),
+			prom.should.eventually.have.property('source', 'ApiValidator')]);
 	})
 
 	it('validation of a recipe with title and userId will be rejected', function(){

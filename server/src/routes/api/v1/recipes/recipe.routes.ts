@@ -1,16 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { RecipeService } from "./../../../../logic/services/recipe.service";
-import { ErrorUtils } from "./../../../../logic/utils/errorUtils"
-import { Recipe } from "./../../../../models/recipe";
-import { DbError } from "./../../../../models/db-error";
-import { ApiError } from "./../../../../models/api-error";
-import { ValidationError } from "./../../../../models/validation-error";
-import { ApiValidator } from "./../../../../middleware/validator";
-
+import { RecipeService } from "./../../../../logic/services/index";
 import { RecipeHandler } from "./recipe.handler"
 import { ValidationHandler } from "./../validation/validation.handler"
 
-export class RecipeRouteV1 {
+export class RecipeRoute {
 
   constructor(
     private _router: Router, 
