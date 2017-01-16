@@ -40,6 +40,7 @@ class Server {
 
   private _userService: UserService;
   private _authService: AuthService;
+  private _recipeService: RecipeService;
 
   constructor () {
     this._create();
@@ -170,6 +171,8 @@ class Server {
   private _services (): void {
     // init user service
     this._userService = new UserService(this._db);
+    // init recipe service
+    this._recipeService = new RecipeService(this._db);
     // init auth service
     this._authService = new AuthService(this._userService, this._cryptoUtils);
   }
@@ -221,10 +224,8 @@ class Server {
   private __recipeRoute(): express.Router {
     // create new router
     let router: express.Router = express.Router();
-    // init recipe service
-    const recipeService: RecipeService = new RecipeService(this._db); 
     // init handler
-    const recipeHandler: RecipeHandler = new RecipeHandler(recipeService);
+    const recipeHandler: RecipeHandler = new RecipeHandler(this._recipeService, this._userService);
     // init and return recipe route
     return new RecipeRoute(router, recipeHandler, this._validationHandler).createRoutes();
   }
