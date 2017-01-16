@@ -15,22 +15,9 @@ export class RecipeHandler{
 		this._recipeService.getById(id)
 		.then((result: Recipe) => {				
 				res.status(200).json(result);
-		}).catch((error: any) => { 
-				if (ErrorUtils.notFound(error)) {
-					let e = new DbError(ERRORS.RECIPE_NOT_FOUND.withArgs(id.toString()))
-						.addSource(RecipeService.name)
-						.addSourceMethod("getById()")
-						.addCause(error)
-						.addQuery(error.query);
-					res.status(e.statusCode).json(e.forResponse());
-				}else{
-					let e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-						.addSource(RecipeService.name)
-						.addSourceMethod("getById()")
-						.addCause(error)
-						.addQuery(error.query);
-					res.status(e.statusCode).json(e.forResponse());
-				}
+		}).catch((e: any) => { 
+				res.status(e.statusCode).json(e.forResponse());
+				res.status(e.statusCode).json(e.forResponse());
 		});
 	}
 
@@ -60,12 +47,7 @@ export class RecipeHandler{
 		.then((result:any) => {
 				recipe.id = result.id;
 				res.status(201).json(recipe)
-		}).catch(error => {
-				let e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-					.addSource(RecipeService.name)
-					.addSourceMethod("save()")
-					.addCause(error)
-					.addQuery(error.query);
+		}).catch(e => {
 				res.status(e.statusCode).json(e.forResponse());
 		});
   }
