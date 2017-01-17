@@ -16,7 +16,8 @@ export class RecipeHandler{
 		.then((result: Recipe) => {				
 				res.status(200).json(result);
 		}).catch((e: any) => { 
-				res.status(e.statusCode).json(e.forResponse());
+			console.log("ERR:", e);
+			
 				res.status(e.statusCode).json(e.forResponse());
 		});
 	}

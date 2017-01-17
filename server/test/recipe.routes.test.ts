@@ -7,7 +7,7 @@ import { errors } from "pg-promise";
 
 import { RecipeService, UserService } from "./../src/logic/services/index"
 import { RecipeHandler } from "./../src/routes/api/v1/recipes/recipe.handler"
-import { ApiError, Recipe } from "./../src/models/index";
+import { ApiError, DbError, Recipe, ERRORS } from "./../src/models/index";
 import Server from "./../src/server";
 
 let mocks = require("node-mocks-http")
@@ -82,7 +82,8 @@ describe("Recipe Handler", () => {
 
 	it("getById should return 500 Internal Server Error if any error other than 404 was thrown", (done) => {
 
-		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(new Error("TestError")));
+		let dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR);
+		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
 
 		let recipeHandler = new RecipeHandler(recipeService, userService);
 		recipeHandler.getById(req, res);
@@ -95,7 +96,10 @@ describe("Recipe Handler", () => {
 
 	it("getById should return correct error response if a 500 Internal Server Error occurs", (done) => {
 
-		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(new Error("TestError")));
+		let dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
+			.addSource("RecipeService")
+			.addSourceMethod("getById()");
+		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
 
 		let recipeHandler = new RecipeHandler(recipeService, userService);
 		recipeHandler.getById(req, res);
@@ -115,10 +119,8 @@ describe("Recipe Handler", () => {
 
 	it("getById should return 404 Not Found Error if the resource was not found", (done) => {
 
-		let err: any = {
-			code: errors.queryResultErrorCode.noData
-		}
-		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(err));
+		let dbError = new DbError(ERRORS.RECIPE_NOT_FOUND);
+		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
 
 		let recipeHandler = new RecipeHandler(recipeService, userService);
 		recipeHandler.getById(req, res);
@@ -131,10 +133,13 @@ describe("Recipe Handler", () => {
 
 	it("getById should return correct error response on 404 Not Found", (done) => {
 
-		let err: any = {
-			code: errors.queryResultErrorCode.noData
-		}
-		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(err));
+		let dbError = new DbError(ERRORS.RECIPE_NOT_FOUND.withArgs("id", "42"))
+			.addSource("RecipeService")
+			.addSourceMethod("getById()");
+		// let err: any = {
+		// 	code: errors.queryResultErrorCode.noData
+		// }
+		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
 
 		let recipeHandler = new RecipeHandler(recipeService, userService);
 		recipeHandler.getById(req, res);
@@ -228,7 +233,8 @@ describe("Recipe Handler", () => {
 
 	it("save should return 500 Internal Server Error if the creation failes", (done) => {
 
-		recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.reject("TestError"));
+		let dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR);
+		recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.reject(dbError));
 		userServiceStub = sinon.stub(userService, "getUserById").returns(Promise.resolve());
 
 		let recipeHandler = new RecipeHandler(recipeService, userService);
@@ -243,7 +249,10 @@ describe("Recipe Handler", () => {
 
 	it("save should return correct error response if a 500 Internal server error occurs", (done) => {
 
-		recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.reject("TestError"));
+		let dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
+			.addSource("RecipeService")
+			.addSourceMethod("save()");
+		recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.reject(dbError));
 		userServiceStub = sinon.stub(userService, "getUserById").returns(Promise.resolve());
 
 		let recipeHandler = new RecipeHandler(recipeService, userService);
