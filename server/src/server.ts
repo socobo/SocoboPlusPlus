@@ -10,6 +10,7 @@ import * as winston from "winston";
 import { Config } from "./config";
 //handler
 import { ValidationHandler } from "./routes/api/v1/validation/validation.handler";
+import { AuthHandler } from "./routes/api/v1/auth/auth.handler";
 import { RecipeHandler } from "./routes/api/v1/recipes/recipe.handler";
 // server services
 import { RecipeService } from "./logic/services/recipe.service";
@@ -33,7 +34,9 @@ class Server {
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
   private _validationHandler = new ValidationHandler(new ApiValidator());
-
+  private _authHandler: AuthHandler;
+  private _recipeHandler: RecipeHandler;
+  
   private _authValidator: AuthValidator;
 
   private _cryptoUtils: CryptoUtils;
@@ -48,6 +51,7 @@ class Server {
     this._middleware();
     this._utils();
     this._services();
+    this._handler();
     this._routes();
     this._listen();
   }
@@ -178,6 +182,14 @@ class Server {
   }
 
   /**
+   * HANDLER
+   */
+  private _handler (): void {
+    this._authHandler = new AuthHandler(this._authValidator);
+    this._recipeHandler = new RecipeHandler(this._recipeService, this._userService);
+  }
+
+  /**
    * ROUTES
    */
   private _routes (): void {
@@ -224,10 +236,8 @@ class Server {
   private __recipeRoute(): express.Router {
     // create new router
     let router: express.Router = express.Router();
-    // init handler
-    const recipeHandler: RecipeHandler = new RecipeHandler(this._recipeService, this._userService);
     // init and return recipe route
-    return new RecipeRoute(router, recipeHandler, this._validationHandler).createRoutes();
+    return new RecipeRoute(router, this._recipeHandler, this._validationHandler, this._authHandler).createRoutes();
   }
   
   private _listen (): void {
