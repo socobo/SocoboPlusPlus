@@ -30,8 +30,8 @@ export class UserService {
         FROM Socobo_User
         WHERE id=$1`;
     return this._db.one(query, id).catch(error => {
-      console.log("user errro", error);
       return ErrorUtils.handleDbNotFound(
+        ERRORS.USER_NOT_FOUND,
         error, 
         "id", 
         id.toString(),
@@ -44,6 +44,7 @@ export class UserService {
     let query: string = "SELECT * FROM Socobo_User Where email=$1";
     return this._db.one(query, email).catch(error => {
       return ErrorUtils.handleDbNotFound(
+        ERRORS.USER_NOT_FOUND,
         error, 
         "email", 
         email, 
@@ -56,6 +57,7 @@ export class UserService {
     let query: string = "SELECT * FROM Socobo_User Where username=$1";
     return this._db.one(query, username).catch(error => {
       return ErrorUtils.handleDbNotFound(
+        ERRORS.USER_NOT_FOUND,
         error, 
         "username", 
         username, 

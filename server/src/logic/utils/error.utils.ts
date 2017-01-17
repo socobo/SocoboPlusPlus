@@ -1,6 +1,6 @@
 import { errors } from "pg-promise";
 import { ApiError, DbError } from "./../../models/index"
-import { ERRORS } from "./../../models/index"
+import { ERRORS, ErrorType } from "./../../models/index"
 
 let errorCode = errors.queryResultErrorCode;
 
@@ -32,13 +32,14 @@ export class ErrorUtils {
   }
 
   static handleDbNotFound(
+    errorType: ErrorType,
     error: any, 
     notFoundPropertyKey: string, 
     notFoundProperty: string,
     source: string,
     method: string): Promise<any> {
     if (ErrorUtils.notFound(error)) {
-      let e = new DbError(ERRORS.USER_NOT_FOUND.withArgs(
+      let e = new DbError(errorType.withArgs(
         notFoundPropertyKey, 
         notFoundProperty))
         .addSource(source)

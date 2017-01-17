@@ -21,9 +21,11 @@ export class RecipeService {
   constructor (private _db: IDatabase<any>) {}
 
   getById (id: number): Promise<Recipe> {
-    let promise = this._db.one(this._GET_BY_ID, [id])
+    console.log("CAll getById");
+    let promise = this._db.one(this._GET_BY_ID, [id]);
     return promise.catch(error => {
       return ErrorUtils.handleDbNotFound(
+        ERRORS.RECIPE_NOT_FOUND,
         error,
         "id",
         id.toString(),

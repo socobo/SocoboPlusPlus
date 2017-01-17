@@ -3,14 +3,13 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 import { Request, Response, NextFunction } from "express";
 import * as express from "express";
-import { errors } from "pg-promise";
 
-import { RecipeService, UserService } from "./../src/logic/services/index"
-import { RecipeHandler } from "./../src/routes/api/v1/recipes/recipe.handler"
+import { RecipeService, UserService } from "./../src/logic/services/index";
+import { RecipeHandler } from "./../src/routes/api/v1/recipes/recipe.handler";
 import { ApiError, DbError, Recipe, ERRORS } from "./../src/models/index";
 import Server from "./../src/server";
 
-let mocks = require("node-mocks-http")
+let mocks = require("node-mocks-http");
 
 describe("Recipe Handler", () => {
 
@@ -34,11 +33,11 @@ describe("Recipe Handler", () => {
           id: 42
         }
 		});
-	})
+	});
 
 	afterEach(() => {
 		recipeServicestub.restore();
-	})
+	});
 	
 	it("getById should send a response with the recipe returned by the recipeService", (done) => {
 			
@@ -136,9 +135,6 @@ describe("Recipe Handler", () => {
 		let dbError = new DbError(ERRORS.RECIPE_NOT_FOUND.withArgs("id", "42"))
 			.addSource("RecipeService")
 			.addSourceMethod("getById()");
-		// let err: any = {
-		// 	code: errors.queryResultErrorCode.noData
-		// }
 		recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
 
 		let recipeHandler = new RecipeHandler(recipeService, userService);
@@ -171,7 +167,7 @@ describe("Recipe Handler", () => {
 			
 			let recipe: Recipe = new Recipe();
 			recipe.title = "Test Recipe";
-			recipe.id = 1
+			recipe.id = 1;
 			chai.expect(data.title).to.be.equal("Test Recipe");
 			chai.expect(data.id).to.be.equal(1);
 			userServiceStub.restore();
@@ -195,7 +191,7 @@ describe("Recipe Handler", () => {
 			recipe.id = 1
 			chai.expect(data.created).to.not.be.null;
 			chai.expect(data.created).to.not.be.undefined;
-			chai.expect(data.created).to.have.length.above(1)
+			chai.expect(data.created).to.have.length.above(1);
 			userServiceStub.restore();
 			done();
     });
