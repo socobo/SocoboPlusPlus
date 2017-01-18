@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { validate } from "class-validator"
+import { validate } from "class-validator";
 import { ValidationError, ERRORS } from "./../../models/index";
 
 
@@ -22,15 +22,15 @@ export class ApiValidator {
                         .addValidationErrors(errors);
                     resolve(e);
                 }else{
-                    reject()
+                    reject();
                 }
             }).catch(error => {
                 let e = new ValidationError(ERRORS.VAL_INVALID_INPUT)
                     .addSource("ApiValidator")
                     .addSourceMethod("validate(..)")
-                    .addCause(error)
+                    .addCause(error);
                 resolve(e);
-            })
-        })
+            });
+        });
     }
 }
