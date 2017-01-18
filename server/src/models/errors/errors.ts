@@ -78,8 +78,18 @@ export class ERRORS {
 		400
 	);
 	static VAL_MISSING_PASSWORD = new ErrorType(
-		"30001",
+		"30002",
 		"validation.missing.password",
 		400
+	);
+	static VAL_INVALID_INPUT = new ErrorType(
+		"30003",
+		"validation.invalid.input",
+		400
+	);
+	static RECIPE_NOT_FOUND = new ErrorType(
+		"40001",
+		"recipe.not.found",
+		404
 	);
 }

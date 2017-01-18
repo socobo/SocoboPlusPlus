@@ -36,7 +36,7 @@ export class ApiError extends Error{
     return msg;
   }
 
-  forResponse = (): Object => {
+  forResponse = () => {
     LogService.addError(this.message, this);
     return {
       "message": this.message,

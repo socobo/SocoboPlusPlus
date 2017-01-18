@@ -1,3 +1,4 @@
+import "es6-shim";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
@@ -7,8 +8,14 @@ import * as path from "path";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
+//handler
+import { ValidationHandler } from "./routes/api/v1/validation/validation.handler";
+import { AuthHandler } from "./routes/api/v1/auth/auth.handler";
+import { RecipeHandler } from "./routes/api/v1/recipes/recipe.handler";
+// server services
+import { RecipeService } from "./logic/services/recipe.service";
 // server middleware
-import { AuthValidator } from "./logic/middleware/index";
+import { AuthValidator, ApiValidator } from "./logic/middleware/index";
 // server utils
 import { CryptoUtils } from "./logic/utils/index";
 // server services
@@ -17,7 +24,7 @@ import {
 } from "./logic/services/index";
 // server routes
 import { 
-  AuthRoute, LogRoute, UsersRoute 
+  AuthRoute, LogRoute, UsersRoute , RecipeRoute
 } from "./routes/api/v1/index";
 
 
@@ -26,13 +33,17 @@ class Server {
   private _server: http.Server;
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
-
+  private _validationHandler: ValidationHandler;
+  private _authHandler: AuthHandler;
+  private _recipeHandler: RecipeHandler;
+  
   private _authValidator: AuthValidator;
 
   private _cryptoUtils: CryptoUtils;
 
   private _userService: UserService;
   private _authService: AuthService;
+  private _recipeService: RecipeService;
 
   constructor () {
     this._create();
@@ -40,6 +51,7 @@ class Server {
     this._middleware();
     this._utils();
     this._services();
+    this._handler();
     this._routes();
     this._listen();
   }
@@ -163,8 +175,19 @@ class Server {
   private _services (): void {
     // init user service
     this._userService = new UserService(this._db);
+    // init recipe service
+    this._recipeService = new RecipeService(this._db);
     // init auth service
     this._authService = new AuthService(this._userService, this._cryptoUtils);
+  }
+
+  /**
+   * HANDLER
+   */
+  private _handler (): void {
+    this._authHandler = new AuthHandler(this._authValidator);
+    this._validationHandler = new ValidationHandler(new ApiValidator());
+    this._recipeHandler = new RecipeHandler(this._recipeService, this._userService);
   }
 
   /**
@@ -182,6 +205,7 @@ class Server {
 
   private _apiRoutes (): void {
     // set routes to paths
+    this._app.use("/api/v1/recipes", this._recipeRoute());
     this._app.use("/api/v1/auth", this._authRoute());
     this._app.use("/api/v1/users", this._usersRoute());
     this._app.use("/api/v1/logs", this._logsRoute());
@@ -210,6 +234,14 @@ class Server {
     return new LogRoute(router, this._authValidator).createRoutes();
   }
 
+  private _recipeRoute(): express.Router {
+    // create new router
+    let router: express.Router = express.Router();
+    // init and return recipe route
+    return new RecipeRoute(router, this._recipeHandler, this._validationHandler,
+       this._authHandler).createRoutes();
+  }
+  
   private _listen (): void {
     this._server.listen(this._port, () => {
       winston.info(`Server started on PORT: ${this._port}`);

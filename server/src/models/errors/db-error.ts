@@ -14,7 +14,7 @@ export class DbError extends ApiError {
     super(errorType);
   }
 
-  addQuery = (query: string): DbError => {
+  addQuery = (query: string): this => {
     this.query = query;
     return this;
   }

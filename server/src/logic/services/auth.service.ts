@@ -50,7 +50,7 @@ export class AuthService {
   private _validateUser (user: SocoboUser): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       if (!user) {
-        let e = new ApiError(ERRORS.USER_NOT_FOUND.withArgs("provided email or username"))
+        let e = new ApiError(ERRORS.USER_NOT_FOUND.withArgs("provided email or","username"))
           .addSource(AuthService.name)
           .addSourceMethod("_validateUser(..)");
         return reject(e);
@@ -94,7 +94,7 @@ export class AuthService {
       this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
         .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
         .catch((error: any) => {
-          if (ErrorUtils.notFound(error)) {
+          if (error.code === ERRORS.USER_NOT_FOUND.code) {
             this._cryptoUtils.hashPassword(password)
               .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail))
               .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
