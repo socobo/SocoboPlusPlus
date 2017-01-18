@@ -33,7 +33,7 @@ class Server {
   private _server: http.Server;
   private _port: number;
   private _db: pgPromise.IDatabase<any>;
-  private _validationHandler = new ValidationHandler(new ApiValidator());
+  private _validationHandler: ValidationHandler;
   private _authHandler: AuthHandler;
   private _recipeHandler: RecipeHandler;
   
@@ -186,6 +186,7 @@ class Server {
    */
   private _handler (): void {
     this._authHandler = new AuthHandler(this._authValidator);
+    this._validationHandler = new ValidationHandler(new ApiValidator());
     this._recipeHandler = new RecipeHandler(this._recipeService, this._userService);
   }
 
@@ -204,7 +205,7 @@ class Server {
 
   private _apiRoutes (): void {
     // set routes to paths
-    this._app.use("/api/v1/recipes", this.__recipeRoute());
+    this._app.use("/api/v1/recipes", this._recipeRoute());
     this._app.use("/api/v1/auth", this._authRoute());
     this._app.use("/api/v1/users", this._usersRoute());
     this._app.use("/api/v1/logs", this._logsRoute());
@@ -233,7 +234,7 @@ class Server {
     return new LogRoute(router, this._authValidator).createRoutes();
   }
 
-  private __recipeRoute(): express.Router {
+  private _recipeRoute(): express.Router {
     // create new router
     let router: express.Router = express.Router();
     // init and return recipe route
