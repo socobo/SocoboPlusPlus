@@ -1,5 +1,6 @@
 // Platzieren Sie Ihre Einstellungen in dieser Datei, um Standard- und Benutzereinstellungen zu überschreiben.
 {
   "editor.tabSize": 2,
-  "editor.insertSpaces": false
+  "editor.insertSpaces": false,
+  "editor.rulers": [80, 120]
 }
