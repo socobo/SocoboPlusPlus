@@ -9,7 +9,7 @@ import { RecipeHandler } from "./../src/routes/api/v1/recipes/recipe.handler";
 import { ApiError, DbError, Recipe, ERRORS } from "./../src/models/index";
 import Server from "./../src/server";
 
-let mocks = require("node-mocks-http");
+const mocks = require("node-mocks-http");
 
 describe("Recipe Handler", () => {
 

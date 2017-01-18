@@ -238,7 +238,8 @@ class Server {
     // create new router
     let router: express.Router = express.Router();
     // init and return recipe route
-    return new RecipeRoute(router, this._recipeHandler, this._validationHandler, this._authHandler).createRoutes();
+    return new RecipeRoute(router, this._recipeHandler, this._validationHandler,
+       this._authHandler).createRoutes();
   }
   
   private _listen (): void {

@@ -9,8 +9,7 @@ import { ApiValidator } from "./../src/logic/middleware/index";
 import { ValidationError, Recipe, DbError, ERRORS } from "./../src/models/index";
 import { RecipeService } from "./../src/logic/services/index";
 
-require("mocha-as-promised")();
-var chaiAsPromised = require("chai-as-promised");
+const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 chai.should();
 

@@ -6,9 +6,8 @@ import {Router, Request, Response, NextFunction } from "express";
 import { ApiValidator } from "./../src/logic/middleware/index";
 import { Recipe, ValidationError } from "./../src/models/index";
 
-let mocks = require("node-mocks-http");
-require("mocha-as-promised")();
-var chaiAsPromised = require("chai-as-promised");
+const mocks = require("node-mocks-http");
+const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 chai.should();
 
