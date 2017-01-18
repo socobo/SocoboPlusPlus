@@ -9,7 +9,6 @@ export class RecipeHandler{
 	constructor(private _recipeService: RecipeService, private _userService: UserService) {}
 
 	getById = (req: Request, res: Response) => {
-		let recipe: Recipe = req.body as Recipe;
 		let id = req.params.id;
 		
 		this._recipeService.getById(id).then((result: Recipe) => {				

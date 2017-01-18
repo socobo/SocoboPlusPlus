@@ -21,32 +21,22 @@ export class RecipeService {
   constructor (private _db: IDatabase<any>) {}
 
   getById (id: number): Promise<Recipe> {
-    console.log("CAll getById");
     let promise = this._db.one(this._GET_BY_ID, [id]);
-    return promise.catch(error => {
+    return promise.catch(error => { 
       return ErrorUtils.handleDbNotFound(
-        ERRORS.RECIPE_NOT_FOUND,
-        error,
-        "id",
-        id.toString(),
-        RecipeService.name,
-        "getById(..)");
+        ERRORS.RECIPE_NOT_FOUND, error, "id", id.toString(),
+        RecipeService.name, "getById(..)");
     });
   }
 
   save (recipe: Recipe): Promise<any> {
     return this._db.tx(() => {
       return this._db.one(this._SAVE, [
-        recipe.title,
-        recipe.userId,
-        recipe.description,
-        recipe.imageUrl,
-        recipe.created]);
+        recipe.title, recipe.userId, recipe.description, 
+        recipe.imageUrl, recipe.created]);
     }).catch(error => {
       return ErrorUtils.handleDbError(
-        error,
-        RecipeService.name,
-        "save(..)");
+        error, RecipeService.name, "save(..)");
     });
   }
 }
