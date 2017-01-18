@@ -94,7 +94,7 @@ export class AuthService {
       this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
         .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
         .catch((error: any) => {
-          if (ErrorUtils.notFound(error)) {
+          if (error.code === ERRORS.USER_NOT_FOUND.code) {
             this._cryptoUtils.hashPassword(password)
               .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail))
               .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
