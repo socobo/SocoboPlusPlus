@@ -27,8 +27,8 @@
     "setup:db:d": "cd ./sql && ./automate-creation.sh -d",
     "setup:db:t": "cd ./sql && ./automate-creation.sh -t",
     "open:b": "open http://localhost:8282",
-    "lint": "tslint src/**/*.ts",
-    "lint:f": "tslint --force --format codeFrame src/**/*.ts"
+    "lint": "tslint 'src/**/*.ts'",
+    "lint:f": "tslint --force --format codeFrame 'src/**/*.ts'"
   },
   "dependencies": {
     "body-parser": "~1.15.2",

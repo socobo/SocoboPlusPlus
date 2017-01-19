@@ -1,7 +1,9 @@
 {
 	"extends": "tslint:latest",
   "rules": {
-    "curly": true,
-		"trailing-comma": [true, {"multiline": "never", "singleline": "never"}]
+    "quotemark": [true, "double"],
+    "space-before-function-paren": true,
+		"trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]
   }
 }
