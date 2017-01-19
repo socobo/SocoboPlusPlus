@@ -17,7 +17,7 @@ export class LogRoute {
         this._authValidator.checkValidToken(req)
           .then(() => next())
           .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
-        }, 
+        },
       (req: Request, res: Response, next: NextFunction) => {
           res.status(200).json(LogService.getErrors());
         }
