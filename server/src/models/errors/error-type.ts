@@ -1,16 +1,14 @@
 export class ErrorType {
-	
-	messageArgs: string[] = [];
+  public messageArgs: string[] = [];
 
-	constructor(
-		public code: string,
-		public messageKey: string,
-		public statusCode: number,
-	) {}
+  constructor (
+    public code: string,
+    public messageKey: string,
+    public statusCode: number
+  ) { }
 
-	withArgs(...args: string[]): ErrorType {
-		this.messageArgs = args;
-		return this;
-	}
-
+  public withArgs (...args: string[]): ErrorType {
+    this.messageArgs = args;
+    return this;
+  }
 }
