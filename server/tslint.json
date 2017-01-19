@@ -3,7 +3,9 @@
   "rules": {
     "quotemark": [true, "double"],
     "space-before-function-paren": true,
-		"trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
-    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]
+		"trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+    "ordered-imports": [true, { "named-imports-order": "case-insensitive" }],
+    "member-ordering": [true, { "order": ["constructor", "statics-first"] }]
   }
 }

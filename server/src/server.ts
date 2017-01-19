@@ -1,49 +1,52 @@
 import "es6-shim";
-import * as express from "express";
+
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
+import * as express from "express";
 import * as http from "http";
-import * as pgPromise from "pg-promise";
 import * as path from "path";
+import * as pgPromise from "pg-promise";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
-//handler
-import { ValidationHandler } from "./routes/api/v1/validation/validation.handler";
-import { AuthHandler } from "./routes/api/v1/auth/auth.handler";
-import { RecipeHandler } from "./routes/api/v1/recipes/recipe.handler";
-// server services
-import { RecipeService } from "./logic/services/recipe.service";
-// server middleware
-import { AuthValidator, ApiValidator } from "./logic/middleware/index";
-// server utils
-import { CryptoUtils } from "./logic/utils/index";
-// server services
-import { 
-  AuthService, UserService 
+// handler
+import {
+  AuthHandler, RecipeHandler, ValidationHandler
+} from "./handler/index";
+// middleware
+import {
+  ApiValidator, AuthValidator
+} from "./logic/middleware/index";
+// services
+import {
+  AuthService, RecipeService, UserService
 } from "./logic/services/index";
-// server routes
-import { 
-  AuthRoute, LogRoute, UsersRoute , RecipeRoute
+// server utils
+import {
+  CryptoUtils
+} from "./logic/utils/index";
+// routes
+import {
+  AuthRoute, LogRoute, RecipeRoute, UsersRoute
 } from "./routes/api/v1/index";
-
 
 class Server {
   private _app: express.Application;
-  private _server: http.Server;
-  private _port: number;
   private _db: pgPromise.IDatabase<any>;
-  private _validationHandler: ValidationHandler;
+  private _port: number;
+  private _server: http.Server;
+
   private _authHandler: AuthHandler;
   private _recipeHandler: RecipeHandler;
-  
+  private _validationHandler: ValidationHandler;
+
   private _authValidator: AuthValidator;
 
   private _cryptoUtils: CryptoUtils;
 
-  private _userService: UserService;
   private _authService: AuthService;
   private _recipeService: RecipeService;
+  private _userService: UserService;
 
   constructor () {
     this._create();
@@ -54,6 +57,17 @@ class Server {
     this._handler();
     this._routes();
     this._listen();
+  }
+
+  /**
+   * PUBLIC API
+   */
+  public static bootstrap (): Server {
+    return new Server();
+  }
+
+  public get app (): express.Application {
+    return this._app;
   }
 
   /**
@@ -87,10 +101,10 @@ class Server {
       case "test":
         winston.configure({
           transports: [
-            new (winston.transports.File) ({
+            new (winston.transports.File)({
               filename: `${process.cwd()}/logs/server.test.log.json`
             }),
-            new (winston.transports.Console) ()
+            new (winston.transports.Console)()
           ]
         });
         break;
@@ -98,10 +112,10 @@ class Server {
       case "development":
         winston.configure({
           transports: [
-            new (winston.transports.File) ({
+            new (winston.transports.File)({
               filename: `${process.cwd()}/logs/server.dev.log.json`
             }),
-            new (winston.transports.Console) ()
+            new (winston.transports.Console)()
           ]
         });
         break;
@@ -109,14 +123,14 @@ class Server {
       case "production":
         winston.configure({
           transports: [
-            new (winston.transports.File) ({
+            new (winston.transports.File)({
               filename: `${process.cwd()}/logs/server.log.json`
             }),
-            new (winston.transports.Console) ()
+            new (winston.transports.Console)()
           ]
         });
         break;
-      
+
       default:
         throw new Error("NODE_ENV is not known!");
     }
@@ -213,54 +227,43 @@ class Server {
 
   private _authRoute (): express.Router {
     // create new router
-    let router: express.Router = express.Router();
+    const router: express.Router = express.Router();
     // init and return auth route
-    return new AuthRoute(this._authService, router, 
-                            this._authValidator).createRoutes();
+    return new AuthRoute(this._authService, router,
+      this._authValidator).createRoutes();
   }
 
   private _usersRoute (): express.Router {
     // create new router
-    let router: express.Router = express.Router();
+    const router: express.Router = express.Router();
     // init and return users route
-    return new UsersRoute(this._userService, router, 
-                              this._authValidator).createRoutes();
+    return new UsersRoute(this._userService, router,
+      this._authValidator).createRoutes();
   }
 
   private _logsRoute (): express.Router {
     // create new router
-    let router: express.Router = express.Router();
+    const router: express.Router = express.Router();
     // init and return logs route
     return new LogRoute(router, this._authValidator).createRoutes();
   }
 
-  private _recipeRoute(): express.Router {
+  private _recipeRoute (): express.Router {
     // create new router
-    let router: express.Router = express.Router();
+    const router: express.Router = express.Router();
     // init and return recipe route
-    return new RecipeRoute(router, this._recipeHandler, this._validationHandler,
-       this._authHandler).createRoutes();
+    return new RecipeRoute(router, this._recipeHandler,
+      this._validationHandler, this._authHandler).createRoutes();
   }
-  
+
   private _listen (): void {
     this._server.listen(this._port, () => {
       winston.info(`Server started on PORT: ${this._port}`);
     });
   }
-
-  /**
-   * PUBLIC API
-   */
-  public get app (): express.Application {
-    return this._app;
-  }
-
-  public static bootstrap (): Server {
-    return new Server();
-  }
 }
 
 // creater server class
-let server: Server = Server.bootstrap();
+const server: Server = Server.bootstrap();
 // export application
 export default server.app;
