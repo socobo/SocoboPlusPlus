@@ -2,5 +2,7 @@
 {
   "editor.tabSize": 2,
   "editor.insertSpaces": false,
+  "editor.renderWhitespace": "all",
+  "editor.renderIndentGuides": true,
   "editor.rulers": [80, 120]
 }
