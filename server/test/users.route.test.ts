@@ -1,19 +1,19 @@
 process.env.NODE_ENV = "test";
 
-import * as mocha from "mocha";
 import * as chai from "chai";
+import * as mocha from "mocha";
 import chaiHttp = require("chai-http");
-
-import Server from "./../src/server";
 import { SocoboUser } from "./../src/models/index";
+import Server from "./../src/server";
 
 chai.use(chaiHttp);
-const expect = chai.expect;
 
 describe("User Route v1", () => {
 
+  const expect = chai.expect;
+
   // define login function
-  let login = (): Promise<string> => {
+  const login = (): Promise<string> => {
     return new Promise((resolve, reject) => {
        chai.request(Server).post("/api/v1/auth/login")
         .send({email: "john-doe@test.test", password: "SuperSecurePassword"})
@@ -26,7 +26,7 @@ describe("User Route v1", () => {
   let users: SocoboUser[];
 
   before((done) => {
-    let user1: SocoboUser = new SocoboUser();
+    const user1: SocoboUser = new SocoboUser();
     user1.id = 1;
     user1.username = "JohnDoe";
     user1.email = "john-doe@test.test";
@@ -36,7 +36,7 @@ describe("User Route v1", () => {
     user1.isAdmin = false;
     user1.provider = "email";
 
-    let user2: SocoboUser = new SocoboUser();
+    const user2: SocoboUser = new SocoboUser();
     user2.id = 2;
     user2.username = "MaxMustermann";
     user2.email = "max-mustermann@test.test";
@@ -56,15 +56,15 @@ describe("User Route v1", () => {
     login().then((token: string) => {
 
       chai.request(Server).get("/api/v1/users").set("x-access-token", token)
-        .then(res => {
+        .then((res: ChaiHttp.Response) => {
           expect(res.type).to.eql("application/json");
         })
-        .catch(err => {
+        .catch((err: any) => {
           expect(err.message).equal("Bad Request");
         });
 
     }).catch((error: any) => console.error(error.message));
-    
+
   });
 
   it("route /api/v1/users should return 2 users", () => {
@@ -72,10 +72,10 @@ describe("User Route v1", () => {
     login().then((token: string) => {
 
       chai.request(Server).get("/api/v1/users").set("x-access-token", token)
-        .then(res => {
+        .then((res: ChaiHttp.Response) => {
           expect(res.body).to.deep.equal(users);
         })
-        .catch(err => {
+        .catch((err: any) => {
           expect(err.message).equal("The 'AllUsers' Request are failed!");
         });
 
@@ -88,10 +88,10 @@ describe("User Route v1", () => {
     login().then((token: string) => {
 
       chai.request(Server).get("/api/v1/users/1").set("x-access-token", token)
-        .then(res => {
+        .then((res: ChaiHttp.Response) => {
           expect(res.body).to.deep.equal(users[0]);
         })
-        .catch(err => {
+        .catch((err: any) => {
           expect(err.message).equal("The 'GetUserById' Request with the Id: 1 are failed!");
         });
 
@@ -99,22 +99,21 @@ describe("User Route v1", () => {
 
   });
 
-  it(`route /api/v1/users/1 should return one user with 
-      id, username, password property`, () => {
+  it("route /api/v1/users/1 should return one user with id, username, password property", () => {
 
         login().then((token: string) => {
 
           chai.request(Server).get("/api/v1/users/1").set("x-access-token", token)
-            .then(res => {
+            .then((res: ChaiHttp.Response) => {
               expect(res.body).to.haveOwnProperty("id");
               expect(res.body).to.haveOwnProperty("username");
               expect(res.body).to.haveOwnProperty("password");
             })
-            .catch(err => {
+            .catch((err: any) => {
               expect(err.message).equal("The 'GetUserById' Request with the Id: 1 are failed!");
             });
- 
+
         }).catch((error: any) => console.error(error));
-        
+
   });
 });

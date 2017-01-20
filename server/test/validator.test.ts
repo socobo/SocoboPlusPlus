@@ -1,4 +1,6 @@
 /* tslint:disable:no-var-requires */
+process.env.NODE_ENV = "test";
+
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { NextFunction, Request, Response, Router } from "express";

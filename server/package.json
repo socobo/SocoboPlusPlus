@@ -18,7 +18,7 @@
     "serve": "node dist/server.js",
     "serve:w": "nodemon dist/server.js",
     "test": "npm-run-all setup:db:t create:l test:m",
-    "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/validator.test.ts'",
+    "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/users.route.test.ts'",
     "create:l": "mkdir -p logs",
     "clean": "rm -r dist/",
     "clean:l": "rm -r logs/",
