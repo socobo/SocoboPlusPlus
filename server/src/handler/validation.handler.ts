@@ -1,17 +1,14 @@
-import { Router, Request, Response, NextFunction } from "express";
-import { Recipe, DbError, ApiError, ValidationError } from "./../../../../models/index";
-import { ApiValidator } from "./../../../../logic/middleware/index";
+import { NextFunction, Request, Response, Router } from "express";
+import { ApiValidator } from "./../logic/middleware/index";
+import { ApiError, DbError, Recipe, ValidationError } from "./../models/index";
 
-export class ValidationHandler{
+export class ValidationHandler {
 
-	constructor(private _validator: ApiValidator) {}
+  constructor (private _validator: ApiValidator) {}
 
-	validate = (req: Request, res: Response, next: NextFunction) => {
-		this._validator.validate(Recipe, req)
-			.then((error: ValidationError) => {
-				res.status(error.statusCode).json(error.forResponse());
-			})
-			.catch(() => next());
-	}
+  public validate = (req: Request, res: Response, next: NextFunction): void => {
+    this._validator.validate(Recipe, req)
+      .then((e: ValidationError) => res.status(e.statusCode).json(e.forResponse()))
+      .catch(() => next());
+  }
 }
-
