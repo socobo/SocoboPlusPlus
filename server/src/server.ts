@@ -144,15 +144,15 @@ class Server {
     // check environment and init connectionString
     switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
       case "test":
-        connectionString = process.env.DATABASE_URL_TEST || Config.DATABASE_URL_TEST;
+        connectionString = process.env.DB_URL_TEST || Config.DB_URL_TEST;
         break;
 
       case "development":
-        connectionString = process.env.DATABASE_URL_DEV || Config.DATABASE_URL_DEV;
+        connectionString = process.env.DB_URL_DEV || Config.DB_URL_DEV;
         break;
 
       case "production":
-        connectionString = process.env.DATABASE_URL || Config.DATABASE_URL;
+        connectionString = process.env.DB_URL || Config.DB_URL;
         break;
 
       default:

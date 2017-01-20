@@ -1,4 +1,4 @@
-import { ErrorType } from "./../index";
+import { ErrorType } from "./error-type";
 /**
  * First digit indicates the type:
  * 0 => Generic errors
