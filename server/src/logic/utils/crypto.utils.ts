@@ -16,14 +16,14 @@ export class CryptoUtils {
           return reject(e);
         }
         bcrypt.hash(userPassword, salt, (errHash, hash) => {
-            if (errHash) {
-              const e = new ApiError(ERRORS.AUTH_PW_HASH_GENERATION)
-                .addSource(CryptoUtils.name)
-                .addSourceMethod("hashPassword(..)")
-                .addCause(errHash);
-              return reject(e);
-            }
-            resolve(hash);
+          if (errHash) {
+            const e = new ApiError(ERRORS.AUTH_PW_HASH_GENERATION)
+              .addSource(CryptoUtils.name)
+              .addSourceMethod("hashPassword(..)")
+              .addCause(errHash);
+            return reject(e);
+          }
+          resolve(hash);
         });
       });
     });

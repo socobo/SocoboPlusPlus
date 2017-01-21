@@ -28,6 +28,7 @@ export class RecipeHandler {
       .then((result: Recipe) => {
         recipe.id = result.id;
         res.status(201).json(recipe);
-      }).catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+      })
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 }
