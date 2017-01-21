@@ -1,8 +1,7 @@
 process.env.NODE_ENV = "test";
 
-import * as mocha from "mocha";
 import * as chai from "chai";
-
+import * as mocha from "mocha";
 import Server from "./../src/server";
 
 describe("Server", () => {

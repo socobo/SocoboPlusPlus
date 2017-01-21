@@ -1,77 +1,81 @@
-import * as mocha from "mocha";
-import * as chai from "chai"; 
-import * as sinon from "sinon";
-import {Router, Request, Response, NextFunction } from "express";
+/* tslint:disable:no-var-requires */
+process.env.NODE_ENV = "test";
 
+import * as chai from "chai";
+import * as chaiAsPromised from "chai-as-promised";
+import { NextFunction, Request, Response, Router } from "express";
+import * as mocha from "mocha";
+import * as sinon from "sinon";
 import { ApiValidator } from "./../src/logic/middleware/index";
 import { Recipe, ValidationError } from "./../src/models/index";
 
-const mocks = require("node-mocks-http");
-const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 chai.should();
 
-describe('ApiValidator', function(){
+describe("ApiValidator", () => {
 
-	it('validation of a recipe with empty title and userId failes with two properties', function(){
+  const mocks = require("node-mocks-http");
 
-		let req: any;
-		let res: any;
-		let recipe: Recipe = new Recipe();
-		recipe.title = "";
-		req = mocks.createRequest({
-			body: recipe
-		});
+  it("validation of a recipe with empty title and userId failes with two properties", () => {
 
-		let prom: any = new ApiValidator().validate(Recipe,req);
-		return prom.should.eventually.have.deep.property('validationErrors').to.have.lengthOf(2);
-	})
+    let req: any;
+    const recipe: Recipe = new Recipe();
+    recipe.title = "";
 
-	it('validation of a recipe with empty title and userId failes with the properties title and userId', function(){
+    req = mocks.createRequest({
+      body: recipe
+    });
 
-		let req: any;
-		let res: any;
-		let recipe: Recipe = new Recipe();
-		recipe.title = "";
-		req = mocks.createRequest({
-			body: recipe
-		});
+    const prom: any = new ApiValidator().validate(Recipe, req);
+    return prom.should.eventually.have.deep.property("validationErrors").to.have.lengthOf(2);
+  });
 
-		let prom: any = new ApiValidator().validate(Recipe,req);
-		return Promise.all([
-			prom.should.eventually.have.deep.property('validationErrors[0].property', 'title'),
-			prom.should.eventually.have.deep.property('validationErrors[1].property', 'userId')]);
-	});
+  it("validation of a recipe with empty title and userId failes with the properties title and userId", () => {
 
-	it('validation of a recipe resolves with correct validation error values', function(){
+    let req: any;
+    const recipe: Recipe = new Recipe();
+    recipe.title = "";
 
-		let req: any;
-		let res: any;
-		let recipe: Recipe = new Recipe();
-			recipe.title = ""
-			req = mocks.createRequest({
-				body: recipe
-		});
+    req = mocks.createRequest({
+      body: recipe
+    });
 
-		let prom: any = new ApiValidator().validate(Recipe,req);
-		return Promise.all([
-			prom.should.eventually.have.property('message', 'The provided input is invalid'),
-			prom.should.eventually.have.property('sourceMethod', 'validate(..)'),
-			prom.should.eventually.have.property('source', 'ApiValidator')]);
-	});
+    const prom: any = new ApiValidator().validate(Recipe, req);
+    return Promise.all([
+      prom.should.eventually.have.deep.property("validationErrors[0].property", "title"),
+      prom.should.eventually.have.deep.property("validationErrors[1].property", "userId")]);
+  });
 
-	it('validation of a recipe with title and userId will be rejected', function(){
+  it("validation of a recipe resolves with correct validation error values", () => {
 
-		let req: any;
-		let res: any;
-		let recipe: Recipe = new Recipe();
-		recipe.title = "Test Title";
-		recipe.userId = 2;
-		req = mocks.createRequest({
-			body: recipe
-		});
+    let req: any;
+    const recipe: Recipe = new Recipe();
+    recipe.title = "";
 
-		let prom: any = new ApiValidator().validate(Recipe,req);
-		return prom.should.be.rejected;
-	});
+    req = mocks.createRequest({
+      body: recipe
+    });
+
+    const prom: any = new ApiValidator().validate(Recipe, req);
+    return Promise.all([
+      prom.should.eventually.have.property("message", "The provided input is invalid"),
+      prom.should.eventually.have.property("sourceMethod", "validate(..)"),
+      prom.should.eventually.have.property("source", "ApiValidator")]);
+  });
+
+  it("validation of a recipe with title and userId will be rejected", () => {
+
+    let req: any;
+    const recipe: Recipe = new Recipe();
+    recipe.title = "Test Title";
+    recipe.userId = 2;
+
+    req = mocks.createRequest({
+      body: recipe
+    });
+
+    const prom: any = new ApiValidator().validate(Recipe, req);
+    return prom.should.be.rejected;
+  });
 });
+/* tslint:enable:no-var-requires */

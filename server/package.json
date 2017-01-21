@@ -1,6 +1,6 @@
 {
   "name": "socobo-backend",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Backend for Socobo",
   "private": true,
   "author": {
@@ -18,7 +18,7 @@
     "serve": "node dist/server.js",
     "serve:w": "nodemon dist/server.js",
     "test": "npm-run-all setup:db:t create:l test:m",
-    "test:m": "mocha --reporter spec --compilers ts:ts-node/register test/**/*.test.ts",
+    "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts'",
     "create:l": "mkdir -p logs",
     "clean": "rm -r dist/",
     "clean:l": "rm -r logs/",
@@ -26,7 +26,9 @@
     "setup:db:p": "cd ./sql && ./automate-creation.sh",
     "setup:db:d": "cd ./sql && ./automate-creation.sh -d",
     "setup:db:t": "cd ./sql && ./automate-creation.sh -t",
-    "open:b": "open http://localhost:8282"
+    "open:b": "open http://localhost:8282",
+    "lint": "tslint 'src/**/*.ts' 'test/**/*.test.ts'",
+    "lint:f": "tslint --force --format codeFrame 'src/**/*.ts' 'test/**/*.test.ts'"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -49,6 +51,7 @@
     "@types/bcrypt": "~1.0.0",
     "@types/jsonwebtoken": "~7.1.33",
     "@types/winston": "~2.2.0",
+    "@types/chai-as-promised": "~0.0.29",
     "nodemon": "~1.11.0",
     "ts-node": "~1.7.0",
     "typescript": "~2.1.4",
@@ -61,6 +64,7 @@
     "sinon": "~1.17.6",
     "winston-spy": "~0.2.0",
     "bcrypt": "~1.0.1",
-    "jsonwebtoken": "~7.2.1"
+    "jsonwebtoken": "~7.2.1",
+    "tslint": "~4.3.1"
   }
 }

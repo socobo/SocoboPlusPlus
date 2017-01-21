@@ -1,51 +1,51 @@
 export class SocoboUser {
-  id: number; 
-  username: string; 
-  email: string;
-  password: string; 
-  image: string; 
-  hasTermsAccepted: boolean; 
-  isAdmin: boolean; 
-  provider: string;
-  created: number;
-  lastModified: number;
+  public id: number;
+  public username: string;
+  public email: string;
+  public password: string;
+  public image: string;
+  public hasTermsAccepted: boolean;
+  public isAdmin: boolean;
+  public provider: string;
+  public created: number;
+  public lastModified: number;
 
-  addUsername = (username: string): this => {
+  public addUsername = (username: string): this => {
     this.username = username;
     return this;
   }
 
-  addEmail = (email: string): this => {
+  public addEmail = (email: string): this => {
     this.email = email;
     return this;
   }
 
-  addPassword = (password: string): this => {
+  public addPassword = (password: string): this => {
     this.password = password;
     return this;
   }
 
-  addImage = (image: string): this => {
+  public addImage = (image: string): this => {
     this.image = image;
     return this;
   }
 
-  addHasTermsAccepted = (hasTermsAccepted: boolean): this => {
+  public addHasTermsAccepted = (hasTermsAccepted: boolean): this => {
     this.hasTermsAccepted = hasTermsAccepted;
     return this;
   }
 
-  addIsAdmin = (isAdmin: boolean): this => {
+  public addIsAdmin = (isAdmin: boolean): this => {
     this.isAdmin = isAdmin;
     return this;
   }
 
-  addProvider = (provider: string): this => {
+  public addProvider = (provider: string): this => {
     this.provider = provider;
     return this;
   }
 
-  addDates = (): this => {
+  public addDates = (): this => {
     const now = Date.now();
     this.created = now;
     this.lastModified = now;

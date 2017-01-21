@@ -1,12 +1,10 @@
-import { ApiError, ErrorType } from "./../index";
 import { LogService } from "./../../logic/services/index";
-
+import { ApiError, ErrorType } from "./../index";
 
 export class DbError extends ApiError {
-  name = DbError.name;
-
-  query: string = "";
-  error = new Error()
+  public name = DbError.name;
+  public query: string = "";
+  public error = new Error();
 
   constructor (
     errorType: ErrorType
@@ -14,7 +12,7 @@ export class DbError extends ApiError {
     super(errorType);
   }
 
-  addQuery = (query: string): this => {
+  public addQuery = (query: string): this => {
     this.query = query;
     return this;
   }

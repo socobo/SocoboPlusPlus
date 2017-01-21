@@ -1,26 +1,23 @@
+import { ERROR_MESSAGES } from "../../i18n/error-messages";
+import { ERRORS } from "../index";
 import { LogService } from "./../../logic/services/index";
-import { ERROR_MESSAGES } from "../../i18n/error-messages"
-import { ERRORS } from "../index"
 import { ErrorType } from "./../index";
 
-export class ApiError extends Error{
-  message: string;
-  name = ApiError.name;
-
-  timestamp: number;
-  statusCode: number;
-  code: string;
-  source = "";
-  sourceMethod = "";
-  error = new Error();
+export class ApiError extends Error {
+  public message: string;
+  public name = ApiError.name;
+  public timestamp: number;
+  public statusCode: number;
+  public code: string;
+  public source = "";
+  public sourceMethod = "";
+  public error = new Error();
 
   constructor (
     errorType: ErrorType
   ) {
     super();
-    this.message = this.resolveMessage(
-      errorType.messageKey, 
-      errorType.messageArgs);
+    this.message = this.resolveMessage(errorType.messageKey, errorType.messageArgs);
     this.statusCode = errorType.statusCode;
     this.code = errorType.code;
     this.timestamp = Date.now();
@@ -28,36 +25,36 @@ export class ApiError extends Error{
 
   private resolveMessage = (messageKey: string, args: string[]): string => {
     let msg: string = ERROR_MESSAGES[messageKey];
-    let argCounter = 0
-    for (let arg of args) {
+    let argCounter = 0;
+    for (const arg of args) {
       msg = msg.replace(`{${argCounter}}`, arg);
-      argCounter ++;
+      argCounter++;
     }
     return msg;
   }
 
-  forResponse = () => {
-    LogService.addError(this.message, this);
-    return {
-      "message": this.message,
-      "source": this.source,
-      "method": this.sourceMethod
-    }
-  }
-
-  addSource = (source: string): this => {
+  public addSource = (source: string): this => {
     this.source = source;
     return this;
   }
 
-  addSourceMethod = (sourceMethod: string): this => {
+  public addSourceMethod = (sourceMethod: string): this => {
     this.sourceMethod = sourceMethod;
     return this;
   }
 
-  addCause = (error: Error): this => {
+  public addCause = (error: Error): this => {
     this.error = error;
-    this.name = error.name
+    this.name = error.name;
     return this;
+  }
+
+  public forResponse = () => {
+    LogService.addError(this.message, this);
+    return {
+      message: this.message,
+      method: this.sourceMethod,
+      source: this.source
+    };
   }
 }
