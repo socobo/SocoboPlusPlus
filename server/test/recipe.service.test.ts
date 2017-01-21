@@ -96,7 +96,7 @@ describe("RecipeService", () => {
       of pgPromise with the correct query and parameters`, () => {
 
     const stubTx = sinon.stub(db, "tx");
-    stubTx.callsArg(0);
+    stubTx.callsArg(1);
     stubTx.returns(Promise.resolve("TEST"));
 
     stub = sinon.stub(db, "one").returns(Promise.resolve("TEST"));
@@ -111,16 +111,15 @@ describe("RecipeService", () => {
     const date = new Date("9999");
     recipe.created = date;
 
+    const _SAVE: string = `insert into recipes(
+                             title, userId, description,
+                             imageUrl, created)
+                           values($1, $2, $3, $4, $5)
+                           returning id`;
+
     return service.save(recipe).then((value) => {
-      chai.expect(stub.calledWith(`
-          insert into recipes(
-            title,
-            userId,
-            description,
-            imageUrl,
-            created)
-          values($1, $2, $3, $4, $5)
-          returning id`, ["Test", 1, "TestDesc", "testUrl", date])).to.be.true;
+
+      chai.expect(stub.calledWith(_SAVE, ["Test", 1, "TestDesc", "testUrl", date])).to.be.true;
     });
   });
 });
