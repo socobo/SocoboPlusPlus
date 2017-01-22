@@ -78,8 +78,8 @@ export class AuthService {
       };
       // create JWT
       jwt.sign(signingInfo, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
-        issuer: (process.env.TOKEN_ISSUER || Config.TOKEN_ISSUER),
-        expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION)
+        expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION),
+        issuer: (process.env.TOKEN_ISSUER || Config.TOKEN_ISSUER)
       }, (err, token) => {
         if (err) {
           const e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)

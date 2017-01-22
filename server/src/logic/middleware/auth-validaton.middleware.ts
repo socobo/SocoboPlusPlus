@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import { Config } from "./../../config";
 import { ApiError, ERRORS } from "./../../models/index";
 
-export class AuthValidator {
+export class AuthValidationMiddleware {
 
   public checkRequest (req: Request): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -13,13 +13,13 @@ export class AuthValidator {
 
       if (!hasEmailProperty && !hasUsernameProperty) {
         const e = new ApiError(ERRORS.VAL_MISSING_USERNAME_EMAIL)
-          .addSource(AuthValidator.name)
+          .addSource(AuthValidationMiddleware.name)
           .addSourceMethod("checkRequest(..)");
         return reject(e);
       }
       if (!hasPasswordProperty) {
         const e = new ApiError(ERRORS.VAL_MISSING_PASSWORD)
-          .addSource(AuthValidator.name)
+          .addSource(AuthValidationMiddleware.name)
           .addSourceMethod("checkRequest(..)");
         return reject(e);
       }
@@ -50,7 +50,7 @@ export class AuthValidator {
             if (err.name === "JsonWebTokenError") {
               e = new ApiError(ERRORS.AUTH_TOKEN_ERROR);
             }
-            e.addSource(AuthValidator.name).addSourceMethod("checkRequest(..)");
+            e.addSource(AuthValidationMiddleware.name).addSourceMethod("checkRequest(..)");
             return reject(e);
           }
           req.body.decoded = decoded;
@@ -58,10 +58,16 @@ export class AuthValidator {
         });
       } else {
         const e = new ApiError(ERRORS.AUTH_TOKEN_MISSING)
-          .addSource(AuthValidator.name)
+          .addSource(AuthValidationMiddleware.name)
           .addSourceMethod("checkRequest(..)");
         return reject(e);
       }
+    });
+  }
+
+  public checkValidUser (req: Request): Promise<any> {
+    return new Promise((resolve, reject) => {
+
     });
   }
 }

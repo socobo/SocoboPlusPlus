@@ -2,7 +2,7 @@ import { validate } from "class-validator";
 import { NextFunction, Request, Response, Router } from "express";
 import { ERRORS, ValidationError } from "./../../models/index";
 
-export class ApiValidator {
+export class ModelValidationMiddleware {
 
   public validate<T> (type: { new (): T }, req: Request): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {
@@ -19,7 +19,7 @@ export class ApiValidator {
         .then((errors: any[]) => {
           if (errors.length > 0) {
             const e = new ValidationError(ERRORS.VAL_INVALID_INPUT)
-              .addSource("ApiValidator")
+              .addSource(ModelValidationMiddleware.name)
               .addSourceMethod("validate(..)")
               .addValidationErrors(errors);
             resolve(e);
@@ -28,7 +28,7 @@ export class ApiValidator {
           }
         }).catch((error: any) => {
           const e = new ValidationError(ERRORS.VAL_INVALID_INPUT)
-            .addSource("ApiValidator")
+            .addSource(ModelValidationMiddleware.name)
             .addSourceMethod("validate(..)")
             .addCause(error);
           resolve(e);

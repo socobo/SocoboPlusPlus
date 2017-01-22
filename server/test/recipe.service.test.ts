@@ -5,14 +5,14 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as mocha from "mocha";
 import * as pgPromise from "pg-promise";
 import * as sinon from "sinon";
-import { ApiValidator } from "./../src/logic/middleware/index";
+import { ModelValidationMiddleware } from "./../src/logic/middleware/index";
 import { RecipeService } from "./../src/logic/services/index";
 import { DbError, ERRORS, Recipe, ValidationError } from "./../src/models/index";
 
 chai.use(chaiAsPromised);
 chai.should();
 
-describe("RecipeService", () => {
+describe("Recipe Service", () => {
 
   let db: pgPromise.IDatabase<any>;
   let stub: sinon.SinonStub;

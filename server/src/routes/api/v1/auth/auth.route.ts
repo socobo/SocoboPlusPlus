@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { AuthValidator } from "./../../../../logic/middleware/index";
+import { AuthValidationMiddleware } from "./../../../../logic/middleware/index";
 import { AuthService } from "./../../../../logic/services/index";
 import { ErrorUtils } from "./../../../../logic/utils/index";
 import {
@@ -11,14 +11,14 @@ export class AuthRoute {
   constructor (
     private _authService: AuthService,
     private _router: Router,
-    private _authValidator: AuthValidator
+    private _authValidationMiddleware: AuthValidationMiddleware
   ) {}
 
   public createRoutes (): Router {
     // login the user
     this._router.post("/login",
       (req: Request, res: Response, next: NextFunction) => {
-        this._authValidator.checkRequest(req)
+        this._authValidationMiddleware.checkRequest(req)
           .then(() => next())
           .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
         },
@@ -39,7 +39,7 @@ export class AuthRoute {
     // register the user
     this._router.post("/register",
       (req: Request, res: Response, next: NextFunction) => {
-        this._authValidator.checkRequest(req)
+        this._authValidationMiddleware.checkRequest(req)
           .then(() => next())
           .catch((error: any) => res.status(error.statusCode).json(error.forResponse()));
         },

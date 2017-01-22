@@ -11,11 +11,11 @@ import * as winston from "winston";
 import { Config } from "./config";
 // handler
 import {
-  AuthHandler, RecipeHandler, ValidationHandler
+  AuthValidationHandler, ModelValidationHandler, RecipeHandler
 } from "./handler/index";
 // middleware
 import {
-  ApiValidator, AuthValidator
+  AuthValidationMiddleware, ModelValidationMiddleware
 } from "./logic/middleware/index";
 // services
 import {
@@ -36,24 +36,25 @@ class Server {
   private _port: number;
   private _server: http.Server;
 
-  private _authHandler: AuthHandler;
-  private _recipeHandler: RecipeHandler;
-  private _validationHandler: ValidationHandler;
-
-  private _authValidator: AuthValidator;
-
   private _cryptoUtils: CryptoUtils;
 
   private _authService: AuthService;
   private _recipeService: RecipeService;
   private _userService: UserService;
 
+  private _authValidationMiddleware: AuthValidationMiddleware;
+  private _modelValidationMiddleware: ModelValidationMiddleware;
+
+  private _authValidationHandler: AuthValidationHandler;
+  private _modelValidationHandler: ModelValidationHandler;
+  private _recipeHandler: RecipeHandler;
+
   constructor () {
     this._create();
     this._config();
-    this._middleware();
     this._utils();
     this._services();
+    this._middleware();
     this._handler();
     this._routes();
     this._listen();
@@ -170,13 +171,6 @@ class Server {
   }
 
   /**
-   * MIDDLEWARE
-   */
-  private _middleware (): void {
-    this._authValidator = new AuthValidator();
-  }
-
-  /**
    * UTILS
    */
   private _utils (): void {
@@ -187,20 +181,25 @@ class Server {
    * SERVICES
    */
   private _services (): void {
-    // init user service
     this._userService = new UserService(this._db);
-    // init recipe service
     this._recipeService = new RecipeService(this._db);
-    // init auth service
     this._authService = new AuthService(this._userService, this._cryptoUtils);
+  }
+
+  /**
+   * MIDDLEWARE
+   */
+  private _middleware (): void {
+    this._authValidationMiddleware = new AuthValidationMiddleware();
+    this._modelValidationMiddleware = new ModelValidationMiddleware();
   }
 
   /**
    * HANDLER
    */
   private _handler (): void {
-    this._authHandler = new AuthHandler(this._authValidator);
-    this._validationHandler = new ValidationHandler(new ApiValidator());
+    this._authValidationHandler = new AuthValidationHandler(this._authValidationMiddleware);
+    this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._recipeHandler = new RecipeHandler(this._recipeService, this._userService);
   }
 
@@ -219,9 +218,9 @@ class Server {
 
   private _apiRoutes (): void {
     // set routes to paths
-    this._app.use("/api/v1/recipes", this._recipeRoute());
     this._app.use("/api/v1/auth", this._authRoute());
     this._app.use("/api/v1/users", this._usersRoute());
+    this._app.use("/api/v1/recipes", this._recipeRoute());
     this._app.use("/api/v1/logs", this._logsRoute());
   }
 
@@ -229,23 +228,14 @@ class Server {
     // create new router
     const router: express.Router = express.Router();
     // init and return auth route
-    return new AuthRoute(this._authService, router,
-      this._authValidator).createRoutes();
+    return new AuthRoute(this._authService, router, this._authValidationMiddleware).createRoutes();
   }
 
   private _usersRoute (): express.Router {
     // create new router
     const router: express.Router = express.Router();
     // init and return users route
-    return new UsersRoute(this._userService, router,
-      this._authValidator).createRoutes();
-  }
-
-  private _logsRoute (): express.Router {
-    // create new router
-    const router: express.Router = express.Router();
-    // init and return logs route
-    return new LogRoute(router, this._authValidator).createRoutes();
+    return new UsersRoute(this._userService, router, this._authValidationMiddleware).createRoutes();
   }
 
   private _recipeRoute (): express.Router {
@@ -253,7 +243,14 @@ class Server {
     const router: express.Router = express.Router();
     // init and return recipe route
     return new RecipeRoute(router, this._recipeHandler,
-      this._validationHandler, this._authHandler).createRoutes();
+        this._authValidationHandler, this._modelValidationHandler).createRoutes();
+  }
+
+  private _logsRoute (): express.Router {
+    // create new router
+    const router: express.Router = express.Router();
+    // init and return logs route
+    return new LogRoute(router, this._authValidationMiddleware).createRoutes();
   }
 
   private _listen (): void {

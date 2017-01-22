@@ -7,7 +7,7 @@ import * as winston from "winston";
 import { LogService } from "./../src/logic/services/log.service";
 import { ApiError, DbError, ERRORS } from "./../src/models/index";
 
-describe("LogService", () => {
+describe("Log Service", () => {
 
   const spyLogger = require("winston-spy");
   let spy: sinon.SinonSpy;

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { ApiValidator } from "./../logic/middleware/index";
 import { RecipeService, UserService } from "./../logic/services/index";
 import { ErrorUtils } from "./../logic/utils/index";
 import { ApiError, DbError, ERRORS, Recipe, ValidationError } from "./../models/index";
