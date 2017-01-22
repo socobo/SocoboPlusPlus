@@ -60,7 +60,7 @@ export class UserService {
       VALUES
         ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING id`;
-    return this._db.tx("SaveUse", () => {
+    return this._db.tx("SaveUser", () => {
       return this._db.one(query, [user.username, user.email, user.password,
                                   user.image, user.hasTermsAccepted, user.isAdmin,
                                   user.provider, user.created, user.lastModified]);

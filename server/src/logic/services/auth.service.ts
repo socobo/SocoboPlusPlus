@@ -67,9 +67,18 @@ export class AuthService {
     });
   }
 
-  private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
+  private _createLoginResult (foundUser: any): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      jwt.sign(foundUser, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
+      // workaround: DB doesn't return a real SocoboUser Object, simply a POJO
+      // maybe the rewrite of the database layer fix this problem (hopefully)
+      const signingInfo: Object = {
+        admin: foundUser.isadmin,
+        email: foundUser.email,
+        username: foundUser.username
+      };
+      // create JWT
+      jwt.sign(signingInfo, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
+        issuer: (process.env.TOKEN_ISSUER || Config.TOKEN_ISSUER),
         expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION)
       }, (err, token) => {
         if (err) {
