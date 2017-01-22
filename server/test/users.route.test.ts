@@ -46,7 +46,17 @@ describe("User Route v1", () => {
     user2.isAdmin = false;
     user2.provider = "email";
 
-    users = [user1, user2];
+    const user3: SocoboUser = new SocoboUser();
+    user2.id = 3;
+    user2.username = "admin";
+    user2.email = "admin@test.test";
+    // user2.password = "password";
+    user2.image = "http://placehold.it/350x150";
+    user2.hasTermsAccepted = true;
+    user2.isAdmin = false;
+    user2.provider = "email";
+
+    users = [user1, user2, user3];
 
     done();
   });

@@ -1,28 +1,21 @@
-import { NextFunction, Request, Response, Router } from "express";
-import { AuthValidationMiddleware } from "./../../../../logic/middleware/index";
-import { LogService } from "./../../../../logic/services/index";
-import { ApiError } from "./../../../../models/index";
+import { Router } from "express";
+import { AuthValidationHandler, LogHandler } from "./../../../../handler/index";
 
 export class LogRoute {
 
   constructor (
     private _router: Router,
-    private _authValidationMiddleware: AuthValidationMiddleware
+    private _logHandler: LogHandler,
+    private _authValidationHandler: AuthValidationHandler
   ) {}
 
   public createRoutes (): Router {
-    // get all errors
     this._router.get("/errors",
-      (req: Request, res: Response, next: NextFunction) => {
-        this._authValidationMiddleware.checkValidToken(req)
-          .then(() => next())
-          .catch((err: any) => res.status(err.statusCode).json(err.forResponse()));
-        },
-      (req: Request, res: Response, next: NextFunction) => {
-          res.status(200).json(LogService.getErrors());
-        }
-    );
-    // return Router to use in server.ts
+      this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser,
+      this._authValidationHandler.restricted,
+      this._logHandler.getErrors);
+
     return this._router;
   }
 }
