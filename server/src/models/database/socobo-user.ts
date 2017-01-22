@@ -1,3 +1,5 @@
+import { ProviderType } from "./../enums/provider-type";
+
 export class SocoboUser {
   public id: number;
   public username: string;
@@ -6,7 +8,7 @@ export class SocoboUser {
   public image: string;
   public hasTermsAccepted: boolean;
   public isAdmin: boolean;
-  public provider: string;
+  public provider: ProviderType;
   public created: number;
   public lastModified: number;
 
@@ -40,7 +42,7 @@ export class SocoboUser {
     return this;
   }
 
-  public addProvider = (provider: string): this => {
+  public addProvider = (provider: ProviderType): this => {
     this.provider = provider;
     return this;
   }
