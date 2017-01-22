@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { UserService } from "./../logic/services/index";
-import { SocoboUser } from "./../models/index";
+import { UserService } from "./../../logic/services/index";
+import { SocoboUser } from "./../../models/index";
 
 export class UserHandler {
 

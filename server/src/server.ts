@@ -11,7 +11,7 @@ import * as winston from "winston";
 import { Config } from "./config";
 // handler
 import { AuthValidationHandler, ModelValidationHandler } from "./handler/index";
-import { LogHandler, RecipeHandler, UserHandler } from "./handler/index";
+import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./handler/index";
 // middleware
 import {
   AuthValidationMiddleware, ModelValidationMiddleware
@@ -47,6 +47,7 @@ class Server {
   private _authValidationHandler: AuthValidationHandler;
   private _modelValidationHandler: ModelValidationHandler;
 
+  private _authHandler: AuthHandler;
   private _userHandler: UserHandler;
   private _recipeHandler: RecipeHandler;
   private _logHandler: LogHandler;
@@ -202,6 +203,7 @@ class Server {
   private _handler (): void {
     this._authValidationHandler = new AuthValidationHandler(this._authValidationMiddleware);
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
+    this._authHandler = new AuthHandler(this._authService);
     this._userHandler = new UserHandler(this._userService);
     this._recipeHandler = new RecipeHandler(this._recipeService, this._userService);
     this._logHandler = new LogHandler();
@@ -232,7 +234,7 @@ class Server {
     // create new router
     const router: express.Router = express.Router();
     // init and return auth route
-    return new AuthRoute(this._authService, router, this._authValidationMiddleware).createRoutes();
+    return new AuthRoute(router, this._authHandler, this._authValidationHandler).createRoutes();
   }
 
   private _usersRoute (): express.Router {

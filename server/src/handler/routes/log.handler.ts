@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { LogService } from "./../logic/services/index";
+import { LogService } from "./../../logic/services/index";
 
 export class LogHandler {
 

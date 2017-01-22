@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { Config } from "./../../config";
-import { ApiError, ERRORS, SocoboUser } from "./../../models/index";
+import { ApiError, ERRORS, ExtractRequestBodyResult, SocoboUser } from "./../../models/index";
 import { UserService } from "./../services/index";
 
 export class AuthValidationMiddleware {
@@ -33,6 +33,22 @@ export class AuthValidationMiddleware {
         req.body.isEmailLogin = false;
       }
 
+      resolve();
+    });
+  }
+
+  public extractRequestBody (req: Request): Promise<ExtractRequestBodyResult> {
+    return new Promise((resolve, reject) => {
+      if (!req.body.hasOwnProperty("isEmailLogin")) {
+        const e: ApiError = new ApiError(ERRORS.REQUEST_BODY)
+          .addSource(AuthValidationMiddleware.name)
+          .addSourceMethod("extractRequestBody(..)");
+        return reject(e);
+      }
+
+      req.body.ExtractRequestBodyResult = new ExtractRequestBodyResult(req.body.isEmailLogin,
+                                                (req.body.isEmailLogin ? req.body.email : req.body.username),
+                                                req.body.password);
       resolve();
     });
   }
