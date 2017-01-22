@@ -190,7 +190,7 @@ class Server {
    * MIDDLEWARE
    */
   private _middleware (): void {
-    this._authValidationMiddleware = new AuthValidationMiddleware();
+    this._authValidationMiddleware = new AuthValidationMiddleware(this._userService);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
   }
 

@@ -6,8 +6,26 @@ export class AuthValidationHandler {
 
   constructor (private _authValidationMiddleware: AuthValidationMiddleware) {}
 
-  public authenticate = (req: Request, res: Response, next: NextFunction): void => {
+  public checkToken = (req: Request, res: Response, next: NextFunction): void => {
     this._authValidationMiddleware.checkValidToken(req)
+      .then(() => next())
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  public checkUser = (req: Request, res: Response, next: NextFunction): void => {
+    this._authValidationMiddleware.checkValidUser(req)
+      .then(() => next())
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  public restricted = (req: Request, res: Response, next: NextFunction): void => {
+    this._authValidationMiddleware.checkUserRoleForRestriction(req, true)
+      .then(() => next())
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  public nonRestricted = (req: Request, res: Response, next: NextFunction): void => {
+    this._authValidationMiddleware.checkUserRoleForRestriction(req, false)
       .then(() => next())
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }

@@ -17,10 +17,20 @@ export class ERRORS {
     "internal.error.request.body",
     500
   );
+  public static REQUEST_BODY_AUTHCHECK = new ErrorType(
+    "00006",
+    "internal.error.request.body.authcheck",
+    500
+  );
   public static USER_NOT_FOUND = new ErrorType(
     "10001",
     "user.not.found",
     404
+  );
+  public static USER_NOT_A_ADMIN = new ErrorType(
+    "10002",
+    "user.not.a.admin",
+    403
   );
   public static AUTH_WRONG_PASSWORD = new ErrorType(
     "20001",

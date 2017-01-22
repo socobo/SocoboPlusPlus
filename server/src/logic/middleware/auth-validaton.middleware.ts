@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { Config } from "./../../config";
-import { ApiError, ERRORS } from "./../../models/index";
+import { ApiError, ERRORS, SocoboUser } from "./../../models/index";
+import { UserService } from "./../services/index";
 
 export class AuthValidationMiddleware {
+
+  constructor (private _userService: UserService) {}
 
   public checkRequest (req: Request): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -67,7 +70,44 @@ export class AuthValidationMiddleware {
 
   public checkValidUser (req: Request): Promise<any> {
     return new Promise((resolve, reject) => {
+      if (!req.body.hasOwnProperty("decoded")) {
+        const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("a decoded Object"))
+          .addSource(AuthValidationMiddleware.name)
+          .addSourceMethod("checkValidUser(..)");
+        return reject(err);
+      }
+      this._userService.getUserByEmail(req.body.decoded.email)
+        .then((user: SocoboUser) => {
+          delete req.body.decoded;
+          req.body.isAdmin = user.isAdmin;
+          resolve();
+        })
+        .catch((error: any) => reject(error));
+    });
+  }
 
+  public checkUserRoleForRestriction (req: Request, shouldBeRestricted: boolean): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!req.body.hasOwnProperty("isAdmin")) {
+        const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("an isAdmin Property"))
+          .addSource(AuthValidationMiddleware.name)
+          .addSourceMethod("checkUserRole(..)");
+        return reject(err);
+      }
+
+      if (shouldBeRestricted) {
+        if (req.body.isAdmin) {
+          delete req.body.isAdmin;
+          resolve();
+        }
+        const error: ApiError = new ApiError(ERRORS.USER_NOT_A_ADMIN)
+          .addSource(AuthValidationMiddleware.name)
+          .addSourceMethod("checkUserRole(..)");
+        reject(error);
+      } else {
+        delete req.body.isAdmin;
+        resolve();
+      }
     });
   }
 }
