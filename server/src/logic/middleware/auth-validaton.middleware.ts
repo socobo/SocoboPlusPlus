@@ -77,9 +77,9 @@ export class AuthValidationMiddleware {
         return reject(err);
       }
       this._userService.getUserByEmail(req.body.decoded.email)
-        .then((user: SocoboUser) => {
+        .then((user: any) => {
           delete req.body.decoded;
-          req.body.isAdmin = user.isAdmin;
+          req.body.isAdmin = user.isadmin;
           resolve();
         })
         .catch((error: any) => reject(error));
@@ -98,16 +98,16 @@ export class AuthValidationMiddleware {
       if (shouldBeRestricted) {
         if (req.body.isAdmin) {
           delete req.body.isAdmin;
-          resolve();
+          return resolve();
         }
         const error: ApiError = new ApiError(ERRORS.USER_NOT_A_ADMIN)
           .addSource(AuthValidationMiddleware.name)
           .addSourceMethod("checkUserRole(..)");
-        reject(error);
-      } else {
-        delete req.body.isAdmin;
-        resolve();
+        return reject(error);
       }
+
+      delete req.body.isAdmin;
+      resolve();
     });
   }
 }
