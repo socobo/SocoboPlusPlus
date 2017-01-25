@@ -4,9 +4,6 @@ dist: trusty
 cache:
   directories:
     - server/node_modules
-before_script:
-  - cd server
-  - npm install
 node_js: 7
 addons:
   postgresql: "9.5"
@@ -18,11 +15,8 @@ addons:
     packages:
       - google-chrome-stable
       - g++-4.8
-script:
-  - cd server
-  - npm run setup:db:t
-  - npm run lint
-  - npm test
 env:
   global:
     - "CXX='g++-4.8'"
+script:
+  - cd server && npm install && npm run setup:db:t && npm run lint && npm test
