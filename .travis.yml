@@ -5,7 +5,8 @@ cache:
   directories:
     - server/node_modules
 before_script:
-  - cd server && npm install
+  - cd server
+  - npm install
 node_js: 7
 addons:
   postgresql: "9.5"
