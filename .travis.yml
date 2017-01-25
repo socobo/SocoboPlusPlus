@@ -1,0 +1,27 @@
+language: node_js
+sudo: required
+dist: trusty
+cache:
+  directories:
+    - server/node_modules
+before_script:
+  - npm install
+node_js: 7
+addons:
+	postgresql: "9.5"
+  firefox: latest
+  apt:
+    sources:
+      - google-chrome
+      - ubuntu-toolchain-r-test
+    packages:
+      - google-chrome-stable
+      - g++-4.8
+script:
+  - cd server
+  - npm run setup:db:t
+  - npm run lint
+  - npm test
+env:
+  global:
+    - "CXX='g++-4.8'"
