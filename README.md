@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/socobo/SocoboPlusPlus.svg?branch=master)](https://travis-ci.org/socobo/SocoboPlusPlus)
+
 # socobo++
 the final stack :-)
 
