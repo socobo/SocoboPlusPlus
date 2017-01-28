@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AuthHandler, AuthValidationHandler } from "./../../../../handler/index";
+import { AuthHandler, AuthValidationHandler } from "./../../../../logic/handler/index";
 import { AuthService } from "./../../../../logic/services/index";
 
 export class AuthRoute {

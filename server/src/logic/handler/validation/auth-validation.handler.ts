@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { AuthValidationMiddleware } from "./../../logic/middleware/index";
-import { ApiError, DbError, Recipe, ValidationError } from "./../../models/index";
+import { AuthValidationMiddleware } from "./../../../logic/middleware/index";
+import { ApiError, DbError, Recipe, ValidationError } from "./../../../models/index";
 
 export class AuthValidationHandler {
 

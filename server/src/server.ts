@@ -10,8 +10,8 @@ import * as winston from "winston";
 // server config
 import { Config } from "./config";
 // handler
-import { AuthValidationHandler, ModelValidationHandler } from "./handler/index";
-import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./handler/index";
+import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/index";
+import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./logic/handler/index";
 // middleware
 import {
   AuthValidationMiddleware, ModelValidationMiddleware

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AuthValidationHandler, LogHandler } from "./../../../../handler/index";
+import { AuthValidationHandler, LogHandler } from "./../../../../logic/handler/index";
 
 export class LogRoute {
 

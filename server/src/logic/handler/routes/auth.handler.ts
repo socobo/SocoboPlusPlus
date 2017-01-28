@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { AuthService } from "./../../logic/services/index";
+import { AuthService } from "./../../../logic/services/index";
 import {
   ApiError, ERRORS, ExtractRequestBodyResult, LoginResponse, SocoboUser
-} from "./../../models/index";
+} from "./../../../models/index";
 
 export class AuthHandler {
 
