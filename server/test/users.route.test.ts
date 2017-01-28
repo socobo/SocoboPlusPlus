@@ -3,7 +3,7 @@ process.env.NODE_ENV = "test";
 import * as chai from "chai";
 import * as mocha from "mocha";
 import chaiHttp = require("chai-http");
-import { SocoboUser, ProviderType } from "./../src/models/index";
+import { ProviderType, SocoboUser } from "./../src/models/index";
 import Server from "./../src/server";
 
 chai.use(chaiHttp);
