@@ -27,9 +27,9 @@ export class ERRORS {
     "user.not.found",
     404
   );
-  public static USER_NOT_A_ADMIN = new ErrorType(
+  public static USER_NOT_AN_ADMIN = new ErrorType(
     "10002",
-    "user.not.a.admin",
+    "user.not.an.admin",
     403
   );
   public static AUTH_WRONG_PASSWORD = new ErrorType(

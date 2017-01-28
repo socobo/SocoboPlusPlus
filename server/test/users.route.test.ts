@@ -47,14 +47,14 @@ describe("User Route v1", () => {
     user2.provider = "email";
 
     const user3: SocoboUser = new SocoboUser();
-    user2.id = 3;
-    user2.username = "admin";
-    user2.email = "admin@test.test";
-    // user2.password = "password";
-    user2.image = "http://placehold.it/350x150";
-    user2.hasTermsAccepted = true;
-    user2.isAdmin = false;
-    user2.provider = "email";
+    user3.id = 3;
+    user3.username = "admin";
+    user3.email = "admin@test.test";
+    // user3.password = "password";
+    user3.image = "http://placehold.it/350x150";
+    user3.hasTermsAccepted = true;
+    user3.isAdmin = false;
+    user3.provider = "email";
 
     users = [user1, user2, user3];
 

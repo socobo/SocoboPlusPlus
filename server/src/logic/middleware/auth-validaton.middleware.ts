@@ -116,7 +116,7 @@ export class AuthValidationMiddleware {
           delete req.body.isAdmin;
           return resolve();
         }
-        const error: ApiError = new ApiError(ERRORS.USER_NOT_A_ADMIN)
+        const error: ApiError = new ApiError(ERRORS.USER_NOT_AN_ADMIN)
           .addSource(AuthValidationMiddleware.name)
           .addSourceMethod("checkUserRole(..)");
         return reject(error);
