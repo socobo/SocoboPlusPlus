@@ -21,7 +21,7 @@ export class AuthService {
         .then((cr: ComparePwResult) => this._validateComparePasswords(cr.isPasswordMatch, cr.user))
         .then((user: SocoboUser) => resolve(this._createLoginResult(user)))
         .catch((error: any) => {
-          if (ErrorUtils.notFound(error)) {
+          if (error.code === ERRORS.USER_NOT_FOUND.code) {
             const e = new DbError(ERRORS.AUTH_NOT_REGISTERED.withArgs(usernameOrEmail))
               .addSource(AuthService.name)
               .addSourceMethod("login(..)")
