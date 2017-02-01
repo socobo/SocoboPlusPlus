@@ -6,6 +6,7 @@ export const ERROR_MESSAGES: any = {
   "auth.used.email.or.password": "Email or Username is already registered. Please use another one.",
   "auth.user.not.registerd": "The user with the username/email {0} is not registered yet",
   "auth.wrong.password": "Authentication failed. Wrong password",
+  "auth.not.authorized": "The user has unsufficient permission to access the requested resource",
   "internal.error": "Internal server error",
   "internal.error.create.hash": "Error while generating password hash",
   "internal.error.create.salt": "Error while generating the Salt value",

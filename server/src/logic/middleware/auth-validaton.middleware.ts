@@ -46,9 +46,11 @@ export class AuthValidationMiddleware {
         return reject(e);
       }
 
+      console.log("IS ADMIN", req.body.isAdmin);
+      
       req.body.ExtractRequestBodyResult = new ExtractRequestBodyResult(req.body.isEmailLogin,
                                                 (req.body.isEmailLogin ? req.body.email : req.body.username),
-                                                req.body.password);
+                                                req.body.password, req.body.isAdmin);
       resolve();
     });
   }
@@ -95,35 +97,45 @@ export class AuthValidationMiddleware {
       this._userService.getUserByEmail(req.body.decoded.email)
         .then((user: any) => {
           delete req.body.decoded;
-          req.body.isAdmin = user.isadmin;
-          resolve();
+          // In the future if we need more roles we could 
+          // The role of a user could be in the token and would be fetched
+          // from the token if we need it for the authorization
+          // check for a role like if user.role === role 
+          if(user.isadmin){
+            resolve();
+          }else{
+            const err: ApiError = new ApiError(ERRORS.USER_NOT_AUTHORIZED)
+              .addSource(AuthValidationMiddleware.name)
+              .addSourceMethod("checkValidUser(..)");
+            reject(err);
+          }
         })
         .catch((error: any) => reject(error));
     });
   }
 
-  public checkUserRoleForRestriction (req: Request, shouldBeRestricted: boolean): Promise<any> {
-    return new Promise((resolve, reject) => {
-      if (!req.body.hasOwnProperty("isAdmin")) {
-        const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("an isAdmin Property"))
-          .addSource(AuthValidationMiddleware.name)
-          .addSourceMethod("checkUserRole(..)");
-        return reject(err);
-      }
+  // public checkUserRoleForRestriction (req: Request, shouldBeRestricted: boolean): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     if (!req.body.hasOwnProperty("isAdmin")) {
+  //       const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("an isAdmin Property"))
+  //         .addSource(AuthValidationMiddleware.name)
+  //         .addSourceMethod("checkUserRole(..)");
+  //       return reject(err);
+  //     }
 
-      if (shouldBeRestricted) {
-        if (req.body.isAdmin) {
-          delete req.body.isAdmin;
-          return resolve();
-        }
-        const error: ApiError = new ApiError(ERRORS.USER_NOT_AN_ADMIN)
-          .addSource(AuthValidationMiddleware.name)
-          .addSourceMethod("checkUserRole(..)");
-        return reject(error);
-      }
+  //     if (shouldBeRestricted) {
+  //       if (req.body.isAdmin) {
+  //         delete req.body.isAdmin;
+  //         return resolve();
+  //       }
+  //       const error: ApiError = new ApiError(ERRORS.USER_NOT_AN_ADMIN)
+  //         .addSource(AuthValidationMiddleware.name)
+  //         .addSourceMethod("checkUserRole(..)");
+  //       return reject(error);
+  //     }
 
-      delete req.body.isAdmin;
-      resolve();
-    });
-  }
+  //     delete req.body.isAdmin;
+  //     resolve();
+  //   });
+  // }
 }

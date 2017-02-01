@@ -30,15 +30,15 @@ export class AuthValidationHandler {
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
-  public restricted = (req: Request, res: Response, next: NextFunction): void => {
-    this._authValidationMiddleware.checkUserRoleForRestriction(req, true)
-      .then(() => next())
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-  }
+  // public restricted = (req: Request, res: Response, next: NextFunction): void => {
+  //   this._authValidationMiddleware.checkUserRoleForRestriction(req, true)
+  //     .then(() => next())
+  //     .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  // }
 
-  public nonRestricted = (req: Request, res: Response, next: NextFunction): void => {
-    this._authValidationMiddleware.checkUserRoleForRestriction(req, false)
-      .then(() => next())
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-  }
+  // public nonRestricted = (req: Request, res: Response, next: NextFunction): void => {
+  //   this._authValidationMiddleware.checkUserRoleForRestriction(req, false)
+  //     .then(() => next())
+  //     .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  // }
 }

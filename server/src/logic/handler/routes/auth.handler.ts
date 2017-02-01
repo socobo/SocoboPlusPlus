@@ -38,7 +38,7 @@ export class AuthHandler {
     }
 
     const erbr: ExtractRequestBodyResult = req.body.ExtractRequestBodyResult;
-    this._authService.register(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password)
+    this._authService.register(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password, erbr.isAdmin)
       .then((result: SocoboUser) => {
         delete req.body.ExtractRequestBodyResult;
         res.status(201).json(result);
