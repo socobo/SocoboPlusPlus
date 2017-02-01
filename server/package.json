@@ -1,6 +1,6 @@
 {
   "name": "socobo-backend",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Backend for Socobo",
   "private": true,
   "author": {
@@ -20,9 +20,9 @@
     "test": "npm-run-all setup:db:t create:l test:m",
     "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts'",
     "create:l": "mkdir -p logs",
-    "clean": "rm -r dist/",
-    "clean:l": "rm -r logs/",
-    "clean:a": "rm -r dist/ node_modules/ logs/",
+    "clean": "rm -rf dist/",
+    "clean:l": "rm -rf logs/",
+    "clean:a": "rm -rf dist/ node_modules/ logs/",
     "setup:db:p": "cd ./sql && ./automate-creation.sh",
     "setup:db:d": "cd ./sql && ./automate-creation.sh -d",
     "setup:db:t": "cd ./sql && ./automate-creation.sh -t",

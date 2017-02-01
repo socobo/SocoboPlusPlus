@@ -3,7 +3,7 @@ process.env.NODE_ENV = "test";
 import * as chai from "chai";
 import * as mocha from "mocha";
 import chaiHttp = require("chai-http");
-import { SocoboUser } from "./../src/models/index";
+import { ProviderType, SocoboUser } from "./../src/models/index";
 import Server from "./../src/server";
 
 chai.use(chaiHttp);
@@ -28,23 +28,23 @@ describe("User Route v1", () => {
   before((done) => {
     const user1: SocoboUser = new SocoboUser();
     user1.id = 1;
-    user1.username = "JohnDoe";
+    user1.username = "john-doe@test.test";
     user1.email = "john-doe@test.test";
     // user1.password = "SuperSecurePassword";
     user1.image = "http://placehold.it/350x150";
     user1.hasTermsAccepted = true;
     user1.isAdmin = false;
-    user1.provider = "email";
+    user1.provider = ProviderType.Email;
 
     const user2: SocoboUser = new SocoboUser();
     user2.id = 2;
     user2.username = "MaxMustermann";
-    user2.email = "max-mustermann@test.test";
+    user2.email = "MaxMustermann";
     // user2.password = "SuperMegaSecure";
     user2.image = "http://placehold.it/350x150";
     user2.hasTermsAccepted = true;
     user2.isAdmin = false;
-    user2.provider = "email";
+    user2.provider = ProviderType.Username;
 
     const user3: SocoboUser = new SocoboUser();
     user3.id = 3;
@@ -109,7 +109,7 @@ describe("User Route v1", () => {
 
   });
 
-  it("route /api/v1/users/1 should return one user with id, username, password property", () => {
+  it("route /api/v1/users/1 should return one user without password property", () => {
 
         login().then((token: string) => {
 
@@ -117,7 +117,14 @@ describe("User Route v1", () => {
             .then((res: ChaiHttp.Response) => {
               expect(res.body).to.haveOwnProperty("id");
               expect(res.body).to.haveOwnProperty("username");
-              expect(res.body).to.haveOwnProperty("password");
+              expect(res.body).to.haveOwnProperty("email");
+              expect(res.body).to.haveOwnProperty("image");
+              expect(res.body).to.haveOwnProperty("hastermsaccepted");
+              expect(res.body).to.haveOwnProperty("isadmin");
+              expect(res.body).to.haveOwnProperty("provider");
+              expect(res.body).to.haveOwnProperty("created");
+              expect(res.body).to.haveOwnProperty("lastmodified");
+              expect(res.body).to.not.haveOwnProperty("password");
             })
             .catch((err: any) => {
               expect(err.message).equal("The 'GetUserById' Request with the Id: 1 are failed!");

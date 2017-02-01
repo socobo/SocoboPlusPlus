@@ -1,5 +1,6 @@
 export * from "./database/recipe";
 export * from "./database/socobo-user";
+export * from "./enums/provider-type";
 export * from "./errors/api-error";
 export * from "./errors/db-error";
 export * from "./errors/errors";
