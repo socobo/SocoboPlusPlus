@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import {Response } from "express";
 import { AuthService } from "./../../../logic/services/index";
 import {
-  ApiError, ERRORS, ExtractRequestBodyResult, LoginResponse, SocoboUser
+  ApiError, ERRORS, ExtractRequestBodyResult, LoginResponse, SocoboUser, Request
 } from "./../../../models/index";
 
 export class AuthHandler {
@@ -30,17 +30,18 @@ export class AuthHandler {
 
   public register = (req: Request, res: Response): void => {
 
-    if (!req.body.hasOwnProperty("ExtractRequestBodyResult")) {
+    //if (!req.body.hasOwnProperty("ExtractRequestBodyResult")) {
+    if (!req.requestData.hasOwnProperty("ExtractRequestBodyResult")) {
       const err: ApiError = new ApiError(ERRORS.REQUEST_BODY)
         .addSource(AuthHandler.name)
         .addSourceMethod("register");
       res.status(err.statusCode).json(err.forResponse());
     }
 
-    const erbr: ExtractRequestBodyResult = req.body.ExtractRequestBodyResult;
+    const erbr: ExtractRequestBodyResult = req.requestData.ExtractRequestBodyResult;//req.body.ExtractRequestBodyResult;
     this._authService.register(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password, erbr.isAdmin)
       .then((result: SocoboUser) => {
-        delete req.body.ExtractRequestBodyResult;
+        //delete req.body.ExtractRequestBodyResult;
         res.status(201).json(result);
       })
       .catch((error: any) => {

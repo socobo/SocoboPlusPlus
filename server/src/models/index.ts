@@ -8,3 +8,4 @@ export * from "./errors/validation-error";
 export * from "./responses/login-response";
 export * from "./results/compare-pw-result";
 export * from "./results/extract-request-body-result";
+export * from "./generic/socobo-request";

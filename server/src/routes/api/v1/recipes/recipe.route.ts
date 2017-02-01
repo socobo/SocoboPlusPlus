@@ -16,7 +16,7 @@ export class RecipeRoute {
   public createRoutes (): Router {
     this._router.post("/",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser("admin"),
+      //this._authValidationHandler.checkUser("admin"),
       //this._authValidationHandler.nonRestricted,
       this._modelValidationHandler.validate,
       this._recipeHandler.save);

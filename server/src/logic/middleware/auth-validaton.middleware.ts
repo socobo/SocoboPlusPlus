@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { Config } from "./../../config";
-import { ApiError, ERRORS, ExtractRequestBodyResult, SocoboUser } from "./../../models/index";
+import { ApiError, ERRORS, ExtractRequestBodyResult, SocoboUser, Request } from "./../../models/index";
 import { UserService } from "./../services/index";
 
 export class AuthValidationMiddleware {
@@ -26,11 +26,13 @@ export class AuthValidationMiddleware {
           .addSourceMethod("checkRequest(..)");
         return reject(e);
       }
-
+      req.requestData = {}
       if (hasEmailProperty) {
-        req.body.isEmailLogin = true;
+        req.requestData.isEmailLogin = true;
+        //req.body.isEmailLogin = true;
       } else {
-        req.body.isEmailLogin = false;
+        req.requestData.isEmailLogin = false;
+        //req.body.isEmailLogin = false;
       }
 
       resolve();
@@ -39,7 +41,8 @@ export class AuthValidationMiddleware {
 
   public extractRequestBody (req: Request): Promise<ExtractRequestBodyResult> {
     return new Promise((resolve, reject) => {
-      if (!req.body.hasOwnProperty("isEmailLogin")) {
+      //if (!req.body.hasOwnProperty("isEmailLogin")) {
+      if (!req.requestData.hasOwnProperty("isEmailLogin")) {
         const e: ApiError = new ApiError(ERRORS.REQUEST_BODY)
           .addSource(AuthValidationMiddleware.name)
           .addSourceMethod("extractRequestBody(..)");
@@ -48,7 +51,8 @@ export class AuthValidationMiddleware {
 
       console.log("IS ADMIN", req.body.isAdmin);
       
-      req.body.ExtractRequestBodyResult = new ExtractRequestBodyResult(req.body.isEmailLogin,
+      //req.body.ExtractRequestBodyResult = new ExtractRequestBodyResult(req.body.isEmailLogin,
+      req.requestData.ExtractRequestBodyResult = new ExtractRequestBodyResult(req.body.isEmailLogin,
                                                 (req.body.isEmailLogin ? req.body.email : req.body.username),
                                                 req.body.password, req.body.isAdmin);
       resolve();
@@ -74,7 +78,9 @@ export class AuthValidationMiddleware {
             e.addSource(AuthValidationMiddleware.name).addSourceMethod("checkRequest(..)");
             return reject(e);
           }
-          req.body.decoded = decoded;
+          //req.body.decoded = decoded;
+          req.requestData = {}
+          req.requestData.decoded = decoded;
           resolve();
         });
       } else {
@@ -88,7 +94,8 @@ export class AuthValidationMiddleware {
 
   public checkValidUser (req: Request, role: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (!req.body.hasOwnProperty("decoded")) {
+      //if (!req.body.hasOwnProperty("decoded")) {
+      if (!req.requestData.hasOwnProperty("decoded")) {
         const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("a decoded Object"))
           .addSource(AuthValidationMiddleware.name)
           .addSourceMethod("checkValidUser(..)");
@@ -96,7 +103,7 @@ export class AuthValidationMiddleware {
       }
       this._userService.getUserByEmail(req.body.decoded.email)
         .then((user: any) => {
-          delete req.body.decoded;
+          //delete req.body.decoded;
           // In the future if we need more roles we could 
           // The role of a user could be in the token and would be fetched
           // from the token if we need it for the authorization (or from db)
