@@ -24,10 +24,12 @@ export class AuthValidationHandler {
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
-  public checkUser = (req: Request, res: Response, next: NextFunction): void => {
-    this._authValidationMiddleware.checkValidUser(req)
+  public checkUser = (role:string) => {
+    return (req: Request, res: Response, next: NextFunction): void => {
+    this._authValidationMiddleware.checkValidUser(req, role)
       .then(() => next())
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+    }
   }
 
   // public restricted = (req: Request, res: Response, next: NextFunction): void => {

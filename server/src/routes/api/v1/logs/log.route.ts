@@ -12,7 +12,7 @@ export class LogRoute {
   public createRoutes (): Router {
     this._router.get("/errors",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser,
+      this._authValidationHandler.checkUser("admin"),
       // this._authValidationHandler.restricted,
       this._logHandler.getErrors);
 

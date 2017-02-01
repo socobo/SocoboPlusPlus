@@ -86,7 +86,7 @@ export class AuthValidationMiddleware {
     });
   }
 
-  public checkValidUser (req: Request): Promise<any> {
+  public checkValidUser (req: Request, role: string): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!req.body.hasOwnProperty("decoded")) {
         const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("a decoded Object"))
@@ -99,8 +99,10 @@ export class AuthValidationMiddleware {
           delete req.body.decoded;
           // In the future if we need more roles we could 
           // The role of a user could be in the token and would be fetched
-          // from the token if we need it for the authorization
+          // from the token if we need it for the authorization (or from db)
           // check for a role like if user.role === role 
+          console.log("Role", role);
+          
           if(user.isadmin){
             resolve();
           }else{
