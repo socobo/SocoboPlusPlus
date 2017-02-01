@@ -42,7 +42,7 @@ export class AuthValidationHandler {
       .catch((e: any) => this._sendErrorResponse(e, res));
   }
 
-  private _sendErrorResponse = (e: any, res: Response) => {
+  private _sendErrorResponse = (e: any, res: Response): void => {
     res.status(e.statusCode).json(e.forResponse());
   }
 }
