@@ -54,7 +54,7 @@ describe("User Route v1", () => {
     user3.image = "http://placehold.it/350x150";
     user3.hasTermsAccepted = true;
     user3.isAdmin = false;
-    user3.provider = "email";
+    user3.provider = ProviderType.Email;
 
     users = [user1, user2, user3];
 
