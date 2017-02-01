@@ -137,7 +137,7 @@ export class AuthService {
         .addPassword(hashedPassword)
         .addImage((process.env.DEFAULT_USER_IMAGE || Config.DEFAULT_USER_IMAGE))
         .addHasTermsAccepted(true)
-        .addIsAdmin(true)
+        .addIsAdmin(false)
         .addProvider(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)
         .addDates();
       resolve(user);
