@@ -9,7 +9,6 @@ export class SocoboUser {
   public image: string;
   public hasTermsAccepted: boolean;
   public role: Role;
-  public provider: string;
   public provider: ProviderType;
   public created: number;
   public lastModified: number;

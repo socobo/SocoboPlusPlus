@@ -87,6 +87,7 @@ export class AuthValidationMiddleware {
     });
   }
 
+  /* tslint:disable:triple-equals */
   public checkValidUser (req: SocoboRequest, restrictedRole: Role): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!req.requestData.hasOwnProperty("decoded")) {
@@ -115,4 +116,5 @@ export class AuthValidationMiddleware {
         .catch((error: any) => reject(error));
     });
   }
+  /* tslint:enable:triple-equals */
 }

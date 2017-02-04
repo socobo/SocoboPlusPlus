@@ -9,7 +9,7 @@ export class AuthHandler {
 
   constructor (private _authService: AuthService) {}
 
-  public login = (req: Request, res: Response): void => {
+  public login = (req: SocoboRequest, res: Response): void => {
     this._getExtractedRequestBodyResult(req, "login(..)")
       .then((result: ExtractRequestBodyResult) => {
         return this._authService.login(result.isEmailLogin, result.usernameOrEmail, result.password);
@@ -20,10 +20,10 @@ export class AuthHandler {
       .catch((error: any) => res.status(error.statusCode).json(error.forResponse()));
   }
 
-  public register = (req: Request, res: Response): void => {
+  public register = (req: SocoboRequest, res: Response): void => {
     this._getExtractedRequestBodyResult(req, "register(..)")
       .then((result: ExtractRequestBodyResult) => {
-        return this._authService.register(result.isEmailLogin, result.usernameOrEmail, 
+        return this._authService.register(result.isEmailLogin, result.usernameOrEmail,
                                           result.password, result.role);
       })
       .then((user: SocoboUser) => {
@@ -32,7 +32,8 @@ export class AuthHandler {
       .catch((error: any) => res.status(error.statusCode).json(error.forResponse()));
   }
 
-  private _getExtractedRequestBodyResult = (req: Request, sourceMethod: string): Promise<ExtractRequestBodyResult> => {
+  private _getExtractedRequestBodyResult = (req: SocoboRequest,
+                                            sourceMethod: string): Promise<ExtractRequestBodyResult> => {
     return new Promise((resolve, reject) => {
       if (!req.requestData.hasOwnProperty("ExtractRequestBodyResult")) {
         const err: ApiError = new ApiError(ERRORS.REQUEST_BODY)
