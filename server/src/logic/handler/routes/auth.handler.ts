@@ -2,7 +2,7 @@ import { Response } from "express";
 import { AuthService } from "./../../../logic/services/index";
 import {
   ApiError, ERRORS, ExtractRequestBodyResult,
-  LoginResponse, SocoboUser, SocoboRequest
+  LoginResponse, SocoboRequest, SocoboUser
 } from "./../../../models/index";
 
 export class AuthHandler {
@@ -11,7 +11,7 @@ export class AuthHandler {
 
   public login = (req: SocoboRequest, res: Response): void => {
 
-    if (!req.body.hasOwnProperty("ExtractRequestBodyResult")) {
+    if (!req.requestData.hasOwnProperty("ExtractRequestBodyResult")) {
       const err: ApiError = new ApiError(ERRORS.REQUEST_BODY)
         .addSource(AuthHandler.name)
         .addSourceMethod("login");

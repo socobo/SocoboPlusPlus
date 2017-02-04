@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { Config } from "./../../config";
-import { ApiError, ERRORS, ExtractRequestBodyResult, Role, SocoboUser, SocoboRequest } from "./../../models/index";
+import { ApiError, ERRORS, ExtractRequestBodyResult, Role, SocoboRequest, SocoboUser } from "./../../models/index";
 import { UserService } from "./../services/index";
 
 export class AuthValidationMiddleware {
@@ -47,7 +47,7 @@ export class AuthValidationMiddleware {
           .addSourceMethod("extractRequestBody(..)");
         return reject(e);
       }
-      
+
       req.requestData.ExtractRequestBodyResult = new ExtractRequestBodyResult(req.requestData.isEmailLogin,
                                                 (req.requestData.isEmailLogin ? req.body.email : req.body.username),
                                                 req.body.password, req.body.isAdmin);

@@ -94,7 +94,8 @@ export class AuthService {
     });
   }
 
-  public register (isEmailLogin: boolean, usernameOrEmail: string, password: string, isAdmin: boolean): Promise<SocoboUser> {
+  public register (isEmailLogin: boolean, usernameOrEmail: string,
+                   password: string, isAdmin: boolean): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
         .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
@@ -140,8 +141,6 @@ export class AuthService {
         .addIsAdmin(isAdmin)
         .addProvider("email")
         .addDates();
-      console.log("USER", user);
-      
       resolve(user);
     });
   }

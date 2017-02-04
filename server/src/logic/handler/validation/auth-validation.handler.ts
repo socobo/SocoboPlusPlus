@@ -1,6 +1,6 @@
 import { NextFunction, Response, Router } from "express";
 import { AuthValidationMiddleware } from "./../../../logic/middleware/index";
-import { ApiError, DbError, Recipe, Role, ValidationError, SocoboRequest } from "./../../../models/index";
+import { ApiError, DbError, Recipe, Role, SocoboRequest, ValidationError } from "./../../../models/index";
 
 export class AuthValidationHandler {
 
@@ -29,6 +29,6 @@ export class AuthValidationHandler {
       this._authValidationMiddleware.checkValidUser(req, role)
         .then(() => next())
         .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-    }
+    };
   }
 }
