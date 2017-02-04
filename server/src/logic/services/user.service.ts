@@ -10,7 +10,7 @@ export class UserService {
     const query: string = `
         SELECT
             id, username, email, image, hasTermsAccepted,
-            isAdmin, provider, created, lastModified
+            role, provider, created, lastModified
         FROM Socobo_User`;
     return this._db.many(query).catch((error: any) => {
       return ErrorUtils.handleDbError(error, UserService.name, "save(..)");
@@ -21,7 +21,7 @@ export class UserService {
     const query: string = `
         SELECT
             id, username, email, image, hasTermsAccepted,
-            isAdmin, provider, created, lastModified
+            role, provider, created, lastModified
         FROM Socobo_User
         WHERE id=$1`;
     return this._db.one(query, id).catch((error: any) => {
@@ -56,7 +56,7 @@ export class UserService {
     const query: string = `
       INSERT INTO Socobo_User
         (username, email, password, image, hasTermsAccepted,
-         isAdmin, provider, created, lastModified)
+         role, provider, created, lastModified)
       VALUES
         ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING id`;
