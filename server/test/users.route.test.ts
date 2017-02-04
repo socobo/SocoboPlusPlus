@@ -3,7 +3,7 @@ process.env.NODE_ENV = "test";
 import * as chai from "chai";
 import * as mocha from "mocha";
 import chaiHttp = require("chai-http");
-import { SocoboUser } from "./../src/models/index";
+import { Role, SocoboUser } from "./../src/models/index";
 import Server from "./../src/server";
 
 chai.use(chaiHttp);
@@ -33,7 +33,7 @@ describe("User Route v1", () => {
     // user1.password = "SuperSecurePassword";
     user1.image = "http://placehold.it/350x150";
     user1.hasTermsAccepted = true;
-    user1.isAdmin = false;
+    user1.role = Role.User;
     user1.provider = "email";
 
     const user2: SocoboUser = new SocoboUser();
@@ -43,7 +43,7 @@ describe("User Route v1", () => {
     // user2.password = "SuperMegaSecure";
     user2.image = "http://placehold.it/350x150";
     user2.hasTermsAccepted = true;
-    user2.isAdmin = false;
+    user2.role = Role.User;
     user2.provider = "email";
 
     const user3: SocoboUser = new SocoboUser();
@@ -53,7 +53,7 @@ describe("User Route v1", () => {
     // user3.password = "password";
     user3.image = "http://placehold.it/350x150";
     user3.hasTermsAccepted = true;
-    user3.isAdmin = false;
+    user3.role = Role.Admin;
     user3.provider = "email";
 
     users = [user1, user2, user3];

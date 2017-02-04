@@ -75,7 +75,7 @@ Response body:
       email: string,
       image: string,
       hasTermsAccepted: boolean,
-      isAdmin: boolean,
+      role: number,
       provider: string,
       created: number,
       lastModified: number
@@ -98,7 +98,8 @@ Request body:
   ```json
   {
     "name": "Username",
-    "password": "HighSecureUserPassword"
+    "password": "HighSecureUserPassword",
+    "role": number
   }
   ```
 
@@ -107,7 +108,8 @@ Request body:
   ```json
   {
     "email": "username@test.test",
-    "password": "HighSecureUserPassword"
+    "password": "HighSecureUserPassword",
+    "role": number
   }
   ```
 
@@ -119,7 +121,7 @@ Response body:
     email: string,
     image: string,
     hasTermsAccepted: boolean,
-    isAdmin: boolean,
+    role: number,
     provider: string,
     created: number,
     lastModified: number
@@ -148,7 +150,7 @@ Response body:
       email: string,
       image: string,
       hasTermsAccepted: boolean,
-      isAdmin: boolean,
+      role: number,
       provider: string,
       created: number,
       lastModified: number
@@ -179,7 +181,7 @@ Response body:
     email: string,
     image: string,
     hasTermsAccepted: boolean,
-    isAdmin: boolean,
+    role: number,
     provider: string,
     created: number,
     lastModified: number

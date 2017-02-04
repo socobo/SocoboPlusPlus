@@ -40,7 +40,7 @@ export class AuthHandler {
 
     const erbr: ExtractRequestBodyResult = req.requestData.ExtractRequestBodyResult;
 
-    this._authService.register(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password, erbr.isAdmin)
+    this._authService.register(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password, erbr.role)
       .then((result: SocoboUser) => {
         res.status(201).json(result);
       })

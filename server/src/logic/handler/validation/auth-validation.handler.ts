@@ -24,9 +24,9 @@ export class AuthValidationHandler {
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
-  public checkUser = (role: Role) => {
+  public checkUser = (restrictedRole: Role) => {
     return (req: SocoboRequest, res: Response, next: NextFunction): void => {
-      this._authValidationMiddleware.checkValidUser(req, role)
+      this._authValidationMiddleware.checkValidUser(req, restrictedRole)
         .then(() => next())
         .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
     };

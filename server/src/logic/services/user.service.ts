@@ -62,7 +62,7 @@ export class UserService {
       RETURNING id`;
     return this._db.tx("SaveUser", () => {
       return this._db.one(query, [user.username, user.email, user.password,
-                                  user.image, user.hasTermsAccepted, user.isAdmin,
+                                  user.image, user.hasTermsAccepted, user.role,
                                   user.provider, user.created, user.lastModified]);
     }).catch((error: any) => {
       return ErrorUtils.handleDbError(error, UserService.name, "save(..)");

@@ -50,7 +50,7 @@ export class AuthValidationMiddleware {
 
       req.requestData.ExtractRequestBodyResult = new ExtractRequestBodyResult(req.requestData.isEmailLogin,
                                                 (req.requestData.isEmailLogin ? req.body.email : req.body.username),
-                                                req.body.password, req.body.isAdmin);
+                                                req.body.password, req.body.role);
       resolve();
     });
   }
@@ -87,7 +87,7 @@ export class AuthValidationMiddleware {
     });
   }
 
-  public checkValidUser (req: SocoboRequest, role: Role): Promise<any> {
+  public checkValidUser (req: SocoboRequest, restrictedRole: Role): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!req.requestData.hasOwnProperty("decoded")) {
         const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("a decoded Object"))
@@ -102,7 +102,7 @@ export class AuthValidationMiddleware {
           // The role of a user could be in the token and would be fetched
           // from the token if we need it for the authorization (or from db)
           // check for a role like if user.role === role
-          if (role === Role.Admin) {
+          if (user.role === restrictedRole) {
             resolve();
           } else {
             const err: ApiError = new ApiError(ERRORS.USER_NOT_AUTHORIZED)
