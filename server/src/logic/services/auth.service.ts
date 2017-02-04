@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { Config } from "./../../config";
 import {
-  ApiError, ComparePwResult, DbError, ERRORS, LoginResponse, Role, SocoboUser
+  ApiError, ComparePwResult, DbError, ERRORS, LoginResponse, ProviderType, Role, SocoboUser
 } from "./../../models/index";
 import { CryptoUtils, ErrorUtils } from "./../utils/index";
 import { UserService } from "./index";
@@ -21,7 +21,7 @@ export class AuthService {
         .then((cr: ComparePwResult) => this._validateComparePasswords(cr.isPasswordMatch, cr.user))
         .then((user: SocoboUser) => resolve(this._createLoginResult(user)))
         .catch((error: any) => {
-          if (ErrorUtils.notFound(error)) {
+          if (error.code === ERRORS.USER_NOT_FOUND.code) {
             const e = new DbError(ERRORS.AUTH_NOT_REGISTERED.withArgs(usernameOrEmail))
               .addSource(AuthService.name)
               .addSourceMethod("login(..)")
@@ -31,6 +31,24 @@ export class AuthService {
           } else {
             const e = ErrorUtils.handleError(error, AuthService.name, "login()");
             reject(e);
+          }
+        });
+    });
+  }
+
+  public register (isEmailLogin: boolean, usernameOrEmail: string,
+                   password: string, role: Role): Promise<SocoboUser> {
+    return new Promise((resolve, reject) => {
+      this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
+        .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
+        .catch((errorOne: any) => {
+          if (errorOne.code === ERRORS.USER_NOT_FOUND.code) {
+            this._cryptoUtils.hashPassword(password)
+              .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail, role))
+              .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
+              .catch((errorTwo: any) => reject(errorTwo));
+          } else {
+            reject(errorOne);
           }
         });
     });
@@ -94,24 +112,6 @@ export class AuthService {
     });
   }
 
-  public register (isEmailLogin: boolean, usernameOrEmail: string,
-                   password: string, role: Role): Promise<SocoboUser> {
-    return new Promise((resolve, reject) => {
-      this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
-        .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
-        .catch((errorOne: any) => {
-          if (errorOne.code === ERRORS.USER_NOT_FOUND.code) {
-            this._cryptoUtils.hashPassword(password)
-              .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail, role))
-              .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
-              .catch((errorTwo: any) => reject(errorTwo));
-          } else {
-            reject(errorOne);
-          }
-        });
-    });
-  }
-
   private _checkIfUserIsAlreadyRegistered (user: SocoboUser): Promise<any> {
     return new Promise((resolve, reject) => {
       if (user) {
@@ -133,13 +133,13 @@ export class AuthService {
         return reject(e);
       }
       const user: SocoboUser = new SocoboUser()
-        .addUsername(usernameOrEmail.includes("@") ? usernameOrEmail.split("@")[0] : usernameOrEmail)
-        .addEmail(usernameOrEmail.includes("@") ? usernameOrEmail : "")
+        .addUsername(usernameOrEmail)
+        .addEmail(usernameOrEmail)
         .addPassword(hashedPassword)
         .addImage((process.env.DEFAULT_USER_IMAGE || Config.DEFAULT_USER_IMAGE))
         .addHasTermsAccepted(true)
         .addRole(role)
-        .addProvider("email")
+        .addProvider(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)
         .addDates();
       resolve(user);
     });

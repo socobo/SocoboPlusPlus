@@ -51,8 +51,8 @@
 Request body:
   ```json
   {
-    "name": "Username",
-    "password": "HighSecureUserPassword"
+    username: string,
+    password: string
   }
   ```
 
@@ -60,23 +60,23 @@ Request body:
 
   ```json
   {
-    "email": "username@test.test",
-    "password": "HighSecureUserPassword"
+    email: string,
+    password: string
   }
   ```
 
 Response body:
   ```json
   {
-    "token": String,
-    "user": {
+    token: string,
+    user: {
       id: number,
       username: string,
       email: string,
       image: string,
       hasTermsAccepted: boolean,
       role: number,
-      provider: string,
+      provider: number,
       created: number,
       lastModified: number
     }
@@ -86,9 +86,9 @@ Response body:
 Error body:
   ```json
   {
-    "message": string,
-    "source": string,
-    "method": string
+    message: string,
+    source: string,
+    method: string
   }
   ```
 
@@ -97,9 +97,9 @@ Error body:
 Request body:
   ```json
   {
-    "name": "Username",
-    "password": "HighSecureUserPassword",
-    "role": number
+    username: string,
+    password: string,
+    role: number
   }
   ```
 
@@ -107,9 +107,9 @@ Request body:
 
   ```json
   {
-    "email": "username@test.test",
-    "password": "HighSecureUserPassword",
-    "role": number
+    email: string,
+    password: string,
+    role: number
   }
   ```
 
@@ -122,7 +122,7 @@ Response body:
     image: string,
     hasTermsAccepted: boolean,
     role: number,
-    provider: string,
+    provider: number,
     created: number,
     lastModified: number
   }
@@ -131,9 +131,9 @@ Response body:
 Error body:
   ```json
   {
-    "message": string,
-    "source": string,
-    "method": string
+    message: string,
+    method: string,
+    source: string
   }
   ```
 
@@ -151,7 +151,7 @@ Response body:
       image: string,
       hasTermsAccepted: boolean,
       role: number,
-      provider: string,
+      provider: number,
       created: number,
       lastModified: number
     },
@@ -162,9 +162,9 @@ Response body:
 Error body:
   ```json
   {
-    "message": string,
-    "source": string,
-    "method": string
+    message: string,
+    method: string,
+    source: string
   }
   ```
 
@@ -182,7 +182,7 @@ Response body:
     image: string,
     hasTermsAccepted: boolean,
     role: number,
-    provider: string,
+    provider: number,
     created: number,
     lastModified: number
   }
@@ -191,9 +191,70 @@ Response body:
 Error body:
   ```json
   {
-    "message": string,
-    "source": string,
-    "method": string
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+### **RECIPES**
+
+**GET /api/v1/recipes/:id**
+
+Path Parameter:
+  - id: Recipe id
+
+Response body:
+  ```json
+  {
+    id: number,
+    title: string,
+    userid: number,
+    description: number,
+    imageurl: string,
+    created: Date
+  }
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**POST /api/v1/recipes**
+
+Request body:
+  ```json
+  {
+    title: string,
+    userId: string,
+    description?: string,
+    imageurl?: string
+  }
+  ```
+
+Response body:
+  ```json
+  {
+    id: number,
+    title: string,
+    userid: number,
+    description?: string,
+    imageurl?: string,
+    created: Date
+  }
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
   }
   ```
 
@@ -201,7 +262,8 @@ Error body:
 
 **GET /api/v1/logs/errors**
 
-```json
+Response body:
+  ```json
   [
     {
       message: string.

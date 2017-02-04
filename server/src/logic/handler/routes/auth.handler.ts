@@ -9,43 +9,38 @@ export class AuthHandler {
 
   constructor (private _authService: AuthService) {}
 
-  public login = (req: SocoboRequest, res: Response): void => {
-
-    if (!req.requestData.hasOwnProperty("ExtractRequestBodyResult")) {
-      const err: ApiError = new ApiError(ERRORS.REQUEST_BODY)
-        .addSource(AuthHandler.name)
-        .addSourceMethod("login");
-      res.status(err.statusCode).json(err.forResponse());
-    }
-
-    const erbr: ExtractRequestBodyResult = req.requestData.ExtractRequestBodyResult;
-
-    this._authService.login(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password)
-      .then((result: LoginResponse) => {
-        res.status(200).json(result);
+  public login = (req: Request, res: Response): void => {
+    this._getExtractedRequestBodyResult(req, "login(..)")
+      .then((result: ExtractRequestBodyResult) => {
+        return this._authService.login(result.isEmailLogin, result.usernameOrEmail, result.password);
       })
-      .catch((error: any) => {
-        res.status(error.statusCode).json(error.forResponse());
-      });
+      .then((loginResult: LoginResponse) => {
+        res.status(200).json(loginResult);
+      })
+      .catch((error: any) => res.status(error.statusCode).json(error.forResponse()));
   }
 
-  public register = (req: SocoboRequest, res: Response): void => {
-
-    if (!req.requestData.hasOwnProperty("ExtractRequestBodyResult")) {
-      const err: ApiError = new ApiError(ERRORS.REQUEST_BODY)
-        .addSource(AuthHandler.name)
-        .addSourceMethod("register");
-      res.status(err.statusCode).json(err.forResponse());
-    }
-
-    const erbr: ExtractRequestBodyResult = req.requestData.ExtractRequestBodyResult;
-
-    this._authService.register(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password, erbr.role)
-      .then((result: SocoboUser) => {
-        res.status(201).json(result);
+  public register = (req: Request, res: Response): void => {
+    this._getExtractedRequestBodyResult(req, "register(..)")
+      .then((result: ExtractRequestBodyResult) => {
+        return this._authService.register(result.isEmailLogin, result.usernameOrEmail, 
+                                          result.password, result.role);
       })
-      .catch((error: any) => {
-        res.status(error.statusCode).json(error.forResponse());
-      });
+      .then((user: SocoboUser) => {
+        res.status(200).json(user);
+      })
+      .catch((error: any) => res.status(error.statusCode).json(error.forResponse()));
+  }
+
+  private _getExtractedRequestBodyResult = (req: Request, sourceMethod: string): Promise<ExtractRequestBodyResult> => {
+    return new Promise((resolve, reject) => {
+      if (!req.requestData.hasOwnProperty("ExtractRequestBodyResult")) {
+        const err: ApiError = new ApiError(ERRORS.REQUEST_BODY)
+          .addSource(AuthHandler.name)
+          .addSourceMethod(sourceMethod);
+        return reject(err);
+      }
+      resolve(req.requestData.ExtractRequestBodyResult);
+    });
   }
 }
