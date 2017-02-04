@@ -1,14 +1,15 @@
-import {Response } from "express";
+import { Response } from "express";
 import { AuthService } from "./../../../logic/services/index";
 import {
-  ApiError, ERRORS, ExtractRequestBodyResult, LoginResponse, SocoboUser, Request
+  ApiError, ERRORS, ExtractRequestBodyResult,
+  LoginResponse, SocoboUser, SocoboRequest
 } from "./../../../models/index";
 
 export class AuthHandler {
 
   constructor (private _authService: AuthService) {}
 
-  public login = (req: Request, res: Response): void => {
+  public login = (req: SocoboRequest, res: Response): void => {
 
     if (!req.body.hasOwnProperty("ExtractRequestBodyResult")) {
       const err: ApiError = new ApiError(ERRORS.REQUEST_BODY)
@@ -17,10 +18,10 @@ export class AuthHandler {
       res.status(err.statusCode).json(err.forResponse());
     }
 
-    const erbr: ExtractRequestBodyResult = req.body.ExtractRequestBodyResult;
+    const erbr: ExtractRequestBodyResult = req.requestData.ExtractRequestBodyResult;
+
     this._authService.login(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password)
       .then((result: LoginResponse) => {
-        delete req.body.ExtractRequestBodyResult;
         res.status(200).json(result);
       })
       .catch((error: any) => {
@@ -28,9 +29,8 @@ export class AuthHandler {
       });
   }
 
-  public register = (req: Request, res: Response): void => {
+  public register = (req: SocoboRequest, res: Response): void => {
 
-    //if (!req.body.hasOwnProperty("ExtractRequestBodyResult")) {
     if (!req.requestData.hasOwnProperty("ExtractRequestBodyResult")) {
       const err: ApiError = new ApiError(ERRORS.REQUEST_BODY)
         .addSource(AuthHandler.name)
@@ -38,10 +38,10 @@ export class AuthHandler {
       res.status(err.statusCode).json(err.forResponse());
     }
 
-    const erbr: ExtractRequestBodyResult = req.requestData.ExtractRequestBodyResult;//req.body.ExtractRequestBodyResult;
+    const erbr: ExtractRequestBodyResult = req.requestData.ExtractRequestBodyResult;
+
     this._authService.register(erbr.isEmailLogin, erbr.usernameOrEmail, erbr.password, erbr.isAdmin)
       .then((result: SocoboUser) => {
-        //delete req.body.ExtractRequestBodyResult;
         res.status(201).json(result);
       })
       .catch((error: any) => {

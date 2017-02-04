@@ -1,5 +1,5 @@
 import express = require('express');
 
-export interface Request extends express.Request {
+export interface SocoboRequest extends express.Request {
     requestData: any;
 }
