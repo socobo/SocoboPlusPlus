@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthValidationHandler, LogHandler } from "./../../../../logic/handler/index";
+import { Role } from "./../../../../models/index";
 
 export class LogRoute {
 
@@ -12,8 +13,7 @@ export class LogRoute {
   public createRoutes (): Router {
     this._router.get("/errors",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser,
-      this._authValidationHandler.restricted,
+      this._authValidationHandler.checkUser(Role.Admin),
       this._logHandler.getErrors);
 
     return this._router;

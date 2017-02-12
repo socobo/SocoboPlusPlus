@@ -82,6 +82,11 @@ export class ERRORS {
     "auth.user.not.registerd",
     401
   );
+  public static USER_NOT_AUTHORIZED = new ErrorType(
+    "10011",
+    "auth.not.authorized",
+    403
+  );
   public static VAL_MISSING_USERNAME_EMAIL = new ErrorType(
     "30001",
     "validation.missing.username.and.email",

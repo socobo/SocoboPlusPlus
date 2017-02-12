@@ -16,15 +16,11 @@ export class RecipeRoute {
   public createRoutes (): Router {
     this._router.post("/",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser,
-      this._authValidationHandler.nonRestricted,
       this._modelValidationHandler.validate,
       this._recipeHandler.save);
 
     this._router.get("/:id",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser,
-      this._authValidationHandler.nonRestricted,
       this._recipeHandler.getById);
 
     return this._router;

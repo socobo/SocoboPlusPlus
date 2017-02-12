@@ -1,4 +1,5 @@
 import { ProviderType } from "./../enums/provider-type";
+import { Role } from "./../enums/role";
 
 export class SocoboUser {
   public id: number;
@@ -7,7 +8,7 @@ export class SocoboUser {
   public password: string;
   public image: string;
   public hasTermsAccepted: boolean;
-  public isAdmin: boolean;
+  public role: Role;
   public provider: ProviderType;
   public created: number;
   public lastModified: number;
@@ -37,8 +38,8 @@ export class SocoboUser {
     return this;
   }
 
-  public addIsAdmin = (isAdmin: boolean): this => {
-    this.isAdmin = isAdmin;
+  public addRole = (role: Role): this => {
+    this.role = role;
     return this;
   }
 

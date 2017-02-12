@@ -1,4 +1,5 @@
 export const ERROR_MESSAGES: any = {
+  "auth.not.authorized": "The user has unsufficient permission to access the requested resource",
   "auth.password.missmatch": "Passwords do not match",
   "auth.token.error": "Token error",
   "auth.token.expired": "Token expired",

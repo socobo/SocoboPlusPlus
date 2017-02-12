@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { Config } from "./../../config";
 import {
-  ApiError, ComparePwResult, DbError, ERRORS, LoginResponse, ProviderType, SocoboUser
+  ApiError, ComparePwResult, DbError, ERRORS, LoginResponse, ProviderType, Role, SocoboUser
 } from "./../../models/index";
 import { CryptoUtils, ErrorUtils } from "./../utils/index";
 import { UserService } from "./index";
@@ -36,14 +36,15 @@ export class AuthService {
     });
   }
 
-  public register (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<SocoboUser> {
+  public register (isEmailLogin: boolean, usernameOrEmail: string,
+                   password: string, role: Role): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
         .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
         .catch((errorOne: any) => {
           if (errorOne.code === ERRORS.USER_NOT_FOUND.code) {
             this._cryptoUtils.hashPassword(password)
-              .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail))
+              .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail, role))
               .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
               .catch((errorTwo: any) => reject(errorTwo));
           } else {
@@ -123,7 +124,7 @@ export class AuthService {
     });
   }
 
-  private _createNewUser (hashedPassword: string, usernameOrEmail: string): Promise<SocoboUser> {
+  private _createNewUser (hashedPassword: string, usernameOrEmail: string, role: Role): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       if (hashedPassword.length <= 0) {
         const e = new ApiError(ERRORS.AUTH_NO_HASHED_PASSWORD)
@@ -137,7 +138,7 @@ export class AuthService {
         .addPassword(hashedPassword)
         .addImage((process.env.DEFAULT_USER_IMAGE || Config.DEFAULT_USER_IMAGE))
         .addHasTermsAccepted(true)
-        .addIsAdmin(false)
+        .addRole(role)
         .addProvider(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)
         .addDates();
       resolve(user);
