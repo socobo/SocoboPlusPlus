@@ -6,13 +6,13 @@ import * as chaiAsPromised from "chai-as-promised";
 import { NextFunction, Request, Response, Router } from "express";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
-import { ApiValidator } from "./../src/logic/middleware/index";
+import { ModelValidationMiddleware } from "./../src/logic/middleware/index";
 import { Recipe, ValidationError } from "./../src/models/index";
 
 chai.use(chaiAsPromised);
 chai.should();
 
-describe("ApiValidator", () => {
+describe("Model Validation Middleware", () => {
 
   const mocks = require("node-mocks-http");
 
@@ -26,7 +26,7 @@ describe("ApiValidator", () => {
       body: recipe
     });
 
-    const prom: any = new ApiValidator().validate(Recipe, req);
+    const prom: any = new ModelValidationMiddleware().validate(Recipe, req);
     return prom.should.eventually.have.deep.property("validationErrors").to.have.lengthOf(2);
   });
 
@@ -40,7 +40,7 @@ describe("ApiValidator", () => {
       body: recipe
     });
 
-    const prom: any = new ApiValidator().validate(Recipe, req);
+    const prom: any = new ModelValidationMiddleware().validate(Recipe, req);
     return Promise.all([
       prom.should.eventually.have.deep.property("validationErrors[0].property", "title"),
       prom.should.eventually.have.deep.property("validationErrors[1].property", "userId")]);
@@ -56,11 +56,11 @@ describe("ApiValidator", () => {
       body: recipe
     });
 
-    const prom: any = new ApiValidator().validate(Recipe, req);
+    const prom: any = new ModelValidationMiddleware().validate(Recipe, req);
     return Promise.all([
       prom.should.eventually.have.property("message", "The provided input is invalid"),
       prom.should.eventually.have.property("sourceMethod", "validate(..)"),
-      prom.should.eventually.have.property("source", "ApiValidator")]);
+      prom.should.eventually.have.property("source", "ModelValidationMiddleware")]);
   });
 
   it("validation of a recipe with title and userId will be rejected", () => {
@@ -74,7 +74,7 @@ describe("ApiValidator", () => {
       body: recipe
     });
 
-    const prom: any = new ApiValidator().validate(Recipe, req);
+    const prom: any = new ModelValidationMiddleware().validate(Recipe, req);
     return prom.should.be.rejected;
   });
 });

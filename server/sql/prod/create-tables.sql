@@ -7,7 +7,7 @@ CREATE TABLE Socobo_User (
   password VARCHAR NOT NULL,
   image VARCHAR NOT NULL,
   hasTermsAccepted BOOLEAN NOT NULL,
-  isAdmin BOOLEAN NOT NULL,
+  role NUMERIC NOT NULL,
   provider INTEGER NOT NULL,
   created NUMERIC NOT NULL,
   lastModified NUMERIC NOT NULL CHECK (lastModified >= created)

@@ -1,4 +1,5 @@
 export const ERROR_MESSAGES: any = {
+  "auth.not.authorized": "The user has unsufficient permission to access the requested resource",
   "auth.password.missmatch": "Passwords do not match",
   "auth.token.error": "Token error",
   "auth.token.expired": "Token expired",
@@ -10,8 +11,10 @@ export const ERROR_MESSAGES: any = {
   "internal.error.create.hash": "Error while generating password hash",
   "internal.error.create.salt": "Error while generating the Salt value",
   "internal.error.request.body": "Something went wrong with extracting request body",
+  "internal.error.request.body.authcheck": "The request body doesn't have {0}",
   "internal.no.password.hash": "No password hash",
   "recipe.not.found": "Recipe with {0} {1} could not be found",
+  "user.not.an.admin": "The User is not entitled to get the requested resource",
   "user.not.found": "User with {0} {1} could not be found",
   "validation.invalid.input": "The provided input is invalid",
   "validation.missing.password": "Request Body doesn't have a Password!",

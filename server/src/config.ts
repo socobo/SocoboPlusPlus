@@ -9,6 +9,7 @@ export class Config {
   public static NODE_ENV: string = "development";
   public static TOKEN_SECRET: string = "!*sdkfduf487387478478hhuhudf#28458//(/)##+993";
   public static TOKEN_EXPIRATION: string = "1d";
+  public static TOKEN_ISSUER: string = "socobo";
   public static TOKEN_HEADER: string = "x-access-token";
   public static DEFAULT_USER_IMAGE: string = "http://placehold.it/350x150";
 }

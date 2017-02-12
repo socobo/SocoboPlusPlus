@@ -17,10 +17,20 @@ export class ERRORS {
     "internal.error.request.body",
     500
   );
+  public static REQUEST_BODY_AUTHCHECK = new ErrorType(
+    "00006",
+    "internal.error.request.body.authcheck",
+    500
+  );
   public static USER_NOT_FOUND = new ErrorType(
     "10001",
     "user.not.found",
     404
+  );
+  public static USER_NOT_AN_ADMIN = new ErrorType(
+    "10002",
+    "user.not.an.admin",
+    403
   );
   public static AUTH_WRONG_PASSWORD = new ErrorType(
     "20001",
@@ -71,6 +81,11 @@ export class ERRORS {
     "20010",
     "auth.user.not.registerd",
     401
+  );
+  public static USER_NOT_AUTHORIZED = new ErrorType(
+    "10011",
+    "auth.not.authorized",
+    403
   );
   public static VAL_MISSING_USERNAME_EMAIL = new ErrorType(
     "30001",
