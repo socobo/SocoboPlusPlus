@@ -26,28 +26,19 @@ var options: any = {
 
 };
 
-// Database connection parameters:
-// var config = {
-//     host: 'localhost',
-//     port: 5432,
-//     database: 'socobo_dev',
-//     user: 'postgres',
-//     password: 'socobo'
-// };
-
 let dbConfig: DbConfig;
 
 switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
   case "test":
-    dbConfig = process.env.DB_URL_TEST || Config.DB_URL_TEST;
+    dbConfig = process.env.DB_CONFIG_TEST || Config.DB_CONFIG_TEST;
     break;
 
   case "development":
-    dbConfig = process.env.DB_URL_DEV || Config.DB_URL_DEV;
+    dbConfig = process.env.DB_CONFIG_DEV || Config.DB_CONFIG_DEV;
     break;
 
   case "production":
-    dbConfig = process.env.DB_URL || Config.DB_URL;
+    dbConfig = process.env.DB_CONFIG || Config.DB_CONFIG;
     break;
 
   default:
