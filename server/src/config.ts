@@ -11,7 +11,6 @@ export interface DbConfig {
 export class Config {
   public static DB_USER: string = "postgres";
   public static DB_PW: string = "socobo";
-  public static DB_URL_TEST: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo_test?ssl=false`;
   public static DB_CONFIG_TEST: DbConfig = {
     host: 'localhost',
     port: 5432,
@@ -19,7 +18,6 @@ export class Config {
     user: 'postgres',
     password: 'socobo'
   }
-  public static DB_URL_DEV: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo_dev?ssl=false`;
   public static DB_CONFIG_DEV: DbConfig = {
     host: 'localhost',
     port: 5432,
@@ -27,7 +25,6 @@ export class Config {
     user: 'postgres',
     password: 'socobo'
   }
-  public static DB_URL: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo?ssl=false`;
   public static DB_CONFIG: DbConfig = {
     host: 'localhost',
     port: 5432,

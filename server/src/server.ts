@@ -33,7 +33,6 @@ import {
 
 class Server {
   private _app: express.Application;
-  private _db: pgPromise.IDatabase<any>;
   private _port: number;
   private _server: http.Server;
 
@@ -95,7 +94,6 @@ class Server {
    */
   private _config (): void {
     this._configLogging();
-    this._configDatabase();
     this._configServer();
   }
 
@@ -138,32 +136,6 @@ class Server {
       default:
         throw new Error("NODE_ENV is not known!");
     }
-  }
-
-  private _configDatabase (): void {
-    // init pgPromise
-    const pgp: pgPromise.IMain = pgPromise();
-    // declare connectionString
-    let connectionString: string;
-    // check environment and init connectionString
-    switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
-      case "test":
-        connectionString = process.env.DB_URL_TEST || Config.DB_URL_TEST;
-        break;
-
-      case "development":
-        connectionString = process.env.DB_URL_DEV || Config.DB_URL_DEV;
-        break;
-
-      case "production":
-        connectionString = process.env.DB_URL || Config.DB_URL;
-        break;
-
-      default:
-        throw new Error("NODE_ENV is not known!");
-    }
-    // init db
-    this._db = pgp(connectionString);
   }
 
   private _configServer (): void {
