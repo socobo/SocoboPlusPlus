@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { RecipeService, UserService } from "./../../../logic/services/index";
 import { Recipe } from "./../../../models/index";
 
 export class RecipeHandler {

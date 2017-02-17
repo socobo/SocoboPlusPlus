@@ -1,5 +1,4 @@
 import { IDatabase } from "pg-promise";
-import { UserService } from "./../../logic/services/index";
 import { ErrorUtils } from "./../../logic/utils/index";
 import { DbError, ERRORS, Recipe } from "./../../models/index";
 

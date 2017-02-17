@@ -4,7 +4,6 @@ import {
   ApiError, ComparePwResult, DbError, ERRORS, LoginResponse, ProviderType, Role, SocoboUser
 } from "./../../models/index";
 import { CryptoUtils, ErrorUtils } from "./../utils/index";
-import { UserService } from "./index";
 
 export class AuthService {
 

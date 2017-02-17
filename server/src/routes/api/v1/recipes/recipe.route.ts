@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   AuthValidationHandler, ModelValidationHandler, RecipeHandler
 } from "./../../../../logic/handler/index";
-import { RecipeService } from "./../../../../logic/services/index";
 
 export class RecipeRoute {
 
