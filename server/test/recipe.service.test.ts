@@ -6,7 +6,7 @@ import * as mocha from "mocha";
 import * as pgPromise from "pg-promise";
 import * as sinon from "sinon";
 import { ModelValidationMiddleware } from "./../src/logic/middleware/index";
-import { RecipeService } from "./../src/logic/services/index";
+import { RecipeRepository } from "./../src/db/repositories/recipe.repository";
 import { DbError, ERRORS, Recipe, ValidationError } from "./../src/models/index";
 
 chai.use(chaiAsPromised);
@@ -29,7 +29,7 @@ describe("Recipe Service", () => {
   it("getById should call the one method of pgPromis with the correct query and parameters", () => {
     stub = sinon.stub(db, "one").returns(Promise.resolve("TEST"));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
     return service.getById(1).then((value) => {
       chai.expect(stub.calledWith(`select * 
                                 from recipes
@@ -44,15 +44,15 @@ describe("Recipe Service", () => {
     };
 
     const dbError = new DbError(ERRORS.RECIPE_NOT_FOUND.withArgs("id", "1"))
-      .addSource("RecipeService")
+      .addSource("RecipeRepository")
       .addSourceMethod("getById");
     stub = sinon.stub(db, "one").returns(Promise.reject(err));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
     return service.getById(1).catch((error) => {
       chai.expect(error).to.have.property("code", "40001");
       chai.expect(error).to.have.property("statusCode", 404);
-      chai.expect(error).to.have.property("source", "RecipeService");
+      chai.expect(error).to.have.property("source", "RecipeRepository");
       chai.expect(error).to.have.property("sourceMethod", "getById(..)");
     });
   });
@@ -64,15 +64,15 @@ describe("Recipe Service", () => {
     };
 
     const dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-      .addSource("RecipeService")
+      .addSource("RecipeRepository")
       .addSourceMethod("getById");
     stub = sinon.stub(db, "one").returns(Promise.reject(err));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
     return service.getById(1).catch((error) => {
       chai.expect(error).to.have.property("code", "00001");
       chai.expect(error).to.have.property("statusCode", 500);
-      chai.expect(error).to.have.property("source", "RecipeService");
+      chai.expect(error).to.have.property("source", "RecipeRepository");
       chai.expect(error).to.have.property("sourceMethod", "getById(..)");
     });
   });
@@ -81,13 +81,13 @@ describe("Recipe Service", () => {
     const stubTx = sinon.stub(db, "tx");
     stubTx.returns(Promise.reject("TEST"));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
     const recipe: Recipe = new Recipe();
 
     return service.save(recipe).catch((error) => {
       chai.expect(error).to.have.property("code", "00001");
       chai.expect(error).to.have.property("statusCode", 500);
-      chai.expect(error).to.have.property("source", "RecipeService");
+      chai.expect(error).to.have.property("source", "RecipeRepository");
       chai.expect(error).to.have.property("sourceMethod", "save(..)");
     });
   });
@@ -101,7 +101,7 @@ describe("Recipe Service", () => {
 
     stub = sinon.stub(db, "one").returns(Promise.resolve("TEST"));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
 
     const recipe: Recipe = new Recipe();
     recipe.title = "Test";
