@@ -9,7 +9,7 @@ import { UserService } from "./index";
 export class AuthService {
 
   constructor (
-    private _userService: UserService,
+    private _db: any,
     private _cryptoUtils: CryptoUtils
   ) {}
 
@@ -56,9 +56,9 @@ export class AuthService {
 
   private _getUserFromDatabase (isEmailLogin: boolean, usernameOrEmail: string): Promise<SocoboUser> {
     if (isEmailLogin) {
-      return this._userService.getUserByEmail(usernameOrEmail);
+      return this._db.users.getUserByEmail(usernameOrEmail);
     }
-    return this._userService.getUserByUsername(usernameOrEmail);
+    return this._db.users.getUserByUsername(usernameOrEmail);
   }
 
   private _validateUser (user: SocoboUser): Promise<SocoboUser> {
@@ -147,7 +147,7 @@ export class AuthService {
 
   private _returnSavedUser (user: SocoboUser): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
-      this._userService.save(user)
+      this._db.users.save(user)
         .then((result: any) => {
           user.id = result.id;
           delete user.password;

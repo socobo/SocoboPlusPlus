@@ -6,7 +6,7 @@ import { UserService } from "./../services/index";
 
 export class AuthValidationMiddleware {
 
-  constructor (private _userService: UserService) {}
+  constructor (private _db: any) {}
 
   public checkRequest (req: SocoboRequest): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -96,7 +96,7 @@ export class AuthValidationMiddleware {
           .addSourceMethod("checkValidUser(..)");
         return reject(err);
       }
-      this._userService.getUserByEmail(req.requestData.decoded.email)
+      this._db.users.getUserByEmail(req.requestData.decoded.email)
         .then((user: any) => {
           req.requestData = {};
           // In the future if we need more roles we could

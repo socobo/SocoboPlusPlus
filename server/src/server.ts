@@ -16,10 +16,11 @@ import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./logic/han
 import {
   AuthValidationMiddleware, ModelValidationMiddleware
 } from "./logic/middleware/index";
-// services
+// repositories db object
 import * as db from './db/index';
+// services
 import {
-  AuthService, RecipeService, UserService
+  AuthService
 } from "./logic/services/index";
 // server utils
 import {
@@ -39,8 +40,6 @@ class Server {
   private _cryptoUtils: CryptoUtils;
 
   private _authService: AuthService;
-  private _recipeService: RecipeService;
-  private _userService: UserService;
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
@@ -185,16 +184,14 @@ class Server {
    * SERVICES
    */
   private _services (): void {
-    this._userService = new UserService(this._db);
-    this._recipeService = new RecipeService(this._db);
-    this._authService = new AuthService(this._userService, this._cryptoUtils);
+    this._authService = new AuthService(db, this._cryptoUtils);
   }
 
   /**
    * MIDDLEWARE
    */
   private _middleware (): void {
-    this._authValidationMiddleware = new AuthValidationMiddleware(this._userService);
+    this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
   }
 
