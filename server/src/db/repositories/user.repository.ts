@@ -2,57 +2,59 @@ import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
 import { DbError, ERRORS, Recipe, SocoboUser } from "./../../models/index";
 
-export class UserService {
+export class UserRepository {
 
-  constructor (private _db: IDatabase<any>) {}
+  constructor (private _db: any) {} //IDatabase<any>
 
-  public getAll (): Promise<SocoboUser[]> {
+  public getAll = (): Promise<SocoboUser[]> => {
     const query: string = `
         SELECT
             id, username, email, image, hasTermsAccepted,
             role, provider, created, lastModified
         FROM Socobo_User`;
     return this._db.many(query).catch((error: any) => {
-      return ErrorUtils.handleDbError(error, UserService.name, "save(..)");
+      return ErrorUtils.handleDbError(error, UserRepository.name, "save(..)");
     });
   }
 
-  public getUserById (id: number): Promise<SocoboUser> {
+  public getUserById = (id: number): Promise<SocoboUser> => {
     const query: string = `
         SELECT
             id, username, email, image, hasTermsAccepted,
             role, provider, created, lastModified
         FROM Socobo_User
         WHERE id=$1`;
+    console.log("User id in repo", id);
+    
     return this._db.one(query, id).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
         ERRORS.USER_NOT_FOUND, error, "id", id.toString(),
-        UserService.name, "getUserByUsername(..)");
+        UserRepository.name, "getUserById(..)");
       }
     );
   }
 
-  public getUserByEmail (email: string): Promise<SocoboUser> {
+  public getUserByEmail = (email: string): Promise<SocoboUser> => {
     const query: string = "SELECT * FROM Socobo_User Where email=$1";
     return this._db.one(query, email).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
         ERRORS.USER_NOT_FOUND, error, "email", email,
-        UserService.name, "getUserByUsername(..)");
+        UserRepository.name, "getUserByUsername(..)");
       }
     );
   }
 
-  public getUserByUsername (username: string): Promise<SocoboUser> {
+  public getUserByUsername = (username: string): Promise<SocoboUser> => {
     const query: string = "SELECT * FROM Socobo_User Where username=$1";
     return this._db.one(query, username).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
         ERRORS.USER_NOT_FOUND, error, "username", username,
-        UserService.name, "getUserByUsername(..)");
+        UserRepository.name, "getUserByUsername(..)");
       }
     );
   }
 
-  public save (user: SocoboUser): Promise<Object> {
+  public save = (user: SocoboUser): Promise<Object> => {
     const query: string = `
       INSERT INTO Socobo_User
         (username, email, password, image, hasTermsAccepted,
@@ -65,7 +67,7 @@ export class UserService {
                                   user.image, user.hasTermsAccepted, user.role,
                                   user.provider, user.created, user.lastModified]);
     }).catch((error: any) => {
-      return ErrorUtils.handleDbError(error, UserService.name, "save(..)");
+      return ErrorUtils.handleDbError(error, UserRepository.name, "save(..)");
     });
   }
 }

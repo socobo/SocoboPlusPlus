@@ -1,9 +1,25 @@
 /* tslint:disable:max-line-length */
+
+export interface DbConfig {
+  host: string,
+  port: number,
+  database: string,
+  user: string,
+  password: string
+}
+
 export class Config {
   public static DB_USER: string = "postgres";
   public static DB_PW: string = "socobo";
   public static DB_URL_TEST: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo_test?ssl=false`;
   public static DB_URL_DEV: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo_dev?ssl=false`;
+  public static DB_CONFIG_DEV: DbConfig = {
+    host: 'localhost',
+    port: 5432,
+    database: 'socobo_dev',
+    user: 'postgres',
+    password: 'socobo'
+  }
   public static DB_URL: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo?ssl=false`;
   public static PORT: number = 8282;
   public static NODE_ENV: string = "development";

@@ -4,12 +4,12 @@ import {
   ApiError, ComparePwResult, DbError, ERRORS, LoginResponse, ProviderType, Role, SocoboUser
 } from "./../../models/index";
 import { CryptoUtils, ErrorUtils } from "./../../logic/utils/index";
-import { UserService } from "./user.service";
+import { UserRepository } from "./user.repository";
 
 export class AuthService {
 
   constructor (
-    private _userService: UserService,
+    private _userService: UserRepository,
     private _cryptoUtils: CryptoUtils
   ) {}
 
