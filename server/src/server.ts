@@ -205,8 +205,8 @@ class Server {
     this._authValidationHandler = new AuthValidationHandler(this._authValidationMiddleware);
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
-    this._userHandler = new UserHandler(db);//this._userService);
-    this._recipeHandler = new RecipeHandler(this._recipeService, this._userService);
+    this._userHandler = new UserHandler(db);
+    this._recipeHandler = new RecipeHandler(db);
     this._logHandler = new LogHandler();
   }
 

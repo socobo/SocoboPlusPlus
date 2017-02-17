@@ -6,10 +6,12 @@ import {IMain, IDatabase, IConfig} from 'pg-promise';
 import { DbConfig, Config } from "../config";
 
 import { UserRepository } from "./repositories/user.repository";
+import { RecipeRepository } from "./repositories/recipe.repository";
 //import products = require('./repos/products');
 
 interface IExtensions {
-    users: UserRepository
+    users: UserRepository,
+    recipes: RecipeRepository
     //products: products.Repository
 }
 
@@ -21,6 +23,7 @@ var options: any = {
         // Do not use 'require()' here, because this event occurs for every task
         // and transaction being executed, which should be as fast as possible.
         obj.users = new UserRepository(obj);
+        obj.recipes = new RecipeRepository(obj);
         //obj.products = new products.Repository(obj, pgp);
     }
 
