@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { AuthValidationHandler, UserHandler } from "./../../../../logic/handler/index";
 
-
 export class UsersRoute {
 
   constructor (

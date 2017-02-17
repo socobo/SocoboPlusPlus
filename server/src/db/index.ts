@@ -1,13 +1,13 @@
-import {IMain, IDatabase, IConfig} from 'pg-promise';
-import { DbConfig, Config } from "../config";
-import * as pgPromise from 'pg-promise';
+import { Config, DbConfig } from "../config";
+import { IConfig, IDatabase, IMain } from "pg-promise";
+import * as pgPromise from "pg-promise";
 
-import { UserRepository } from "./repositories/user.repository";
 import { RecipeRepository } from "./repositories/recipe.repository";
+import { UserRepository } from "./repositories/user.repository";
 
 interface IExtensions {
-    users: UserRepository,
-    recipes: RecipeRepository
+    users: UserRepository;
+    recipes: RecipeRepository;
 }
 
 const getDbConfig = (): DbConfig => {
@@ -30,14 +30,14 @@ const getDbConfig = (): DbConfig => {
   }
 
   return dbConfig;
-}
+};
 
 // pg-promise initialization options:
-var options: any = {
+const options: any = {
 
     // Extending the database protocol with our custom repositories:
     extend: (obj: IExtensions) => {
-        // Do not use 'require()' here, because this event occurs for every task
+        // Do not use "require()"" here, because this event occurs for every task
         // and transaction being executed, which should be as fast as possible.
         obj.users = new UserRepository(obj);
         obj.recipes = new RecipeRepository(obj);
@@ -46,25 +46,23 @@ var options: any = {
 };
 
 // Choose the db configuration depending on the current environment
-let dbConfig = getDbConfig();
+const dbConfig = getDbConfig();
 
 // Loading and initializing pg-promise:
 const pgp: IMain = pgPromise(options);
 
 // Create the database instance with extensions:
-const db = <IDatabase<IExtensions>&IExtensions>pgp(dbConfig);
+const db = pgp(dbConfig) as IDatabase<IExtensions>&IExtensions;
 
 // Load and initialize optional diagnostics:
-//import diag = require('./diagnostics');
-//diag.init(options);
+// import diag = require("./diagnostics"");
+// diag.init(options);
 
-// If you ever need to change the default pool size, here's an example:
+// If you ever need to change the default pool size, here"s an example:
 // pgp.pg.defaults.poolSize = 20;
 
-// Database object is all that's needed.
-// And if you even need access to the library's root (pgp object),
+// Database object is all that"s needed.
+// And if you even need access to the library"s root (pgp object),
 // you can do it via db.$config.pgp
 // See: http://vitaly-t.github.io/pg-promise/Database.html#.$config
 export = db;
-
-

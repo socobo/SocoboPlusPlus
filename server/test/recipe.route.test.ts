@@ -5,9 +5,9 @@ import * as express from "express";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
 import { RecipeHandler } from "./../src/logic/handler/index";
+import { ApiError, DbError, ERRORS, Recipe } from "./../src/models/index";
 import { RecipeRepository } from "./../src/db/repositories/recipe.repository";
 import { UserRepository } from "./../src/db/repositories/user.repository";
-import { ApiError, DbError, ERRORS, Recipe } from "./../src/models/index";
 import Server from "./../src/server";
 
 describe("Recipe Handler", () => {
@@ -19,12 +19,12 @@ describe("Recipe Handler", () => {
   const db = {
     recipes: recipeRepository,
     users: userRepository
-  }
+  };
 
   let req: any;
   let res: any;
   let recipeRepositorystub: sinon.SinonStub;
-  let UserRepositoryStub: sinon.SinonStub;
+  let userRepositoryStub: sinon.SinonStub;
 
   beforeEach(() => {
     res = mocks.createResponse({
@@ -47,7 +47,7 @@ describe("Recipe Handler", () => {
   });
 
   it("getById should send a response with the recipe returned by the RecipeRepository", (done) => {
-    
+
     recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.resolve("recipe"));
 
     const recipeHandler = new RecipeHandler(db);
@@ -166,7 +166,7 @@ describe("Recipe Handler", () => {
   it("save should send a response with the recipe exptended by the assigned id", (done) => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
-    UserRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
     const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
@@ -181,7 +181,7 @@ describe("Recipe Handler", () => {
       chai.expect(data.title).to.be.equal("Test Recipe");
       chai.expect(data.id).to.be.equal(1);
 
-      UserRepositoryStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
@@ -189,7 +189,7 @@ describe("Recipe Handler", () => {
   it("save should set a creation data to the recipe", (done) => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
-    UserRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
     const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
@@ -205,7 +205,7 @@ describe("Recipe Handler", () => {
       chai.expect(data.created).to.not.be.undefined;
       chai.expect(data.created).to.have.length.above(1);
 
-      UserRepositoryStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
@@ -213,7 +213,7 @@ describe("Recipe Handler", () => {
   it("save should send a json response", (done) => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
-    UserRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
     const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
@@ -221,7 +221,7 @@ describe("Recipe Handler", () => {
     res.on("end", () => {
       chai.expect(res._isJSON()).to.be.true;
 
-      UserRepositoryStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
@@ -229,7 +229,7 @@ describe("Recipe Handler", () => {
   it("save should return 201 CREATED if the creation was successful", (done) => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
-    UserRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
     const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
@@ -237,7 +237,7 @@ describe("Recipe Handler", () => {
     res.on("end", () => {
       chai.expect(res.statusCode).to.be.equal(201);
 
-      UserRepositoryStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
@@ -246,7 +246,7 @@ describe("Recipe Handler", () => {
 
     const dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR);
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.reject(dbError));
-    UserRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
     const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
@@ -254,7 +254,7 @@ describe("Recipe Handler", () => {
     res.on("end", () => {
       chai.expect(res.statusCode).to.be.equal(500);
 
-      UserRepositoryStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
@@ -266,7 +266,7 @@ describe("Recipe Handler", () => {
       .addSourceMethod("save()");
 
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.reject(dbError));
-    UserRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
     const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
@@ -281,7 +281,7 @@ describe("Recipe Handler", () => {
         }
       );
 
-      UserRepositoryStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });

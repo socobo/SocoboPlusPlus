@@ -4,7 +4,7 @@ import { DbError, ERRORS, Recipe, SocoboUser } from "./../../models/index";
 
 export class UserRepository {
 
-  constructor (private _db: any) {} //IDatabase<any>
+  constructor (private _db: any) {}
 
   public getAll = (): Promise<SocoboUser[]> => {
     const query: string = `
@@ -24,8 +24,6 @@ export class UserRepository {
             role, provider, created, lastModified
         FROM Socobo_User
         WHERE id=$1`;
-    console.log("User id in repo", id);
-    
     return this._db.one(query, id).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
         ERRORS.USER_NOT_FOUND, error, "id", id.toString(),

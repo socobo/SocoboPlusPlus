@@ -7,6 +7,7 @@ import * as http from "http";
 import * as path from "path";
 import * as pgPromise from "pg-promise";
 import * as winston from "winston";
+import * as db from "./db/index";
 // server config
 import { Config } from "./config";
 // handler
@@ -16,8 +17,6 @@ import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./logic/han
 import {
   AuthValidationMiddleware, ModelValidationMiddleware
 } from "./logic/middleware/index";
-// repositories db object
-import * as db from './db/index';
 // services
 import {
   AuthService

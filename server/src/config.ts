@@ -1,37 +1,37 @@
 /* tslint:disable:max-line-length */
 
 export interface DbConfig {
-  host: string,
-  port: number,
-  database: string,
-  user: string,
-  password: string
+  database: string;
+  host: string;
+  port: number;
+  user: string;
+  password: string;
 }
 
 export class Config {
   public static DB_USER: string = "postgres";
   public static DB_PW: string = "socobo";
   public static DB_CONFIG_TEST: DbConfig = {
-    host: 'localhost',
+    database: "socobo_test",
+    host: "localhost",
+    password: "socobo",
     port: 5432,
-    database: 'socobo_test',
-    user: 'postgres',
-    password: 'socobo'
-  }
+    user: "postgres"
+  };
   public static DB_CONFIG_DEV: DbConfig = {
-    host: 'localhost',
+    database: "socobo_dev",
+    host: "localhost",
+    password: "socobo",
     port: 5432,
-    database: 'socobo_dev',
-    user: 'postgres',
-    password: 'socobo'
-  }
+    user: "postgres"
+  };
   public static DB_CONFIG: DbConfig = {
-    host: 'localhost',
+    database: "socobo",
+    host: "localhost",
+    password: "socobo",
     port: 5432,
-    database: 'socobo',
-    user: 'postgres',
-    password: 'socobo'
-  }
+    user: "postgres"
+  };
   public static PORT: number = 8282;
   public static NODE_ENV: string = "development";
   public static TOKEN_SECRET: string = "!*sdkfduf487387478478hhuhudf#28458//(/)##+993";
