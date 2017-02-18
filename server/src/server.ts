@@ -7,9 +7,10 @@ import * as http from "http";
 import * as path from "path";
 import * as pgPromise from "pg-promise";
 import * as winston from "winston";
-import * as db from "./db/index";
 // server config
 import { Config } from "./config";
+// database setup
+import * as db from "./db/index";
 // handler
 import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/index";
 import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./logic/handler/index";

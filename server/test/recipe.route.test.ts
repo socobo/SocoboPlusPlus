@@ -4,10 +4,10 @@ import * as chai from "chai";
 import * as express from "express";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
-import { RecipeHandler } from "./../src/logic/handler/index";
-import { ApiError, DbError, ERRORS, Recipe } from "./../src/models/index";
 import { RecipeRepository } from "./../src/db/repositories/recipe.repository";
 import { UserRepository } from "./../src/db/repositories/user.repository";
+import { RecipeHandler } from "./../src/logic/handler/index";
+import { ApiError, DbError, ERRORS, Recipe } from "./../src/models/index";
 import Server from "./../src/server";
 
 describe("Recipe Handler", () => {

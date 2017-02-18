@@ -1,7 +1,7 @@
-import { Config, DbConfig } from "../config";
 import { IConfig, IDatabase, IMain } from "pg-promise";
 import * as pgPromise from "pg-promise";
 
+import { Config, DbConfig } from "../config";
 import { RecipeRepository } from "./repositories/recipe.repository";
 import { UserRepository } from "./repositories/user.repository";
 

@@ -5,8 +5,8 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as mocha from "mocha";
 import * as pgPromise from "pg-promise";
 import * as sinon from "sinon";
-import { ModelValidationMiddleware } from "./../src/logic/middleware/index";
 import { RecipeRepository } from "./../src/db/repositories/recipe.repository";
+import { ModelValidationMiddleware } from "./../src/logic/middleware/index";
 import { DbError, ERRORS, Recipe, ValidationError } from "./../src/models/index";
 
 chai.use(chaiAsPromised);
