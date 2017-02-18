@@ -15,7 +15,7 @@ chai.should();
 describe("Recipe Repository", () => {
 
   const pgp: pgPromise.IMain = pgPromise({ noLocking: true });
-  let db: pgPromise.IDatabase<any> = pgp("connectionString");
+  const db: pgPromise.IDatabase<any> = pgp("connectionString");
   let stub: sinon.SinonStub;
 
   afterEach(() => {
