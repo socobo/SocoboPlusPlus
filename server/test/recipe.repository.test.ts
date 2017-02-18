@@ -14,13 +14,9 @@ chai.should();
 
 describe("Recipe Repository", () => {
 
-  let db: pgPromise.IDatabase<any>;
+  const pgp: pgPromise.IMain = pgPromise({ noLocking: true });
+  let db: pgPromise.IDatabase<any> = pgp("connectionString");
   let stub: sinon.SinonStub;
-
-  beforeEach(() => {
-    const pgp: pgPromise.IMain = pgPromise({ noLocking: true });
-    db = pgp("connectionString");
-  });
 
   afterEach(() => {
     stub.restore();
@@ -89,6 +85,8 @@ describe("Recipe Repository", () => {
       chai.expect(error).to.have.property("statusCode", 500);
       chai.expect(error).to.have.property("source", "RecipeRepository");
       chai.expect(error).to.have.property("sourceMethod", "save(..)");
+
+      stubTx.restore();
     });
   });
 
@@ -119,6 +117,7 @@ describe("Recipe Repository", () => {
 
     return service.save(recipe).then((value) => {
       chai.expect(stub.calledWith(_SAVE, ["Test", 1, "TestDesc", "testUrl", date])).to.be.true;
+      stubTx.restore();
     });
   });
 });
