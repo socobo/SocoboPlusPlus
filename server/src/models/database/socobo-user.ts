@@ -54,4 +54,12 @@ export class SocoboUser {
     this.lastModified = now;
     return this;
   }
+
+  public getSigningInfo = (): Object => {
+    return {
+      email: this.email,
+      role: this.role,
+      username: this.username
+    };
+  }
 }

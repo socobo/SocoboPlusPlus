@@ -12,7 +12,7 @@ import { DbError, ERRORS, Recipe, ValidationError } from "./../src/models/index"
 chai.use(chaiAsPromised);
 chai.should();
 
-describe("Recipe Service", () => {
+describe("Recipe Repository", () => {
 
   let db: pgPromise.IDatabase<any>;
   let stub: sinon.SinonStub;
@@ -26,7 +26,7 @@ describe("Recipe Service", () => {
     stub.restore();
   });
 
-  it("getById should call the one method of pgPromis with the correct query and parameters", () => {
+  it("getById should call the one method of pgPromise with the correct query and parameters", () => {
     stub = sinon.stub(db, "one").returns(Promise.resolve("TEST"));
 
     const service = new RecipeRepository(db);
@@ -118,7 +118,6 @@ describe("Recipe Service", () => {
                            returning id`;
 
     return service.save(recipe).then((value) => {
-
       chai.expect(stub.calledWith(_SAVE, ["Test", 1, "TestDesc", "testUrl", date])).to.be.true;
     });
   });
