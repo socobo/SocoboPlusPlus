@@ -2,7 +2,6 @@ import { NextFunction, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { Config } from "./../../config";
 import { ApiError, ERRORS, ExtractRequestBodyResult, Role, SocoboRequest, SocoboUser } from "./../../models/index";
-import { ObjectUtils } from "./../utils/index";
 
 export class AuthValidationMiddleware {
 
@@ -98,7 +97,6 @@ export class AuthValidationMiddleware {
       this._db.users.getUserByEmail(req.requestData.decoded.email)
         .then((user: SocoboUser) => {
           req.requestData = {};
-          // const convertedUser: SocoboUser = ObjectUtils.createFromPOJO(SocoboUser, user);
           if (user.role === restrictedRole) {
             resolve();
           } else {

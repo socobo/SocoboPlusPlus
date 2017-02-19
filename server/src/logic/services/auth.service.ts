@@ -4,7 +4,7 @@ import {
   ApiError, ComparePwResult, DbError, ERRORS,
   LoginResponse, ProviderType, Role, SocoboUser
 } from "./../../models/index";
-import { CryptoUtils, ErrorUtils, ObjectUtils } from "./../utils/index";
+import { CryptoUtils, ErrorUtils } from "./../utils/index";
 
 export class AuthService {
 
@@ -69,7 +69,6 @@ export class AuthService {
           .addSourceMethod("_validateUser(..)");
         return reject(e);
       }
-      //const convertedUser: SocoboUser = ObjectUtils.createFromPOJO(SocoboUser, user);
       resolve(user);
     });
   }
