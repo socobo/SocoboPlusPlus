@@ -76,16 +76,16 @@ export class UserRepository {
 
   private _tranformResult = (result: any): SocoboUser => {
     const tranformedResult: SocoboUser = new SocoboUser()
-      .addId(result.id ? Number(result.id) : null)
-      .addUsername(result.username ? result.username : null)
-      .addEmail(result.email ? result.email : null)
-      .addPassword(result.password ? result.password : null)
-      .addImage(result.image ? result.image : null)
-      .addHasTermsAccepted(result.hastermsaccepted ? Boolean(result.hastermsaccepted) : null)
-      .addRole(result.role ? Number(result.role) : null)
-      .addProvider(result.provider ? Number(result.provider) : null)
-      .addCreated(result.created ? Number(result.created) : null)
-      .addLastModified(result.lastmodified ? Number(result.lastmodified) : null);
+      .addId(result.hasOwnProperty("id") ? Number(result.id) : null)
+      .addUsername(result.hasOwnProperty("username") ? result.username : null)
+      .addEmail(result.hasOwnProperty("email") ? result.email : null)
+      .addPassword(result.hasOwnProperty("password") ? result.password : null)
+      .addImage(result.hasOwnProperty("image") ? result.image : null)
+      .addHasTermsAccepted(result.hasOwnProperty("hastermsaccepted") ? Boolean(result.hastermsaccepted) : null)
+      .addRole(result.hasOwnProperty("role") ? Number(result.role) : null)
+      .addProvider(result.hasOwnProperty("provider") ? Number(result.provider) : null)
+      .addCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
+      .addLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
     return tranformedResult;
   }
 }

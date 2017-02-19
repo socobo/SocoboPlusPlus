@@ -1,4 +1,3 @@
-import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
 import { DbError, ERRORS, Recipe } from "./../../models/index";
 
@@ -17,12 +16,12 @@ export class RecipeRepository {
   constructor (private _db: any) {}
 
   public getById = (id: number): Promise<Recipe> => {
-    const promise = this._db.one(this._GET_BY_ID, [id]);
-    return promise.catch((error: any) => {
-      return ErrorUtils.handleDbNotFound(
-        ERRORS.RECIPE_NOT_FOUND, error, "id", id.toString(),
-        RecipeRepository.name, "getById(..)");
-    });
+    return this._db.one(this._GET_BY_ID, [id], this._transformResult)
+      .catch((error: any) => {
+        return ErrorUtils.handleDbNotFound(
+          ERRORS.RECIPE_NOT_FOUND, error, "id", id.toString(),
+          RecipeRepository.name, "getById(..)");
+      });
   }
 
   public save = (recipe: Recipe): Promise<any> => {
@@ -33,5 +32,16 @@ export class RecipeRepository {
     }).catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
     });
+  }
+
+  private _transformResult = (result: any): Recipe => {
+    const transformedResult: Recipe = new Recipe();
+    transformedResult.id = result.hasOwnProperty("id") ? Number(result.id) : null;
+    transformedResult.title = result.hasOwnProperty("title") ? result.title : null;
+    transformedResult.userId = result.hasOwnProperty("userid") ? Number(result.userid) : null;
+    transformedResult.description = result.hasOwnProperty("description") ? result.description : null;
+    transformedResult.imageUrl = result.hasOwnProperty("imageurl") ? result.imageurl : null;
+    transformedResult.created = result.hasOwnProperty("created") ? new Date(result.created) : null;
+    return transformedResult;
   }
 }
