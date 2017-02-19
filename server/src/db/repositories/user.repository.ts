@@ -13,7 +13,7 @@ export class UserRepository {
             role, provider, created, lastModified
         FROM Socobo_User`;
     return this._db.many(query, [])
-      .then((result: Object[]) =>{
+      .then((result: Object[]) => {
         const transformedResult: SocoboUser[] = result.map(this._tranformResult);
         return transformedResult;
       })
@@ -76,8 +76,8 @@ export class UserRepository {
 
   private _tranformResult = (result: any): SocoboUser => {
     const tranformedResult: SocoboUser = new SocoboUser()
-      .addId(result.id ? Number(result.id): null)
-      .addUsername(result.username ? result.username: null)
+      .addId(result.id ? Number(result.id) : null)
+      .addUsername(result.username ? result.username : null)
       .addEmail(result.email ? result.email : null)
       .addPassword(result.password ? result.password : null)
       .addImage(result.image ? result.image : null)
