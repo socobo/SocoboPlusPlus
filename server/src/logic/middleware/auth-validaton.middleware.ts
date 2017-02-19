@@ -98,8 +98,8 @@ export class AuthValidationMiddleware {
       this._db.users.getUserByEmail(req.requestData.decoded.email)
         .then((user: SocoboUser) => {
           req.requestData = {};
-          const convertedUser: SocoboUser = ObjectUtils.createFromPOJO(SocoboUser, user);
-          if (Number(convertedUser.role) === restrictedRole) {
+          // const convertedUser: SocoboUser = ObjectUtils.createFromPOJO(SocoboUser, user);
+          if (user.role === restrictedRole) {
             resolve();
           } else {
             const err: ApiError = new ApiError(ERRORS.USER_NOT_AUTHORIZED)

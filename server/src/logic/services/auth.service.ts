@@ -69,8 +69,8 @@ export class AuthService {
           .addSourceMethod("_validateUser(..)");
         return reject(e);
       }
-      const convertedUser: SocoboUser = ObjectUtils.createFromPOJO(SocoboUser, user);
-      resolve(convertedUser);
+      //const convertedUser: SocoboUser = ObjectUtils.createFromPOJO(SocoboUser, user);
+      resolve(user);
     });
   }
 
@@ -134,7 +134,7 @@ export class AuthService {
         .addHasTermsAccepted(true)
         .addRole(role)
         .addProvider(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)
-        .addDates();
+        .createDates();
       resolve(user);
     });
   }
