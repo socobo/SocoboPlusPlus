@@ -14,7 +14,7 @@ export class UserRepository {
         FROM Socobo_User`;
     return this._db.many(query, [])
       .then((result: Object[]) => {
-        const transformedResult: SocoboUser[] = result.map(this._tranformResult);
+        const transformedResult: SocoboUser[] = result.map(this._transformResult);
         return transformedResult;
       })
       .catch((error: any) => {
@@ -29,7 +29,7 @@ export class UserRepository {
             role, provider, created, lastModified
         FROM Socobo_User
         WHERE id=$1`;
-    return this._db.one(query, id, this._tranformResult).catch((error: any) => {
+    return this._db.one(query, id, this._transformResult).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
         ERRORS.USER_NOT_FOUND, error, "id", id.toString(),
         UserRepository.name, "getUserById(..)");
@@ -39,7 +39,7 @@ export class UserRepository {
 
   public getUserByEmail = (email: string): Promise<SocoboUser> => {
     const query: string = "SELECT * FROM Socobo_User Where email=$1";
-    return this._db.one(query, email, this._tranformResult).catch((error: any) => {
+    return this._db.one(query, email, this._transformResult).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
         ERRORS.USER_NOT_FOUND, error, "email", email,
         UserRepository.name, "getUserByUsername(..)");
@@ -49,7 +49,7 @@ export class UserRepository {
 
   public getUserByUsername = (username: string): Promise<SocoboUser> => {
     const query: string = "SELECT * FROM Socobo_User Where username=$1";
-    return this._db.one(query, username, this._tranformResult).catch((error: any) => {
+    return this._db.one(query, username, this._transformResult).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
         ERRORS.USER_NOT_FOUND, error, "username", username,
         UserRepository.name, "getUserByUsername(..)");
@@ -74,7 +74,7 @@ export class UserRepository {
     });
   }
 
-  private _tranformResult = (result: any): SocoboUser => {
+  private _transformResult = (result: any): SocoboUser => {
     const tranformedResult: SocoboUser = new SocoboUser()
       .addId(result.hasOwnProperty("id") ? Number(result.id) : null)
       .addUsername(result.hasOwnProperty("username") ? result.username : null)
