@@ -1,12 +1,4 @@
-/* tslint:disable:max-line-length */
-
-export interface DbConfig {
-  database: string;
-  host: string;
-  port: number;
-  user: string;
-  password: string;
-}
+import { DbConfig } from "./models/index";
 
 export class Config {
   public static DB_USER: string = "postgres";
@@ -40,4 +32,3 @@ export class Config {
   public static TOKEN_HEADER: string = "x-access-token";
   public static DEFAULT_USER_IMAGE: string = "http://placehold.it/350x150";
 }
-/* tslint:enable:max-line-length */

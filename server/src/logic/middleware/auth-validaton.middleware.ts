@@ -86,7 +86,6 @@ export class AuthValidationMiddleware {
     });
   }
 
-  /* tslint:disable:triple-equals */
   public checkValidUser (req: SocoboRequest, restrictedRole: Role): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!req.requestData.hasOwnProperty("decoded")) {
@@ -96,14 +95,9 @@ export class AuthValidationMiddleware {
         return reject(err);
       }
       this._db.users.getUserByEmail(req.requestData.decoded.email)
-        .then((user: any) => {
+        .then((user: SocoboUser) => {
           req.requestData = {};
-          // In the future if we need more roles we could
-          // The role of a user could be in the token and would be fetched
-          // from the token if we need it for the authorization (or from db)
-          // check for a role like if user.role === role
-          // workaround: user.role is a string and restrictedRole is a number 
-          if (user.role == restrictedRole) {
+          if (user.role === restrictedRole) {
             resolve();
           } else {
             const err: ApiError = new ApiError(ERRORS.USER_NOT_AUTHORIZED)
@@ -115,5 +109,4 @@ export class AuthValidationMiddleware {
         .catch((error: any) => reject(error));
     });
   }
-  /* tslint:enable:triple-equals */
 }
