@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
+import { IDatabase } from "pg-promise";
 import { Recipe } from "./../../../models/index";
+import { DbExtensions } from "./../../../models/index";
 
 export class RecipeHandler {
 
   constructor (
-    private _db: any
+    private _db: IDatabase<DbExtensions>&DbExtensions
   ) {}
 
   public getById = (req: Request, res: Response): void => {

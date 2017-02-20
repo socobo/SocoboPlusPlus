@@ -1,15 +1,17 @@
 import * as jwt from "jsonwebtoken";
+import { IDatabase } from "pg-promise";
 import { Config } from "./../../config";
 import {
   ApiError, ComparePwResult, DbError, ERRORS,
   LoginResponse, ProviderType, Role, SocoboUser
 } from "./../../models/index";
+import { DbExtensions } from "./../../models/index";
 import { CryptoUtils, ErrorUtils } from "./../utils/index";
 
 export class AuthService {
 
   constructor (
-    private _db: any,
+    private _db: IDatabase<DbExtensions>&DbExtensions,
     private _cryptoUtils: CryptoUtils
   ) {}
 

@@ -1,10 +1,11 @@
 import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
 import { DbError, ERRORS, Recipe, SocoboUser } from "./../../models/index";
+import { DbExtensions } from "./../../models/index";
 
 export class UserRepository {
 
-  constructor (private _db: any) {}
+  constructor (private _db: IDatabase<DbExtensions>&DbExtensions) {}
 
   public getAll = (): Promise<SocoboUser[]> => {
     const query: string = `

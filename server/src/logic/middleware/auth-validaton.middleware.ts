@@ -1,11 +1,13 @@
 import { NextFunction, Response } from "express";
 import * as jwt from "jsonwebtoken";
+import { IDatabase } from "pg-promise";
 import { Config } from "./../../config";
 import { ApiError, ERRORS, ExtractRequestBodyResult, Role, SocoboRequest, SocoboUser } from "./../../models/index";
+import { DbExtensions } from "./../../models/index";
 
 export class AuthValidationMiddleware {
 
-  constructor (private _db: any) {}
+  constructor (private _db: IDatabase<DbExtensions>&DbExtensions) {}
 
   public checkRequest (req: SocoboRequest): Promise<any> {
     return new Promise((resolve, reject) => {

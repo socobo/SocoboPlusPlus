@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
+import { IDatabase } from "pg-promise";
 import * as db from "./../../../db/index";
 import { SocoboUser } from "./../../../models/index";
+import { DbExtensions } from "./../../../models/index";
 
 export class UserHandler {
 
-  constructor (private _db: any) {}
+  constructor (private _db: IDatabase<DbExtensions>&DbExtensions) {}
 
   public getAll = (req: Request, res: Response): void => {
     this._db.users.getAll()

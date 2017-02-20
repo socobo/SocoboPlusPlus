@@ -1,5 +1,7 @@
+import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
 import { DbError, ERRORS, Recipe } from "./../../models/index";
+import { DbExtensions } from "./../../models/index";
 
 export class RecipeRepository {
 
@@ -13,7 +15,7 @@ export class RecipeRepository {
                            values($1, $2, $3, $4, $5)
                            returning id`;
 
-  constructor (private _db: any) {}
+  constructor (private _db: IDatabase<DbExtensions>&DbExtensions) {}
 
   public getById = (id: number): Promise<Recipe> => {
     return this._db.one(this._GET_BY_ID, [id], this._transformResult)

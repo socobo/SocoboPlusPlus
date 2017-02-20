@@ -1,5 +1,6 @@
 import { DbConfig } from "./models/index";
 
+/* tslint:disable:max-line-length */
 export class Config {
   public static DB_USER: string = "postgres";
   public static DB_PW: string = "socobo";
@@ -14,3 +15,4 @@ export class Config {
   public static TOKEN_HEADER: string = "x-access-token";
   public static DEFAULT_USER_IMAGE: string = "http://placehold.it/350x150";
 }
+/* tslint:enable:max-line-length */
