@@ -5,31 +5,28 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as mocha from "mocha";
 import * as pgPromise from "pg-promise";
 import * as sinon from "sinon";
+import { RecipeRepository } from "./../src/db/repositories/recipe.repository";
 import { ModelValidationMiddleware } from "./../src/logic/middleware/index";
-import { RecipeService } from "./../src/logic/services/index";
 import { DbError, ERRORS, Recipe, ValidationError } from "./../src/models/index";
+import { DbExtensions } from "./../src/models/index";
 
 chai.use(chaiAsPromised);
 chai.should();
 
-describe("Recipe Service", () => {
+describe("Recipe Repository", () => {
 
-  let db: pgPromise.IDatabase<any>;
+  const pgp: pgPromise.IMain = pgPromise({ noLocking: true });
+  const db: any = pgp("connectionString");
   let stub: sinon.SinonStub;
-
-  beforeEach(() => {
-    const pgp: pgPromise.IMain = pgPromise({ noLocking: true });
-    db = pgp("connectionString");
-  });
 
   afterEach(() => {
     stub.restore();
   });
 
-  it("getById should call the one method of pgPromis with the correct query and parameters", () => {
+  it("getById should call the one method of pgPromise with the correct query and parameters", () => {
     stub = sinon.stub(db, "one").returns(Promise.resolve("TEST"));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
     return service.getById(1).then((value) => {
       chai.expect(stub.calledWith(`select * 
                                 from recipes
@@ -44,15 +41,15 @@ describe("Recipe Service", () => {
     };
 
     const dbError = new DbError(ERRORS.RECIPE_NOT_FOUND.withArgs("id", "1"))
-      .addSource("RecipeService")
+      .addSource("RecipeRepository")
       .addSourceMethod("getById");
     stub = sinon.stub(db, "one").returns(Promise.reject(err));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
     return service.getById(1).catch((error) => {
       chai.expect(error).to.have.property("code", "40001");
       chai.expect(error).to.have.property("statusCode", 404);
-      chai.expect(error).to.have.property("source", "RecipeService");
+      chai.expect(error).to.have.property("source", "RecipeRepository");
       chai.expect(error).to.have.property("sourceMethod", "getById(..)");
     });
   });
@@ -64,15 +61,15 @@ describe("Recipe Service", () => {
     };
 
     const dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-      .addSource("RecipeService")
+      .addSource("RecipeRepository")
       .addSourceMethod("getById");
     stub = sinon.stub(db, "one").returns(Promise.reject(err));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
     return service.getById(1).catch((error) => {
       chai.expect(error).to.have.property("code", "00001");
       chai.expect(error).to.have.property("statusCode", 500);
-      chai.expect(error).to.have.property("source", "RecipeService");
+      chai.expect(error).to.have.property("source", "RecipeRepository");
       chai.expect(error).to.have.property("sourceMethod", "getById(..)");
     });
   });
@@ -81,14 +78,16 @@ describe("Recipe Service", () => {
     const stubTx = sinon.stub(db, "tx");
     stubTx.returns(Promise.reject("TEST"));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
     const recipe: Recipe = new Recipe();
 
     return service.save(recipe).catch((error) => {
       chai.expect(error).to.have.property("code", "00001");
       chai.expect(error).to.have.property("statusCode", 500);
-      chai.expect(error).to.have.property("source", "RecipeService");
+      chai.expect(error).to.have.property("source", "RecipeRepository");
       chai.expect(error).to.have.property("sourceMethod", "save(..)");
+
+      stubTx.restore();
     });
   });
 
@@ -101,7 +100,7 @@ describe("Recipe Service", () => {
 
     stub = sinon.stub(db, "one").returns(Promise.resolve("TEST"));
 
-    const service = new RecipeService(db);
+    const service = new RecipeRepository(db);
 
     const recipe: Recipe = new Recipe();
     recipe.title = "Test";
@@ -118,8 +117,8 @@ describe("Recipe Service", () => {
                            returning id`;
 
     return service.save(recipe).then((value) => {
-
       chai.expect(stub.calledWith(_SAVE, ["Test", 1, "TestDesc", "testUrl", date])).to.be.true;
+      stubTx.restore();
     });
   });
 });

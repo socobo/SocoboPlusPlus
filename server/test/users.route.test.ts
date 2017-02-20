@@ -48,7 +48,7 @@ describe("User Route v1", () => {
 
     const user3: SocoboUser = new SocoboUser();
     user3.id = 3;
-    user3.username = "admin";
+    user3.username = "admin@test.test";
     user3.email = "admin@test.test";
     // user3.password = "password";
     user3.image = "http://placehold.it/350x150";

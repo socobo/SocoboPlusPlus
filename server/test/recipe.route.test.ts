@@ -4,8 +4,9 @@ import * as chai from "chai";
 import * as express from "express";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
+import { RecipeRepository } from "./../src/db/repositories/recipe.repository";
+import { UserRepository } from "./../src/db/repositories/user.repository";
 import { RecipeHandler } from "./../src/logic/handler/index";
-import { RecipeService, UserService } from "./../src/logic/services/index";
 import { ApiError, DbError, ERRORS, Recipe } from "./../src/models/index";
 import Server from "./../src/server";
 
@@ -13,13 +14,17 @@ describe("Recipe Handler", () => {
 
   const mocks = require("node-mocks-http");
 
-  const recipeService: RecipeService = new RecipeService(null);
-  const userService: UserService = new UserService(null);
+  const recipeRepository: RecipeRepository = new RecipeRepository(null);
+  const userRepository: UserRepository = new UserRepository(null);
+  const db = {
+    recipes: recipeRepository,
+    users: userRepository
+  };
 
   let req: any;
   let res: any;
-  let recipeServicestub: sinon.SinonStub;
-  let userServiceStub: sinon.SinonStub;
+  let recipeRepositorystub: sinon.SinonStub;
+  let userRepositoryStub: sinon.SinonStub;
 
   beforeEach(() => {
     res = mocks.createResponse({
@@ -38,14 +43,14 @@ describe("Recipe Handler", () => {
   });
 
   afterEach(() => {
-    recipeServicestub.restore();
+    recipeRepositorystub.restore();
   });
 
-  it("getById should send a response with the recipe returned by the recipeService", (done) => {
+  it("getById should send a response with the recipe returned by the RecipeRepository", (done) => {
 
-    recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.resolve("recipe"));
+    recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.resolve("recipe"));
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -57,9 +62,9 @@ describe("Recipe Handler", () => {
 
   it("getById should send a json response", (done) => {
 
-    recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.resolve("recipe"));
+    recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.resolve("recipe"));
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -70,9 +75,9 @@ describe("Recipe Handler", () => {
 
   it("getById should return 200 OK if recipe was found", (done) => {
 
-    recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.resolve("recipe"));
+    recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.resolve("recipe"));
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -84,9 +89,9 @@ describe("Recipe Handler", () => {
   it("getById should return 500 Internal Server Error if any error other than 404 was thrown", (done) => {
 
     const dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR);
-    recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
+    recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.reject(dbError));
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -98,12 +103,12 @@ describe("Recipe Handler", () => {
   it("getById should return correct error response if a 500 Internal Server Error occurs", (done) => {
 
     const dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-      .addSource("RecipeService")
+      .addSource("RecipeRepository")
       .addSourceMethod("getById()");
 
-    recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
+    recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.reject(dbError));
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -112,7 +117,7 @@ describe("Recipe Handler", () => {
         {
           message: "Internal server error",
           method: "getById()",
-          source: "RecipeService"
+          source: "RecipeRepository"
         }
       );
       done();
@@ -122,9 +127,9 @@ describe("Recipe Handler", () => {
   it("getById should return 404 Not Found Error if the resource was not found", (done) => {
 
     const dbError = new DbError(ERRORS.RECIPE_NOT_FOUND);
-    recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
+    recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.reject(dbError));
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -136,12 +141,12 @@ describe("Recipe Handler", () => {
   it("getById should return correct error response on 404 Not Found", (done) => {
 
     const dbError = new DbError(ERRORS.RECIPE_NOT_FOUND.withArgs("id", "42"))
-      .addSource("RecipeService")
+      .addSource("RecipeRepository")
       .addSourceMethod("getById()");
 
-    recipeServicestub = sinon.stub(recipeService, "getById").returns(Promise.reject(dbError));
+    recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.reject(dbError));
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -151,7 +156,7 @@ describe("Recipe Handler", () => {
         {
           message: "Recipe with id 42 could not be found",
           method: "getById()",
-          source: "RecipeService"
+          source: "RecipeRepository"
         }
       );
       done();
@@ -160,10 +165,10 @@ describe("Recipe Handler", () => {
 
   it("save should send a response with the recipe exptended by the assigned id", (done) => {
 
-    recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.resolve({ id: 1 }));
-    userServiceStub = sinon.stub(userService, "getUserById").returns(Promise.resolve());
+    recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
@@ -176,17 +181,17 @@ describe("Recipe Handler", () => {
       chai.expect(data.title).to.be.equal("Test Recipe");
       chai.expect(data.id).to.be.equal(1);
 
-      userServiceStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
 
   it("save should set a creation data to the recipe", (done) => {
 
-    recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.resolve({ id: 1 }));
-    userServiceStub = sinon.stub(userService, "getUserById").returns(Promise.resolve());
+    recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
@@ -200,39 +205,39 @@ describe("Recipe Handler", () => {
       chai.expect(data.created).to.not.be.undefined;
       chai.expect(data.created).to.have.length.above(1);
 
-      userServiceStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
 
   it("save should send a json response", (done) => {
 
-    recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.resolve({ id: 1 }));
-    userServiceStub = sinon.stub(userService, "getUserById").returns(Promise.resolve());
+    recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
       chai.expect(res._isJSON()).to.be.true;
 
-      userServiceStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
 
   it("save should return 201 CREATED if the creation was successful", (done) => {
 
-    recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.resolve({ id: 1 }));
-    userServiceStub = sinon.stub(userService, "getUserById").returns(Promise.resolve());
+    recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
       chai.expect(res.statusCode).to.be.equal(201);
 
-      userServiceStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
@@ -240,16 +245,16 @@ describe("Recipe Handler", () => {
   it("save should return 500 Internal Server Error if the creation failes", (done) => {
 
     const dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR);
-    recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.reject(dbError));
-    userServiceStub = sinon.stub(userService, "getUserById").returns(Promise.resolve());
+    recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.reject(dbError));
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
       chai.expect(res.statusCode).to.be.equal(500);
 
-      userServiceStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });
@@ -257,13 +262,13 @@ describe("Recipe Handler", () => {
   it("save should return correct error response if a 500 Internal server error occurs", (done) => {
 
     const dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-      .addSource("RecipeService")
+      .addSource("RecipeRepository")
       .addSourceMethod("save()");
 
-    recipeServicestub = sinon.stub(recipeService, "save").returns(Promise.reject(dbError));
-    userServiceStub = sinon.stub(userService, "getUserById").returns(Promise.resolve());
+    recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.reject(dbError));
+    userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(recipeService, userService);
+    const recipeHandler = new RecipeHandler(db);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
@@ -272,11 +277,11 @@ describe("Recipe Handler", () => {
         {
           message: "Internal server error",
           method: "save()",
-          source: "RecipeService"
+          source: "RecipeRepository"
         }
       );
 
-      userServiceStub.restore();
+      userRepositoryStub.restore();
       done();
     });
   });

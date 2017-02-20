@@ -1,16 +1,18 @@
 import { Request, Response } from "express";
-import { RecipeService, UserService } from "./../../../logic/services/index";
+import { IDatabase } from "pg-promise";
 import { Recipe } from "./../../../models/index";
+import { DbExtensions } from "./../../../models/index";
 
 export class RecipeHandler {
 
-  constructor (
-    private _recipeService: RecipeService,
-    private _userService: UserService
-  ) {}
+  private _db: IDatabase<DbExtensions>&DbExtensions;
+
+  constructor (db: any) {
+    this._db = db;
+  }
 
   public getById = (req: Request, res: Response): void => {
-    this._recipeService.getById(req.params.id)
+    this._db.recipes.getById(req.params.id)
       .then((result: Recipe) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
@@ -19,10 +21,10 @@ export class RecipeHandler {
     const recipe: Recipe = req.body as Recipe;
     recipe.created = new Date();
 
-    this._userService.getUserById(recipe.userId)
+    this._db.users.getUserById(recipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
 
-    this._recipeService.save(recipe)
+    this._db.recipes.save(recipe)
       .then((result: Recipe) => {
         recipe.id = result.id;
         res.status(201).json(recipe);

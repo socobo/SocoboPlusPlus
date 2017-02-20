@@ -9,6 +9,8 @@ import * as pgPromise from "pg-promise";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
+// database setup
+import * as db from "./db/index";
 // handler
 import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/index";
 import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./logic/handler/index";
@@ -18,7 +20,7 @@ import {
 } from "./logic/middleware/index";
 // services
 import {
-  AuthService, RecipeService, UserService
+  AuthService
 } from "./logic/services/index";
 // server utils
 import {
@@ -31,15 +33,12 @@ import {
 
 class Server {
   private _app: express.Application;
-  private _db: pgPromise.IDatabase<any>;
   private _port: number;
   private _server: http.Server;
 
   private _cryptoUtils: CryptoUtils;
 
   private _authService: AuthService;
-  private _recipeService: RecipeService;
-  private _userService: UserService;
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
@@ -95,7 +94,6 @@ class Server {
    */
   private _config (): void {
     this._configLogging();
-    this._configDatabase();
     this._configServer();
   }
 
@@ -140,32 +138,6 @@ class Server {
     }
   }
 
-  private _configDatabase (): void {
-    // init pgPromise
-    const pgp: pgPromise.IMain = pgPromise();
-    // declare connectionString
-    let connectionString: string;
-    // check environment and init connectionString
-    switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
-      case "test":
-        connectionString = process.env.DB_URL_TEST || Config.DB_URL_TEST;
-        break;
-
-      case "development":
-        connectionString = process.env.DB_URL_DEV || Config.DB_URL_DEV;
-        break;
-
-      case "production":
-        connectionString = process.env.DB_URL || Config.DB_URL;
-        break;
-
-      default:
-        throw new Error("NODE_ENV is not known!");
-    }
-    // init db
-    this._db = pgp(connectionString);
-  }
-
   private _configServer (): void {
     this._port = process.env.PORT || Config.PORT;
     this._app.use(cors());
@@ -184,16 +156,14 @@ class Server {
    * SERVICES
    */
   private _services (): void {
-    this._userService = new UserService(this._db);
-    this._recipeService = new RecipeService(this._db);
-    this._authService = new AuthService(this._userService, this._cryptoUtils);
+    this._authService = new AuthService(db, this._cryptoUtils);
   }
 
   /**
    * MIDDLEWARE
    */
   private _middleware (): void {
-    this._authValidationMiddleware = new AuthValidationMiddleware(this._userService);
+    this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
   }
 
@@ -204,8 +174,8 @@ class Server {
     this._authValidationHandler = new AuthValidationHandler(this._authValidationMiddleware);
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
-    this._userHandler = new UserHandler(this._userService);
-    this._recipeHandler = new RecipeHandler(this._recipeService, this._userService);
+    this._userHandler = new UserHandler(db);
+    this._recipeHandler = new RecipeHandler(db);
     this._logHandler = new LogHandler();
   }
 

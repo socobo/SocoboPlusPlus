@@ -1,15 +1,17 @@
 import * as jwt from "jsonwebtoken";
+import { IDatabase } from "pg-promise";
 import { Config } from "./../../config";
 import {
-  ApiError, ComparePwResult, DbError, ERRORS, LoginResponse, ProviderType, Role, SocoboUser
+  ApiError, ComparePwResult, DbError, ERRORS,
+  LoginResponse, ProviderType, Role, SocoboUser
 } from "./../../models/index";
+import { DbExtensions } from "./../../models/index";
 import { CryptoUtils, ErrorUtils } from "./../utils/index";
-import { UserService } from "./index";
 
 export class AuthService {
 
   constructor (
-    private _userService: UserService,
+    private _db: IDatabase<DbExtensions>&DbExtensions,
     private _cryptoUtils: CryptoUtils
   ) {}
 
@@ -56,9 +58,9 @@ export class AuthService {
 
   private _getUserFromDatabase (isEmailLogin: boolean, usernameOrEmail: string): Promise<SocoboUser> {
     if (isEmailLogin) {
-      return this._userService.getUserByEmail(usernameOrEmail);
+      return this._db.users.getUserByEmail(usernameOrEmail);
     }
-    return this._userService.getUserByUsername(usernameOrEmail);
+    return this._db.users.getUserByUsername(usernameOrEmail);
   }
 
   private _validateUser (user: SocoboUser): Promise<SocoboUser> {
@@ -85,17 +87,10 @@ export class AuthService {
     });
   }
 
-  private _createLoginResult (foundUser: any): Promise<LoginResponse> {
+  private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      // workaround: DB doesn't return a real SocoboUser Object, simply a POJO
-      // maybe the rewrite of the database layer fix this problem (hopefully)
-      const signingInfo: Object = {
-        admin: foundUser.isadmin,
-        email: foundUser.email,
-        username: foundUser.username
-      };
       // create JWT
-      jwt.sign(signingInfo, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
+      jwt.sign(foundUser.getSigningInfo(), (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
         expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION),
         issuer: (process.env.TOKEN_ISSUER || Config.TOKEN_ISSUER)
       }, (err, token) => {
@@ -140,14 +135,14 @@ export class AuthService {
         .addHasTermsAccepted(true)
         .addRole(role)
         .addProvider(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)
-        .addDates();
+        .createDates();
       resolve(user);
     });
   }
 
   private _returnSavedUser (user: SocoboUser): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
-      this._userService.save(user)
+      this._db.users.save(user)
         .then((result: any) => {
           user.id = result.id;
           delete user.password;
