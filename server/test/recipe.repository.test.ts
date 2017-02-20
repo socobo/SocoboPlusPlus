@@ -8,6 +8,7 @@ import * as sinon from "sinon";
 import { RecipeRepository } from "./../src/db/repositories/recipe.repository";
 import { ModelValidationMiddleware } from "./../src/logic/middleware/index";
 import { DbError, ERRORS, Recipe, ValidationError } from "./../src/models/index";
+import { DbExtensions } from "./../src/models/index";
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -15,7 +16,7 @@ chai.should();
 describe("Recipe Repository", () => {
 
   const pgp: pgPromise.IMain = pgPromise({ noLocking: true });
-  const db: pgPromise.IDatabase<any> = pgp("connectionString");
+  const db: any = pgp("connectionString");
   let stub: sinon.SinonStub;
 
   afterEach(() => {

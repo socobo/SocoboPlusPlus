@@ -6,7 +6,11 @@ import { DbExtensions } from "./../../../models/index";
 
 export class UserHandler {
 
-  constructor (private _db: IDatabase<DbExtensions>&DbExtensions) {}
+  private _db: IDatabase<DbExtensions>&DbExtensions;
+
+  constructor (db: any) {
+    this._db = db;
+  }
 
   public getAll = (req: Request, res: Response): void => {
     this._db.users.getAll()

@@ -5,9 +5,11 @@ import { DbExtensions } from "./../../../models/index";
 
 export class RecipeHandler {
 
-  constructor (
-    private _db: IDatabase<DbExtensions>&DbExtensions
-  ) {}
+  private _db: IDatabase<DbExtensions>&DbExtensions;
+
+  constructor (db: any) {
+    this._db = db;
+  }
 
   public getById = (req: Request, res: Response): void => {
     this._db.recipes.getById(req.params.id)

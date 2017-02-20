@@ -15,7 +15,11 @@ export class RecipeRepository {
                            values($1, $2, $3, $4, $5)
                            returning id`;
 
-  constructor (private _db: IDatabase<DbExtensions>&DbExtensions) {}
+  private _db: IDatabase<DbExtensions>&DbExtensions;
+
+  constructor (db: any) {
+    this._db = db;
+  }
 
   public getById = (id: number): Promise<Recipe> => {
     return this._db.one(this._GET_BY_ID, [id], this._transformResult)
