@@ -3,27 +3,9 @@ import { DbConfig } from "./models/index";
 export class Config {
   public static DB_USER: string = "postgres";
   public static DB_PW: string = "socobo";
-  public static DB_CONFIG_TEST: DbConfig = {
-    database: "socobo_test",
-    host: "localhost",
-    password: "socobo",
-    port: 5432,
-    user: "postgres"
-  };
-  public static DB_CONFIG_DEV: DbConfig = {
-    database: "socobo_dev",
-    host: "localhost",
-    password: "socobo",
-    port: 5432,
-    user: "postgres"
-  };
-  public static DB_CONFIG: DbConfig = {
-    database: "socobo",
-    host: "localhost",
-    password: "socobo",
-    port: 5432,
-    user: "postgres"
-  };
+  public static DB_URL_TEST: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo_test?ssl=false`;
+  public static DB_URL_DEV: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo_dev?ssl=false`;
+  public static DB_URL: string = `postgres://${Config.DB_USER}:${Config.DB_PW}@localhost:5432/socobo?ssl=false`;
   public static PORT: number = 8282;
   public static NODE_ENV: string = "development";
   public static TOKEN_SECRET: string = "!*sdkfduf487387478478hhuhudf#28458//(/)##+993";

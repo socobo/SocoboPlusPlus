@@ -5,27 +5,27 @@ import { Config } from "../config";
 import { DbConfig, DbExtensions } from "./../models/index";
 import { RecipeRepository, UserRepository } from "./repositories/index";
 
-const getDbConfig = (): DbConfig => {
-  let dbConfig: DbConfig;
+const getConnectionUrl = (): string => {
+  let connectionUrl: string;
 
   switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
     case "test":
-      dbConfig = process.env.DB_CONFIG_TEST || Config.DB_CONFIG_TEST;
+      connectionUrl = process.env.DB_URL_TEST || Config.DB_URL_TEST;
       break;
 
     case "development":
-      dbConfig = process.env.DB_CONFIG_DEV || Config.DB_CONFIG_DEV;
+      connectionUrl = process.env.DB_URL_DEV || Config.DB_URL_DEV;
       break;
 
     case "production":
-      dbConfig = process.env.DB_CONFIG || Config.DB_CONFIG;
+      connectionUrl = process.env.DB_URL || Config.DB_URL;
       break;
 
     default:
       throw new Error("NODE_ENV is not known!");
   }
 
-  return dbConfig;
+  return connectionUrl;
 };
 
 // pg-promise initialization options:
@@ -37,13 +37,13 @@ const options: IOptions<DbExtensions> = {
 };
 
 // Choose the db configuration depending on the current environment
-const dbConfig = getDbConfig();
+const connectionUrl = getConnectionUrl();
 
 // Loading and initializing pg-promise:
 const pgp: IMain = pgPromise(options);
 
 // Create the database instance with extensions:
-const db = pgp(dbConfig) as IDatabase<DbExtensions>&DbExtensions;
+const db = pgp(connectionUrl) as IDatabase<DbExtensions>&DbExtensions;
 
 // export database object
 export = db;
