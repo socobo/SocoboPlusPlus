@@ -16,7 +16,8 @@ export class UserRepository {
         SELECT
             id, username, email, image, hasTermsAccepted,
             role, provider, created, lastModified
-        FROM Socobo_User`;
+        FROM Socobo_User
+        ORDER BY id`;
     return this._db.many(query, [])
       .then((result: Object[]) => {
         const transformedResult: SocoboUser[] = result.map(this._transformResult);
@@ -79,17 +80,16 @@ export class UserRepository {
       });
   }
 
-  public updateById = (id: number, updateType: UpdateType, fieldsToUpdate: string[]): Promise<SocoboUser> => {
+  public updateById = (id: number, updateType: UpdateType, fieldValuesToUpdate: string[]): Promise<SocoboUser> => {
     const query: string = this._getUpdateQuery(updateType);
-    const fields: any[] = [id, ...fieldsToUpdate, Date.now()];
+    const fields: any[] = [id, ...fieldValuesToUpdate, Date.now()];
     return this._db.tx("UpdateUser", () => {
-      this._db.one(query, fields)
-        .then((result: any) => {
-          return this.getUserById(result.id)
-        })
-      }).catch((error: any) => {
-        return ErrorUtils.handleDbError(error, UserRepository.name, "save(..)");
-      });
+      return this._db.one(query, fields)
+        .then((result: any) => this.getUserById(result.id))
+        .catch((error: any) => {
+          return ErrorUtils.handleDbError(error, UserRepository.name, "updateById(..)");
+        });
+    });
   }
 
   public deleteById = (id: number): Promise<Object> => {
@@ -114,11 +114,11 @@ export class UserRepository {
   }
 
   private _getUpdateQuery = (updateType: UpdateType): string => {
-    let result = "UPDATE Socobo_User"
+    let result: string = "UPDATE Socobo_User";
 
     switch (updateType) {
       case UpdateType.full:
-        result += result + ` 
+        result += ` 
           SET 
             username=$2,
             email=$3,
@@ -128,28 +128,28 @@ export class UserRepository {
         break;
 
       case UpdateType.username:
-        result += result + ` 
+        result += ` 
           SET 
             username=$2,
             lastModified=$3`;
         break;
 
       case UpdateType.email:
-        result += result + ` 
+        result += ` 
           SET 
             email=$2,
             lastModified=$3`;
         break;
 
       case UpdateType.password:
-        result += result + ` 
+        result += ` 
           SET 
             password=$2,
             lastModified=$3`;
         break;
 
       case UpdateType.image:
-        result += result + ` 
+        result += ` 
           SET 
             image=$2,
             lastModified=$3`;
@@ -159,7 +159,7 @@ export class UserRepository {
         throw new Error("Invalid UpdateType"); 
     }
 
-    result += result + ` 
+    result += ` 
       WHERE id=$1
       RETURNING id`;
 
