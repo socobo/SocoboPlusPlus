@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 import { IDatabase } from "pg-promise";
 import { Config } from "./../../config";
 import {
-  ApiError, ComparePwResult, DbError, ERRORS,
+  ApiError, ComparePwResult, DbError, ERRORS, ExtractRequestBodyResult,
   LoginResponse, ProviderType, Role, SocoboUser
 } from "./../../models/index";
 import { DbExtensions } from "./../../models/index";
@@ -15,16 +15,16 @@ export class AuthService {
     private _cryptoUtils: CryptoUtils
   ) {}
 
-  public login (isEmailLogin: boolean, usernameOrEmail: string, password: string): Promise<LoginResponse> {
+  public login (erbr: ExtractRequestBodyResult): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
+      this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail)
         .then((user: SocoboUser) => this._validateUser(user))
-        .then((foundUser: SocoboUser) => this._cryptoUtils.comparePasswords(password, foundUser))
+        .then((foundUser: SocoboUser) => this._cryptoUtils.comparePasswords(erbr.password, foundUser))
         .then((cr: ComparePwResult) => this._validateComparePasswords(cr.isPasswordMatch, cr.user))
         .then((user: SocoboUser) => resolve(this._createLoginResult(user)))
         .catch((error: any) => {
           if (error.code === ERRORS.USER_NOT_FOUND.code) {
-            const e = new DbError(ERRORS.AUTH_NOT_REGISTERED.withArgs(usernameOrEmail))
+            const e = new DbError(ERRORS.AUTH_NOT_REGISTERED.withArgs(erbr.usernameOrEmail))
               .addSource(AuthService.name)
               .addSourceMethod("login(..)")
               .addCause(error)
@@ -38,15 +38,14 @@ export class AuthService {
     });
   }
 
-  public register (isEmailLogin: boolean, usernameOrEmail: string,
-                   password: string, role: Role): Promise<SocoboUser> {
+  public register (erbr: ExtractRequestBodyResult): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
-      this._getUserFromDatabase(isEmailLogin, usernameOrEmail)
+      this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail)
         .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
         .catch((errorOne: any) => {
           if (errorOne.code === ERRORS.USER_NOT_FOUND.code) {
-            this._cryptoUtils.hashPassword(password)
-              .then((hashedPassword: string) => this._createNewUser(hashedPassword, usernameOrEmail, role))
+            this._cryptoUtils.hashPassword(erbr.password)
+              .then((hashedPassword: string) => this._createNewUser(hashedPassword, erbr.usernameOrEmail, erbr.role))
               .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
               .catch((errorTwo: any) => reject(errorTwo));
           } else {
