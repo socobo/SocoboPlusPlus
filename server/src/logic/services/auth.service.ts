@@ -17,7 +17,7 @@ export class AuthService {
 
   public login (erbr: ExtractRequestBodyResult): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail)
+      this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail, false)
         .then((user: SocoboUser) => this._validateUser(user))
         .then((foundUser: SocoboUser) => this._cryptoUtils.comparePasswords(erbr.password, foundUser))
         .then((cr: ComparePwResult) => this._validateComparePasswords(cr.isPasswordMatch, cr.user))
@@ -40,7 +40,7 @@ export class AuthService {
 
   public register (erbr: ExtractRequestBodyResult): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
-      this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail)
+      this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail, true)
         .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
         .catch((errorOne: any) => {
           if (errorOne.code === ERRORS.USER_NOT_FOUND.code) {
@@ -55,11 +55,21 @@ export class AuthService {
     });
   }
 
-  private _getUserFromDatabase (isEmailLogin: boolean, usernameOrEmail: string): Promise<SocoboUser> {
+  private _getUserFromDatabase (isEmailLogin: boolean, usernameOrEmail: string,
+                                onlyEmailRegistration: boolean): Promise<SocoboUser> {
+
     if (isEmailLogin) {
       return this._db.users.getUserByEmail(usernameOrEmail);
     }
-    return this._db.users.getUserByUsername(usernameOrEmail);
+    
+    if (!onlyEmailRegistration) {
+      return this._db.users.getUserByUsername(usernameOrEmail);
+    }
+
+    const e = new ApiError(ERRORS.AUTH_ONLY_EMAIL_ALLOWED)
+      .addSource(AuthService.name)
+      .addSourceMethod("_getUserFromDatabase(..)");
+    return Promise.reject(e);
   }
 
   private _validateUser (user: SocoboUser): Promise<SocoboUser> {
@@ -88,7 +98,6 @@ export class AuthService {
 
   private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      // create JWT
       jwt.sign(foundUser.getSigningInfo(), (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
         expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION),
         issuer: (process.env.TOKEN_ISSUER || Config.TOKEN_ISSUER)
