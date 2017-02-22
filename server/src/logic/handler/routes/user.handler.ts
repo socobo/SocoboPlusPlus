@@ -28,8 +28,8 @@ export class UserHandler {
   public updateById = (req: Request, res: Response): void => {
     const userId: number = +req.params.id;
     const updateType: UpdateType = req.body.updateType;
-    const fieldValuesToUpdate: string[] = req.body.fieldValuesToUpdate;
-    this._db.users.updateById(userId, updateType, fieldValuesToUpdate)
+    const fieldValues: string[] = req.body.fieldValues;
+    this._db.users.updateById(userId, updateType, fieldValues)
       .then((result: SocoboUser) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
