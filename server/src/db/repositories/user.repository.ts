@@ -156,7 +156,7 @@ export class UserRepository {
         break;
 
       default:
-        throw new Error("Invalid UpdateType"); 
+        throw new Error("Invalid UpdateType");
     }
 
     result += ` 
