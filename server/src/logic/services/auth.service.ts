@@ -61,7 +61,7 @@ export class AuthService {
     if (isEmailLogin) {
       return this._db.users.getUserByEmail(usernameOrEmail);
     }
-    
+
     if (!onlyEmailRegistration) {
       return this._db.users.getUserByUsername(usernameOrEmail);
     }
