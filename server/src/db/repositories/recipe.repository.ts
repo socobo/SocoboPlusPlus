@@ -17,6 +17,11 @@ export class RecipeRepository {
                              imageUrl, created)
                            values($1, $2, $3, $4, $5)
                            returning id`;
+  
+  private _UPDATE: string = `update recipes set
+                             title=$2, userId=$3, description=$4,
+                             imageUrl=$5
+                           where recipes.id = $1`;
 
   private _DELETE: string = `delete from recipes where recipes.id = $1`;
 
@@ -61,6 +66,16 @@ export class RecipeRepository {
         recipe.imageUrl, recipe.created]);
     }).catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
+    });
+  }
+
+  public update = (recipe: Recipe): Promise<Recipe> => {
+    return this._db.tx("UpdateRecipe", () => {
+      return this._db.one(this._UPDATE, [
+        recipe.id, recipe.title, recipe.userId, recipe.description,
+        recipe.imageUrl], this._transformResult);
+    }).catch((error: any) => {
+      return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");
     });
   }
 
