@@ -9,6 +9,9 @@ export class RecipeRepository {
                                 from recipes
                                 where recipes.id = $1`;
 
+  private _GET_ALL: string = `select * 
+                                from recipes`;
+
   private _SAVE: string = `insert into recipes(
                              title, userId, description,
                              imageUrl, created)
@@ -27,6 +30,15 @@ export class RecipeRepository {
         return ErrorUtils.handleDbNotFound(
           ERRORS.RECIPE_NOT_FOUND, error, "id", id.toString(),
           RecipeRepository.name, "getById(..)");
+      });
+  }
+
+  public getAll = (): Promise<Recipe[]> => {
+    return this._db.many(this._GET_BY_ID, [])
+      .then(result => result.map(this._transformResult))
+      .catch((error: any) => {
+        return ErrorUtils.handleDbError(
+          error, RecipeRepository.name, "getById(..)");
       });
   }
 
