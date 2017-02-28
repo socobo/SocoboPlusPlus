@@ -37,4 +37,14 @@ export class RecipeHandler {
       })
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
+
+  public delete = (req: Request, res: Response): void => {
+
+    this._db.recipes.getById(req.params.id)
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+
+    this._db.recipes.delete(req.params.id)
+      .then(() => res.status(200).json())
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
 }

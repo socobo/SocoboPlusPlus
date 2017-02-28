@@ -26,6 +26,10 @@ export class RecipeRoute {
       this._authValidationHandler.checkToken,
       this._recipeHandler.getById);
 
+    this._router.delete("/:id",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.delete);
+
     return this._router;
   }
 }
