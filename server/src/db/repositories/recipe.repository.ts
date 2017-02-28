@@ -18,6 +18,8 @@ export class RecipeRepository {
                            values($1, $2, $3, $4, $5)
                            returning id`;
 
+  private _DELETE: string = `delete from recipes where recipes.id = $1`;
+
   private _db: IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
@@ -40,6 +42,16 @@ export class RecipeRepository {
         return ErrorUtils.handleDbError(
           error, RecipeRepository.name, "getById(..)");
       });
+  }
+
+  public delete = (id: Number): Promise<void> => {
+    return this._db.tx("DeleteRecipe", () => {
+      return this._db.one(this._DELETE, [id])
+      .catch((error: any) => {
+        return ErrorUtils.handleDbError(
+          error, RecipeRepository.name, "delete(..)");
+      });
+    });
   }
 
   public save = (recipe: Recipe): Promise<any> => {
