@@ -51,7 +51,7 @@ export class RecipeRepository {
 
   public delete = (id: Number): Promise<void> => {
     return this._db.tx("DeleteRecipe", () => {
-      return this._db.one(this._DELETE, [id])
+      return this._db.none(this._DELETE, [id])
       .catch((error: any) => {
         return ErrorUtils.handleDbError(
           error, RecipeRepository.name, "delete(..)");
