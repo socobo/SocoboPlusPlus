@@ -38,6 +38,19 @@ export class RecipeHandler {
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
+  public update = (req: Request, res: Response): void => {
+    const recipe: Recipe = req.body as Recipe;
+
+    this._db.users.getUserById(recipe.userId)
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+
+    this._db.recipes.update(req.params.id, recipe)
+      .then(() => {
+        this.getById(req, res);
+      })
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
   public delete = (req: Request, res: Response): void => {
 
     this._db.recipes.getById(req.params.id)

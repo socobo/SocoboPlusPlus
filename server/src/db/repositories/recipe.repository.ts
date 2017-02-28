@@ -69,11 +69,11 @@ export class RecipeRepository {
     });
   }
 
-  public update = (recipe: Recipe): Promise<Recipe> => {
+  public update = (id: number, recipe: Recipe): Promise<Recipe> => {
     return this._db.tx("UpdateRecipe", () => {
-      return this._db.one(this._UPDATE, [
-        recipe.id, recipe.title, recipe.userId, recipe.description,
-        recipe.imageUrl], this._transformResult);
+      return this._db.none(this._UPDATE, [
+        id, recipe.title, recipe.userId, recipe.description,
+        recipe.imageUrl]);
     }).catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");
     });
