@@ -41,11 +41,11 @@ export class RecipeRepository {
   }
 
   public getAll = (): Promise<Recipe[]> => {
-    return this._db.many(this._GET_BY_ID, [])
+    return this._db.many(this._GET_ALL, [])
       .then(result => result.map(this._transformResult))
       .catch((error: any) => {
         return ErrorUtils.handleDbError(
-          error, RecipeRepository.name, "getById(..)");
+          error, RecipeRepository.name, "getAll(..)");
       });
   }
 
