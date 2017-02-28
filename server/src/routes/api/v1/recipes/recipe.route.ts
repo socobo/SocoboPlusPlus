@@ -18,6 +18,10 @@ export class RecipeRoute {
       this._modelValidationHandler.validate,
       this._recipeHandler.save);
 
+    this._router.get("/",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.getAll);
+
     this._router.get("/:id",
       this._authValidationHandler.checkToken,
       this._recipeHandler.getById);

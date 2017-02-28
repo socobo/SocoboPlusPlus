@@ -17,6 +17,12 @@ export class RecipeHandler {
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
+  public getAll = (req: Request, res: Response): void => {
+    this._db.recipes.getAll()
+      .then((result: Recipe[]) => res.status(200).json(result))
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
   public save = (req: Request, res: Response): void => {
     const recipe: Recipe = req.body as Recipe;
     recipe.created = new Date();
