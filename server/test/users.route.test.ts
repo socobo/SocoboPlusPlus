@@ -77,13 +77,14 @@ describe("User Route v1", () => {
 
   });
 
-  it("route /api/v1/users should return 2 users", () => {
+  it("route /api/v1/users should return 3 users", () => {
 
     login().then((token: string) => {
 
       chai.request(Server).get("/api/v1/users").set("x-access-token", token)
         .then((res: ChaiHttp.Response) => {
           expect(res.body).to.deep.equal(users);
+          expect(res.body.length).to.equal(3);
         })
         .catch((err: any) => {
           expect(err.message).equal("The 'AllUsers' Request are failed!");

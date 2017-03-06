@@ -1,6 +1,6 @@
 import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
-import { DbError, ERRORS, Recipe, SocoboUser } from "./../../models/index";
+import { DbError, ERRORS, Recipe, SocoboUser, UpdateType } from "./../../models/index";
 import { DbExtensions } from "./../../models/index";
 
 export class UserRepository {
@@ -16,7 +16,8 @@ export class UserRepository {
         SELECT
             id, username, email, image, hasTermsAccepted,
             role, provider, created, lastModified
-        FROM Socobo_User`;
+        FROM Socobo_User
+        ORDER BY id`;
     return this._db.many(query, [])
       .then((result: Object[]) => {
         const transformedResult: SocoboUser[] = result.map(this._transformResult);
@@ -74,9 +75,27 @@ export class UserRepository {
       return this._db.one(query, [user.username, user.email, user.password,
                                   user.image, user.hasTermsAccepted, user.role,
                                   user.provider, user.created, user.lastModified]);
-    }).catch((error: any) => {
-      return ErrorUtils.handleDbError(error, UserRepository.name, "save(..)");
+      }).catch((error: any) => {
+        return ErrorUtils.handleDbError(error, UserRepository.name, "save(..)");
+      });
+  }
+
+  public updateById = (id: number, updateType: UpdateType, fieldValuesToUpdate: string[]): Promise<SocoboUser> => {
+    const query: string = this._getUpdateQuery(updateType);
+    const fields: any[] = [id, ...fieldValuesToUpdate, Date.now()];
+    return this._db.tx("UpdateUser", () => {
+      return this._db.one(query, fields)
+        .then((result: any) => this.getUserById(result.id))
+        .catch((error: any) => {
+          return ErrorUtils.handleDbError(error, UserRepository.name, "updateById(..)");
+        });
     });
+  }
+
+  public deleteById = (id: number): Promise<Object> => {
+    const query: string = `DELETE FROM Socobo_User WHERE id=$1 RETURNING id`;
+    return this._db.tx("DeleteUser", () => this._db.one(query, [id]))
+      .catch((error: any) => ErrorUtils.handleDbError(error, UserRepository.name, "deleteById(..)"));
   }
 
   private _transformResult = (result: any): SocoboUser => {
@@ -92,5 +111,58 @@ export class UserRepository {
       .addCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
       .addLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
     return tranformedResult;
+  }
+
+  private _getUpdateQuery = (updateType: UpdateType): string => {
+    let result: string = "UPDATE Socobo_User";
+
+    switch (updateType) {
+      case UpdateType.full:
+        result += ` 
+          SET 
+            username=$2,
+            email=$3,
+            password=$4,
+            image=$5,
+            lastModified=$6`;
+        break;
+
+      case UpdateType.username:
+        result += ` 
+          SET 
+            username=$2,
+            lastModified=$3`;
+        break;
+
+      case UpdateType.email:
+        result += ` 
+          SET 
+            email=$2,
+            lastModified=$3`;
+        break;
+
+      case UpdateType.password:
+        result += ` 
+          SET 
+            password=$2,
+            lastModified=$3`;
+        break;
+
+      case UpdateType.image:
+        result += ` 
+          SET 
+            image=$2,
+            lastModified=$3`;
+        break;
+
+      default:
+        throw new Error("Invalid UpdateType");
+    }
+
+    result += ` 
+      WHERE id=$1
+      RETURNING id`;
+
+    return result;
   }
 }
