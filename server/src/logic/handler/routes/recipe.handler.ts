@@ -21,9 +21,34 @@ export class RecipeHandler {
   }
 
   public getAll = (req: Request, res: Response): void => {
-    this._db.recipes.getAll()
+
+    let queryPramas = req.query
+    let value = req.query.name
+    
+    let allQueryParams = Object.getOwnPropertyNames(queryPramas);
+    let firstQeryParam = allQueryParams[0];
+    let valueFirstQueryParam = queryPramas[firstQeryParam];
+
+    if(firstQeryParam && valueFirstQueryParam){      
+      if(!(new Recipe().getFields().has(firstQeryParam))){
+        res.status(400).json("Field does not exist");
+      }
+      this._db.recipes.getByField(firstQeryParam, valueFirstQueryParam)
       .then((result: Recipe[]) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+    }else{
+      this._db.recipes.getAll()
+      .then((result: Recipe[]) => res.status(200).json(result))
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+    }
+  }
+
+  public getByField = (req: Request, res: Response): void => {
+    let params = req.query
+    let value = req.query.name
+    // this._db.recipes.getByField()
+    //   .then((result: Recipe[]) => res.status(200).json(result))
+    //   .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
   public save = (req: Request, res: Response): void => {

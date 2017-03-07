@@ -5,26 +5,6 @@ import { DbExtensions } from "./../../models/index";
 
 export class RecipeRepository {
 
-  private _GET_BY_ID: string = `select * 
-                                from recipes
-                                where recipes.id = $1`;
-
-  private _GET_ALL: string = `select * 
-                                from recipes`;
-
-  private _SAVE: string = `insert into recipes(
-                             title, userId, description,
-                             imageUrl, created)
-                           values($1, $2, $3, $4, $5)
-                           returning id`;
-  
-  private _UPDATE: string = `update recipes set
-                             title=$2, userId=$3, description=$4,
-                             imageUrl=$5
-                           where recipes.id = $1`;
-
-  private _DELETE: string = `delete from recipes where recipes.id = $1`;
-
   private _db: IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
@@ -32,7 +12,8 @@ export class RecipeRepository {
   }
 
   public getById = (id: number): Promise<Recipe> => {
-    return this._db.one(this._GET_BY_ID, [id], this._transformResult)
+    let query = `select * from recipes where recipes.id = $1`;
+    return this._db.one(query, [id], this._transformResult)
       .catch((error: any) => {
         return ErrorUtils.handleDbNotFound(
           ERRORS.RECIPE_NOT_FOUND, error, "id", id.toString(),
@@ -41,7 +22,8 @@ export class RecipeRepository {
   }
 
   public getAll = (): Promise<Recipe[]> => {
-    return this._db.many(this._GET_ALL, [])
+    let query = `select * from recipes`;
+    return this._db.many(query, [])
       .then(result => result.map(this._transformResult))
       .catch((error: any) => {
         return ErrorUtils.handleDbError(
@@ -49,9 +31,21 @@ export class RecipeRepository {
       });
   }
 
+  public getByField = (field: string, 
+                      value: string | number): Promise<Recipe[]> => {
+    let query: string = `select * from recipes where ${field} = $1`
+    return this._db.many(query, [value])
+      .then(result => result.map(this._transformResult))
+      .catch((error: any) => {
+        return ErrorUtils.handleDbError(
+          error, RecipeRepository.name, "getByField(..)");
+      });
+  }
+
   public delete = (id: Number): Promise<void> => {
+    let query: string = `delete from recipes where recipes.id = $1`;
     return this._db.tx("DeleteRecipe", () => {
-      return this._db.none(this._DELETE, [id])
+      return this._db.none(query, [id])
       .catch((error: any) => {
         return ErrorUtils.handleDbError(
           error, RecipeRepository.name, "delete(..)");
@@ -60,8 +54,13 @@ export class RecipeRepository {
   }
 
   public save = (recipe: Recipe): Promise<any> => {
+    let query: string = `insert into recipes(
+                             title, userId, description,
+                             imageUrl, created)
+                           values($1, $2, $3, $4, $5)
+                           returning id`;
     return this._db.tx("SaveRecipe", () => {
-      return this._db.one(this._SAVE, [
+      return this._db.one(query, [
         recipe.title, recipe.userId, recipe.description,
         recipe.imageUrl, recipe.created]);
     }).catch((error: any) => {
@@ -70,8 +69,12 @@ export class RecipeRepository {
   }
 
   public update = (id: number, recipe: Recipe): Promise<Recipe> => {
+    let query: string = `update recipes set
+                             title=$2, userId=$3, description=$4,
+                             imageUrl=$5
+                           where recipes.id = $1`;
     return this._db.tx("UpdateRecipe", () => {
-      return this._db.none(this._UPDATE, [
+      return this._db.none(query, [
         id, recipe.title, recipe.userId, recipe.description,
         recipe.imageUrl]);
     }).catch((error: any) => {
