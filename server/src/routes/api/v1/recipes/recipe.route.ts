@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   AuthValidationHandler, ModelValidationHandler, RecipeHandler
 } from "./../../../../logic/handler/index";
+import { Recipe } from "./../../../../models/index";
 
 export class RecipeRoute {
 
@@ -20,6 +21,7 @@ export class RecipeRoute {
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
+      this._recipeHandler.updateRecipe,
       this._modelValidationHandler.validate,
       this._recipeHandler.update);
 

@@ -1,14 +1,17 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { IDatabase } from "pg-promise";
-import { Recipe } from "./../../../models/index";
+import { Recipe, ApiError, ERRORS } from "./../../../models/index";
 import { DbExtensions } from "./../../../models/index";
+import { ModelUtils } from "./../../../logic/utils/index"
 
 export class RecipeHandler {
 
   private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _modelUtils: ModelUtils;
 
-  constructor (db: any) {
+  constructor (db: any, modelUtils: ModelUtils) {
     this._db = db;
+    this._modelUtils = modelUtils;
   }
 
   public getById = (req: Request, res: Response): void => {
@@ -39,16 +42,31 @@ export class RecipeHandler {
   }
 
   public update = (req: Request, res: Response): void => {
-    const recipe: Recipe = req.body as Recipe;
+    const newRecipe: Recipe = req.body as Recipe;
 
-    this._db.users.getUserById(recipe.userId)
+    this._db.users.getUserById(newRecipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
 
-    this._db.recipes.update(req.params.id, recipe)
+    this._db.recipes.update(req.params.id, newRecipe)
       .then(() => {
         this.getById(req, res);
       })
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  public updateRecipe = (req: Request, res: Response, next: NextFunction) => {
+    const newRecipe: any = req.body;
+
+    this._db.recipes.getById(req.params.id).then(existingRecipe => {
+      this._modelUtils.updateModelValues(existingRecipe, newRecipe)
+        .then(result => {
+          req.body = result;
+          next();
+        })
+        .catch((error) => {
+          res.status(error.statusCode).json(error.forResponse());
+        });
+    });
   }
 
   public delete = (req: Request, res: Response): void => {

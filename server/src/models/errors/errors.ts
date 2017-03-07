@@ -12,6 +12,11 @@ export class ERRORS {
     "internal.error",
     500
   );
+  public static UPDATE_MODEL_VALUES = new ErrorType(
+    "00002",
+    "update.model.values",
+    400
+  );
   public static REQUEST_BODY = new ErrorType(
     "00005",
     "internal.error.request.body",

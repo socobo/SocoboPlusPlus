@@ -30,6 +30,9 @@ import {
 import {
   AuthRoute, LogRoute, RecipeRoute, UsersRoute
 } from "./routes/api/v1/index";
+import { 
+  ModelUtils 
+} from "./logic/utils/index"
 
 class Server {
   private _app: express.Application;
@@ -37,6 +40,7 @@ class Server {
   private _server: http.Server;
 
   private _cryptoUtils: CryptoUtils;
+  private _modelUtils: ModelUtils;
 
   private _authService: AuthService;
 
@@ -150,6 +154,7 @@ class Server {
    */
   private _utils (): void {
     this._cryptoUtils = new CryptoUtils();
+    this._modelUtils = new ModelUtils();
   }
 
   /**
@@ -175,7 +180,7 @@ class Server {
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
     this._userHandler = new UserHandler(db);
-    this._recipeHandler = new RecipeHandler(db);
+    this._recipeHandler = new RecipeHandler(db, this._modelUtils);
     this._logHandler = new LogHandler();
   }
 

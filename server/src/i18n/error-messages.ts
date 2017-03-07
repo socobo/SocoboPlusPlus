@@ -14,6 +14,7 @@ export const ERROR_MESSAGES: any = {
   "internal.error.request.body.authcheck": "The request body doesn't have {0}",
   "internal.no.password.hash": "No password hash",
   "recipe.not.found": "Recipe with {0} {1} could not be found",
+  "update.model.values": "Field {0} does not exist or is not updatable",
   "user.not.an.admin": "The User is not entitled to get the requested resource",
   "user.not.found": "User with {0} {1} could not be found",
   "validation.invalid.input": "The provided input is invalid",
