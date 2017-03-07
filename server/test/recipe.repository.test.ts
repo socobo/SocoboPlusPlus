@@ -28,9 +28,7 @@ describe("Recipe Repository", () => {
 
     const service = new RecipeRepository(db);
     return service.getById(1).then((value) => {
-      chai.expect(stub.calledWith(`select * 
-                                from recipes
-                                where recipes.id = $1`, [1])).to.be.true;
+      chai.expect(stub.calledWith(`select * from recipes where recipes.id = $1`, [1])).to.be.true;
     });
   });
 
