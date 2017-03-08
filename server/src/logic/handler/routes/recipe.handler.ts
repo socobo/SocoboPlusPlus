@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { IDatabase } from "pg-promise";
-import { Recipe, ApiError, ERRORS } from "./../../../models/index";
+import { ModelUtils } from "./../../../logic/utils/index";
+import { ApiError, ERRORS, Recipe } from "./../../../models/index";
 import { DbExtensions } from "./../../../models/index";
-import { ModelUtils } from "./../../../logic/utils/index"
 
 export class RecipeHandler {
 
@@ -22,20 +22,19 @@ export class RecipeHandler {
 
   public getAll = (req: Request, res: Response): void => {
 
-    let queryPramas = req.query
-    
-    let allQueryParams = Object.getOwnPropertyNames(queryPramas);
-    let firstQeryParam = allQueryParams[0];
-    let valueFirstQueryParam = queryPramas[firstQeryParam];
+    const queryPramas = req.query;
+    const allQueryParams = Object.getOwnPropertyNames(queryPramas);
+    const firstQeryParam = allQueryParams[0];
+    const valueFirstQueryParam = queryPramas[firstQeryParam];
 
-    if(firstQeryParam && valueFirstQueryParam){      
-      if(!(new Recipe().getFields().has(firstQeryParam))){
+    if (firstQeryParam && valueFirstQueryParam) {
+      if (!(new Recipe().getFields().has(firstQeryParam))) {
         res.status(400).json("Field does not exist");
       }
       this._db.recipes.getByField(firstQeryParam, valueFirstQueryParam)
       .then((result: Recipe[]) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-    }else{
+    } else {
       this._db.recipes.getAll()
       .then((result: Recipe[]) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
@@ -43,20 +42,20 @@ export class RecipeHandler {
   }
 
   public searchByField = (req: Request, res: Response): void => {
-    let queryPramas = req.query
 
-    let allQueryParams = Object.getOwnPropertyNames(queryPramas);
-    let firstQeryParam = allQueryParams[0];
-    let valueFirstQueryParam = queryPramas[firstQeryParam];
+    const queryPramas = req.query;
+    const allQueryParams = Object.getOwnPropertyNames(queryPramas);
+    const firstQeryParam = allQueryParams[0];
+    const valueFirstQueryParam = queryPramas[firstQeryParam];
 
-    if(firstQeryParam && valueFirstQueryParam){      
-      if(!(new Recipe().getFields().has(firstQeryParam))){
+    if (firstQeryParam && valueFirstQueryParam) {
+      if (!(new Recipe().getFields().has(firstQeryParam))) {
         res.status(400).json("Field does not exist");
       }
       this._db.recipes.searchByField(firstQeryParam, valueFirstQueryParam)
       .then((result: Recipe[]) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-    }else{
+    } else {
       res.status(400).json("Invalid request");
     }
   }
@@ -92,9 +91,9 @@ export class RecipeHandler {
   public updateRecipe = (req: Request, res: Response, next: NextFunction) => {
     const newRecipe: any = req.body;
 
-    this._db.recipes.getById(req.params.id).then(existingRecipe => {
+    this._db.recipes.getById(req.params.id).then((existingRecipe) => {
       this._modelUtils.updateModelValues(existingRecipe, newRecipe)
-        .then(result => {
+        .then((result) => {
           req.body = result;
           next();
         })

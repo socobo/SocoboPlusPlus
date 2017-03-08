@@ -1,4 +1,6 @@
 export * from "./database/recipe";
+export * from "./database/recipe-step";
+export * from "./database/food-item";
 export * from "./database/socobo-user";
 export * from "./enums/provider-type";
 export * from "./enums/role";

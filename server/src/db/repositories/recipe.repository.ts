@@ -12,7 +12,7 @@ export class RecipeRepository {
   }
 
   public getById = (id: number): Promise<Recipe> => {
-    let query = `select * from recipes where recipes.id = $1`;
+    const query = `select * from recipes where recipes.id = $1`;
     return this._db.one(query, [id], this._transformResult)
       .catch((error: any) => {
         return ErrorUtils.handleDbNotFound(
@@ -22,48 +22,41 @@ export class RecipeRepository {
   }
 
   public getAll = (): Promise<Recipe[]> => {
-    let query = `select * from recipes`;
+    const query = `select * from recipes`;
     return this._db.many(query, [])
-      .then(result => result.map(this._transformResult))
+      .then((result) => result.map(this._transformResult))
       .catch((error: any) => {
         return ErrorUtils.handleDbError(
           error, RecipeRepository.name, "getAll(..)");
       });
   }
 
-  public getByField = (field: string, 
-                      value: string | number): Promise<Recipe[]> => {
-    let query: string = `select * from recipes where ${field} = $1`
+  public getByField = (field: string,
+    value: string | number): Promise<Recipe[]> => {
+    const query: string = `select * from recipes where ${field} = $1`;
     return this._db.many(query, [value])
-      .then(result => result.map(this._transformResult))
+      .then((result) => result.map(this._transformResult))
       .catch((error: any) => {
-        console.log("ERROR", error);
-        
         return ErrorUtils.handleDbNotFound(
           ERRORS.RECIPE_NOT_FOUND, error, "a field of value", field.toString(),
           RecipeRepository.name, "getById(..)");
       });
   }
 
-  public searchByField = (field: string, 
-                          value: string | number): Promise<Recipe[]> => {
-                            console.log("field", field);
-                            console.log("value", value);
-                            
-    let query: string = `select * from recipes where ${field} like '%${value}%'`
+  public searchByField = (field: string,
+    value: string | number): Promise<Recipe[]> => {
+    const query: string = `select * from recipes where ${field} like '%${value}%'`;
     return this._db.many(query, [])
-      .then(result => result.map(this._transformResult))
+      .then((result) => result.map(this._transformResult))
       .catch((error: any) => {
-        console.log(error);
-        
-        return ErrorUtils.handleDbNotFound(
+      return ErrorUtils.handleDbNotFound(
           ERRORS.RECIPE_NOT_FOUND, error, "a field of value", field.toString(),
           RecipeRepository.name, "getById(..)");
       });
   }
 
   public delete = (id: Number): Promise<void> => {
-    let query: string = `delete from recipes where recipes.id = $1`;
+    const query: string = `delete from recipes where recipes.id = $1`;
     return this._db.tx("DeleteRecipe", () => {
       return this._db.none(query, [id])
       .catch((error: any) => {
@@ -74,7 +67,7 @@ export class RecipeRepository {
   }
 
   public save = (recipe: Recipe): Promise<any> => {
-    let query: string = `insert into recipes(
+    const query: string = `insert into recipes(
                              title, userId, description,
                              imageUrl, created)
                            values($1, $2, $3, $4, $5)
@@ -89,7 +82,7 @@ export class RecipeRepository {
   }
 
   public update = (id: number, recipe: Recipe): Promise<Recipe> => {
-    let query: string = `update recipes set
+    const query: string = `update recipes set
                              title=$2, userId=$3, description=$4,
                              imageUrl=$5
                            where recipes.id = $1`;

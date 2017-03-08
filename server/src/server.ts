@@ -24,15 +24,12 @@ import {
 } from "./logic/services/index";
 // server utils
 import {
-  CryptoUtils
+  CryptoUtils, ModelUtils
 } from "./logic/utils/index";
 // routes
 import {
   AuthRoute, LogRoute, RecipeRoute, UsersRoute
 } from "./routes/api/v1/index";
-import { 
-  ModelUtils 
-} from "./logic/utils/index"
 
 class Server {
   private _app: express.Application;
