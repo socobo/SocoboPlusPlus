@@ -4,6 +4,7 @@ export * from "./database/food-item";
 export * from "./database/socobo-user";
 export * from "./enums/provider-type";
 export * from "./enums/role";
+export * from "./enums/update-type";
 export * from "./errors/api-error";
 export * from "./errors/db-error";
 export * from "./errors/errors";

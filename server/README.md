@@ -76,7 +76,7 @@ Response body:
       image: string,
       hasTermsAccepted: boolean,
       role: number,
-      provider: number,
+      provider: ProviderType,
       created: number,
       lastModified: number
     }
@@ -99,7 +99,7 @@ Request body:
   {
     username: string,
     password: string,
-    role: number
+    role: Role
   }
   ```
 
@@ -109,7 +109,7 @@ Request body:
   {
     email: string,
     password: string,
-    role: number
+    role: Role
   }
   ```
 
@@ -122,7 +122,7 @@ Response body:
     image: string,
     hasTermsAccepted: boolean,
     role: number,
-    provider: number,
+    provider: ProviderType,
     created: number,
     lastModified: number
   }
@@ -151,7 +151,7 @@ Response body:
       image: string,
       hasTermsAccepted: boolean,
       role: number,
-      provider: number,
+      provider: ProviderType,
       created: number,
       lastModified: number
     },
@@ -182,9 +182,70 @@ Response body:
     image: string,
     hasTermsAccepted: boolean,
     role: number,
-    provider: number,
+    provider: ProviderType,
     created: number,
     lastModified: number
+  }
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**PUT /api/v1/users/:id**
+
+Path Parameter:
+  - id: User id
+
+Request body:
+  ```json
+  {
+    updateType: UpdateType,
+    fieldValues: [
+      value: string,
+      ...
+    ]
+  }
+  ```
+
+Response body:
+  ```json
+  {
+    id: number,
+    username: string,
+    email: string,
+    image: string,
+    hasTermsAccepted: boolean,
+    role: number,
+    provider: ProviderType,
+    created: number,
+    lastModified: number
+  }
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**DELETE /api/v1/users/:id**
+
+Path Parameter:
+  - id: User id
+
+Response body:
+  ```json
+  {
+    id: number
   }
   ```
 
@@ -279,6 +340,23 @@ Response body:
     {...}
   ]
   ```
+
+## Enums
+
+Role:
+  - 0 = Admin
+  - 1 = User
+
+ProviderType:
+  - 0 = Email
+  - 1 = Username
+
+UpdateType:
+  - 0 = full
+  - 1 = username
+  - 2 = email
+  - 3 = password
+  - 4 = image
 
 ## Running tests
 

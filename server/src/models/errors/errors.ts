@@ -87,6 +87,11 @@ export class ERRORS {
     "auth.user.not.registerd",
     401
   );
+  public static AUTH_ONLY_EMAIL_ALLOWED = new ErrorType(
+    "20011",
+    "auth.only.email.allowed",
+    400
+  );
   public static USER_NOT_AUTHORIZED = new ErrorType(
     "10011",
     "auth.not.authorized",
