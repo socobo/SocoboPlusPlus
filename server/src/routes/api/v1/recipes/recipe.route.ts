@@ -19,6 +19,10 @@ export class RecipeRoute {
       this._modelValidationHandler.validate,
       this._recipeHandler.save);
 
+    this._router.get("/search",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.searchByField);
+
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
       this._recipeHandler.updateRecipe,

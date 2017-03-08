@@ -37,8 +37,28 @@ export class RecipeRepository {
     return this._db.many(query, [value])
       .then(result => result.map(this._transformResult))
       .catch((error: any) => {
-        return ErrorUtils.handleDbError(
-          error, RecipeRepository.name, "getByField(..)");
+        console.log("ERROR", error);
+        
+        return ErrorUtils.handleDbNotFound(
+          ERRORS.RECIPE_NOT_FOUND, error, "a field of value", field.toString(),
+          RecipeRepository.name, "getById(..)");
+      });
+  }
+
+  public searchByField = (field: string, 
+                          value: string | number): Promise<Recipe[]> => {
+                            console.log("field", field);
+                            console.log("value", value);
+                            
+    let query: string = `select * from recipes where ${field} like '%${value}%'`
+    return this._db.many(query, [])
+      .then(result => result.map(this._transformResult))
+      .catch((error: any) => {
+        console.log(error);
+        
+        return ErrorUtils.handleDbNotFound(
+          ERRORS.RECIPE_NOT_FOUND, error, "a field of value", field.toString(),
+          RecipeRepository.name, "getById(..)");
       });
   }
 
