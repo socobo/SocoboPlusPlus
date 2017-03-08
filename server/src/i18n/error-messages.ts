@@ -13,11 +13,14 @@ export const ERROR_MESSAGES: any = {
   "internal.error.request.body": "Something went wrong with extracting request body",
   "internal.error.request.body.authcheck": "The request body doesn't have {0}",
   "internal.no.password.hash": "No password hash",
+  "recipe.field.not.found": "Recipes have no field {0}",
   "recipe.not.found": "Recipe with {0} {1} could not be found",
+  "recipes.empty": "No recipes available",
   "update.model.values": "Field {0} does not exist or is not updatable",
   "user.not.an.admin": "The User is not entitled to get the requested resource",
   "user.not.found": "User with {0} {1} could not be found",
   "validation.invalid.input": "The provided input is invalid",
+  "validation.invalid.query.params.format": "The defined query params format is invalid",
   "validation.missing.password": "Request Body doesn't have a Password!",
   "validation.missing.username.and.email": "Request Body doesn't have a Username or Email Address!"
 };

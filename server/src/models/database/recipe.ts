@@ -3,7 +3,7 @@ import { FoodItem, RecipeStep, SocoboUser } from "./../index";
 
 export class Recipe {
 
-  private fields: Map<string, Function>;
+  public fields: Map<string, Function>;
 
   public id: number;
   @IsNotEmpty()
@@ -24,10 +24,6 @@ export class Recipe {
     this.fields.set("userId", this.addUserId);
     this.fields.set("description", this.addDescription);
     this.fields.set("imageUrl", this.addImageUrl);
-  }
-
-  public getFields () {
-    return this.fields;
   }
 
   public addTitle (title: string) {

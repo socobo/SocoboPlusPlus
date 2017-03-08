@@ -28,8 +28,11 @@ export class RecipeHandler {
     const valueFirstQueryParam = queryPramas[firstQeryParam];
 
     if (firstQeryParam && valueFirstQueryParam) {
-      if (!(new Recipe().getFields().has(firstQeryParam))) {
-        res.status(400).json("Field does not exist");
+      if (!(new Recipe().fields.has(firstQeryParam))) {
+        const e = new ApiError(ERRORS.RECIPE_INVALID_FIELD.withArgs(firstQeryParam))
+          .addSource(RecipeHandler.name)
+          .addSourceMethod("getAll()");
+        res.status(e.statusCode).json(e.forResponse());
       }
       this._db.recipes.getByField(firstQeryParam, valueFirstQueryParam)
       .then((result: Recipe[]) => res.status(200).json(result))
@@ -37,7 +40,12 @@ export class RecipeHandler {
     } else {
       this._db.recipes.getAll()
       .then((result: Recipe[]) => res.status(200).json(result))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+      .catch((e: any) => {
+        if (e.statusCode === 404) {
+          res.status(200).json([]);
+        }
+        res.status(e.statusCode).json(e.forResponse());
+      });
     }
   }
 
@@ -49,14 +57,20 @@ export class RecipeHandler {
     const valueFirstQueryParam = queryPramas[firstQeryParam];
 
     if (firstQeryParam && valueFirstQueryParam) {
-      if (!(new Recipe().getFields().has(firstQeryParam))) {
-        res.status(400).json("Field does not exist");
+      if (!(new Recipe().fields.has(firstQeryParam))) {
+        const e = new ApiError(ERRORS.RECIPE_INVALID_FIELD.withArgs(firstQeryParam))
+          .addSource(RecipeHandler.name)
+          .addSourceMethod("searchByField()");
+        res.status(e.statusCode).json(e.forResponse());
       }
       this._db.recipes.searchByField(firstQeryParam, valueFirstQueryParam)
       .then((result: Recipe[]) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
     } else {
-      res.status(400).json("Invalid request");
+      const e = new ApiError(ERRORS.VAL_INVALID_QUERY_PARAM_FORMAT)
+        .addSource(RecipeHandler.name)
+        .addSourceMethod("searchByField()");
+      res.status(e.statusCode).json(e.forResponse());
     }
   }
 
@@ -91,15 +105,18 @@ export class RecipeHandler {
   public updateRecipe = (req: Request, res: Response, next: NextFunction) => {
     const newRecipe: any = req.body;
 
-    this._db.recipes.getById(req.params.id).then((existingRecipe) => {
-      this._modelUtils.updateModelValues(existingRecipe, newRecipe)
-        .then((result) => {
-          req.body = result;
-          next();
-        })
-        .catch((error) => {
-          res.status(error.statusCode).json(error.forResponse());
-        });
+    this._db.recipes.getById(req.params.id)
+      .then((existingRecipe) => {
+        this._modelUtils.updateModelValues(existingRecipe, newRecipe)
+          .then((result) => {
+            req.body = result;
+            next();
+          })
+          .catch((error) => {
+            res.status(error.statusCode).json(error.forResponse());
+          });
+      }).catch((error) => {
+        res.status(error.statusCode).json(error.forResponse());
     });
   }
 

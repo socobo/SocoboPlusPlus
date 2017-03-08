@@ -16,8 +16,8 @@ export class RecipeRepository {
     return this._db.one(query, [id], this._transformResult)
       .catch((error: any) => {
         return ErrorUtils.handleDbNotFound(
-          ERRORS.RECIPE_NOT_FOUND, error, "id", id.toString(),
-          RecipeRepository.name, "getById(..)");
+          ERRORS.RECIPE_NOT_FOUND, error,
+          RecipeRepository.name, "getById(..)", "id", id.toString());
       });
   }
 
@@ -26,8 +26,9 @@ export class RecipeRepository {
     return this._db.many(query, [])
       .then((result) => result.map(this._transformResult))
       .catch((error: any) => {
-        return ErrorUtils.handleDbError(
-          error, RecipeRepository.name, "getAll(..)");
+        return ErrorUtils.handleDbNotFound(
+          ERRORS.RECIPE_NON_AVAILABLE, error, RecipeRepository.name,
+          "getAll(..)");
       });
   }
 
@@ -38,8 +39,8 @@ export class RecipeRepository {
       .then((result) => result.map(this._transformResult))
       .catch((error: any) => {
         return ErrorUtils.handleDbNotFound(
-          ERRORS.RECIPE_NOT_FOUND, error, "a field of value", field.toString(),
-          RecipeRepository.name, "getById(..)");
+          ERRORS.RECIPE_NOT_FOUND, error, RecipeRepository.name,
+          "getByField(..)", "a field of value", value.toString());
       });
   }
 
@@ -49,9 +50,9 @@ export class RecipeRepository {
     return this._db.many(query, [])
       .then((result) => result.map(this._transformResult))
       .catch((error: any) => {
-      return ErrorUtils.handleDbNotFound(
-          ERRORS.RECIPE_NOT_FOUND, error, "a field of value", field.toString(),
-          RecipeRepository.name, "getById(..)");
+      return ErrorUtils.handleDbNotFound (
+          ERRORS.RECIPE_NOT_FOUND, error, RecipeRepository.name,
+          "searchByField(..)", "a field of value", value.toString());
       });
   }
 
