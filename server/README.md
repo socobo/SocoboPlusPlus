@@ -375,7 +375,7 @@ Response body:
   ]
   
   ```
-
+  
 Error body:
   ```json
   {
@@ -390,9 +390,7 @@ Error body:
 Deletes the recipe found for the given id
 
 Path Parameter:
-  - id: Recipe id
-  
-  ```
+  - id: The id of the recipe which should be deleted
 
 Error body:
   ```json
