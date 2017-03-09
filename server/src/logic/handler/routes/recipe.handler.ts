@@ -24,27 +24,27 @@ export class RecipeHandler {
 
     const queryPramas = req.query;
     const allQueryParams = Object.getOwnPropertyNames(queryPramas);
-    const firstQeryParam = allQueryParams[0];
-    const valueFirstQueryParam = queryPramas[firstQeryParam];
+    const firstQueryParam = allQueryParams[0];
+    const valueFirstQueryParam = queryPramas[firstQueryParam];
 
-    if (firstQeryParam && valueFirstQueryParam) {
-      if (!(new Recipe().fields.has(firstQeryParam))) {
-        const e = new ApiError(ERRORS.RECIPE_INVALID_FIELD.withArgs(firstQeryParam))
+    if (firstQueryParam && valueFirstQueryParam) {
+      if (!(new Recipe().fields.has(firstQueryParam))) {
+        const e = new ApiError(ERRORS.RECIPE_INVALID_FIELD.withArgs(firstQueryParam))
           .addSource(RecipeHandler.name)
           .addSourceMethod("getAll()");
         res.status(e.statusCode).json(e.forResponse());
       }
-      this._db.recipes.getByField(firstQeryParam, valueFirstQueryParam)
-      .then((result: Recipe[]) => res.status(200).json(result))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+      this._db.recipes.getByField(firstQueryParam, valueFirstQueryParam)
+        .then((result: Recipe[]) => res.status(200).json(result))
+        .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
     } else {
       this._db.recipes.getAll()
-      .then((result: Recipe[]) => res.status(200).json(result))
-      .catch((e: any) => {
-        if (e.statusCode === 404) {
-          res.status(200).json([]);
-        }
-        res.status(e.statusCode).json(e.forResponse());
+        .then((result: Recipe[]) => res.status(200).json(result))
+        .catch((e: any) => {          
+          if (e.code === ERRORS.RECIPE_NON_AVAILABLE.code) {
+            res.status(200).json([]);
+          }
+          res.status(e.statusCode).json(e.forResponse());
       });
     }
   }
@@ -53,19 +53,19 @@ export class RecipeHandler {
 
     const queryPramas = req.query;
     const allQueryParams = Object.getOwnPropertyNames(queryPramas);
-    const firstQeryParam = allQueryParams[0];
-    const valueFirstQueryParam = queryPramas[firstQeryParam];
+    const firstQueryParam = allQueryParams[0];
+    const valueFirstQueryParam = queryPramas[firstQueryParam];
 
-    if (firstQeryParam && valueFirstQueryParam) {
-      if (!(new Recipe().fields.has(firstQeryParam))) {
-        const e = new ApiError(ERRORS.RECIPE_INVALID_FIELD.withArgs(firstQeryParam))
+    if (firstQueryParam && valueFirstQueryParam) {
+      if (!(new Recipe().fields.has(firstQueryParam))) {
+        const e = new ApiError(ERRORS.RECIPE_INVALID_FIELD.withArgs(firstQueryParam))
           .addSource(RecipeHandler.name)
           .addSourceMethod("searchByField()");
         res.status(e.statusCode).json(e.forResponse());
       }
-      this._db.recipes.searchByField(firstQeryParam, valueFirstQueryParam)
-      .then((result: Recipe[]) => res.status(200).json(result))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+      this._db.recipes.searchByField(firstQueryParam, valueFirstQueryParam)
+        .then((result: Recipe[]) => res.status(200).json(result))
+        .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
     } else {
       const e = new ApiError(ERRORS.VAL_INVALID_QUERY_PARAM_FORMAT)
         .addSource(RecipeHandler.name)
@@ -96,9 +96,7 @@ export class RecipeHandler {
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
 
     this._db.recipes.update(req.params.id, newRecipe)
-      .then(() => {
-        this.getById(req, res);
-      })
+      .then(() => {this.getById(req, res)})
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
