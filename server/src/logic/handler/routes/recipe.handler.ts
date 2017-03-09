@@ -40,7 +40,7 @@ export class RecipeHandler {
     } else {
       this._db.recipes.getAll()
         .then((result: Recipe[]) => res.status(200).json(result))
-        .catch((e: any) => {          
+        .catch((e: any) => {
           if (e.code === ERRORS.RECIPE_NON_AVAILABLE.code) {
             res.status(200).json([]);
           }
@@ -96,7 +96,7 @@ export class RecipeHandler {
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
 
     this._db.recipes.update(req.params.id, newRecipe)
-      .then(() => {this.getById(req, res)})
+      .then(() => this.getById(req, res))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
