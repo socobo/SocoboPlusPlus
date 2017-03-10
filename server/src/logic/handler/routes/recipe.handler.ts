@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { IDatabase } from "pg-promise";
-import { ModelUtils } from "./../../../logic/utils/index";
+import { RecipeMiddleware } from "./../../../logic/middleware/recipe.middleware";
 import { ApiError, ERRORS, Recipe } from "./../../../models/index";
 import { DbExtensions } from "./../../../models/index";
 
 export class RecipeHandler {
 
   private _db: IDatabase<DbExtensions>&DbExtensions;
-  private _modelUtils: ModelUtils;
+  private _recipeMiddleware: RecipeMiddleware;
 
-  constructor (db: any, modelUtils: ModelUtils) {
+  constructor (db: any, recipeMiddleware: RecipeMiddleware) {
     this._db = db;
-    this._modelUtils = modelUtils;
+    this._recipeMiddleware = recipeMiddleware;
   }
 
   public getById = (req: Request, res: Response): void => {
@@ -100,22 +100,10 @@ export class RecipeHandler {
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
-  public updateRecipe = (req: Request, res: Response, next: NextFunction) => {
-    const newRecipe: any = req.body;
-
-    this._db.recipes.getById(req.params.id)
-      .then((existingRecipe) => {
-        this._modelUtils.updateModelValues(existingRecipe, newRecipe)
-          .then((result) => {
-            req.body = result;
-            next();
-          })
-          .catch((error) => {
-            res.status(error.statusCode).json(error.forResponse());
-          });
-      }).catch((error) => {
-        res.status(error.statusCode).json(error.forResponse());
-    });
+  public updateRecipeProperties = (req: Request, res: Response, next: NextFunction) => {
+    this._recipeMiddleware.updateRecipe(req)
+      .then(() => next())
+      .catch((error) => res.status(error.statusCode).json(error.forResponse()));
   }
 
   public delete = (req: Request, res: Response): void => {

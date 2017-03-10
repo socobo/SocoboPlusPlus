@@ -1,7 +1,7 @@
-import { ApiError, ERRORS } from "./../../models/index";
+import { ApiError, ERRORS, Recipe } from "./../../models/index";
 
 export class ModelUtils {
-  public updateModelValues = (existingValue: any, newValue: any ) => {
+  public updateModelValues = (existingValue: Recipe, newValue: any ) => {
     return new Promise<any>((resolve, reject) => {
       for (const key in newValue) {
         if (existingValue.fields.has(key)) {
