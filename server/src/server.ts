@@ -208,7 +208,8 @@ class Server {
     // create new router
     const router: express.Router = express.Router();
     // init and return auth route
-    return new AuthRoute(router, this._authHandler, this._authValidationHandler).createRoutes();
+    return new AuthRoute(router, this._authHandler,
+        this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _usersRoute (): express.Router {

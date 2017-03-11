@@ -75,7 +75,7 @@ Response body:
       email: string,
       image: string,
       hasTermsAccepted: boolean,
-      role: number,
+      role: Role,
       provider: ProviderType,
       created: number,
       lastModified: number
@@ -97,16 +97,6 @@ Error body:
 Request body:
   ```json
   {
-    username: string,
-    password: string,
-    role: Role
-  }
-  ```
-
-  or
-
-  ```json
-  {
     email: string,
     password: string,
     role: Role
@@ -121,7 +111,7 @@ Response body:
     email: string,
     image: string,
     hasTermsAccepted: boolean,
-    role: number,
+    role: Role,
     provider: ProviderType,
     created: number,
     lastModified: number
@@ -150,7 +140,7 @@ Response body:
       email: string,
       image: string,
       hasTermsAccepted: boolean,
-      role: number,
+      role: Role,
       provider: ProviderType,
       created: number,
       lastModified: number
@@ -181,7 +171,7 @@ Response body:
     email: string,
     image: string,
     hasTermsAccepted: boolean,
-    role: number,
+    role: Role,
     provider: ProviderType,
     created: number,
     lastModified: number
@@ -221,7 +211,7 @@ Response body:
     email: string,
     image: string,
     hasTermsAccepted: boolean,
-    role: number,
+    role: Role,
     provider: ProviderType,
     created: number,
     lastModified: number

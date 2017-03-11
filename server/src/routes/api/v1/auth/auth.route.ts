@@ -1,5 +1,7 @@
 import { Router } from "express";
-import { AuthHandler, AuthValidationHandler } from "./../../../../logic/handler/index";
+import {
+  AuthHandler, AuthValidationHandler, ModelValidationHandler
+} from "./../../../../logic/handler/index";
 import { AuthService } from "./../../../../logic/services/index";
 
 export class AuthRoute {
@@ -7,17 +9,20 @@ export class AuthRoute {
   constructor (
     private _router: Router,
     private _authHandler: AuthHandler,
-    private _authValidationHandler: AuthValidationHandler
+    private _authValidationHandler: AuthValidationHandler,
+    private _modelValidationHandler: ModelValidationHandler
   ) {}
 
   public createRoutes (): Router {
     this._router.post("/login",
       this._authValidationHandler.checkRequest,
+      this._modelValidationHandler.validateAuth,
       this._authValidationHandler.extractBody,
       this._authHandler.login);
 
     this._router.post("/register",
       this._authValidationHandler.checkRequest,
+      this._modelValidationHandler.validateAuth,
       this._authValidationHandler.extractBody,
       this._authHandler.register);
 
