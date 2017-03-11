@@ -12,6 +12,11 @@ export class ERRORS {
     "internal.error",
     500
   );
+  public static UPDATE_MODEL_VALUES = new ErrorType(
+    "00002",
+    "update.model.values",
+    400
+  );
   public static REQUEST_BODY = new ErrorType(
     "00005",
     "internal.error.request.body",
@@ -107,9 +112,24 @@ export class ERRORS {
     "validation.invalid.input",
     400
   );
+  public static VAL_INVALID_QUERY_PARAM_FORMAT = new ErrorType(
+    "30004",
+    "validation.invalid.query.params.format",
+    400
+  );
   public static RECIPE_NOT_FOUND = new ErrorType(
     "40001",
     "recipe.not.found",
+    404
+  );
+  public static RECIPE_INVALID_FIELD = new ErrorType(
+    "40002",
+    "recipe.field.not.found",
+    400
+  );
+  public static RECIPE_NON_AVAILABLE = new ErrorType(
+    "40003",
+    "recipes.empty",
     404
   );
 }

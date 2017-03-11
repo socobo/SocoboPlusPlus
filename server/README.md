@@ -286,6 +286,121 @@ Error body:
   }
   ```
 
+**GET /api/v1/recipes**
+
+Response body:
+  ```json
+  [
+    {
+      id: number,
+      title: string,
+      userid: number,
+      description: number,
+      imageurl: string,
+      created: Date
+    },
+    {
+      ...
+    }
+  ]
+  
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**GET /api/v1/recipes?property=value**
+
+Gets all recieps for the defined property value
+
+Query parameter:
+  - property: The name of the recipe property which should be used as filter
+  - value: The to filter on
+
+Response body:
+  ```json
+  [
+    {
+      id: number,
+      title: string,
+      userid: number,
+      description: number,
+      imageurl: string,
+      created: Date
+    },
+    {
+      ...
+    }
+  ]
+  
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+**GET /api/v1/recipes/search?property=searchTerm**
+
+Searches for a specified term inside a the given recipe property and returns
+the matching subset of recipes
+
+Query parameter:
+  - property: The name of the recipe property after which should be searched
+  - searchTerm: The term which will be searched
+
+Response body:
+  ```json
+  [
+    {
+      id: number,
+      title: string,
+      userid: number,
+      description: number,
+      imageurl: string,
+      created: Date
+    },
+    {
+      ...
+    }
+  ]
+  
+  ```
+  
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**DELETE /api/v1/recipes/:id**
+
+Deletes the recipe found for the given id
+
+Path Parameter:
+  - id: The id of the recipe which should be deleted
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
 **POST /api/v1/recipes**
 
 Request body:
@@ -306,6 +421,45 @@ Response body:
     userid: number,
     description?: string,
     imageurl?: string,
+    created: Date
+  }
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**PUT /api/v1/recipes/:id**
+
+Alters the properties, defined in the request body, on the recipe with the
+provided id
+
+Path Parameter:
+  - id: Recipe id
+
+Request body (could also be a subset of these values):
+  ```json
+  {
+    title?: string,
+    userId?: string,
+    description?: string,
+    imageurl?: string
+  }
+  ```
+
+Response body:
+  ```json
+  {
+    id: number,
+    title: string,
+    userid: number,
+    description: string,
+    imageurl: string,
     created: Date
   }
   ```

@@ -16,7 +16,7 @@ import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/i
 import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./logic/handler/index";
 // middleware
 import {
-  AuthValidationMiddleware, ModelValidationMiddleware
+  AuthValidationMiddleware, ModelValidationMiddleware, RecipeMiddleware
 } from "./logic/middleware/index";
 // services
 import {
@@ -24,7 +24,7 @@ import {
 } from "./logic/services/index";
 // server utils
 import {
-  CryptoUtils
+  CryptoUtils, ModelUtils
 } from "./logic/utils/index";
 // routes
 import {
@@ -37,11 +37,13 @@ class Server {
   private _server: http.Server;
 
   private _cryptoUtils: CryptoUtils;
+  private _modelUtils: ModelUtils;
 
   private _authService: AuthService;
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
+  private _recipeMiddleware: RecipeMiddleware;
 
   private _authValidationHandler: AuthValidationHandler;
   private _modelValidationHandler: ModelValidationHandler;
@@ -150,6 +152,7 @@ class Server {
    */
   private _utils (): void {
     this._cryptoUtils = new CryptoUtils();
+    this._modelUtils = new ModelUtils();
   }
 
   /**
@@ -165,6 +168,7 @@ class Server {
   private _middleware (): void {
     this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
+    this._recipeMiddleware = new RecipeMiddleware(db, this._modelUtils);
   }
 
   /**
@@ -175,7 +179,7 @@ class Server {
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
     this._userHandler = new UserHandler(db);
-    this._recipeHandler = new RecipeHandler(db);
+    this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware);
     this._logHandler = new LogHandler();
   }
 

@@ -37,8 +37,8 @@ export class UserRepository {
         WHERE id=$1`;
     return this._db.one(query, id, this._transformResult).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
-        ERRORS.USER_NOT_FOUND, error, "id", id.toString(),
-        UserRepository.name, "getUserById(..)");
+        ERRORS.USER_NOT_FOUND, error, UserRepository.name,
+        "getUserById(..)", "id", id.toString());
       }
     );
   }
@@ -46,9 +46,9 @@ export class UserRepository {
   public getUserByEmail = (email: string): Promise<SocoboUser> => {
     const query: string = "SELECT * FROM Socobo_User Where email=$1";
     return this._db.one(query, email, this._transformResult).catch((error: any) => {
-      return ErrorUtils.handleDbNotFound(
-        ERRORS.USER_NOT_FOUND, error, "email", email,
-        UserRepository.name, "getUserByUsername(..)");
+      return ErrorUtils.handleDbNotFound (
+        ERRORS.USER_NOT_FOUND, error, UserRepository.name,
+        "getUserByUsername(..)", "email", email);
       }
     );
   }
@@ -57,8 +57,8 @@ export class UserRepository {
     const query: string = "SELECT * FROM Socobo_User Where username=$1";
     return this._db.one(query, username, this._transformResult).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
-        ERRORS.USER_NOT_FOUND, error, "username", username,
-        UserRepository.name, "getUserByUsername(..)");
+        ERRORS.USER_NOT_FOUND, error, UserRepository.name,
+        "getUserByUsername(..)", "username", username);
       }
     );
   }
