@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsNumber, Length } from "class-validator";
-import { FoodItem, RecipeStep, SocoboUser, ValidationGroup } from "./../index";
+import { FoodItem, RecipeStep, SocoboUser } from "./../index";
+import { ValidationGroup } from "./../enums/validation-group"; 
 
 export class Recipe {
 

@@ -8,9 +8,9 @@ export class ModelValidationHandler {
 
   constructor (private _modelValidationMiddleware: ModelValidationMiddleware) {}
 
-  public validate<T> (type: { new (): T }, validationGroup: ValidationGroup) {
+  public validate<T> (type: { new (): T }, validationGroups: ValidationGroup[]) {
     return (req: Request, res: Response, next: NextFunction): void => {
-      this._modelValidationMiddleware.validate(type, req, [validationGroup.toString()])
+      this._modelValidationMiddleware.validate(type, req, validationGroups)
         .then((e: ValidationError) => res.status(e.statusCode).json(e.forResponse()))
         .catch(() => next());
     };
