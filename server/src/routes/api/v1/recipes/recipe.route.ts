@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   AuthValidationHandler, ModelValidationHandler, RecipeHandler
 } from "./../../../../logic/handler/index";
-import { Recipe } from "./../../../../models/index";
+import { Recipe, ValidationGroup } from "./../../../../models/index";
 
 export class RecipeRoute {
 
@@ -16,7 +16,7 @@ export class RecipeRoute {
   public createRoutes (): Router {
     this._router.post("/",
       this._authValidationHandler.checkToken,
-      this._modelValidationHandler.validate,
+      this._modelValidationHandler.validate(Recipe, ValidationGroup.RECIPE),
       this._recipeHandler.save);
 
     this._router.get("/search",
@@ -26,7 +26,7 @@ export class RecipeRoute {
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
       this._recipeHandler.updateRecipeProperties,
-      this._modelValidationHandler.validate,
+      this._modelValidationHandler.validate(Recipe, ValidationGroup.RECIPE),
       this._recipeHandler.update);
 
     this._router.get("/",

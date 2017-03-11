@@ -4,7 +4,7 @@ import { ERRORS, ValidationError } from "./../../models/index";
 
 export class ModelValidationMiddleware {
 
-  public validate<T> (type: { new (): T }, req: Request): Promise<any> {
+  public validate<T> (type: { new (): T }, req: Request, validationGroups: string[]): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {
       const obj: any = req.body;
       const objectToValidate: T = new type();
@@ -15,7 +15,7 @@ export class ModelValidationMiddleware {
         }
       }
 
-      validate(objectToValidate)
+      validate(objectToValidate, { groups: [...validationGroups] })
         .then((errors: any[]) => {
           if (errors.length > 0) {
             const e = new ValidationError(ERRORS.VAL_INVALID_INPUT)

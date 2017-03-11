@@ -1,15 +1,21 @@
 import { IsNotEmpty, IsNumber, Length } from "class-validator";
-import { FoodItem, RecipeStep, SocoboUser } from "./../index";
+import { FoodItem, RecipeStep, SocoboUser, ValidationGroup } from "./../index";
 
 export class Recipe {
 
   public fields: Map<string, Function>;
 
   public id: number;
-  @IsNotEmpty()
-  @Length(1, 50)
+  @IsNotEmpty({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @Length(1, 50, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
   public title: string;
-  @IsNumber()
+  @IsNumber({
+    groups: [ ValidationGroup.RECIPE ]
+  })
   public userId: number;
   public description: string;
   public imageUrl: string;
