@@ -1,12 +1,13 @@
 import { IsNotEmpty, IsNumber, Length } from "class-validator";
+import { ValidationGroup } from "./../enums/validation-group";
 import { FoodItem, RecipeStep, SocoboUser } from "./../index";
-import { ValidationGroup } from "./../enums/validation-group"; 
 
 export class Recipe {
 
   public fields: Map<string, Function>;
 
   public id: number;
+
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
@@ -14,6 +15,7 @@ export class Recipe {
     groups: [ ValidationGroup.RECIPE ]
   })
   public title: string;
+
   @IsNumber({
     groups: [ ValidationGroup.RECIPE ]
   })

@@ -11,8 +11,8 @@ export class ModelValidationHandler {
   public validate<T> (type: { new (): T }, validationGroups: ValidationGroup[]) {
     return (req: Request, res: Response, next: NextFunction): void => {
       this._modelValidationMiddleware.validate(type, req, validationGroups)
-        .then((e: ValidationError) => res.status(e.statusCode).json(e.forResponse()))
-        .catch(() => next());
+        .then(() => next())
+        .catch((e: ValidationError) => res.status(e.statusCode).json(e.forResponse()));
     };
   }
 }

@@ -1,4 +1,3 @@
-import { LogService } from "./../../logic/services/index";
 import { ApiError, ErrorType } from "./../index";
 
 export class ValidationError extends ApiError {

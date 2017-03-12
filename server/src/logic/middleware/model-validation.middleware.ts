@@ -1,7 +1,6 @@
-import { ValidationGroup } from "./../../models/enums/validation-group";
 import { validate } from "class-validator";
 import { NextFunction, Request, Response, Router } from "express";
-import { ERRORS, ValidationError } from "./../../models/index";
+import { ERRORS, ValidationError, ValidationGroup } from "./../../models/index";
 
 export class ModelValidationMiddleware {
 
@@ -15,7 +14,7 @@ export class ModelValidationMiddleware {
         if (obj.hasOwnProperty(prop)) {
           (objectToValidate as any)[prop] = obj[prop];
         }
-    }
+      }
 
       validate(objectToValidate, { groups: mappedGroups })
         .then((errors: any[]) => {
@@ -24,16 +23,17 @@ export class ModelValidationMiddleware {
               .addSource(ModelValidationMiddleware.name)
               .addSourceMethod("validate(..)")
               .addValidationErrors(errors);
-            resolve(e);
+            reject(e);
           } else {
-            reject();
+            resolve();
           }
-        }).catch((error: any) => {
+        })
+        .catch((error: any) => {
           const e = new ValidationError(ERRORS.VAL_INVALID_INPUT)
             .addSource(ModelValidationMiddleware.name)
             .addSourceMethod("validate(..)")
             .addCause(error);
-          resolve(e);
+          reject(e);
         });
     });
   }
