@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { DebugElement } from "@angular/core";
 
-import { RecipeRootComponent } from './recipe-root.component';
+import { RecipeRootComponent } from "./recipe-root.component";
 
-describe('RecipeRootComponent', () => {
+describe("RecipeRootComponent", () => {
   let component: RecipeRootComponent;
   let fixture: ComponentFixture<RecipeRootComponent>;
 
@@ -22,7 +22,7 @@ describe('RecipeRootComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

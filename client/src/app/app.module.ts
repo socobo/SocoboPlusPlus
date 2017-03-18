@@ -6,9 +6,6 @@ import { HttpModule } from "@angular/http";
 // Components
 import { RootComponent } from "./components/root/root.component";
 
-// Modules
-import { RecipeModule } from "./recipe/recipe.module";
-
 // Routes
 import { AppRoutingModule } from "./app-routing.module";
 
@@ -20,7 +17,6 @@ import { AppRoutingModule } from "./app-routing.module";
     BrowserModule,
     FormsModule,
     HttpModule,
-    RecipeModule,
     AppRoutingModule
   ],
   providers: [],
