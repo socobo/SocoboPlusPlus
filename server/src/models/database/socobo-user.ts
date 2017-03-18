@@ -1,16 +1,64 @@
+import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
 import { ProviderType } from "./../enums/provider-type";
 import { Role } from "./../enums/role";
+import { ValidationGroup } from "./../enums/validation-group";
 
 export class SocoboUser {
+
   public id: number;
+
+  @ValidateIf((o) => o.email === "", {
+    groups: [ ValidationGroup.LOGIN ]
+  })
+  @IsNotEmpty({
+    groups: [ ValidationGroup.LOGIN ]
+  })
+  @MinLength(5, {
+    groups: [ ValidationGroup.LOGIN ]
+  })
   public username: string;
+
+  @ValidateIf((o) => o.username === "", {
+    groups: [ ValidationGroup.LOGIN ]
+  })
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
+  @IsEmail({}, {
+    groups: [
+      ValidationGroup.LOGIN,
+      ValidationGroup.REGISTRATION
+    ]
+  })
   public email: string;
+
+  @IsNotEmpty({
+    groups: [
+      ValidationGroup.LOGIN,
+      ValidationGroup.REGISTRATION
+    ]
+  })
+  @MinLength(8, {
+    groups: [
+      ValidationGroup.LOGIN,
+      ValidationGroup.REGISTRATION
+    ]
+  })
   public password: string;
+
   public image: string;
+
   public hasTermsAccepted: boolean;
+
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
   public role: Role;
+
   public provider: ProviderType;
+
   public created: number;
+
   public lastModified: number;
 
   public addId = (id: number): this => {
