@@ -1,5 +1,7 @@
 <p>
   Your recipes
 </p>
-<scb-recipe-list-item *ngFor="let recipe of recipes" [recipe]="recipe"></scb-recipe-list-item>
+<div class="recipe-list">
+  <scb-recipe-list-item class="test" *ngFor="let recipe of recipes" [recipe]="recipe"></scb-recipe-list-item>
+</div>
 <p>{{errorMsg}}</p>

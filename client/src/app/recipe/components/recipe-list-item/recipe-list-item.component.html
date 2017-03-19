@@ -1,5 +1,7 @@
-<div>
-  <span>{{recipe?.title}}</span>
-  <span>{{recipe?.created | date: 'dd/MM/yyyy'}}</span>
-  <span>{{recipe?.modified | date: 'dd/MM/yyyy'}}</span>
+<div class="recipe-list-item">
+  <div class="title">{{recipe?.title}}</div>
+  <div class="dates">
+    <span>{{recipe?.created | date: 'dd/MM/yyyy'}}</span>
+    <span>{{recipe?.modified | date: 'dd/MM/yyyy'}}not modified</span>
+  </div>
 </div>

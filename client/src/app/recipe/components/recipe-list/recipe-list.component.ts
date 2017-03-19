@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 
 import { RecipeService } from "./../../services/recipe.service";
 import { Recipe } from "./../../model/recipe";
@@ -8,7 +8,8 @@ import { RecipeListItemComponent } from "./../recipe-list-item/recipe-list-item.
 @Component({
   selector: "scb-recipe-list",
   templateUrl: "./recipe-list.component.html",
-  styleUrls: ["./recipe-list.component.css"]
+  styleUrls: ["./recipe-list.component.css"],
+  encapsulation: ViewEncapsulation.None
 })
 export class RecipeListComponent implements OnInit {
 

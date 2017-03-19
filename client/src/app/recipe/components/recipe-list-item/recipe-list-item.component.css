@@ -1,0 +1,20 @@
+div.recipe-list-item {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 10px;
+}
+
+.title {
+  margin-left: 30px;
+}
+
+.dates {
+  width: 30%;
+  margin-right: 30px;
+  display: flex;
+  justify-content: space-around;
+}
