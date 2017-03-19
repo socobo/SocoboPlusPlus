@@ -6,6 +6,7 @@ import { RecipeRootComponent } from "./components/recipe-root/recipe-root.compon
 
 // Routes
 import { RecipeRoutingModule } from "./recipe-routing.module";
+import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { RecipeRoutingModule } from "./recipe-routing.module";
     RecipeRoutingModule
   ],
   declarations: [
-    RecipeRootComponent
+    RecipeRootComponent,
+    RecipeListComponent
   ]
 })
 export class RecipeModule { }
