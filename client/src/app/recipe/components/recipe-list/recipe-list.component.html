@@ -1,7 +1,5 @@
 <p>
-  recipe-list works!
+  Your recipes
 </p>
-<ul>
-  <li *ngFor="let recipe of recipes">{{recipe.title}}</li>
-</ul>
+<scb-recipe-list-item *ngFor="let recipe of recipes" [recipe]="recipe"></scb-recipe-list-item>
 <p>{{errorMsg}}</p>

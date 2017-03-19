@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { RecipeService } from "./../../services/recipe.service";
 import { Recipe } from "./../../model/recipe";
+import { RecipeListItemComponent } from './../recipe-list-item/recipe-list-item.component';
+
 
 @Component({
   selector: 'scb-recipe-list',
