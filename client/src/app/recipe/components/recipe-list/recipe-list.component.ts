@@ -18,7 +18,7 @@ export class RecipeListComponent implements OnInit {
   private _listRecipes() {
     this.recipeService.getAllRecipes().subscribe(
       recipes => this.recipes = recipes,
-      error => this.errorMsg = error as any
+      error => this.errorMsg = error as string
     );
   }
 
