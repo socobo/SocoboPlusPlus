@@ -9,6 +9,9 @@ import { RootComponent } from "./components/root/root.component";
 // Routes
 import { AppRoutingModule } from "./app-routing.module";
 
+// Services
+import { FakeAuthService } from "./fake-auth.service";
+
 @NgModule({
   declarations: [
     RootComponent,
@@ -19,7 +22,7 @@ import { AppRoutingModule } from "./app-routing.module";
     HttpModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [FakeAuthService],
   bootstrap: [RootComponent]
 })
 export class AppModule { }

@@ -4,21 +4,22 @@ import { Http, Response, RequestOptions, Headers } from "@angular/http"
 import { Observable } from  "rxjs/Observable";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
+import "rxjs/add/observable/throw";
 
 import { Recipe } from "./../model/recipe";
+import { FakeAuthService } from "./../../fake-auth.service";
 
 @Injectable()
 export class RecipeService {
 
   private recipeBaseUrl = "http://localhost:8282/api/v1/recipes";
-  private fake_toke = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwicm9sZSI6MCwidXNlcm5hbWUiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTQ4OTkyMDczOCwiZXhwIjoxNDkwMDA3MTM4LCJpc3MiOiJzb2NvYm8ifQ.E-KPZbZa9IV4ldaHpuYPzm6LPEtjyuRkRSXrbLF3RL0";
 
-  constructor(private http:Http) { }
+  constructor(private http:Http, private authService: FakeAuthService) { }
 
   getAllRecipes(): Observable<Recipe[]> {
     let headers = new Headers({ 
       'Content-Type': 'application/json' ,
-      'x-access-token': this.fake_toke
+      'x-access-token': this.authService.getToken()
     });
     let options = new RequestOptions({ headers: headers });
 
@@ -32,15 +33,11 @@ export class RecipeService {
   }
 
   private _handleError(error: Response | any) {
-    let errMsg: string;
+    let errMsg = "An Error occured";
     if (error instanceof Response) {
       const body = error.json() || '';
-      const err = body.message || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
+      errMsg = body.message || errMsg;
     }
-    console.error(errMsg);
     return Observable.throw(errMsg);
   }
 
