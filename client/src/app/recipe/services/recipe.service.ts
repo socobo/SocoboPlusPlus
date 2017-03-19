@@ -18,8 +18,8 @@ export class RecipeService {
 
   getAllRecipes(): Observable<Recipe[]> {
     let headers = new Headers({ 
-      'Content-Type': 'application/json' ,
-      'x-access-token': this.authService.getToken()
+      "Content-Type": "application/json" ,
+      "x-access-token": this.authService.getToken()
     });
     let options = new RequestOptions({ headers: headers });
 
@@ -35,7 +35,7 @@ export class RecipeService {
   private _handleError(error: Response | any) {
     let errMsg = "An Error occured";
     if (error instanceof Response) {
-      const body = error.json() || '';
+      const body = error.json() || "";
       errMsg = body.message || errMsg;
     }
     return Observable.throw(errMsg);

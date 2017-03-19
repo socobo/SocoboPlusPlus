@@ -1,4 +1,5 @@
 <div>
   <span>{{recipe?.title}}</span>
-  <span>{{recipe?.description}}</span>
+  <span>{{recipe?.created | date: 'dd/MM/yyyy'}}</span>
+  <span>{{recipe?.modified | date: 'dd/MM/yyyy'}}</span>
 </div>

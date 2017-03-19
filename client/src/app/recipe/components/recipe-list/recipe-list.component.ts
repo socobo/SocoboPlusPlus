@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 import { RecipeService } from "./../../services/recipe.service";
 import { Recipe } from "./../../model/recipe";
-import { RecipeListItemComponent } from './../recipe-list-item/recipe-list-item.component';
+import { RecipeListItemComponent } from "./../recipe-list-item/recipe-list-item.component";
 
 
 @Component({
-  selector: 'scb-recipe-list',
-  templateUrl: './recipe-list.component.html',
-  styleUrls: ['./recipe-list.component.css']
+  selector: "scb-recipe-list",
+  templateUrl: "./recipe-list.component.html",
+  styleUrls: ["./recipe-list.component.css"]
 })
 export class RecipeListComponent implements OnInit {
 
