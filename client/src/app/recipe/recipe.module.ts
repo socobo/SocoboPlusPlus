@@ -4,6 +4,9 @@ import { CommonModule } from "@angular/common";
 // Components
 import { RecipeRootComponent } from "./components/recipe-root/recipe-root.component";
 
+// Services
+import { RecipeService } from "./services/recipe.service";
+
 // Routes
 import { RecipeRoutingModule } from "./recipe-routing.module";
 import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
@@ -17,6 +20,9 @@ import { RecipeListComponent } from './components/recipe-list/recipe-list.compon
   declarations: [
     RecipeRootComponent,
     RecipeListComponent
+  ],
+  providers: [
+    RecipeService
   ]
 })
 export class RecipeModule { }

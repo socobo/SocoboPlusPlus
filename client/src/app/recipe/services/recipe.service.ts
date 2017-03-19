@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http, Response } from "@angular/http"
+import { Http, Response, RequestOptions, Headers } from "@angular/http"
 
 import { Observable } from  "rxjs/Observable";
 import "rxjs/add/operator/catch";
@@ -10,13 +10,19 @@ import { Recipe } from "./../model/recipe";
 @Injectable()
 export class RecipeService {
 
-  private recipeBaseUrl = "localhost:8282/api/v1/recipes";
+  private recipeBaseUrl = "http://localhost:8282/api/v1/recipes";
   private fake_toke = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwicm9sZSI6MCwidXNlcm5hbWUiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTQ4OTkyMDczOCwiZXhwIjoxNDkwMDA3MTM4LCJpc3MiOiJzb2NvYm8ifQ.E-KPZbZa9IV4ldaHpuYPzm6LPEtjyuRkRSXrbLF3RL0";
 
   constructor(private http:Http) { }
 
   getAllRecipes(): Observable<Recipe[]> {
-    return this.http.get(this.recipeBaseUrl)
+    let headers = new Headers({ 
+      'Content-Type': 'application/json' ,
+      'x-access-token': this.fake_toke
+    });
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http.get(this.recipeBaseUrl, options)
       .map(this._extractBody)
       .catch(this._handleError);
   }
