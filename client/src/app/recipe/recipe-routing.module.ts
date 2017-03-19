@@ -8,7 +8,13 @@ import { RecipeListComponent } from "./components/recipe-list/recipe-list.compon
 const RECIPE_ROUTES: Route[] = [
   {
     path: "",
-    component: RecipeListComponent
+    component: RecipeRootComponent,
+    children: [
+      {
+        path: "",
+        component: RecipeListComponent
+      }
+    ]
   }
 ]
 
