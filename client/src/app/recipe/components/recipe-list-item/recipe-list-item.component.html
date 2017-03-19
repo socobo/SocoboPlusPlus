@@ -2,6 +2,7 @@
   <div class="title">{{recipe?.title}}</div>
   <div class="dates">
     <span>{{recipe?.created | date: 'dd/MM/yyyy'}}</span>
-    <span>{{recipe?.modified | date: 'dd/MM/yyyy'}}not modified</span>
+    <span *ngIf="recipe.modified">{{recipe?.modified | date: 'dd/MM/yyyy'}}</span>
+    <span *ngIf="!recipe.modified">-</span>
   </div>
 </div>
