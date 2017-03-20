@@ -7,5 +7,5 @@ import { Component } from "@angular/core";
 })
 export class RootComponent {
   private title = "Socobo";
-  private subtitle = "the best place for managing your fridge inventory and recipes"
+  private subtitle = "the best place for managing your fridge inventory and recipes";
 }
