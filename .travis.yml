@@ -20,3 +20,4 @@ env:
     - "CXX='g++-4.8'"
 script:
   - cd server && npm install && npm run lint && npm test
+  - cd .. && cd client && npm install && npm run lint && npm test 
