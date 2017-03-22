@@ -4,6 +4,7 @@ dist: trusty
 cache:
   directories:
     - server/node_modules
+    - client/node_modules
 node_js: 7
 addons:
   postgresql: "9.5"
