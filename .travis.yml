@@ -19,6 +19,9 @@ addons:
 env:
   global:
     - "CXX='g++-4.8'"
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
 script:
   - cd server && npm install && npm run lint && npm test
   - cd .. 
