@@ -4,8 +4,10 @@ import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as express from "express";
 import * as http from "http";
+import * as multer from "multer";
 import * as path from "path";
 import * as pgPromise from "pg-promise";
+import * as uuid from "uuid";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
@@ -39,6 +41,8 @@ class Server {
   private _cryptoUtils: CryptoUtils;
   private _modelUtils: ModelUtils;
 
+  private _recipeUpload: multer.Instance;
+
   private _authService: AuthService;
 
   private _authValidationMiddleware: AuthValidationMiddleware;
@@ -60,6 +64,7 @@ class Server {
     this._services();
     this._middleware();
     this._handler();
+    this._uploader();
     this._routes();
     this._listen();
   }
@@ -184,6 +189,21 @@ class Server {
   }
 
   /**
+   * UPLOADS
+   */
+  private _uploader (): void {
+    const storage = multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, Config.IMAGE_TMP_DIR);
+      },
+      filename: (req, file, cb) => {
+        cb(null, file.fieldname + "_" + uuid());
+      }
+    });
+    this._recipeUpload = multer({storage});
+  }
+
+  /**
    * ROUTES
    */
   private _routes (): void {
@@ -223,7 +243,7 @@ class Server {
     // create new router
     const router: express.Router = express.Router();
     // init and return recipe route
-    return new RecipeRoute(router, this._recipeHandler,
+    return new RecipeRoute(router, this._recipeUpload, this._recipeHandler,
         this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 

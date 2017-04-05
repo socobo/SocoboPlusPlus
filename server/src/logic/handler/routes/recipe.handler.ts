@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { IDatabase } from "pg-promise";
 import { RecipeMiddleware } from "./../../../logic/middleware/recipe.middleware";
-import { ApiError, ERRORS, Recipe } from "./../../../models/index";
-import { DbExtensions } from "./../../../models/index";
+import { FilesystemImageService, ImageService } from "./../../../logic/services/index";
+import {
+  ApiError, DataType, DbExtensions, ERRORS, Recipe, SocoboRequest
+} from "./../../../models/index";
 
 export class RecipeHandler {
 
@@ -114,5 +116,16 @@ export class RecipeHandler {
     this._db.recipes.delete(req.params.id)
       .then(() => res.status(200).json())
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  public uploadImage = (req: SocoboRequest, res: Response) => {
+    const service: ImageService = new FilesystemImageService();
+    const userEmail = req.requestData.decoded.email;
+    service.persistImage(req.file.filename, DataType.RECIPE_IMAGE, userEmail)
+      .then(() => {
+        res.status(200).json();
+      }).catch((e: ApiError) => {
+        res.status(e.statusCode).json(e.forResponse());
+      });
   }
 }

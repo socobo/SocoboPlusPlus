@@ -1,13 +1,15 @@
 import { Router } from "express";
+import { Instance } from "multer";
 import {
   AuthValidationHandler, ModelValidationHandler, RecipeHandler
 } from "./../../../../logic/handler/index";
-import { Recipe, ValidationGroup } from "./../../../../models/index";
+import { DataType, Recipe, ValidationGroup } from "./../../../../models/index";
 
 export class RecipeRoute {
 
   constructor (
     private _router: Router,
+    private _multer: Instance,
     private _recipeHandler: RecipeHandler,
     private _authValidationHandler: AuthValidationHandler,
     private _modelValidationHandler: ModelValidationHandler
@@ -18,6 +20,11 @@ export class RecipeRoute {
       this._authValidationHandler.checkToken,
       this._modelValidationHandler.validate(Recipe, [ValidationGroup.RECIPE]),
       this._recipeHandler.save);
+
+    this._router.post("/image",
+      this._authValidationHandler.checkToken,
+      this._multer.single("recipeImage"),
+      this._recipeHandler.uploadImage);
 
     this._router.get("/search",
       this._authValidationHandler.checkToken,
