@@ -50,7 +50,7 @@ describe("Recipe Handler", () => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.resolve("recipe"));
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -64,7 +64,7 @@ describe("Recipe Handler", () => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.resolve("recipe"));
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -77,7 +77,7 @@ describe("Recipe Handler", () => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.resolve("recipe"));
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -91,7 +91,7 @@ describe("Recipe Handler", () => {
     const dbError = new DbError(ERRORS.INTERNAL_SERVER_ERROR);
     recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.reject(dbError));
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -108,7 +108,7 @@ describe("Recipe Handler", () => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.reject(dbError));
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -129,7 +129,7 @@ describe("Recipe Handler", () => {
     const dbError = new DbError(ERRORS.RECIPE_NOT_FOUND);
     recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.reject(dbError));
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -146,7 +146,7 @@ describe("Recipe Handler", () => {
 
     recipeRepositorystub = sinon.stub(recipeRepository, "getById").returns(Promise.reject(dbError));
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.getById(req, res);
 
     res.on("end", () => {
@@ -168,7 +168,7 @@ describe("Recipe Handler", () => {
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
     userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
@@ -191,7 +191,7 @@ describe("Recipe Handler", () => {
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
     userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
@@ -215,7 +215,7 @@ describe("Recipe Handler", () => {
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
     userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
@@ -231,7 +231,7 @@ describe("Recipe Handler", () => {
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.resolve({ id: 1 }));
     userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
@@ -248,7 +248,7 @@ describe("Recipe Handler", () => {
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.reject(dbError));
     userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
@@ -268,7 +268,7 @@ describe("Recipe Handler", () => {
     recipeRepositorystub = sinon.stub(recipeRepository, "save").returns(Promise.reject(dbError));
     userRepositoryStub = sinon.stub(userRepository, "getUserById").returns(Promise.resolve());
 
-    const recipeHandler = new RecipeHandler(db, null);
+    const recipeHandler = new RecipeHandler(db, null, null);
     recipeHandler.save(req, res);
 
     res.on("end", () => {
