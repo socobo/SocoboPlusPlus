@@ -31,9 +31,9 @@ echo
 
 if [ "$1" = "-p" ]
 then
-  cd client && ng build -prod && cd ..
+  cd client && npm run ng build -prod && cd ..
 else
-  cd client && ng build && cd ..
+  cd client && npm run ng build && cd ..
 fi
 
 echo

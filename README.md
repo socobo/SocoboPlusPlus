@@ -3,6 +3,10 @@
 # socobo++
 the final stack :-)
 
+## Requirements
+- Node
+- PostgreSQL
+
 ## Build and Serve Development Frontend
 
 ```bash

@@ -1,15 +1,12 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Route } from '@angular/router';
-
-// Components
-import { RootComponent } from './components/root/root.component';
+import { NgModule } from "@angular/core";
+import { RouterModule, Route } from "@angular/router";
 
 const ROOT_ROUTES: Route[] = [
   {
     path: "recipes",
     loadChildren: "app/recipe/recipe.module#RecipeModule"
   }
-]
+];
 
 @NgModule({
   imports: [

@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Route } from "@angular/router";
-
 // Components
 import { RecipeRootComponent } from "./components/recipe-root/recipe-root.component";
 
@@ -9,7 +8,7 @@ const RECIPE_ROUTES: Route[] = [
     path: "",
     component: RecipeRootComponent
   }
-]
+];
 
 @NgModule({
   imports: [

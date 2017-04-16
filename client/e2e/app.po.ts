@@ -6,6 +6,6 @@ export class SocoboPage {
   }
 
   getParagraphText() {
-    return element(by.css("scb-root h1")).getText();
+    return element(by.css("scb-app h1")).getText();
   }
 }
