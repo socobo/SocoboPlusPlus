@@ -12,7 +12,7 @@ export class RecipeHandler {
   private _recipeMiddleware: RecipeMiddleware;
   private _imgService: ImageService;
 
-  constructor (db: any, recipeMiddleware: RecipeMiddleware, 
+  constructor (db: any, recipeMiddleware: RecipeMiddleware,
                imgService: ImageService) {
     this._db = db;
     this._recipeMiddleware = recipeMiddleware;

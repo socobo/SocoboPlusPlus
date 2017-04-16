@@ -23,7 +23,7 @@ export class FilesystemImageService implements ImageService {
         if (!fs.existsSync(dir)) {
           winston.info(`Directory ${dir} doesn't exist. Will be created.`);
           fs.mkdir(dir, (createErr) => {
-            if(createErr) {
+            if (createErr) {
               rej(error.addCause.call(error, createErr));
             }
           });
@@ -32,8 +32,8 @@ export class FilesystemImageService implements ImageService {
 
       function removeSourceFile (dir: string, rej: Function) {
         fs.unlink(dir, (deleteErr) => {
-          if(deleteErr) {
-            reject(error.addCause.call(error, deleteErr))
+          if (deleteErr) {
+            reject(error.addCause.call(error, deleteErr));
           }
         });
       }

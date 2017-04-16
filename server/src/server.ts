@@ -23,8 +23,8 @@ import {
 // services
 import {
   AuthService,
-  ImageService,
-  FilesystemImageService
+  FilesystemImageService,
+  ImageService
 } from "./logic/services/index";
 // server utils
 import {
@@ -168,7 +168,7 @@ class Server {
    */
   private _services (): void {
     this._authService = new AuthService(db, this._cryptoUtils);
-    this._imgService = new FilesystemImageService()
+    this._imgService = new FilesystemImageService();
   }
 
   /**
