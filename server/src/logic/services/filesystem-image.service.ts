@@ -22,10 +22,20 @@ export class FilesystemImageService implements ImageService {
       function createDirIfNotExists (dir: string, rej: Function): void {
         if (!fs.existsSync(dir)) {
           winston.info(`Directory ${dir} doesn't exist. Will be created.`);
-          fs.mkdir(dir, (e) => {
-            rej(error.addCause.call(error, e));
+          fs.mkdir(dir, (createErr) => {
+            if(createErr) {
+              rej(error.addCause.call(error, createErr));
+            }
           });
         }
+      }
+
+      function removeSourceFile (dir: string, rej: Function) {
+        fs.unlink(dir, (deleteErr) => {
+          if(deleteErr) {
+            reject(error.addCause.call(error, deleteErr))
+          }
+        });
       }
 
       fs.readFile(sourcePath, (readErr, data) => {
@@ -36,7 +46,8 @@ export class FilesystemImageService implements ImageService {
           createDirIfNotExists(dataTypeDir, reject);
 
           fs.writeFile(targetPath, data, (writeErr) => {
-            writeErr ? reject(writeErr) : resolve(targetPath);
+            writeErr ? reject(writeErr) : removeSourceFile(sourcePath, reject);
+            resolve(targetPath);
           });
         }
       });
