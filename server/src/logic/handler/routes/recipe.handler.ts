@@ -10,10 +10,13 @@ export class RecipeHandler {
 
   private _db: IDatabase<DbExtensions>&DbExtensions;
   private _recipeMiddleware: RecipeMiddleware;
+  private _imgService: ImageService;
 
-  constructor (db: any, recipeMiddleware: RecipeMiddleware) {
+  constructor (db: any, recipeMiddleware: RecipeMiddleware, 
+               imgService: ImageService) {
     this._db = db;
     this._recipeMiddleware = recipeMiddleware;
+    this._imgService = imgService;
   }
 
   public getById = (req: Request, res: Response): void => {
@@ -119,9 +122,8 @@ export class RecipeHandler {
   }
 
   public uploadImage = (req: SocoboRequest, res: Response) => {
-    const service: ImageService = new FilesystemImageService();
     const userEmail = req.requestData.decoded.email;
-    service.persistImage(req.file.filename, DataType.RECIPE_IMAGE, userEmail)
+    this._imgService.persistImage(req.file.filename, DataType.RECIPE_IMAGE, userEmail)
       .then(() => {
         res.status(200).json();
       }).catch((e: ApiError) => {

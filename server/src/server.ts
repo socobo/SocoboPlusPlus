@@ -22,7 +22,9 @@ import {
 } from "./logic/middleware/index";
 // services
 import {
-  AuthService
+  AuthService,
+  ImageService,
+  FilesystemImageService
 } from "./logic/services/index";
 // server utils
 import {
@@ -44,6 +46,7 @@ class Server {
   private _recipeUpload: multer.Instance;
 
   private _authService: AuthService;
+  private _imgService: ImageService;
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
@@ -165,6 +168,7 @@ class Server {
    */
   private _services (): void {
     this._authService = new AuthService(db, this._cryptoUtils);
+    this._imgService = new FilesystemImageService()
   }
 
   /**
@@ -184,7 +188,7 @@ class Server {
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
     this._userHandler = new UserHandler(db);
-    this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware);
+    this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware, this._imgService);
     this._logHandler = new LogHandler();
   }
 
