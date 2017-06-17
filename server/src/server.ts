@@ -28,7 +28,7 @@ import {
 } from "./logic/services/index";
 // server utils
 import {
-  CryptoUtils, ModelUtils
+  CryptoUtils
 } from "./logic/utils/index";
 // routes
 import {
@@ -41,7 +41,6 @@ class Server {
   private _server: http.Server;
 
   private _cryptoUtils: CryptoUtils;
-  private _modelUtils: ModelUtils;
 
   private _recipeUpload: multer.Instance;
 
@@ -160,7 +159,6 @@ class Server {
    */
   private _utils (): void {
     this._cryptoUtils = new CryptoUtils();
-    this._modelUtils = new ModelUtils();
   }
 
   /**
@@ -177,7 +175,7 @@ class Server {
   private _middleware (): void {
     this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
-    this._recipeMiddleware = new RecipeMiddleware(db, this._modelUtils);
+    this._recipeMiddleware = new RecipeMiddleware(db);
   }
 
   /**

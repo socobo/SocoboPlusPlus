@@ -106,7 +106,7 @@ export class RecipeHandler {
   }
 
   public updateRecipeProperties = (req: Request, res: Response, next: NextFunction) => {
-    this._recipeMiddleware.updateRecipe(req)
+    this._recipeMiddleware.newUpdateRecipes(req, res)
       .then(() => next())
       .catch((error) => res.status(error.statusCode).json(error.forResponse()));
   }
@@ -123,15 +123,15 @@ export class RecipeHandler {
 
   public uploadImage = (req: SocoboRequest, res: Response) => {
     const userEmail = req.requestData.decoded.email;
-    let recipeId = req.params.id;
+    const recipeId = req.params.id;
     this._imgService.persistImage(req.file.filename, DataType.RECIPE_IMAGE, userEmail)
       .then((url) => {
         this._db.recipes.getById(recipeId)
           .then((recipe: Recipe) => {
-            recipe.addImageUrl(url)
-            this._db.recipes.update(recipeId, recipe).then(() => this.getById(req, res))
+            recipe.addImageUrl(url);
+            this._db.recipes.update(recipeId, recipe).then(() => this.getById(req, res));
           })
-          .catch((e: any) => res.status(e.statusCode).json(e.forResponse()))
+          .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
       }).catch((e: ApiError) => {
         res.status(e.statusCode).json(e.forResponse());
       });
