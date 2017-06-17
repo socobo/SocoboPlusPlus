@@ -17,6 +17,7 @@ export class RecipeMiddleware {
       .then((existingRecipe) => {
         if (!UPDATEABLE_FIELDS) {
           NEW_RECIPE.id = existingRecipe.id;
+          NEW_RECIPE.created = existingRecipe.created;
           return NEW_RECIPE;
         } else {
 
