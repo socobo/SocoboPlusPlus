@@ -123,9 +123,15 @@ export class RecipeHandler {
 
   public uploadImage = (req: SocoboRequest, res: Response) => {
     const userEmail = req.requestData.decoded.email;
+    let recipeId = req.params.id;
     this._imgService.persistImage(req.file.filename, DataType.RECIPE_IMAGE, userEmail)
-      .then(() => {
-        res.status(200).json();
+      .then((url) => {
+        this._db.recipes.getById(recipeId)
+          .then((recipe: Recipe) => {
+            recipe.addImageUrl(url)
+            this._db.recipes.update(recipeId, recipe).then(() => this.getById(req, res))
+          })
+          .catch((e: any) => res.status(e.statusCode).json(e.forResponse()))
       }).catch((e: ApiError) => {
         res.status(e.statusCode).json(e.forResponse());
       });

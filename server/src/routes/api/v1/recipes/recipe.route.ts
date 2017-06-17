@@ -21,7 +21,7 @@ export class RecipeRoute {
       this._modelValidationHandler.validate(Recipe, [ValidationGroup.RECIPE]),
       this._recipeHandler.save);
 
-    this._router.post("/image",
+    this._router.post("/:id/image",
       this._authValidationHandler.checkToken,
       this._multer.single("recipeImage"),
       this._recipeHandler.uploadImage);
