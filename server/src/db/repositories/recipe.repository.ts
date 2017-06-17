@@ -104,6 +104,7 @@ export class RecipeRepository {
     transformedResult.description = result.hasOwnProperty("description") ? result.description : null;
     transformedResult.imageUrl = result.hasOwnProperty("imageurl") ? result.imageurl : null;
     transformedResult.created = result.hasOwnProperty("created") ? new Date(result.created) : null;
+    delete transformedResult.fields;
     return transformedResult;
   }
 }
