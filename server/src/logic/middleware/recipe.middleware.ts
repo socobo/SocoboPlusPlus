@@ -10,7 +10,7 @@ export class RecipeMiddleware {
     this._db = db;
   }
 
-  public newUpdateRecipes = (req: Request, res: Response): Promise<Recipe> => {
+  public updateRecipes = (req: Request, res: Response): Promise<Recipe> => {
     const NEW_RECIPE: any = req.body;
     const UPDATEABLE_FIELDS = req.query.props;
     return this._db.recipes.getById(req.params.id)
@@ -28,24 +28,24 @@ export class RecipeMiddleware {
             userId: "userId"
           };
 
-          const partlyUpdatedRecipe = {
+          const PARTLY_UPDATED_RECIPE = {
             ...existingRecipe
           };
 
           if (UPDATEABLE_FIELDS.indexOf("title") !== -1) {
-            partlyUpdatedRecipe.title = NEW_RECIPE.title;
+            PARTLY_UPDATED_RECIPE.title = NEW_RECIPE.title;
           }
           if (UPDATEABLE_FIELDS.indexOf("userId") !== -1) {
-            partlyUpdatedRecipe.userId = NEW_RECIPE.userId;
+            PARTLY_UPDATED_RECIPE.userId = NEW_RECIPE.userId;
           }
           if (UPDATEABLE_FIELDS.indexOf("description") !== -1) {
-            partlyUpdatedRecipe.description = NEW_RECIPE.description;
+            PARTLY_UPDATED_RECIPE.description = NEW_RECIPE.description;
           }
           if (UPDATEABLE_FIELDS.indexOf("imageUrl") !== -1) {
-            partlyUpdatedRecipe.imageUrl = NEW_RECIPE.imageUrl;
+            PARTLY_UPDATED_RECIPE.imageUrl = NEW_RECIPE.imageUrl;
           }
-          req.body = partlyUpdatedRecipe;
-          return partlyUpdatedRecipe;
+          req.body = PARTLY_UPDATED_RECIPE;
+          return PARTLY_UPDATED_RECIPE;
         }
       });
   }

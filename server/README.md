@@ -429,6 +429,15 @@ Error body:
 Uploads a provided image file to the server for the current user and updates
 the related recipe in the database.
 
+Request body:
+
+```
+  multipart/form-data:
+
+  key: recipeImage
+  value: image file
+```
+
 Response body:
   ```json
   {

@@ -12,8 +12,7 @@ export class RecipeHandler {
   private _recipeMiddleware: RecipeMiddleware;
   private _imgService: ImageService;
 
-  constructor (db: any, recipeMiddleware: RecipeMiddleware,
-               imgService: ImageService) {
+  constructor (db: any, recipeMiddleware: RecipeMiddleware, imgService: ImageService) {
     this._db = db;
     this._recipeMiddleware = recipeMiddleware;
     this._imgService = imgService;
@@ -106,7 +105,7 @@ export class RecipeHandler {
   }
 
   public updateRecipeProperties = (req: Request, res: Response, next: NextFunction) => {
-    this._recipeMiddleware.newUpdateRecipes(req, res)
+    this._recipeMiddleware.updateRecipes(req, res)
       .then(() => next())
       .catch((error) => res.status(error.statusCode).json(error.forResponse()));
   }
@@ -125,15 +124,19 @@ export class RecipeHandler {
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
     this._imgService.persistImage(req.file.filename, DataType.RECIPE_IMAGE, userEmail)
-      .then((url) => {
-        this._db.recipes.getById(recipeId)
-          .then((recipe: Recipe) => {
-            recipe.addImageUrl(url);
-            this._db.recipes.update(recipeId, recipe).then(() => this.getById(req, res));
-          })
-          .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-      }).catch((e: ApiError) => {
-        res.status(e.statusCode).json(e.forResponse());
-      });
+      .then((url) => this._getRecipe(recipeId, url))
+      .then((obj: any) => this._addImageUrl(obj.recipe, obj.url))
+      .then((recipe: Recipe) => this._db.recipes.update(recipeId, recipe))
+      .then(() => this.getById(req, res))
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  private _getRecipe = (recipeId: number, url: string): Promise<any> => {
+    return this._db.recipes.getById(recipeId).then((recipe) => ({recipe, url}));
+  }
+
+  private _addImageUrl = (recipe: Recipe, url: string): Promise<any> => {
+    recipe.addImageUrl(url);
+    return Promise.resolve(recipe);
   }
 }

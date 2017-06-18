@@ -6,47 +6,47 @@ import { ImageService } from "./image.service";
 
 export class FilesystemImageService implements ImageService {
 
+  private _error = new ApiError(ERRORS.IMAGE_UPLOAD)
+    .addSource(FilesystemImageService.name)
+    .addSourceMethod("persistImage");
+
+  // 'this' doesn't work correctly inside of fs.readFile.
+  private _createDirIfNotExists (dir: string, rej: Function): void {
+    if (!fs.existsSync(dir)) {
+      winston.info(`Directory ${dir} doesn't exist. Will be created.`);
+      fs.mkdir(dir, (createErr) => {
+        if (createErr) {
+          rej(this._error.addCause.call(this._error, createErr));
+        }
+      });
+    }
+  }
+
+  private _removeSourceFile (dir: string, rej: Function) {
+    fs.unlink(dir, (deleteErr) => {
+      if (deleteErr) {
+        rej(this._error.addCause.call(this._error, deleteErr));
+      }
+    });
+  }
+
   public persistImage (fileName: string, dataType: string, userIdentifier: string): Promise<string> {
 
     return new Promise((resolve, reject) => {
-      const sourcePath = `${Config.IMAGE_TMP_DIR}/${fileName}`;
+      const sourcePath = `${process.cwd()}/${process.env.IMAGE_TMP_DIR || Config.IMAGE_TMP_DIR}/${fileName}`;
       const userDataDir = `${Config.DATA_BASE_DIR}/${userIdentifier}`;
       const dataTypeDir = `${userDataDir}/${dataType}`;
       const targetPath = `${dataTypeDir}/${fileName}`;
 
-      const error = new ApiError(ERRORS.IMAGE_UPLOAD)
-        .addSource(FilesystemImageService.name)
-        .addSourceMethod("persistImage");
-
-      // 'this' doesn't work correctly inside of fs.readFile.
-      function createDirIfNotExists (dir: string, rej: Function): void {
-        if (!fs.existsSync(dir)) {
-          winston.info(`Directory ${dir} doesn't exist. Will be created.`);
-          fs.mkdir(dir, (createErr) => {
-            if (createErr) {
-              rej(error.addCause.call(error, createErr));
-            }
-          });
-        }
-      }
-
-      function removeSourceFile (dir: string, rej: Function) {
-        fs.unlink(dir, (deleteErr) => {
-          if (deleteErr) {
-            reject(error.addCause.call(error, deleteErr));
-          }
-        });
-      }
-
       fs.readFile(sourcePath, (readErr, data) => {
         if (readErr) {
-          reject(error.addCause.call(error, readErr));
+          reject(this._error.addCause.call(this._error, readErr));
         } else {
-          createDirIfNotExists(userDataDir, reject);
-          createDirIfNotExists(dataTypeDir, reject);
+          this._createDirIfNotExists(userDataDir, reject);
+          this._createDirIfNotExists(dataTypeDir, reject);
 
           fs.writeFile(targetPath, data, (writeErr) => {
-            writeErr ? reject(writeErr) : removeSourceFile(sourcePath, reject);
+            writeErr ? reject(writeErr) : this._removeSourceFile(sourcePath, reject);
             resolve(targetPath);
           });
         }

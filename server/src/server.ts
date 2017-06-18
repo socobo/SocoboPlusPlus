@@ -196,7 +196,7 @@ class Server {
   private _uploader (): void {
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, Config.IMAGE_TMP_DIR);
+        cb(null, `${process.cwd()}/${process.env.IMAGE_TMP_DIR || Config.IMAGE_TMP_DIR}`);
       },
       filename: (req, file, cb) => {
         cb(null, file.fieldname + "_" + uuid());
