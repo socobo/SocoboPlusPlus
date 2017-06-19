@@ -11,34 +11,34 @@ export class RecipeMiddleware {
   }
 
   public updateRecipes = (req: Request, res: Response): Promise<Recipe> => {
-    const NEW_RECIPE: any = req.body;
+    const updatedRecipe: any = req.body;
     const UPDATEABLE_FIELDS = req.query.fields;
     return this._db.recipes.getById(req.params.id)
       .then((existingRecipe) => {
         if (!UPDATEABLE_FIELDS) {
-          NEW_RECIPE.id = existingRecipe.id;
-          NEW_RECIPE.created = existingRecipe.created;
-          return NEW_RECIPE;
+          updatedRecipe.id = existingRecipe.id;
+          updatedRecipe.created = existingRecipe.created;
+          return updatedRecipe;
         } else {
 
-          const PARTLY_UPDATED_RECIPE = {
+          const partlyUpdatedRecipe = {
             ...existingRecipe
           };
 
           if (UPDATEABLE_FIELDS.indexOf("title") !== -1) {
-            PARTLY_UPDATED_RECIPE.title = NEW_RECIPE.title;
+            partlyUpdatedRecipe.title = updatedRecipe.title;
           }
           if (UPDATEABLE_FIELDS.indexOf("userId") !== -1) {
-            PARTLY_UPDATED_RECIPE.userId = NEW_RECIPE.userId;
+            partlyUpdatedRecipe.userId = updatedRecipe.userId;
           }
           if (UPDATEABLE_FIELDS.indexOf("description") !== -1) {
-            PARTLY_UPDATED_RECIPE.description = NEW_RECIPE.description;
+            partlyUpdatedRecipe.description = updatedRecipe.description;
           }
           if (UPDATEABLE_FIELDS.indexOf("imageUrl") !== -1) {
-            PARTLY_UPDATED_RECIPE.imageUrl = NEW_RECIPE.imageUrl;
+            partlyUpdatedRecipe.imageUrl = updatedRecipe.imageUrl;
           }
-          req.body = PARTLY_UPDATED_RECIPE;
-          return PARTLY_UPDATED_RECIPE;
+          req.body = partlyUpdatedRecipe;
+          return partlyUpdatedRecipe;
         }
       });
   }
