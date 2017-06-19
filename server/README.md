@@ -463,14 +463,14 @@ Error body:
 
 Alters the properties, defined in the request body, on the recipe with the
 provided id. The request body must contain all recipe properties except the id.
-To update only specific field you need to define these fields in the props query parameter.
-If a props query prameter is defined, only these fields will be updated.
+To update only specific field you need to define these fields in the fields query parameter.
+If a fields query prameter is defined, only these fields will be updated.
 
 Path Parameter:
   - id: Recipe id
 
 Query Parameter:
-  - props: The fields which should be updated (title, description, imageUrl, userId)
+  - fields: The fields which should be updated (title, description, imageUrl, userId)
 
 Request body (could also be a subset of these values):
   ```json

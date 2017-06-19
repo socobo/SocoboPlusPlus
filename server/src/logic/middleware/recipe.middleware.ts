@@ -12,7 +12,7 @@ export class RecipeMiddleware {
 
   public updateRecipes = (req: Request, res: Response): Promise<Recipe> => {
     const NEW_RECIPE: any = req.body;
-    const UPDATEABLE_FIELDS = req.query.props;
+    const UPDATEABLE_FIELDS = req.query.fields;
     return this._db.recipes.getById(req.params.id)
       .then((existingRecipe) => {
         if (!UPDATEABLE_FIELDS) {
@@ -20,13 +20,6 @@ export class RecipeMiddleware {
           NEW_RECIPE.created = existingRecipe.created;
           return NEW_RECIPE;
         } else {
-
-          const UPDATEABLES = {
-            description: "description",
-            imageUrl: "imageUrl",
-            title: "title",
-            userId: "userId"
-          };
 
           const PARTLY_UPDATED_RECIPE = {
             ...existingRecipe
