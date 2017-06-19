@@ -2,3 +2,5 @@ npm-debug.log
 logs/*.json
 node_modules/
 dist/
+tmp/
+socobo_data/

@@ -424,13 +424,53 @@ Error body:
   }
   ```
 
+**POST /api/v1/recipes/:id/image**
+
+Uploads a provided image file to the server for the current user and updates
+the related recipe in the database.
+
+Request body:
+
+```
+  multipart/form-data:
+
+  key: recipeImage
+  value: image file
+```
+
+Response body:
+  ```json
+  {
+    id: number,
+    title: string,
+    userid: number,
+    description?: string,
+    imageurl: string,
+    created: Date
+  }
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
 **PUT /api/v1/recipes/:id**
 
 Alters the properties, defined in the request body, on the recipe with the
-provided id
+provided id. The request body must contain all recipe properties except the id.
+To update only specific field you need to define these fields in the fields query parameter.
+If a fields query prameter is defined, only these fields will be updated.
 
 Path Parameter:
   - id: Recipe id
+
+Query Parameter:
+  - fields: The fields which should be updated (title, description, imageUrl, userId)
 
 Request body (could also be a subset of these values):
   ```json

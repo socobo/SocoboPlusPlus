@@ -1,17 +1,21 @@
 import { NextFunction, Request, Response } from "express";
 import { IDatabase } from "pg-promise";
 import { RecipeMiddleware } from "./../../../logic/middleware/recipe.middleware";
-import { ApiError, ERRORS, Recipe } from "./../../../models/index";
-import { DbExtensions } from "./../../../models/index";
+import { FilesystemImageService, ImageService } from "./../../../logic/services/index";
+import {
+  ApiError, DataType, DbExtensions, ERRORS, Recipe, SocoboRequest
+} from "./../../../models/index";
 
 export class RecipeHandler {
 
   private _db: IDatabase<DbExtensions>&DbExtensions;
   private _recipeMiddleware: RecipeMiddleware;
+  private _imgService: ImageService;
 
-  constructor (db: any, recipeMiddleware: RecipeMiddleware) {
+  constructor (db: any, recipeMiddleware: RecipeMiddleware, imgService: ImageService) {
     this._db = db;
     this._recipeMiddleware = recipeMiddleware;
+    this._imgService = imgService;
   }
 
   public getById = (req: Request, res: Response): void => {
@@ -101,7 +105,7 @@ export class RecipeHandler {
   }
 
   public updateRecipeProperties = (req: Request, res: Response, next: NextFunction) => {
-    this._recipeMiddleware.updateRecipe(req)
+    this._recipeMiddleware.updateRecipes(req, res)
       .then(() => next())
       .catch((error) => res.status(error.statusCode).json(error.forResponse()));
   }
@@ -114,5 +118,25 @@ export class RecipeHandler {
     this._db.recipes.delete(req.params.id)
       .then(() => res.status(200).json())
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  public uploadImage = (req: SocoboRequest, res: Response) => {
+    const userEmail = req.requestData.decoded.email;
+    const recipeId = req.params.id;
+    this._imgService.persistImage(req.file.filename, DataType.RECIPE_IMAGE, userEmail)
+      .then((url) => this._getRecipe(recipeId, url))
+      .then((obj: any) => this._addImageUrl(obj.recipe, obj.url))
+      .then((recipe: Recipe) => this._db.recipes.update(recipeId, recipe))
+      .then(() => this.getById(req, res))
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  private _getRecipe = (recipeId: number, url: string): Promise<any> => {
+    return this._db.recipes.getById(recipeId).then((recipe) => ({recipe, url}));
+  }
+
+  private _addImageUrl = (recipe: Recipe, url: string): Promise<any> => {
+    recipe.addImageUrl(url);
+    return Promise.resolve(recipe);
   }
 }

@@ -1,27 +1,45 @@
 import { NextFunction, Request, Response } from "express";
 import { IDatabase } from "pg-promise";
-import { ModelUtils } from "./../../logic/utils/index";
 import { ApiError, DbExtensions, ERRORS, Recipe } from "./../../models/index";
 
 export class RecipeMiddleware {
 
   private _db: IDatabase<DbExtensions>&DbExtensions;
-  private _modelUtils: ModelUtils;
 
-  constructor (db: any, modelUtils: ModelUtils) {
+  constructor (db: any) {
     this._db = db;
-    this._modelUtils = modelUtils;
   }
 
-  public updateRecipe = (req: Request): Promise<Recipe> => {
-    const newRecipe: any = req.body;
+  public updateRecipes = (req: Request, res: Response): Promise<Recipe> => {
+    const updatedRecipe: any = req.body;
+    const UPDATEABLE_FIELDS = req.query.fields;
     return this._db.recipes.getById(req.params.id)
       .then((existingRecipe) => {
-        return this._modelUtils.updateModelValues(existingRecipe, newRecipe)
-          .then((result) => {
-            req.body = result;
-            return (result);
-          }) as Promise<Recipe>;
-    });
+        if (!UPDATEABLE_FIELDS) {
+          updatedRecipe.id = existingRecipe.id;
+          updatedRecipe.created = existingRecipe.created;
+          return updatedRecipe;
+        } else {
+
+          const partlyUpdatedRecipe = {
+            ...existingRecipe
+          };
+
+          if (UPDATEABLE_FIELDS.indexOf("title") !== -1) {
+            partlyUpdatedRecipe.title = updatedRecipe.title;
+          }
+          if (UPDATEABLE_FIELDS.indexOf("userId") !== -1) {
+            partlyUpdatedRecipe.userId = updatedRecipe.userId;
+          }
+          if (UPDATEABLE_FIELDS.indexOf("description") !== -1) {
+            partlyUpdatedRecipe.description = updatedRecipe.description;
+          }
+          if (UPDATEABLE_FIELDS.indexOf("imageUrl") !== -1) {
+            partlyUpdatedRecipe.imageUrl = updatedRecipe.imageUrl;
+          }
+          req.body = partlyUpdatedRecipe;
+          return partlyUpdatedRecipe;
+        }
+      });
   }
 }

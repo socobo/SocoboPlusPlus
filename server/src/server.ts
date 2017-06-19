@@ -4,8 +4,10 @@ import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as express from "express";
 import * as http from "http";
+import * as multer from "multer";
 import * as path from "path";
 import * as pgPromise from "pg-promise";
+import * as uuid from "uuid";
 import * as winston from "winston";
 // server config
 import { Config } from "./config";
@@ -20,11 +22,13 @@ import {
 } from "./logic/middleware/index";
 // services
 import {
-  AuthService
+  AuthService,
+  FilesystemImageService,
+  ImageService
 } from "./logic/services/index";
 // server utils
 import {
-  CryptoUtils, ModelUtils
+  CryptoUtils
 } from "./logic/utils/index";
 // routes
 import {
@@ -37,9 +41,11 @@ class Server {
   private _server: http.Server;
 
   private _cryptoUtils: CryptoUtils;
-  private _modelUtils: ModelUtils;
+
+  private _recipeUpload: multer.Instance;
 
   private _authService: AuthService;
+  private _imgService: ImageService;
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
@@ -60,6 +66,7 @@ class Server {
     this._services();
     this._middleware();
     this._handler();
+    this._uploader();
     this._routes();
     this._listen();
   }
@@ -152,7 +159,6 @@ class Server {
    */
   private _utils (): void {
     this._cryptoUtils = new CryptoUtils();
-    this._modelUtils = new ModelUtils();
   }
 
   /**
@@ -160,6 +166,7 @@ class Server {
    */
   private _services (): void {
     this._authService = new AuthService(db, this._cryptoUtils);
+    this._imgService = new FilesystemImageService();
   }
 
   /**
@@ -168,7 +175,7 @@ class Server {
   private _middleware (): void {
     this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
-    this._recipeMiddleware = new RecipeMiddleware(db, this._modelUtils);
+    this._recipeMiddleware = new RecipeMiddleware(db);
   }
 
   /**
@@ -179,8 +186,23 @@ class Server {
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
     this._userHandler = new UserHandler(db);
-    this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware);
+    this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware, this._imgService);
     this._logHandler = new LogHandler();
+  }
+
+  /**
+   * UPLOADS
+   */
+  private _uploader (): void {
+    const storage = multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, `${process.cwd()}/${process.env.IMAGE_TMP_DIR || Config.IMAGE_TMP_DIR}`);
+      },
+      filename: (req, file, cb) => {
+        cb(null, file.fieldname + "_" + uuid());
+      }
+    });
+    this._recipeUpload = multer({storage});
   }
 
   /**
@@ -223,7 +245,7 @@ class Server {
     // create new router
     const router: express.Router = express.Router();
     // init and return recipe route
-    return new RecipeRoute(router, this._recipeHandler,
+    return new RecipeRoute(router, this._recipeUpload, this._recipeHandler,
         this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 

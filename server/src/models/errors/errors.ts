@@ -27,6 +27,11 @@ export class ERRORS {
     "internal.error.request.body.authcheck",
     500
   );
+  public static IMAGE_UPLOAD = new ErrorType(
+    "00007",
+    "internal.error.upload.image",
+    500
+  );
   public static USER_NOT_FOUND = new ErrorType(
     "10001",
     "user.not.found",
