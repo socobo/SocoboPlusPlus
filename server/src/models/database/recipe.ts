@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, Length } from "class-validator";
+import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
 import { ValidationGroup } from "./../enums/validation-group";
 import { FoodItem, RecipeStep, SocoboUser } from "./../index";
 
@@ -24,8 +24,11 @@ export class Recipe {
   public imageUrl: string;
   public created: Date;
   public lastModified: Date;
+  @ValidateNested({
+    each: true,
+    groups: [ ValidationGroup.RECIPE ]
+  })
   public steps: RecipeStep[];
-  public ingredients: FoodItem[];
 
   constructor () {
     this.fields = new Map();
@@ -33,6 +36,19 @@ export class Recipe {
     this.fields.set("userId", this.addUserId);
     this.fields.set("description", this.addDescription);
     this.fields.set("imageUrl", this.addImageUrl);
+  }
+
+  public of(recipe: Recipe){
+    this.title = recipe.title;
+    this.description = recipe.description;
+    this.id = recipe.id;
+    this.imageUrl = recipe.imageUrl;
+    this.userId = recipe.userId;
+    this.steps = [];
+    recipe.steps.forEach((step) => {
+      this.steps.push(new RecipeStep().of(step));
+    })
+    return this;
   }
 
   public addTitle (title: string) {

@@ -3,12 +3,6 @@ import { ValidationGroup } from "./../enums/validation-group";
 
 export class RecipeStep {
   public id: number;
-  @IsNotEmpty({
-    groups: [ ValidationGroup.RECIPE ]
-  })
-  @IsNumber({
-    groups: [ ValidationGroup.RECIPE ]
-  })
   public recipeId: number;
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
@@ -27,9 +21,6 @@ export class RecipeStep {
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
-  @IsNumber({
-    groups: [ ValidationGroup.RECIPE ]
-  })
   @MinLength(1, {
     groups: [ ValidationGroup.RECIPE ]
   })
@@ -37,6 +28,12 @@ export class RecipeStep {
   public createdDate: number;
   public lastModifiedDate: number;
 
+  public of(step: RecipeStep){
+      this.stepTitle = step.stepTitle;
+      this.stepDescription = step.stepDescription;
+      this.stepNumber = step.stepNumber;
+      return this
+  }
 
   public setRecipeId (recipeId: number) {
     this.recipeId = recipeId;

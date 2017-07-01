@@ -79,11 +79,11 @@ export class RecipeRepository {
   }
 
   public save = (recipe: Recipe): Promise<any> => {
-    return this._db.tx("SaveRecipeStep", (t) => {
+    return this._db.tx("SaveRecipeCoreDate", (t) => {
       return this._saveRecipeCoreQuery(recipe);      
     })
     .then((id: any) => {
-      return this._db.tx("SaveRecipe", (t) => {
+      return this._db.tx("SaveRecipeSteps", (t) => {
         let step: RecipeStep = new RecipeStep()
           .setStep(9999)
           .setDescription('TestDescription999')

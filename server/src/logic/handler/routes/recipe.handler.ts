@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+// import { validate } from "class-validator";
 import { IDatabase } from "pg-promise";
 import { RecipeMiddleware } from "./../../../logic/middleware/recipe.middleware";
 import { FilesystemImageService, ImageService } from "./../../../logic/services/index";
 import {
-  ApiError, DataType, DbExtensions, ERRORS, Recipe, SocoboRequest
+  ApiError, DataType, DbExtensions, ERRORS, Recipe, RecipeStep, SocoboRequest
 } from "./../../../models/index";
 
 export class RecipeHandler {
@@ -80,6 +81,19 @@ export class RecipeHandler {
 
   public save = (req: Request, res: Response): void => {
     const recipe: Recipe = req.body as Recipe;
+    // console.log('Recipe', recipe)
+
+    // let r = new Recipe().of(recipe);
+
+    // validate(r, {
+    //   groups: ["recipe"]
+    // }).then((errors: any) => { // errors is an array of validation errors
+    //   if (errors.length > 0) {
+    //       console.log("validation failed. errors: ", errors);
+    //   } else {
+    //       console.log("validation succeed");
+    //   }
+    // });
     recipe.created = new Date();
 
     this._db.users.getUserById(recipe.userId)
