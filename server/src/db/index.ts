@@ -3,7 +3,7 @@ import * as pgPromise from "pg-promise";
 
 import { Config } from "../config";
 import { DbConfig, DbExtensions } from "./../models/index";
-import { RecipeRepository, UserRepository } from "./repositories/index";
+import { RecipeRepository, RecipeStepRepository, UserRepository } from "./repositories/index";
 
 const getConnectionUrl = (): string => {
   let connectionUrl: string;
@@ -33,6 +33,7 @@ const options: IOptions<DbExtensions> = {
   extend: (obj: DbExtensions) => {
     obj.users = new UserRepository(obj);
     obj.recipes = new RecipeRepository(obj);
+    obj.recipeSteps = new RecipeStepRepository(obj);
   }
 };
 

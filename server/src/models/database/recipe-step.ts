@@ -38,27 +38,32 @@ export class RecipeStep {
   public lastModifiedDate: number;
 
 
-  public step (stepNumber: number) {
+  public setRecipeId (recipeId: number) {
+    this.recipeId = recipeId;
+    return this;
+  }
+
+  public setStep (stepNumber: number) {
     this.stepNumber = stepNumber;
     return this;
   }
 
-  public description (stepDescription: string) {
+  public setDescription (stepDescription: string) {
     this.stepDescription = stepDescription;
     return this;
   }
 
-  public title (stepTitle: string) {
+  public setTitle (stepTitle: string) {
     this.stepTitle = stepTitle;
     return this;
   }
 
-  public created (createdDate: number) {
+  public setCreated (createdDate: number) {
     this.createdDate = createdDate;
     return this;
   }
 
-  public lastModified (lastModifiedDate: number) {
+  public setLastModified (lastModifiedDate: number) {
     this.lastModifiedDate = lastModifiedDate;
     return this;
   }

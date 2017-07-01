@@ -1,6 +1,6 @@
 import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
-import { DbError, ERRORS, Recipe } from "./../../models/index";
+import { DbError, ERRORS, Recipe, RecipeStep } from "./../../models/index";
 import { DbExtensions } from "./../../models/index";
 
 export class RecipeRepository {
@@ -67,17 +67,34 @@ export class RecipeRepository {
     });
   }
 
-  public save = (recipe: Recipe): Promise<any> => {
+  private _saveRecipeCoreQuery = (recipe: Recipe) => {
     const query: string = `insert into recipes(
                              title, userId, description,
                              imageUrl, created)
                            values($1, $2, $3, $4, $5)
                            returning id`;
-    return this._db.tx("SaveRecipe", () => {
-      return this._db.one(query, [
+    return this._db.one(query, [
         recipe.title, recipe.userId, recipe.description,
         recipe.imageUrl, recipe.created]);
-    }).catch((error: any) => {
+  }
+
+  public save = (recipe: Recipe): Promise<any> => {
+    return this._db.tx("SaveRecipeStep", (t) => {
+      return this._saveRecipeCoreQuery(recipe);      
+    })
+    .then((id: any) => {
+      return this._db.tx("SaveRecipe", (t) => {
+        let step: RecipeStep = new RecipeStep()
+          .setStep(9999)
+          .setDescription('TestDescription999')
+          .setTitle('TestTitle9999')
+          .setCreated(Date.now())
+          .setLastModified(Date.now())
+          return this._db.recipeSteps.save([step], id.id);
+      })
+    })
+    .catch((error: any) => {
+      console.log("Error", error)
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
     });
   }

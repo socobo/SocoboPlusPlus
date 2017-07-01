@@ -27,7 +27,7 @@ CREATE TABLE recipe_steps (
   title varchar(100) NOT NULL,
   recipeId integer REFERENCES recipes(id) NOT NULL,
   description text,
-  stepNumber integer UNIQUE,
-  lastModified NUMERIC NOT NULL CHECK (lastModified >= created),
-  created NUMERIC NOT NULL
+  stepNumber integer,
+  lastModified NUMERIC,
+  created NUMERIC
 );
