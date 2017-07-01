@@ -11,9 +11,23 @@ export class RecipeRepository {
     this._db = db;
   }
 
+  private _fetchSteps = (recipe: Recipe) => {
+    return this._db.recipeSteps.getRecipeSteps(recipe.id)
+      .then((steps) => {
+        return {steps: steps, recipe: recipe};
+      })
+  }
+
+  private _addStepsToRecipe = (obj: any) => {
+    obj.recipe.steps = obj.steps;
+    return obj.recipe;
+  }
+
   public getById = (id: number): Promise<Recipe> => {
     const query = `select * from recipes where recipes.id = $1`;
     return this._db.one(query, [id], this._transformResult)
+      .then((recipe) => this._fetchSteps(recipe))
+      .then((obj: any) => this._addStepsToRecipe(obj))
       .catch((error: any) => {
         return ErrorUtils.handleDbNotFound(
           ERRORS.RECIPE_NOT_FOUND, error,
@@ -85,11 +99,11 @@ export class RecipeRepository {
     .then((id: any) => {
       recipe.id = id.id;
       return this._db.tx("SaveRecipeSteps", (t) => {
-          return this._db.recipeSteps.save(recipe.steps, recipe);
+          this._db.recipeSteps.save(recipe.steps, recipe);
+          return id;
       })
     })
     .catch((error: any) => {
-      console.log("Error", error)
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
     });
   }
@@ -116,6 +130,7 @@ export class RecipeRepository {
     transformedResult.description = result.hasOwnProperty("description") ? result.description : null;
     transformedResult.imageUrl = result.hasOwnProperty("imageurl") ? result.imageurl : null;
     transformedResult.created = result.hasOwnProperty("created") ? new Date(result.created) : null;
+    transformedResult.steps = result.hasOwnProperty("steps") ? result.steps : null;
     delete transformedResult.fields;
     return transformedResult;
   }

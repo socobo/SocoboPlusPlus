@@ -12,7 +12,6 @@ export class RecipeStepRepository {
   }
 
   private _saveRecipeStepQuery = (step: RecipeStep) => {
-    console.log('Save step', step);
     const query: string = `insert into recipe_steps(
                              title, description, stepNumber,
                              recipeId)
@@ -38,6 +37,13 @@ export class RecipeStepRepository {
     return this._db.tx("SaveRecipe", (t) => {
       return t.batch(queries);
     });
+  }
+
+  public getRecipeSteps = (recipeId: number) => {
+    const query: string = `select * from recipe_steps
+                            where recipe_steps.recipeId = $1`;
+    return this._db.many(query, [
+      recipeId]);
   }
 
 }
