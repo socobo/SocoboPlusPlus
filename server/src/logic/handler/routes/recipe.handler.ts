@@ -80,20 +80,7 @@ export class RecipeHandler {
   }
 
   public save = (req: Request, res: Response): void => {
-    const recipe: Recipe = req.body as Recipe;
-    // console.log('Recipe', recipe)
-
-    // let r = new Recipe().of(recipe);
-
-    // validate(r, {
-    //   groups: ["recipe"]
-    // }).then((errors: any) => { // errors is an array of validation errors
-    //   if (errors.length > 0) {
-    //       console.log("validation failed. errors: ", errors);
-    //   } else {
-    //       console.log("validation succeed");
-    //   }
-    // });
+    const recipe: Recipe = new Recipe().of(req.body as Recipe);
     recipe.created = new Date();
 
     this._db.users.getUserById(recipe.userId)

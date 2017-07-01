@@ -1,6 +1,6 @@
 import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
-import { DbError, ERRORS, RecipeStep } from "./../../models/index";
+import { DbError, ERRORS, Recipe, RecipeStep } from "./../../models/index";
 import { DbExtensions } from "./../../models/index";
 
 export class RecipeStepRepository {
@@ -12,6 +12,7 @@ export class RecipeStepRepository {
   }
 
   private _saveRecipeStepQuery = (step: RecipeStep) => {
+    console.log('Save step', step);
     const query: string = `insert into recipe_steps(
                              title, description, stepNumber,
                              recipeId)
@@ -22,11 +23,15 @@ export class RecipeStepRepository {
       step.recipeId]);
   }
 
-  public save = (steps: RecipeStep[], recipeId: number) => {
+  public save = (steps: RecipeStep[], recipe: Recipe) => {
 
     let queries: Promise<any>[] = [];
     steps.forEach((recipeStep: RecipeStep) => {
-      recipeStep.setRecipeId(recipeId);
+      console.log('step', recipeStep)
+      recipeStep
+        .setCreated(recipe.created.getTime())
+        .setLastModified(recipe.created.getTime())
+        .setRecipeId(recipe.id);
       queries.push(this._saveRecipeStepQuery(recipeStep))
     })
 

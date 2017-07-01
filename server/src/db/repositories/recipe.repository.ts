@@ -83,14 +83,9 @@ export class RecipeRepository {
       return this._saveRecipeCoreQuery(recipe);      
     })
     .then((id: any) => {
+      recipe.id = id.id;
       return this._db.tx("SaveRecipeSteps", (t) => {
-        let step: RecipeStep = new RecipeStep()
-          .setStep(9999)
-          .setDescription('TestDescription999')
-          .setTitle('TestTitle9999')
-          .setCreated(Date.now())
-          .setLastModified(Date.now())
-          return this._db.recipeSteps.save([step], id.id);
+          return this._db.recipeSteps.save(recipe.steps, recipe);
       })
     })
     .catch((error: any) => {
