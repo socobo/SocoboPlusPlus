@@ -12,7 +12,7 @@ export class RecipeRepository {
   }
 
   private _fetchSteps = (recipe: Recipe) => {
-    return this._db.recipeSteps.getRecipeSteps(recipe.id)
+    return this._db.recipeSteps.get(recipe.id)
       .then((steps) => {
         return {steps: steps, recipe: recipe};
       })
