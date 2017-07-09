@@ -1,2 +1,2 @@
 export * from "./recipe.repository";
-export * from "./user.repository";
+export * from "./socobouser.repository";

@@ -96,7 +96,7 @@ export class AuthValidationMiddleware {
           .addSourceMethod("checkValidUser(..)");
         return reject(err);
       }
-      this._db.users.getUserByEmail(req.requestData.decoded.email)
+      this._db.socobousers.getUserByEmail(req.requestData.decoded.email)
         .then((user: SocoboUser) => {
           req.requestData = {};
           if (user.socoboUserRoleId === restrictedRole) {

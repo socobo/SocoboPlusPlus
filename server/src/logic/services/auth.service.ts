@@ -59,11 +59,11 @@ export class AuthService {
                                 onlyEmailRegistration: boolean): Promise<SocoboUser> {
 
     if (isEmailLogin) {
-      return this._db.users.getUserByEmail(usernameOrEmail);
+      return this._db.socobousers.getUserByEmail(usernameOrEmail);
     }
 
     if (!onlyEmailRegistration) {
-      return this._db.users.getUserByUsername(usernameOrEmail);
+      return this._db.socobousers.getUserByUsername(usernameOrEmail);
     }
 
     const e = new ApiError(ERRORS.AUTH_ONLY_EMAIL_ALLOWED)
@@ -150,7 +150,7 @@ export class AuthService {
 
   private _returnSavedUser (user: SocoboUser): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
-      this._db.users.save(user)
+      this._db.socobousers.save(user)
         .then((result: any) => {
           user.id = result.id;
           delete user.password;

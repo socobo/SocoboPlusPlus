@@ -13,14 +13,14 @@ export class UserHandler {
   }
 
   public getAll = (req: Request, res: Response): void => {
-    this._db.users.getAll()
+    this._db.socobousers.getAll()
       .then((result: SocoboUser[]) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
   public getById = (req: Request, res: Response): void => {
     const userId: number = +req.params.id;
-    this._db.users.getUserById(userId)
+    this._db.socobousers.getUserById(userId)
       .then((result: SocoboUser) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
@@ -29,14 +29,14 @@ export class UserHandler {
     const userId: number = +req.params.id;
     const updateType: UpdateType = req.body.updateType;
     const fieldValues: string[] = req.body.fieldValues;
-    this._db.users.updateById(userId, updateType, fieldValues)
+    this._db.socobousers.updateById(userId, updateType, fieldValues)
       .then((result: SocoboUser) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
   public deleteById = (req: Request, res: Response): void => {
     const userId: number = +req.params.id;
-    this._db.users.deleteById(userId)
+    this._db.socobousers.deleteById(userId)
       .then((result: Object) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }

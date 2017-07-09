@@ -82,7 +82,7 @@ export class RecipeHandler {
     const recipe: Recipe = req.body as Recipe;
     recipe.created = new Date();
 
-    this._db.users.getUserById(recipe.userId)
+    this._db.socobousers.getUserById(recipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
 
     this._db.recipes.save(recipe)
@@ -96,7 +96,7 @@ export class RecipeHandler {
   public update = (req: Request, res: Response): void => {
     const newRecipe: Recipe = req.body as Recipe;
 
-    this._db.users.getUserById(newRecipe.userId)
+    this._db.socobousers.getUserById(newRecipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
 
     this._db.recipes.update(req.params.id, newRecipe)

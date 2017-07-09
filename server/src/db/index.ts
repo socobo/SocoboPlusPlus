@@ -3,7 +3,7 @@ import * as pgPromise from "pg-promise";
 
 import { Config } from "../config";
 import { DbConfig, DbExtensions } from "./../models/index";
-import { RecipeRepository, UserRepository } from "./repositories/index";
+import { RecipeRepository, SocoboUserRepository } from "./repositories/index";
 
 const getConnectionUrl = (): string => {
   let connectionUrl: string;
@@ -31,7 +31,7 @@ const getConnectionUrl = (): string => {
 // pg-promise initialization options:
 const options: IOptions<DbExtensions> = {
   extend: (obj: DbExtensions) => {
-    obj.users = new UserRepository(obj);
+    obj.socobousers = new SocoboUserRepository(obj);
     obj.recipes = new RecipeRepository(obj);
   }
 };

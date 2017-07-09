@@ -3,7 +3,7 @@ import { ErrorUtils } from "./../../logic/utils/index";
 import { DbError, ERRORS, Recipe, SocoboUser, UpdateType } from "./../../models/index";
 import { DbExtensions } from "./../../models/index";
 
-export class UserRepository {
+export class SocoboUserRepository {
 
   private _db: IDatabase<DbExtensions>&DbExtensions;
 
@@ -24,7 +24,7 @@ export class UserRepository {
         return transformedResult;
       })
       .catch((error: any) => {
-        return ErrorUtils.handleDbError(error, UserRepository.name, "getAll(..)");
+        return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "getAll(..)");
       });
   }
 
@@ -37,8 +37,7 @@ export class UserRepository {
         WHERE id=$1`;
     return this._db.one(query, id, this._transformResult).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
-        ERRORS.USER_NOT_FOUND, error, UserRepository.name,
-        "getUserById(..)", "id", id.toString());
+        ERRORS.USER_NOT_FOUND, error, SocoboUserRepository.name, "getUserById(..)", "id", id.toString());
       }
     );
   }
@@ -47,8 +46,7 @@ export class UserRepository {
     const query: string = "SELECT * FROM Socobo_User Where email=$1";
     return this._db.one(query, email, this._transformResult).catch((error: any) => {
       return ErrorUtils.handleDbNotFound (
-        ERRORS.USER_NOT_FOUND, error, UserRepository.name,
-        "getUserByEmail(..)", "email", email);
+        ERRORS.USER_NOT_FOUND, error, SocoboUserRepository.name, "getUserByEmail(..)", "email", email);
       }
     );
   }
@@ -57,8 +55,7 @@ export class UserRepository {
     const query: string = "SELECT * FROM Socobo_User Where username=$1";
     return this._db.one(query, username, this._transformResult).catch((error: any) => {
       return ErrorUtils.handleDbNotFound(
-        ERRORS.USER_NOT_FOUND, error, UserRepository.name,
-        "getUserByUsername(..)", "username", username);
+        ERRORS.USER_NOT_FOUND, error, SocoboUserRepository.name, "getUserByUsername(..)", "username", username);
       }
     );
   }
@@ -79,7 +76,7 @@ export class UserRepository {
       return this._db.one(query, [user.username, user.email, user.password,
                                   user.hasTermsAccepted, user.created, user.lastModified]);
       }).catch((error: any) => {
-        return ErrorUtils.handleDbError(error, UserRepository.name, "save(..)");
+        return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "save(..)");
       });
   }
 
@@ -90,7 +87,7 @@ export class UserRepository {
       return this._db.one(query, fields)
         .then((result: any) => this.getUserById(result.id))
         .catch((error: any) => {
-          return ErrorUtils.handleDbError(error, UserRepository.name, "updateById(..)");
+          return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "updateById(..)");
         });
     });
   }
@@ -98,18 +95,18 @@ export class UserRepository {
   public deleteById = (id: number): Promise<Object> => {
     const query: string = `DELETE FROM Socobo_User WHERE id=$1 RETURNING id`;
     return this._db.tx("DeleteUser", () => this._db.one(query, [id]))
-      .catch((error: any) => ErrorUtils.handleDbError(error, UserRepository.name, "deleteById(..)"));
+      .catch((error: any) => ErrorUtils.handleDbError(error, SocoboUserRepository.name, "deleteById(..)"));
   }
 
   private _transformResult = (result: any): SocoboUser => {
     const tranformedResult: SocoboUser = new SocoboUser()
       .addId(result.hasOwnProperty("id") ? Number(result.id) : null)
       .addSocoboUserRoleId(result.hasOwnProperty("socoboUserRoleId") ?
-                                                        Number(result.socoboUserRoleId) : null)
+          Number(result.socoboUserRoleId) : null)
       .addSocoboUserProviderId(result.hasOwnProperty("socoboUserProviderId") ?
-                                                        Number(result.socoboUserProviderId) : null)
+          Number(result.socoboUserProviderId) : null)
       .addSocoboUserImageId(result.hasOwnProperty("socoboUserImageId") ?
-                                                        Number(result.socoboUserImageId) : null)
+          Number(result.socoboUserImageId) : null)
       .addUsername(result.hasOwnProperty("username") ? result.username : null)
       .addEmail(result.hasOwnProperty("email") ? result.email : null)
       .addPassword(result.hasOwnProperty("password") ? result.password : null)

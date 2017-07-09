@@ -45,7 +45,7 @@ describe("User Route v1", () => {
     user2.username = "MaxMustermann";
     user2.email = "MaxMustermann";
     user2.hasTermsAccepted = true;
-    
+
     // PW: password
     const user3: SocoboUser = new SocoboUser();
     user3.id = 3;
