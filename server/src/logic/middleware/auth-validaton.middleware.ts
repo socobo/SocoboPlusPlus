@@ -99,7 +99,7 @@ export class AuthValidationMiddleware {
       this._db.users.getUserByEmail(req.requestData.decoded.email)
         .then((user: SocoboUser) => {
           req.requestData = {};
-          if (user.role === restrictedRole) {
+          if (user.socoboUserRoleId === restrictedRole) {
             resolve();
           } else {
             const err: ApiError = new ApiError(ERRORS.USER_NOT_AUTHORIZED)

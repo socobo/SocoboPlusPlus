@@ -3,5 +3,7 @@ export enum UpdateType {
   username = 1,
   email = 2,
   password = 3,
-  image = 4
+  image = 4,
+  role = 5,
+  provider = 6
 }

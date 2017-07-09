@@ -136,13 +136,13 @@ export class AuthService {
         return reject(e);
       }
       const user: SocoboUser = new SocoboUser()
+        .addSocoboUserRoleId(role)
+        .addSocoboUserProviderId(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)
+        .addSocoboUserImageId((process.env.DEFAULT_USER_IMAGE_ID || Config.DEFAULT_USER_IMAGE_ID))
         .addUsername(usernameOrEmail)
         .addEmail(usernameOrEmail)
         .addPassword(hashedPassword)
-        .addImage((process.env.DEFAULT_USER_IMAGE || Config.DEFAULT_USER_IMAGE))
         .addHasTermsAccepted(true)
-        .addRole(role)
-        .addProvider(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)
         .createDates();
       resolve(user);
     });
