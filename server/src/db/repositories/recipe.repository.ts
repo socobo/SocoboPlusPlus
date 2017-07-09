@@ -72,12 +72,16 @@ export class RecipeRepository {
 
   public delete = (id: Number): Promise<void> => {
     const query: string = `delete from recipes where recipes.id = $1`;
-    return this._db.tx("DeleteRecipe", () => {
-      return this._db.none(query, [id])
-      .catch((error: any) => {
-        return ErrorUtils.handleDbError(
-          error, RecipeRepository.name, "delete(..)");
-      });
+    return this._db.tx("DeleteRecipe", (t) => {
+      let queries = [
+        this._db.recipeSteps.delete(id),
+        this._db.none(query, [id])]
+      return t.batch(queries)
+        .catch((error: any) => {
+          console.log(error)
+          return ErrorUtils.handleDbError(
+            error, RecipeRepository.name, "delete(..)");
+        });
     });
   }
 

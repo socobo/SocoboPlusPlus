@@ -38,14 +38,14 @@ export class RecipeStepRepository {
     });
   }
 
-  public get = (recipeId: number) => {
+  public get = (recipeId: Number) => {
     const query: string = `select * from recipe_steps
                             where recipe_steps.recipeId = $1`;
     return this._db.many(query, [
       recipeId]);
   }
 
-  public delete = (recipeId: number) => {
+  public delete = (recipeId: Number) => {
     const query: string = `delete from recipe_steps
                             where recipe_steps.recipeId = $1`;
     return this._db.none(query, [
