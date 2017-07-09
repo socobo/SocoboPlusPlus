@@ -1,6 +1,6 @@
 import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
-import { DbError, ERRORS, Recipe, SocoboUser, UpdateType } from "./../../models/index";
+import { DbError, ERRORS, SocoboUser, UpdateType } from "./../../models/index";
 import { DbExtensions } from "./../../models/index";
 
 export class SocoboUserRepository {

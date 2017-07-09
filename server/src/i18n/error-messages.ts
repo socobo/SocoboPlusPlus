@@ -18,6 +18,7 @@ export const ERROR_MESSAGES: any = {
   "recipe.field.not.found": "Recipes have no field {0}",
   "recipe.not.found": "Recipe with {0} {1} could not be found",
   "recipes.empty": "No recipes available",
+  "role.not.found": "User Role with {0} {1} could not be found",
   "update.model.values": "Field {0} does not exist or is not updatable",
   "user.not.an.admin": "The User is not entitled to get the requested resource",
   "user.not.found": "User with {0} {1} could not be found",

@@ -42,6 +42,11 @@ export class ERRORS {
     "user.not.an.admin",
     403
   );
+  public static ROLE_NOT_FOUND = new ErrorType(
+    "10003",
+    "role.not.found",
+    404
+  );
   public static AUTH_WRONG_PASSWORD = new ErrorType(
     "20001",
     "auth.wrong.password",
