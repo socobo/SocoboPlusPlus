@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
-import { BaseObject } from "./BaseObject";
 import { ValidationGroup } from "./../enums/validation-group";
+import { BaseObject } from "./BaseObject";
 
 export class SocoboUser extends BaseObject {
 
@@ -10,12 +10,12 @@ export class SocoboUser extends BaseObject {
     groups: [ ValidationGroup.REGISTRATION ]
   })
   public socoboUserRoleId: number;
-  
+
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
   public socoboUserProviderId: number;
-  
+
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
@@ -106,12 +106,11 @@ export class SocoboUser extends BaseObject {
 
   public getSigningInfo = (): Object => {
     return {
-      role: this.socoboUserRoleId,
-      provider: this.socoboUserProviderId,
-      image: this.socoboUserImageId,
       email: this.email,
+      image: this.socoboUserImageId,
+      provider: this.socoboUserProviderId,
+      role: this.socoboUserRoleId,
       username: this.username
     };
   }
-
 }
