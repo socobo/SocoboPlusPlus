@@ -31,8 +31,23 @@ describe("Recipe Handler", () => {
       eventEmitter: require("events").EventEmitter
     });
 
-    const recipe: Recipe = new Recipe();
-    recipe.title = "Test Recipe";
+    const recipe = {
+      description: "Irgenetwas",
+      steps: [
+        {
+          stepDescription: "step02",
+          stepNumber: 1,
+          stepTitle: "step31"
+        },
+        {
+          stepDescription: "step02",
+          stepNumber: 1,
+          stepTitle: "step32"
+        }
+      ],
+      title: "Test Recipe",
+      userId: 2
+    };
 
     req = mocks.createRequest({
       body: recipe,
