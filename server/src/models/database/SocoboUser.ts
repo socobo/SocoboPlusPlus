@@ -1,11 +1,25 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
-import { ProviderType } from "./../enums/provider-type";
-import { Role } from "./../enums/role";
+import { BaseObject } from "./BaseObject";
 import { ValidationGroup } from "./../enums/validation-group";
 
-export class SocoboUser {
+export class SocoboUser extends BaseObject {
 
   public id: number;
+
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
+  public socoboUserRoleId: number;
+  
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
+  public socoboUserProviderId: number;
+  
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
+  public socoboUserImageId: number;
 
   @ValidateIf((o) => o.email === "", {
     groups: [ ValidationGroup.LOGIN ]
@@ -46,23 +60,27 @@ export class SocoboUser {
   })
   public password: string;
 
-  public image: string;
-
   public hasTermsAccepted: boolean;
 
-  @IsNotEmpty({
-    groups: [ ValidationGroup.REGISTRATION ]
-  })
-  public role: Role;
-
-  public provider: ProviderType;
-
-  public created: number;
-
-  public lastModified: number;
+  constructor () { super(); }
 
   public addId = (id: number): this => {
     this.id = id;
+    return this;
+  }
+
+  public addSocoboUserRoleId = (id: number): this => {
+    this.socoboUserRoleId = id;
+    return this;
+  }
+
+  public addSocoboUserProviderId = (id: number): this => {
+    this.socoboUserProviderId = id;
+    return this;
+  }
+
+  public addSocoboUserImageId = (id: number): this => {
+    this.socoboUserRoleId = id;
     return this;
   }
 
@@ -81,48 +99,19 @@ export class SocoboUser {
     return this;
   }
 
-  public addImage = (image: string): this => {
-    this.image = image;
-    return this;
-  }
-
   public addHasTermsAccepted = (hasTermsAccepted: boolean): this => {
     this.hasTermsAccepted = hasTermsAccepted;
     return this;
   }
 
-  public addRole = (role: Role): this => {
-    this.role = role;
-    return this;
-  }
-
-  public addProvider = (provider: ProviderType): this => {
-    this.provider = provider;
-    return this;
-  }
-
-  public addCreated = (created: number): this => {
-    this.created = created;
-    return this;
-  }
-
-  public addLastModified = (lastModified: number): this => {
-    this.lastModified = lastModified;
-    return this;
-  }
-
-  public createDates = (): this => {
-    const now = Date.now();
-    this.created = now;
-    this.lastModified = now;
-    return this;
-  }
-
   public getSigningInfo = (): Object => {
     return {
+      role: this.socoboUserRoleId,
+      provider: this.socoboUserProviderId,
+      image: this.socoboUserImageId,
       email: this.email,
-      role: this.role,
       username: this.username
     };
   }
+
 }
