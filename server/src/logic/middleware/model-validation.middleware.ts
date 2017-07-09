@@ -38,7 +38,7 @@ export class ModelValidationMiddleware {
     });
   }
 
-  public val(o: Validatable, req: Request, validationGroups: ValidationGroup[]): Promise<any> {
+  public val (o: Validatable, req: Request, validationGroups: ValidationGroup[]): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {
       const obj: any = req.body;
       const mappedGroups: string[] = validationGroups.map((group) => group.toString());

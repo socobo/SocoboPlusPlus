@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, Length, IsString, MinLength } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, Length, MinLength } from "class-validator";
 import { ValidationGroup } from "./../enums/validation-group";
 
 export class RecipeStep {
@@ -28,11 +28,11 @@ export class RecipeStep {
   public createdDate: number;
   public lastModifiedDate: number;
 
-  public of(step: RecipeStep){
+  public of (step: RecipeStep) {
       this.stepTitle = step.stepTitle;
       this.stepDescription = step.stepDescription;
       this.stepNumber = step.stepNumber;
-      return this
+      return this;
   }
 
   public setRecipeId (recipeId: number) {

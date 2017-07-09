@@ -14,8 +14,8 @@ export class RecipeRepository {
   private _fetchSteps = (recipe: Recipe) => {
     return this._db.recipeSteps.get(recipe.id)
       .then((steps) => {
-        return {steps: steps, recipe: recipe};
-      })
+        return {steps, recipe};
+      });
   }
 
   private _addStepsToRecipe = (obj: any) => {
@@ -73,12 +73,11 @@ export class RecipeRepository {
   public delete = (id: Number): Promise<void> => {
     const query: string = `delete from recipes where recipes.id = $1`;
     return this._db.tx("DeleteRecipe", (t) => {
-      let queries = [
+      const queries = [
         this._db.recipeSteps.delete(id),
-        this._db.none(query, [id])]
+        this._db.none(query, [id])];
       return t.batch(queries)
         .catch((error: any) => {
-          console.log(error)
           return ErrorUtils.handleDbError(
             error, RecipeRepository.name, "delete(..)");
         });
@@ -98,14 +97,14 @@ export class RecipeRepository {
 
   public save = (recipe: Recipe): Promise<any> => {
     return this._db.tx("SaveRecipeCoreDate", (t) => {
-      return this._saveRecipeCoreQuery(recipe);      
+      return this._saveRecipeCoreQuery(recipe);
     })
     .then((id: any) => {
       recipe.id = id.id;
       return this._db.tx("SaveRecipeSteps", (t) => {
           this._db.recipeSteps.save(recipe.steps, recipe);
           return id;
-      })
+      });
     })
     .catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");

@@ -89,7 +89,7 @@ export class RecipeHandler {
     this._db.recipes.save(recipe)
       .then((result: any) => {
         recipe.id = result.id;
-        delete recipe.fields
+        delete recipe.fields;
         res.status(201).json(recipe);
       })
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
@@ -121,8 +121,6 @@ export class RecipeHandler {
           .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
       })
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-
-    
   }
 
   public uploadImage = (req: SocoboRequest, res: Response) => {

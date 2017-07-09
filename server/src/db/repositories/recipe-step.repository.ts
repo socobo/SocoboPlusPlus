@@ -24,14 +24,14 @@ export class RecipeStepRepository {
 
   public save = (steps: RecipeStep[], recipe: Recipe) => {
 
-    let queries: Promise<any>[] = [];
+    const queries: Array<Promise<any>> = [];
     steps.forEach((recipeStep: RecipeStep) => {
       recipeStep
         .setCreated(recipe.created.getTime())
         .setLastModified(recipe.created.getTime())
         .setRecipeId(recipe.id);
-      queries.push(this._saveQuery(recipeStep))
-    })
+      queries.push(this._saveQuery(recipeStep));
+    });
 
     return this._db.tx("SaveRecipeStep", (t) => {
       return t.batch(queries);

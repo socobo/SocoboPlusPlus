@@ -38,7 +38,7 @@ export class Recipe {
     this.fields.set("imageUrl", this.addImageUrl);
   }
 
-  public of(recipe: Recipe){
+  public of (recipe: Recipe) {
     this.title = recipe.title;
     this.description = recipe.description;
     this.id = recipe.id;
@@ -47,7 +47,7 @@ export class Recipe {
     this.steps = [];
     recipe.steps.forEach((step) => {
       this.steps.push(new RecipeStep().of(step));
-    })
+    });
     return this;
   }
 
