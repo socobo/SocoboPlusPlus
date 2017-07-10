@@ -4,4 +4,6 @@ export * from "./routes/auth.handler";
 export * from "./routes/log.handler";
 export * from "./routes/recipe.handler";
 export * from "./routes/socobouser.handler";
+export * from "./routes/socobouserImages.handler";
+export * from "./routes/socobouserProviders.handler";
 export * from "./routes/socobouserRoles.handler";

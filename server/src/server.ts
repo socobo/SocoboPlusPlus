@@ -17,7 +17,7 @@ import * as db from "./db/index";
 import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/index";
 import {
   AuthHandler, LogHandler, RecipeHandler,
-  SocoboUserHandler, SocoboUserRolesHandler
+  SocoboUserHandler, SocoboUserImagesHandler, SocoboUserProvidersHandler, SocoboUserRolesHandler
 } from "./logic/handler/index";
 // middleware
 import {
@@ -59,6 +59,8 @@ class Server {
 
   private _authHandler: AuthHandler;
   private _socoboUserHandler: SocoboUserHandler;
+  private _socoboUserImagesHandler: SocoboUserImagesHandler;
+  private _socoboUserProvidersHandler: SocoboUserProvidersHandler;
   private _socoboUserRolesHandler: SocoboUserRolesHandler;
   private _recipeHandler: RecipeHandler;
   private _logHandler: LogHandler;
@@ -190,6 +192,8 @@ class Server {
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
     this._socoboUserHandler = new SocoboUserHandler(db);
+    this._socoboUserImagesHandler = new SocoboUserImagesHandler(db);
+    this._socoboUserProvidersHandler = new SocoboUserProvidersHandler(db);
     this._socoboUserRolesHandler = new SocoboUserRolesHandler(db);
     this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware, this._imgService);
     this._logHandler = new LogHandler();
