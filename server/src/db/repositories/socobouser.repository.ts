@@ -101,12 +101,12 @@ export class SocoboUserRepository {
   private _transformResult = (result: any): SocoboUser => {
     const tranformedResult: SocoboUser = new SocoboUser()
       .addId(result.hasOwnProperty("id") ? Number(result.id) : null)
-      .addSocoboUserRoleId(result.hasOwnProperty("socoboUserRoleId") ?
-          Number(result.socoboUserRoleId) : null)
-      .addSocoboUserProviderId(result.hasOwnProperty("socoboUserProviderId") ?
-          Number(result.socoboUserProviderId) : null)
-      .addSocoboUserImageId(result.hasOwnProperty("socoboUserImageId") ?
-          Number(result.socoboUserImageId) : null)
+      .addSocoboUserRoleId(result.hasOwnProperty("socobouserroleid") ?
+          Number(result.socobouserroleid) : null)
+      .addSocoboUserProviderId(result.hasOwnProperty("socobouserproviderid") ?
+          Number(result.socobouserproviderid) : null)
+      .addSocoboUserImageId(result.hasOwnProperty("socobouserimageid") ?
+          Number(result.socobouserimageid) : null)
       .addUsername(result.hasOwnProperty("username") ? result.username : null)
       .addEmail(result.hasOwnProperty("email") ? result.email : null)
       .addPassword(result.hasOwnProperty("password") ? result.password : null)

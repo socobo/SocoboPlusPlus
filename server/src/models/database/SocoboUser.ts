@@ -80,7 +80,7 @@ export class SocoboUser extends BaseObject {
   }
 
   public addSocoboUserImageId = (id: number): this => {
-    this.socoboUserRoleId = id;
+    this.socoboUserImageId = id;
     return this;
   }
 

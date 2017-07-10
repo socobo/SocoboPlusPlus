@@ -32,9 +32,8 @@ export class ErrorUtils {
     return Promise.reject(e);
   }
 
-  public static handleDbNotFound (
-    errorType: ErrorType, error: any,
-    source: string, method: string, ...msgVariables: string[]): Promise<DbError> {
+  public static handleDbNotFound (errorType: ErrorType, error: any, source: string,
+                                  method: string, ...msgVariables: string[]): Promise<DbError> {
     if (ErrorUtils.notFound(error)) {
       const e = new DbError(errorType.withArgs(...msgVariables))
         .addSource(source)

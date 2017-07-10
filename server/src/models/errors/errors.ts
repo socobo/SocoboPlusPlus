@@ -32,6 +32,11 @@ export class ERRORS {
     "internal.error.upload.image",
     500
   );
+  public static GENERIC_BASE_NOT_FOUND = new ErrorType(
+    "10000",
+    "generic.base.not.found",
+    404
+  );
   public static USER_NOT_FOUND = new ErrorType(
     "10001",
     "user.not.found",
@@ -41,11 +46,6 @@ export class ERRORS {
     "10002",
     "user.not.an.admin",
     403
-  );
-  public static ROLE_NOT_FOUND = new ErrorType(
-    "10003",
-    "role.not.found",
-    404
   );
   public static AUTH_WRONG_PASSWORD = new ErrorType(
     "20001",

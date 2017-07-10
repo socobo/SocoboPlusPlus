@@ -1,17 +1,17 @@
-import { SocoboUserRole } from "../../models/index";
+import { SocoboUserImage } from "../../models/index";
 import { BaseRepository } from "./Base.repository";
 
-export class SocoboUserRoleRepository extends BaseRepository <SocoboUserRole> {
+export class SocoboUserImageRepository extends BaseRepository <SocoboUserImage> {
 
   constructor (db: any) {
-    super(db, "Socobo_User_Role", "name");
+    super(db, "Socobo_User_Image", "url");
     this.transformFunction = this._transformResult;
   }
 
-  private _transformResult = (result: any): SocoboUserRole => {
-    const tranformedResult: SocoboUserRole = new SocoboUserRole()
+  private _transformResult = (result: any): SocoboUserImage => {
+    const tranformedResult: SocoboUserImage = new SocoboUserImage()
       .addId(result.hasOwnProperty("id") ? Number(result.id) : null)
-      .addName(result.hasOwnProperty("name") ? result.name : null)
+      .addUrl(result.hasOwnProperty("url") ? result.url : null)
       .addCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
       .addLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
     return tranformedResult;

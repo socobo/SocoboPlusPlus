@@ -5,7 +5,7 @@ import { Config } from "../config";
 import { DbConfig, DbExtensions } from "./../models/index";
 import {
   RecipeRepository,
-  SocoboUserRepository, SocoboUserRoleRepository
+  SocoboUserImageRepository, SocoboUserProviderRepository, SocoboUserRepository, SocoboUserRoleRepository
 } from "./repositories/index";
 
 const getConnectionUrl = (): string => {
@@ -36,6 +36,8 @@ const options: IOptions<DbExtensions> = {
   extend: (obj: DbExtensions) => {
     obj.socobousers = new SocoboUserRepository(obj);
     obj.socobouserRoles = new SocoboUserRoleRepository(obj);
+    obj.socobouserProviders = new SocoboUserProviderRepository(obj);
+    obj.socobouserImages = new SocoboUserImageRepository(obj);
     obj.recipes = new RecipeRepository(obj);
   }
 };
