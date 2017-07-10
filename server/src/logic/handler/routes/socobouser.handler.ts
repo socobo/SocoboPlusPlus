@@ -4,7 +4,7 @@ import * as db from "./../../../db/index";
 import { SocoboUser, UpdateType } from "./../../../models/index";
 import { DbExtensions } from "./../../../models/index";
 
-export class UserHandler {
+export class SocoboUserHandler {
 
   private _db: IDatabase<DbExtensions>&DbExtensions;
 

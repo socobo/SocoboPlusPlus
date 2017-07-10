@@ -15,7 +15,7 @@ import { Config } from "./config";
 import * as db from "./db/index";
 // handler
 import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/index";
-import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./logic/handler/index";
+import { AuthHandler, LogHandler, RecipeHandler, SocoboUserHandler } from "./logic/handler/index";
 // middleware
 import {
   AuthValidationMiddleware, ModelValidationMiddleware, RecipeMiddleware
@@ -32,7 +32,7 @@ import {
 } from "./logic/utils/index";
 // routes
 import {
-  AuthRoute, LogRoute, RecipeRoute, UsersRoute
+  AuthRoute, LogRoute, RecipeRoute, SocoboUsersRoute
 } from "./routes/api/v1/index";
 
 class Server {
@@ -55,7 +55,7 @@ class Server {
   private _modelValidationHandler: ModelValidationHandler;
 
   private _authHandler: AuthHandler;
-  private _userHandler: UserHandler;
+  private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
   private _logHandler: LogHandler;
 
@@ -185,7 +185,7 @@ class Server {
     this._authValidationHandler = new AuthValidationHandler(this._authValidationMiddleware);
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
-    this._userHandler = new UserHandler(db);
+    this._socoboUserHandler = new SocoboUserHandler(db);
     this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware, this._imgService);
     this._logHandler = new LogHandler();
   }
@@ -221,7 +221,7 @@ class Server {
   private _apiRoutes (): void {
     // set routes to paths
     this._app.use("/api/v1/auth", this._authRoute());
-    this._app.use("/api/v1/users", this._usersRoute());
+    this._app.use("/api/v1/socobousers", this._socobousersRoute());
     this._app.use("/api/v1/recipes", this._recipeRoute());
     this._app.use("/api/v1/logs", this._logsRoute());
   }
@@ -234,11 +234,11 @@ class Server {
         this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
-  private _usersRoute (): express.Router {
+  private _socobousersRoute (): express.Router {
     // create new router
     const router: express.Router = express.Router();
     // init and return users route
-    return new UsersRoute(router, this._userHandler, this._authValidationHandler).createRoutes();
+    return new SocoboUsersRoute(router, this._socoboUserHandler, this._authValidationHandler).createRoutes();
   }
 
   private _recipeRoute (): express.Router {
