@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IDatabase } from "pg-promise/typescript/pg-promise";
 import { DbExtensions, SocoboUserRole } from "../../../models/index";
 
-export class SocoboUserRoleHandler {
+export class SocoboUserRolesHandler {
   private _db: IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
