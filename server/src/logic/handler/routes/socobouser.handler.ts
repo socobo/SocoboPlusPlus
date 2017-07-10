@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { IDatabase } from "pg-promise";
-import * as db from "./../../../db/index";
 import { SocoboUser, UpdateType } from "./../../../models/index";
 import { DbExtensions } from "./../../../models/index";
 
