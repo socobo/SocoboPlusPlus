@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IDatabase } from "pg-promise/typescript/pg-promise";
-import { DbExtensions, SocoboUserProvider } from "../../../models/index";
+import { DbExtensions } from "../../models/index";
+import { SocoboUserProvider } from "../models/SocoboUserProvider";
 
 export class SocoboUserProvidersHandler {
 

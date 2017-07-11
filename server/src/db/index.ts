@@ -3,10 +3,10 @@ import * as pgPromise from "pg-promise";
 
 import { Config } from "../config";
 import { DbConfig, DbExtensions } from "./../models/index";
+import { RecipeRepository } from "./repositories/index";
 import {
-  RecipeRepository,
   SocoboUserImageRepository, SocoboUserProviderRepository, SocoboUserRepository, SocoboUserRoleRepository
-} from "./repositories/index";
+} from "./../socobouser/index";
 
 const getConnectionUrl = (): string => {
   let connectionUrl: string;

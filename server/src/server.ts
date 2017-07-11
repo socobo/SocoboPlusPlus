@@ -15,10 +15,7 @@ import { Config } from "./config";
 import * as db from "./db/index";
 // handler
 import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/index";
-import {
-  AuthHandler, LogHandler, RecipeHandler,
-  SocoboUserHandler, SocoboUserImagesHandler, SocoboUserProvidersHandler, SocoboUserRolesHandler
-} from "./logic/handler/index";
+import { AuthHandler, LogHandler, RecipeHandler} from "./logic/handler/index";
 // middleware
 import {
   AuthValidationMiddleware, ModelValidationMiddleware, RecipeMiddleware
@@ -34,10 +31,10 @@ import {
   CryptoUtils
 } from "./logic/utils/index";
 // routes
+import { AuthRoute, LogRoute, RecipeRoute } from "./routes/api/v1/index";
 import {
-  AuthRoute, LogRoute, RecipeRoute,
-  SocoboUserImagesRoute, SocoboUserProvidersRoute, SocoboUserRolesRoute, SocoboUsersRoute
-} from "./routes/api/v1/index";
+  SocoboUserHandler, SocoboUserImagesHandler, SocoboUserProvidersHandler, SocoboUserRolesHandler,SocoboUsersRoute, SocoboUserImagesRoute, SocoboUserProvidersRoute, SocoboUserRolesRoute
+} from "./socobouser/index";
 
 class Server {
   private _app: express.Application;

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { IDatabase } from "pg-promise/typescript/pg-promise";
-import { DbExtensions, SocoboUserImage } from "../../../models/index";
+import { DbExtensions } from "../../models/index";
+import { SocoboUserRole } from "../models/SocoboUserRole";
 
-export class SocoboUserImagesHandler {
-
+export class SocoboUserRolesHandler {
   private _db: IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
@@ -11,29 +11,29 @@ export class SocoboUserImagesHandler {
   }
 
   public getAll = (req: Request, res: Response): void => {
-    this._db.socobouserImages.getAll()
-      .then((result: SocoboUserImage[]) => res.status(200).json(result))
+    this._db.socobouserRoles.getAll()
+      .then((result: SocoboUserRole[]) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
   public getById = (req: Request, res: Response): void => {
-    const imageId: number = +req.params.id;
-    this._db.socobouserImages.getById(imageId)
-      .then((result: SocoboUserImage) => res.status(200).json(result))
+    const roleId: number = +req.params.id;
+    this._db.socobouserRoles.getById(roleId)
+      .then((result: SocoboUserRole) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
   public updateById = (req: Request, res: Response): void => {
-    const imageId: number = +req.params.id;
+    const roleId: number = +req.params.id;
     const fieldValue: string = req.body.fieldValue;
-    this._db.socobouserImages.updateById(imageId, fieldValue)
-      .then((result: SocoboUserImage) => res.status(200).json(result))
+    this._db.socobouserRoles.updateById(roleId, fieldValue)
+      .then((result: SocoboUserRole) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
   public deleteById = (req: Request, res: Response): void => {
-    const imageId: number = +req.params.id;
-    this._db.socobouserImages.deleteById(imageId)
+    const roleId: number = +req.params.id;
+    this._db.socobousers.deleteById(roleId)
       .then((result: Object) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }

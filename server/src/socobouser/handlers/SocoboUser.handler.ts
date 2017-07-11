@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { IDatabase } from "pg-promise";
-import { SocoboUser, UpdateType } from "./../../../models/index";
-import { DbExtensions } from "./../../../models/index";
+import { SocoboUserUpdateTypes } from "../enums/SocoboUserUpdateTypes";
+import { SocoboUser } from "../models/SocoboUser";
+import { DbExtensions } from "../../models/index";
 
 export class SocoboUserHandler {
 
@@ -26,7 +27,7 @@ export class SocoboUserHandler {
 
   public updateById = (req: Request, res: Response): void => {
     const userId: number = +req.params.id;
-    const updateType: UpdateType = req.body.updateType;
+    const updateType: SocoboUserUpdateTypes = req.body.updateType;
     const fieldValues: string[] = req.body.fieldValues;
     this._db.socobousers.updateById(userId, updateType, fieldValues)
       .then((result: SocoboUser) => res.status(200).json(result))

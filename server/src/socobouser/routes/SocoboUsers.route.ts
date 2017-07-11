@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { AuthValidationHandler, SocoboUserHandler } from "./../../../../logic/handler/index";
+import { SocoboUserHandler } from "../handlers/SocoboUser.handler";
+import { AuthValidationHandler } from "../../logic/handler/index";
 
 export class SocoboUsersRoute {
 

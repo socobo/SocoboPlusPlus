@@ -1,30 +1,31 @@
 import { Router } from "express";
-import { AuthValidationHandler, SocoboUserImagesHandler } from "./../../../../logic/handler/index";
+import { SocoboUserProvidersHandler } from "../handlers/SocoboUserProviders.handler";
+import { AuthValidationHandler } from "../../logic/handler/index";
 
-export class SocoboUserImagesRoute {
+export class SocoboUserProvidersRoute {
 
   constructor (
     private _router: Router,
-    private _socoboUserImagesHandler: SocoboUserImagesHandler,
+    private _socoboUserProvidersHandler: SocoboUserProvidersHandler,
     private _authValidationHandler: AuthValidationHandler
   ) {}
 
   public createRoutes (): Router {
     this._router.get("/",
       this._authValidationHandler.checkToken,
-      this._socoboUserImagesHandler.getAll);
+      this._socoboUserProvidersHandler.getAll);
 
     this._router.get("/:id",
       this._authValidationHandler.checkToken,
-      this._socoboUserImagesHandler.getById);
+      this._socoboUserProvidersHandler.getById);
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
-      this._socoboUserImagesHandler.updateById);
+      this._socoboUserProvidersHandler.updateById);
 
     this._router.delete("/:id",
       this._authValidationHandler.checkToken,
-      this._socoboUserImagesHandler.deleteById);
+      this._socoboUserProvidersHandler.deleteById);
 
     return this._router;
   }

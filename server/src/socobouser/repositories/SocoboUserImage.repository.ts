@@ -1,5 +1,5 @@
-import { SocoboUserImage } from "../../models/index";
-import { BaseRepository } from "./Base.repository";
+import { SocoboUserImage } from "../models/SocoboUserImage";
+import { BaseRepository } from "../../base/index";
 
 export class SocoboUserImageRepository extends BaseRepository <SocoboUserImage> {
 

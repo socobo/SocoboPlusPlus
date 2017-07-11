@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsUrl, MinLength } from "class-validator";
-import { ValidationGroup } from "./../enums/validation-group";
-import { BaseObject } from "./BaseObject";
+import { BaseObject } from "../../base/index";
+import { ValidationGroup } from "../../models/index";
 
 export class SocoboUserImage extends BaseObject {
 

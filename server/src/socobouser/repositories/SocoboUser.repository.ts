@@ -1,7 +1,8 @@
 import { IDatabase } from "pg-promise";
-import { ErrorUtils } from "./../../logic/utils/index";
-import { DbError, ERRORS, SocoboUser, UpdateType } from "./../../models/index";
-import { DbExtensions } from "./../../models/index";
+import { DbExtensions, DbError, ERRORS } from "./../../models/index";
+import { SocoboUser } from "../models/SocoboUser";
+import { SocoboUserUpdateTypes } from "../enums/SocoboUserUpdateTypes";
+import { ErrorUtils } from "../../logic/utils/index";
 
 export class SocoboUserRepository {
 
@@ -11,7 +12,7 @@ export class SocoboUserRepository {
     this._db = db;
   }
 
-  public getAll = (): Promise<SocoboUser[]> => {
+  public getAll = (): Promise<SocoboUser[] | DbError> => {
     const query: string = `
         SELECT
           id, socoboUserRoleId, socoboUserProviderId, socoboUserImageId, 
@@ -19,13 +20,8 @@ export class SocoboUserRepository {
         FROM Socobo_User
         ORDER BY id`;
     return this._db.many(query, [])
-      .then((result: Object[]) => {
-        const transformedResult: SocoboUser[] = result.map(this._transformResult);
-        return transformedResult;
-      })
-      .catch((error: any) => {
-        return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "getAll(..)");
-      });
+      .then((result: Object[]) => result.map(this._transformResult))
+      .catch((error: any) => ErrorUtils.handleDbError(error, SocoboUserRepository.name, "getAll(..)"));
   }
 
   public getUserById = (id: number): Promise<SocoboUser> => {
@@ -60,11 +56,6 @@ export class SocoboUserRepository {
     );
   }
 
-  /**
-   * ToDo: 
-   *  - IMAGE, ROLE & Provider
-   *  -- Insert image, role, provider first, after this update User with Image id
-   */
   public save = (user: SocoboUser): Promise<Object> => {
     const query: string = `
       INSERT INTO Socobo_User
@@ -80,7 +71,7 @@ export class SocoboUserRepository {
       });
   }
 
-  public updateById = (id: number, updateType: UpdateType, fieldValuesToUpdate: string[]): Promise<SocoboUser> => {
+  public updateById = (id: number, updateType: SocoboUserUpdateTypes, fieldValuesToUpdate: string[]): Promise<SocoboUser> => {
     const query: string = this._getUpdateQuery(updateType);
     const fields: any[] = [id, ...fieldValuesToUpdate, Date.now()];
     return this._db.tx("UpdateUser", () => {
@@ -121,35 +112,35 @@ export class SocoboUserRepository {
    *  - IMAGE, ROLE & Provider
    *  -- Insert image, role, provider first, after this update User with Image id
    */
-  private _getUpdateQuery = (updateType: UpdateType): string => {
+  private _getUpdateQuery = (updateType: SocoboUserUpdateTypes): string => {
     let result: string = "UPDATE Socobo_User";
 
     switch (updateType) {
-      case UpdateType.full:
+      case SocoboUserUpdateTypes.full:
         result += ` SET username=$2, email=$3, password=$4, lastModified=$5`;
         break;
 
-      case UpdateType.username:
+      case SocoboUserUpdateTypes.username:
         result += ` SET username=$2, lastModified=$3`;
         break;
 
-      case UpdateType.email:
+      case SocoboUserUpdateTypes.email:
         result += ` SET email=$2, lastModified=$3`;
         break;
 
-      case UpdateType.password:
+      case SocoboUserUpdateTypes.password:
         result += ` SET password=$2, lastModified=$3`;
         break;
 
-      case UpdateType.image:
+      case SocoboUserUpdateTypes.image:
         result += ` SET socoboUserImageId=$2, lastModified=$3`;
         break;
 
-      case UpdateType.role:
+      case SocoboUserUpdateTypes.role:
         result += ` SET socoboUserRoleId=$2, lastModified=$3`;
         break;
 
-      case UpdateType.provider:
+      case SocoboUserUpdateTypes.provider:
         result += ` SET socoboUserProviderId=$2, lastModified=$3`;
         break;
 

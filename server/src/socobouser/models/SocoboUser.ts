@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
-import { ValidationGroup } from "./../enums/validation-group";
-import { BaseObject } from "./BaseObject";
+import { BaseObject } from "../../base/index";
+import { ValidationGroup } from "../../models/index";
 
 export class SocoboUser extends BaseObject {
 

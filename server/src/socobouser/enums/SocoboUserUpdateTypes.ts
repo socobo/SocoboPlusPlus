@@ -1,4 +1,4 @@
-export enum UpdateType {
+export enum SocoboUserUpdateTypes {
   full = 0,
   username = 1,
   email = 2,
