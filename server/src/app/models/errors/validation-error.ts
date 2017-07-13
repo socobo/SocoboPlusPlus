@@ -1,4 +1,5 @@
-import { ApiError, ErrorType } from "./../index";
+import { ApiError } from "./api-error";
+import { ErrorType } from "./error-type";
 
 export class ValidationError extends ApiError {
   private validationErrors: any;

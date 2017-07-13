@@ -1,6 +1,6 @@
 import { validate } from "class-validator";
 import { NextFunction, Request, Response, Router } from "express";
-import { ERRORS, ValidationError, ValidationGroup } from "./../../models/index";
+import { ValidationGroup, ValidationError, ERRORS } from "../index";
 
 export class ModelValidationMiddleware {
 

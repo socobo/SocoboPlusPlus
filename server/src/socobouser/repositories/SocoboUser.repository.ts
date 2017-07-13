@@ -1,8 +1,7 @@
 import { IDatabase } from "pg-promise";
-import { DbExtensions, DbError, ERRORS } from "./../../models/index";
 import { SocoboUser } from "../models/SocoboUser";
 import { SocoboUserUpdateTypes } from "../enums/SocoboUserUpdateTypes";
-import { ErrorUtils } from "../../logic/utils/index";
+import { DbExtensions, DbError, ErrorUtils, ERRORS } from "../../app/index";
 
 export class SocoboUserRepository {
 
@@ -107,11 +106,6 @@ export class SocoboUserRepository {
     return tranformedResult;
   }
 
-  /**
-   * ToDo: 
-   *  - IMAGE, ROLE & Provider
-   *  -- Insert image, role, provider first, after this update User with Image id
-   */
   private _getUpdateQuery = (updateType: SocoboUserUpdateTypes): string => {
     let result: string = "UPDATE Socobo_User";
 

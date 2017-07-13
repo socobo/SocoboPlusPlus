@@ -1,8 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { ModelValidationMiddleware } from "./../../../logic/middleware/index";
-import {
-  ApiError, DbError, Recipe, SocoboUser, ValidationError, ValidationGroup
-} from "./../../../models/index";
+import { ModelValidationMiddleware, ValidationGroup, ValidationError } from "../index";
 
 export class ModelValidationHandler {
 

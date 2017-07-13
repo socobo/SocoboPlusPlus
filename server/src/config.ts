@@ -1,5 +1,3 @@
-import { DbConfig } from "./models/index";
-
 /* tslint:disable:max-line-length */
 export class Config {
   public static DB_USER: string = "postgres";

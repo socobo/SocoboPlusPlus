@@ -1,4 +1,4 @@
-import { DataType } from "./../../models/index";
+import { DataType } from "../index";
 
 export interface ImageService {
 

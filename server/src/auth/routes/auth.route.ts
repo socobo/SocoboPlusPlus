@@ -1,9 +1,7 @@
 import { Router } from "express";
-import {
-  AuthHandler, AuthValidationHandler, ModelValidationHandler
-} from "./../../../../logic/handler/index";
-import { AuthService } from "./../../../../logic/services/index";
-import { SocoboUser, ValidationGroup } from "./../../../../models/index";
+import { AuthHandler, AuthValidationHandler } from "../index";
+import { ModelValidationHandler, ValidationGroup } from "../../app/index";
+import { SocoboUser } from "../../socobouser/index";
 
 export class AuthRoute {
 

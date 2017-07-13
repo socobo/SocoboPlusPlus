@@ -1,6 +1,7 @@
 import { NextFunction, Response, Router } from "express";
-import { AuthValidationMiddleware } from "./../../../logic/middleware/index";
-import { ApiError, DbError, Recipe, Role, SocoboRequest, ValidationError } from "./../../../models/index";
+import { AuthValidationMiddleware } from "../index";
+import { SocoboRequest } from "../../app/index";
+import { SocoboUserRoleTypes } from "../../socobouser/index";
 
 export class AuthValidationHandler {
 
@@ -24,7 +25,7 @@ export class AuthValidationHandler {
       .catch((e: any) => this._sendErrorResponse(e, res));
   }
 
-  public checkUser = (restrictedRole: Role) => {
+  public checkUser = (restrictedRole: SocoboUserRoleTypes) => {
     return (req: SocoboRequest, res: Response, next: NextFunction): void => {
       this._authValidationMiddleware.checkValidUser(req, restrictedRole)
         .then(() => next())

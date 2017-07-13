@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { Instance } from "multer";
-import {
-  AuthValidationHandler, ModelValidationHandler, RecipeHandler
-} from "./../../../../logic/handler/index";
-import { DataType, Recipe, ValidationGroup } from "./../../../../models/index";
+import { RecipeHandler, Recipe } from "../index";
+import { AuthValidationHandler } from "../../auth/index";
+import { ModelValidationHandler, ValidationGroup } from "../../app/index";
+
 
 export class RecipeRoute {
 

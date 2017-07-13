@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { IDatabase } from "pg-promise";
-import { RecipeMiddleware } from "./../../../logic/middleware/recipe.middleware";
-import { FilesystemImageService, ImageService } from "./../../../logic/services/index";
 import {
-  ApiError, DataType, DbExtensions, ERRORS, Recipe, SocoboRequest
-} from "./../../../models/index";
+  DbExtensions, ImageService, ApiError, ERRORS, SocoboRequest, DataType
+} from "../../app/index";
+import { RecipeMiddleware, Recipe } from "../index";
 
 export class RecipeHandler {
 
@@ -132,7 +131,7 @@ export class RecipeHandler {
   }
 
   private _getRecipe = (recipeId: number, url: string): Promise<any> => {
-    return this._db.recipes.getById(recipeId).then((recipe) => ({recipe, url}));
+    return this._db.recipes.getById(recipeId).then((recipe: Recipe) => ({recipe, url}));
   }
 
   private _addImageUrl = (recipe: Recipe, url: string): Promise<any> => {

@@ -2,11 +2,10 @@ import * as jwt from "jsonwebtoken";
 import { IDatabase } from "pg-promise";
 import { Config } from "./../../config";
 import {
-  ApiError, ComparePwResult, DbError, ERRORS, ExtractRequestBodyResult,
-  LoginResponse, ProviderType, Role, SocoboUser
-} from "./../../models/index";
-import { DbExtensions } from "./../../models/index";
-import { CryptoUtils, ErrorUtils } from "./../utils/index";
+  DbExtensions, CryptoUtils, ExtractRequestBodyResult, LoginResponse,
+  ComparePwResult, ERRORS, DbError, ErrorUtils, ApiError
+} from "../../app/index";
+import { SocoboUser, SocoboUserRoleTypes, SocoboUserProviderTypes } from "../../socobouser/index";
 
 export class AuthService {
 
@@ -127,7 +126,7 @@ export class AuthService {
     });
   }
 
-  private _createNewUser (hashedPassword: string, usernameOrEmail: string, role: Role): Promise<SocoboUser> {
+  private _createNewUser (hashedPassword: string, usernameOrEmail: string, role: SocoboUserRoleTypes): Promise<SocoboUser> {
     return new Promise((resolve, reject) => {
       if (hashedPassword.length <= 0) {
         const e = new ApiError(ERRORS.AUTH_NO_HASHED_PASSWORD)
@@ -137,7 +136,7 @@ export class AuthService {
       }
       const user: SocoboUser = new SocoboUser()
         .addSocoboUserRoleId(role)
-        .addSocoboUserProviderId(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)
+        .addSocoboUserProviderId(usernameOrEmail.includes("@") ? SocoboUserProviderTypes.Email : SocoboUserProviderTypes.Username)
         .addSocoboUserImageId((process.env.DEFAULT_USER_IMAGE_ID || Config.DEFAULT_USER_IMAGE_ID))
         .addUsername(usernameOrEmail)
         .addEmail(usernameOrEmail)

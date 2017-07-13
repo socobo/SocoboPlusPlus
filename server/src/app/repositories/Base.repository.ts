@@ -1,7 +1,7 @@
 import { IDatabase } from "pg-promise";
-import { ErrorUtils } from "../../logic/utils/index";
-import { DbExtensions, ERRORS } from "../../models/index";
-import { IBaseRepositiory } from "../interfaces/IBase.repository";
+import {
+  IBaseRepositiory, DbExtensions, ErrorUtils, ERRORS
+} from "../index";
 
 export class BaseRepository <T> implements IBaseRepositiory <T> {
 

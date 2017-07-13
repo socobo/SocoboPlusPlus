@@ -1,6 +1,5 @@
 import { IsNotEmpty, MinLength } from "class-validator";
-import { BaseObject } from "../../base/index";
-import { ValidationGroup } from "../../models/index";
+import { BaseObject, ValidationGroup } from "../../app/index";
 
 export class SocoboUserRole extends BaseObject {
 

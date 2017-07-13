@@ -1,13 +1,16 @@
 import { Router } from "express";
 import { SocoboUserHandler } from "../handlers/SocoboUser.handler";
-import { AuthValidationHandler } from "../../logic/handler/index";
+import { AuthValidationHandler } from "../../auth/index";
+import { ModelValidationHandler, ValidationGroup } from "../../app/index";
+import { SocoboUser } from "../index";
 
 export class SocoboUsersRoute {
 
   constructor (
     private _router: Router,
     private _socoboUserHandler: SocoboUserHandler,
-    private _authValidationHandler: AuthValidationHandler
+    private _authValidationHandler: AuthValidationHandler,
+    private _modelValidationHandler: ModelValidationHandler
   ) {}
 
   public createRoutes (): Router {
@@ -21,6 +24,7 @@ export class SocoboUsersRoute {
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
+      this._modelValidationHandler.validate(SocoboUser, [ValidationGroup.LOGIN, ValidationGroup.REGISTRATION]),
       this._socoboUserHandler.updateById);
 
     this._router.delete("/:id",

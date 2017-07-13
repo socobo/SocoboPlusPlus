@@ -2,11 +2,11 @@ import { IDatabase, IMain, IOptions } from "pg-promise";
 import * as pgPromise from "pg-promise";
 
 import { Config } from "../config";
-import { DbConfig, DbExtensions } from "./../models/index";
-import { RecipeRepository } from "./repositories/index";
 import {
   SocoboUserImageRepository, SocoboUserProviderRepository, SocoboUserRepository, SocoboUserRoleRepository
 } from "./../socobouser/index";
+import { DbExtensions } from "../app/index";
+import { RecipeRepository } from "../recipe/index";
 
 const getConnectionUrl = (): string => {
   let connectionUrl: string;

@@ -244,7 +244,8 @@ class Server {
     // create new router
     const router: express.Router = express.Router();
     // init and return users route
-    return new SocoboUsersRoute(router, this._socoboUserHandler, this._authValidationHandler).createRoutes();
+    return new SocoboUsersRoute(router, this._socoboUserHandler, 
+        this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _socobouserImagesRoute (): express.Router {
@@ -252,7 +253,7 @@ class Server {
     const router: express.Router = express.Router();
     // init and return users route
     return new SocoboUserImagesRoute(router, this._socoboUserImagesHandler,
-        this._authValidationHandler).createRoutes();
+        this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _socobouserProvidersRoute (): express.Router {
@@ -260,7 +261,7 @@ class Server {
     const router: express.Router = express.Router();
     // init and return users route
     return new SocoboUserProvidersRoute(router, this._socoboUserProvidersHandler,
-        this._authValidationHandler).createRoutes();
+        this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _socobouserRolesRoute (): express.Router {
@@ -268,7 +269,7 @@ class Server {
     const router: express.Router = express.Router();
     // init and return users route
     return new SocoboUserRolesRoute(router, this._socoboUserRolesHandler,
-        this._authValidationHandler).createRoutes();
+        this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _recipeRoute (): express.Router {

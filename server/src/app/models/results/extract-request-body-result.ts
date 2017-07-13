@@ -1,4 +1,4 @@
-import { Role } from "./../enums/role";
+import { SocoboUserRoleTypes } from "../../../socobouser/index";
 
 export class ExtractRequestBodyResult {
 
@@ -6,6 +6,6 @@ export class ExtractRequestBodyResult {
     public isEmailLogin: boolean,
     public usernameOrEmail: string,
     public password: string,
-    public role: Role
+    public role: SocoboUserRoleTypes
   ) {}
 }

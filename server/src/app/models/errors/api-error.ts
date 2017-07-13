@@ -1,7 +1,6 @@
-import { ERROR_MESSAGES } from "../../i18n/error-messages";
-import { ERRORS } from "../index";
-import { LogService } from "./../../logic/services/index";
-import { ErrorType } from "./../index";
+import { ErrorType } from "./error-type";
+import { ERROR_MESSAGES } from "../../../i18n/error-messages";
+import { LogService } from "../../index";
 
 export class ApiError extends Error {
   public message: string;

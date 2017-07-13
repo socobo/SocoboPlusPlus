@@ -1,7 +1,6 @@
 import { IDatabase } from "pg-promise";
-import { ErrorUtils } from "./../../logic/utils/index";
-import { DbError, ERRORS, Recipe } from "./../../models/index";
-import { DbExtensions } from "./../../models/index";
+import { DbExtensions, ErrorUtils, ERRORS, DbError } from "../../app/index";
+import { Recipe } from "../index";
 
 export class RecipeRepository {
 
@@ -21,7 +20,7 @@ export class RecipeRepository {
       });
   }
 
-  public getAll = (): Promise<Recipe[]> => {
+  public getAll = (): Promise<Recipe[] | DbError> => {
     const query = `select * from recipes`;
     return this._db.many(query, [])
       .then((result) => result.map(this._transformResult))
@@ -32,8 +31,7 @@ export class RecipeRepository {
       });
   }
 
-  public getByField = (field: string,
-    value: string | number): Promise<Recipe[]> => {
+  public getByField = (field: string, value: string | number): Promise<Recipe[] | DbError> => {
     const query: string = `select * from recipes where ${field} = $1`;
     return this._db.many(query, [value])
       .then((result) => result.map(this._transformResult))
@@ -44,13 +42,12 @@ export class RecipeRepository {
       });
   }
 
-  public searchByField = (field: string,
-    value: string | number): Promise<Recipe[]> => {
+  public searchByField = (field: string, value: string | number): Promise<Recipe[] | DbError> => {
     const query: string = `select * from recipes where ${field} like '%${value}%'`;
     return this._db.many(query, [])
       .then((result) => result.map(this._transformResult))
       .catch((error: any) => {
-      return ErrorUtils.handleDbNotFound (
+        return ErrorUtils.handleDbNotFound (
           ERRORS.RECIPE_NOT_FOUND, error, RecipeRepository.name,
           "searchByField(..)", "a field of value", value.toString());
       });

@@ -2,8 +2,11 @@ import { NextFunction, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { IDatabase } from "pg-promise";
 import { Config } from "./../../config";
-import { ApiError, ERRORS, ExtractRequestBodyResult, Role, SocoboRequest, SocoboUser } from "./../../models/index";
-import { DbExtensions } from "./../../models/index";
+import {
+  DbExtensions, SocoboRequest, ApiError, ERRORS, ExtractRequestBodyResult
+} from "../../app/index";
+import { SocoboUserRoleTypes, SocoboUser } from "../../socobouser/index";
+
 
 export class AuthValidationMiddleware {
 
@@ -88,7 +91,7 @@ export class AuthValidationMiddleware {
     });
   }
 
-  public checkValidUser (req: SocoboRequest, restrictedRole: Role): Promise<any> {
+  public checkValidUser (req: SocoboRequest, restrictedRole: SocoboUserRoleTypes): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!req.requestData.hasOwnProperty("decoded")) {
         const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("a decoded Object"))

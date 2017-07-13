@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IDatabase } from "pg-promise";
-import { ApiError, DbExtensions, ERRORS, Recipe } from "./../../models/index";
+import { DbExtensions } from "../../app/index";
+import { Recipe } from "../index";
 
 export class RecipeMiddleware {
 
@@ -14,7 +15,7 @@ export class RecipeMiddleware {
     const updatedRecipe: any = req.body;
     const UPDATEABLE_FIELDS = req.query.fields;
     return this._db.recipes.getById(req.params.id)
-      .then((existingRecipe) => {
+      .then((existingRecipe: Recipe) => {
         if (!UPDATEABLE_FIELDS) {
           updatedRecipe.id = existingRecipe.id;
           updatedRecipe.created = existingRecipe.created;

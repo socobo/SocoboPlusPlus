@@ -1,9 +1,9 @@
 import { Response } from "express";
-import { AuthService } from "./../../../logic/services/index";
+import { AuthService } from "../index";
 import {
-  ApiError, ERRORS, ExtractRequestBodyResult,
-  LoginResponse, SocoboRequest, SocoboUser
-} from "./../../../models/index";
+  SocoboRequest, ExtractRequestBodyResult, LoginResponse, ApiError, ERRORS
+} from "../../app/index";
+import { SocoboUser } from "../../socobouser/index";
 
 export class AuthHandler {
 
