@@ -54,6 +54,7 @@
     "@types/jsonwebtoken": "~7.1.33",
     "@types/mocha": "~2.2.33",
     "@types/multer": "0.0.33",
+    "@types/node": "~8.0.12",
     "@types/sinon": "~1.16.33",
     "@types/uuid": "^2.0.29",
     "@types/winston": "~2.2.0",
