@@ -1,12 +1,11 @@
 import { NextFunction, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { IDatabase } from "pg-promise";
-import { Config } from "./../../config";
 import {
-  DbExtensions, SocoboRequest, ApiError, ERRORS, ExtractRequestBodyResult
+  ApiError, DbExtensions, ERRORS, ExtractRequestBodyResult, SocoboRequest
 } from "../../app/index";
-import { SocoboUserRoleTypes, SocoboUser } from "../../socobouser/index";
-
+import { SocoboUser, SocoboUserRoleTypes } from "../../socobouser/index";
+import { Config } from "./../../config";
 
 export class AuthValidationMiddleware {
 

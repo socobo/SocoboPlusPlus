@@ -1,5 +1,5 @@
-import { SocoboUserProvider } from "../models/SocoboUserProvider";
 import { BaseRepository } from "../../app/index";
+import { SocoboUserProvider } from "../models/SocoboUserProvider";
 
 export class SocoboUserProviderRepository extends BaseRepository <SocoboUserProvider> {
 

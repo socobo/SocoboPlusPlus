@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { SocoboUserHandler } from "../handlers/SocoboUser.handler";
-import { AuthValidationHandler } from "../../auth/index";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
+import { AuthValidationHandler } from "../../auth/index";
+import { SocoboUserHandler } from "../handlers/SocoboUser.handler";
 import { SocoboUser } from "../index";
 
 export class SocoboUsersRoute {

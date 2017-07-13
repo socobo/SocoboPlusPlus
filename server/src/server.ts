@@ -9,27 +9,27 @@ import * as path from "path";
 import * as pgPromise from "pg-promise";
 import * as uuid from "uuid";
 import * as winston from "winston";
+// app
+import {
+  CryptoUtils, FilesystemImageService, ImageService,
+  LogHandler, LogRoute, ModelValidationHandler, ModelValidationMiddleware
+} from "./app/index";
+// auth
+import {
+  AuthHandler, AuthRoute, AuthService, AuthValidationHandler, AuthValidationMiddleware
+} from "./auth/index";
 // server config
 import { Config } from "./config";
 // database setup
 import * as db from "./db/index";
-// app
-import {
-  CryptoUtils, ImageService, ModelValidationMiddleware, ModelValidationHandler,
-  LogHandler, FilesystemImageService, LogRoute
-} from "./app/index";
-// auth
-import {
-  AuthService, AuthValidationMiddleware, AuthValidationHandler, AuthHandler, AuthRoute
-} from "./auth/index";
 // recipe
 import {
-  RecipeMiddleware, RecipeHandler, RecipeRoute
+  RecipeHandler, RecipeMiddleware, RecipeRoute
 } from "./recipe/index";
 // socobouser
 import {
-  SocoboUserHandler, SocoboUserImagesHandler, SocoboUserProvidersHandler, SocoboUserRolesHandler,
-  SocoboUsersRoute, SocoboUserImagesRoute, SocoboUserProvidersRoute, SocoboUserRolesRoute
+  SocoboUserHandler, SocoboUserImagesHandler, SocoboUserImagesRoute, SocoboUserProvidersHandler,
+  SocoboUserProvidersRoute, SocoboUserRolesHandler, SocoboUserRolesRoute, SocoboUsersRoute
 } from "./socobouser/index";
 
 class Server {
@@ -244,7 +244,7 @@ class Server {
     // create new router
     const router: express.Router = express.Router();
     // init and return users route
-    return new SocoboUsersRoute(router, this._socoboUserHandler, 
+    return new SocoboUsersRoute(router, this._socoboUserHandler,
         this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 

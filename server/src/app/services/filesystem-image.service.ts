@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import * as winston from "winston";
+import { ApiError, ERRORS } from "../index";
 import { Config } from "./../../config";
 import { ImageService } from "./image.service";
-import { ApiError, ERRORS } from "../index";
 
 export class FilesystemImageService implements ImageService {
 

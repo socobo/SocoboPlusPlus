@@ -1,9 +1,9 @@
 import { Response } from "express";
-import { AuthService } from "../index";
 import {
-  SocoboRequest, ExtractRequestBodyResult, LoginResponse, ApiError, ERRORS
+  ApiError, ERRORS, ExtractRequestBodyResult, LoginResponse, SocoboRequest
 } from "../../app/index";
 import { SocoboUser } from "../../socobouser/index";
+import { AuthService } from "../index";
 
 export class AuthHandler {
 

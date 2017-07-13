@@ -1,6 +1,6 @@
 import { IDatabase } from "pg-promise";
 import {
-  IBaseRepositiory, DbExtensions, ErrorUtils, ERRORS
+  DbExtensions, ERRORS, ErrorUtils, IBaseRepositiory
 } from "../index";
 
 export class BaseRepository <T> implements IBaseRepositiory <T> {

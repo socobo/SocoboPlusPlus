@@ -1,7 +1,7 @@
 import { IDatabase } from "pg-promise";
-import { SocoboUser } from "../models/SocoboUser";
+import { DbError, DbExtensions, ERRORS, ErrorUtils } from "../../app/index";
 import { SocoboUserUpdateTypes } from "../enums/SocoboUserUpdateTypes";
-import { DbExtensions, DbError, ErrorUtils, ERRORS } from "../../app/index";
+import { SocoboUser } from "../models/SocoboUser";
 
 export class SocoboUserRepository {
 
@@ -70,7 +70,8 @@ export class SocoboUserRepository {
       });
   }
 
-  public updateById = (id: number, updateType: SocoboUserUpdateTypes, fieldValuesToUpdate: string[]): Promise<SocoboUser> => {
+  public updateById = (id: number, updateType: SocoboUserUpdateTypes,
+                       fieldValuesToUpdate: string[]): Promise<SocoboUser> => {
     const query: string = this._getUpdateQuery(updateType);
     const fields: any[] = [id, ...fieldValuesToUpdate, Date.now()];
     return this._db.tx("UpdateUser", () => {

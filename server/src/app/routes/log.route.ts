@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { LogHandler } from "../index";
 import { AuthValidationHandler } from "../../auth/index";
 import { SocoboUserRoleTypes } from "../../socobouser/index";
+import { LogHandler } from "../index";
 
 export class LogRoute {
 

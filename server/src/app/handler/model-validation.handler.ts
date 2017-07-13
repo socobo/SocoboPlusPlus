@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { ModelValidationMiddleware, ValidationGroup, ValidationError } from "../index";
+import { ModelValidationMiddleware, ValidationError, ValidationGroup } from "../index";
 
 export class ModelValidationHandler {
 

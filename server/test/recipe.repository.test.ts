@@ -5,10 +5,8 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as mocha from "mocha";
 import * as pgPromise from "pg-promise";
 import * as sinon from "sinon";
-import { RecipeRepository } from "./../src/recipe/repositories/recipe.repository";
-import { ModelValidationMiddleware } from "./../src/app/index";
-import { DbError, ERRORS, DbExtensions, ValidationError } from "./../src/app/index";
-import { Recipe } from "./../src/recipe/index";
+import { DbError, DbExtensions, ERRORS, ModelValidationMiddleware, ValidationError } from "./../src/app/index";
+import { Recipe, RecipeRepository } from "./../src/recipe/index";
 
 chai.use(chaiAsPromised);
 chai.should();

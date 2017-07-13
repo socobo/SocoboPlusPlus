@@ -1,5 +1,5 @@
 import { errors } from "pg-promise";
-import { ApiError, ERRORS, DbError, ErrorType } from "../index";
+import { ApiError, DbError, ERRORS, ErrorType } from "../index";
 
 const errorCode = errors.queryResultErrorCode;
 

@@ -1,7 +1,7 @@
 import { NextFunction, Response, Router } from "express";
-import { AuthValidationMiddleware } from "../index";
 import { SocoboRequest } from "../../app/index";
 import { SocoboUserRoleTypes } from "../../socobouser/index";
+import { AuthValidationMiddleware } from "../index";
 
 export class AuthValidationHandler {
 

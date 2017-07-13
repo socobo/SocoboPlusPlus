@@ -1,5 +1,5 @@
 import { IDatabase } from "pg-promise";
-import { DbExtensions, ErrorUtils, ERRORS, DbError } from "../../app/index";
+import { DbError, DbExtensions, ERRORS, ErrorUtils } from "../../app/index";
 import { Recipe } from "../index";
 
 export class RecipeRepository {

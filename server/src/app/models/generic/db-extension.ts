@@ -1,10 +1,10 @@
 import {
-  SocoboUserRepository, SocoboUserRoleRepository,
-  SocoboUserProviderRepository, SocoboUserImageRepository
-} from "../../../socobouser/index";
-import {
   RecipeRepository
 } from "../../../recipe/index";
+import {
+  SocoboUserImageRepository, SocoboUserProviderRepository,
+  SocoboUserRepository, SocoboUserRoleRepository
+} from "../../../socobouser/index";
 
 export interface DbExtensions {
   socobousers: SocoboUserRepository;

@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber, Length } from "class-validator";
 import { ValidationGroup } from "../../app/index";
-import { RecipeStep } from "./recipe-step";
 import { FoodItem } from "../../food/index";
+import { RecipeStep } from "./recipe-step";
 
 export class Recipe {
 

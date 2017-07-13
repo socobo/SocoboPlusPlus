@@ -4,10 +4,10 @@ import * as chai from "chai";
 import * as express from "express";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
-import { RecipeRepository, RecipeHandler, Recipe } from "./../src/recipe/index";
-import { SocoboUserRepository } from "./../src/socobouser/index";
-import { ApiError, DbError, ERRORS,  } from "./../src/app/index";
+import { ApiError, DbError, ERRORS } from "./../src/app/index";
+import { Recipe, RecipeHandler, RecipeRepository } from "./../src/recipe/index";
 import Server from "./../src/server";
+import { SocoboUserRepository } from "./../src/socobouser/index";
 
 describe("Recipe Handler", () => {
 

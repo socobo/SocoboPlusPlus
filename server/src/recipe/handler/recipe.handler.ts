@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { IDatabase } from "pg-promise";
 import {
-  DbExtensions, ImageService, ApiError, ERRORS, SocoboRequest, DataType
+  ApiError, DataType, DbExtensions, ERRORS, ImageService, SocoboRequest
 } from "../../app/index";
-import { RecipeMiddleware, Recipe } from "../index";
+import { Recipe, RecipeMiddleware } from "../index";
 
 export class RecipeHandler {
 

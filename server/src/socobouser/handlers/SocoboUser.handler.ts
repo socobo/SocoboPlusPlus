@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { IDatabase } from "pg-promise";
+import { DbExtensions } from "../../app/index";
 import { SocoboUserUpdateTypes } from "../enums/SocoboUserUpdateTypes";
 import { SocoboUser } from "../models/SocoboUser";
-import { DbExtensions } from "../../app/index";
 
 export class SocoboUserHandler {
 

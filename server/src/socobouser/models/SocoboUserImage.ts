@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsUrl, MinLength } from "class-validator";
 import { BaseObject, ValidationGroup } from "../../app/index";
 
-
 export class SocoboUserImage extends BaseObject {
 
   public id: number;

@@ -1,6 +1,6 @@
-import { ErrorType } from "./error-type";
 import { ERROR_MESSAGES } from "../../../i18n/error-messages";
 import { LogService } from "../../index";
+import { ErrorType } from "./error-type";
 
 export class ApiError extends Error {
   public message: string;

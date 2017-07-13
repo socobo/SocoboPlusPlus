@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { AuthHandler, AuthValidationHandler } from "../index";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
 import { SocoboUser } from "../../socobouser/index";
+import { AuthHandler, AuthValidationHandler } from "../index";
 
 export class AuthRoute {
 

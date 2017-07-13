@@ -1,9 +1,8 @@
 import { Router } from "express";
 import { Instance } from "multer";
-import { RecipeHandler, Recipe } from "../index";
-import { AuthValidationHandler } from "../../auth/index";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
-
+import { AuthValidationHandler } from "../../auth/index";
+import { Recipe, RecipeHandler } from "../index";
 
 export class RecipeRoute {
 
