@@ -13,27 +13,23 @@ import * as winston from "winston";
 import { Config } from "./config";
 // database setup
 import * as db from "./db/index";
-// handler
-import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/index";
-import { AuthHandler, LogHandler, RecipeHandler} from "./logic/handler/index";
-// middleware
+// app
 import {
-  AuthValidationMiddleware, ModelValidationMiddleware, RecipeMiddleware
-} from "./logic/middleware/index";
-// services
+  CryptoUtils, ImageService, ModelValidationMiddleware, ModelValidationHandler,
+  LogHandler, FilesystemImageService, LogRoute
+} from "./app/index";
+// auth
 import {
-  AuthService,
-  FilesystemImageService,
-  ImageService
-} from "./logic/services/index";
-// server utils
+  AuthService, AuthValidationMiddleware, AuthValidationHandler, AuthHandler, AuthRoute
+} from "./auth/index";
+// recipe
 import {
-  CryptoUtils
-} from "./logic/utils/index";
-// routes
-import { AuthRoute, LogRoute, RecipeRoute } from "./routes/api/v1/index";
+  RecipeMiddleware, RecipeHandler, RecipeRoute
+} from "./recipe/index";
+// socobouser
 import {
-  SocoboUserHandler, SocoboUserImagesHandler, SocoboUserProvidersHandler, SocoboUserRolesHandler,SocoboUsersRoute, SocoboUserImagesRoute, SocoboUserProvidersRoute, SocoboUserRolesRoute
+  SocoboUserHandler, SocoboUserImagesHandler, SocoboUserProvidersHandler, SocoboUserRolesHandler,
+  SocoboUsersRoute, SocoboUserImagesRoute, SocoboUserProvidersRoute, SocoboUserRolesRoute
 } from "./socobouser/index";
 
 class Server {
