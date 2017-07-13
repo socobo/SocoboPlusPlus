@@ -1,14 +1,14 @@
 language: node_js
-sudo: enabled
-dist: trusty
-cache:
-  directories:
-    - server/node_modules
-    - client/node_modules
+# sudo: enabled
+# dist: trusty
 node_js: 7
 addons:
   postgresql: "9.5"
   firefox: latest
+cache:
+  directories:
+    - server/node_modules
+    - client/node_modules
 before_install: 
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0 
@@ -19,5 +19,5 @@ before_install:
   - sudo dpkg -i google-chrome*.deb
 script:
   - cd server && npm install && npm run lint && npm test
-  - cd .. 
-  - cd client && npm install && npm run lint:t && npm run test:t 
+  # - cd .. 
+  # - cd client && npm install && npm run lint:t && npm run test:t 
