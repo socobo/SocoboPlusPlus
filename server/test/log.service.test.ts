@@ -4,8 +4,8 @@ import * as chai from "chai";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
 import * as winston from "winston";
-import { LogService } from "./../src/logic/services/log.service";
-import { ApiError, DbError, ERRORS } from "./../src/models/index";
+import { LogService } from "./../src/app/services/log.service";
+import { ApiError, DbError, ERRORS } from "./../src/app/index";
 
 describe("Log Service", () => {
 

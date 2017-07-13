@@ -3,7 +3,7 @@ process.env.NODE_ENV = "test";
 import * as chai from "chai";
 import * as mocha from "mocha";
 import chaiHttp = require("chai-http");
-import { ProviderType, Role, SocoboUser } from "./../src/models/index";
+import { SocoboUserProviderTypes, SocoboUserRoleTypes, SocoboUser } from "./../src/socobouser/index";
 import Server from "./../src/server";
 
 chai.use(chaiHttp);
@@ -30,8 +30,8 @@ describe("User Route v1", () => {
     const user1: SocoboUser = new SocoboUser();
     user1.id = 1;
     user1.socoboUserImageId = 1;
-    user1.socoboUserRoleId = Role.User;
-    user1.socoboUserProviderId = ProviderType.Email;
+    user1.socoboUserRoleId = SocoboUserRoleTypes.User;
+    user1.socoboUserProviderId = SocoboUserProviderTypes.Email;
     user1.username = "john-doe@test.test";
     user1.email = "john-doe@test.test";
     user1.hasTermsAccepted = true;
@@ -40,8 +40,8 @@ describe("User Route v1", () => {
     const user2: SocoboUser = new SocoboUser();
     user2.id = 2;
     user2.socoboUserImageId = 1;
-    user2.socoboUserRoleId = Role.User;
-    user2.socoboUserProviderId = ProviderType.Username;
+    user2.socoboUserRoleId = SocoboUserRoleTypes.User;
+    user2.socoboUserProviderId = SocoboUserProviderTypes.Username;
     user2.username = "MaxMustermann";
     user2.email = "MaxMustermann";
     user2.hasTermsAccepted = true;
@@ -50,8 +50,8 @@ describe("User Route v1", () => {
     const user3: SocoboUser = new SocoboUser();
     user3.id = 3;
     user3.socoboUserImageId = 1;
-    user3.socoboUserRoleId = Role.Admin;
-    user3.socoboUserProviderId = ProviderType.Email;
+    user3.socoboUserRoleId = SocoboUserRoleTypes.Admin;
+    user3.socoboUserProviderId = SocoboUserProviderTypes.Email;
     user3.username = "admin@test.test";
     user3.email = "admin@test.test";
     user3.hasTermsAccepted = true;

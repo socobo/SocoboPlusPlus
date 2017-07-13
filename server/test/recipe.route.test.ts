@@ -4,9 +4,9 @@ import * as chai from "chai";
 import * as express from "express";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
-import { RecipeRepository, SocoboUserRepository } from "./../src/db/repositories/index";
-import { RecipeHandler } from "./../src/logic/handler/index";
-import { ApiError, DbError, ERRORS, Recipe } from "./../src/models/index";
+import { RecipeRepository, RecipeHandler, Recipe } from "./../src/recipe/index";
+import { SocoboUserRepository } from "./../src/socobouser/index";
+import { ApiError, DbError, ERRORS,  } from "./../src/app/index";
 import Server from "./../src/server";
 
 describe("Recipe Handler", () => {

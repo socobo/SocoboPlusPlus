@@ -5,8 +5,9 @@ import * as chaiAsPromised from "chai-as-promised";
 import { NextFunction, Request, Response, Router } from "express";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
-import { ModelValidationMiddleware } from "./../src/logic/middleware/index";
-import { Recipe, ValidationGroup } from "./../src/models/index";
+import { ModelValidationMiddleware } from "./../src/app/index";
+import { Recipe } from "./../src/recipe/index";
+import { ValidationGroup } from "./../src/app/index"
 
 chai.use(chaiAsPromised);
 chai.should();
