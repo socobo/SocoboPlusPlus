@@ -24,7 +24,7 @@ export class BaseRepository <T> implements IBaseRepositiory <T> {
     this._transformFunction = func;
   }
 
-  public getAll = (): Promise<T[]> => {
+  public getAll = (): Promise<T[] | any> => {
     const query: string = `SELECT * FROM ${this._tableName} ORDER BY id`;
     return this._db.many(query, [])
       .then((result: Object[]) => result.map(this._transformFunction))
@@ -43,7 +43,7 @@ export class BaseRepository <T> implements IBaseRepositiory <T> {
 
   public save = (entity: T): Promise<Object> => {
     const query: string = `
-      INSERT INTO ${this._tableName} (name, created, lastModified)
+      INSERT INTO ${this._tableName} (${this._updateFieldName}, created, lastModified)
       VALUES ($1, $2, $3)
       RETURNING id`;
     return this._db.tx("SaveBase", () => {
