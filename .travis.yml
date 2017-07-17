@@ -2,6 +2,8 @@ language: node_js
 # sudo: enabled
 dist: trusty
 node_js: 7
+env:
+  - NODE_ENV=test
 addons:
   postgresql: "9.5"
   firefox: latest
