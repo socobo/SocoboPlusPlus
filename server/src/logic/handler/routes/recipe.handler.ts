@@ -139,7 +139,7 @@ export class RecipeHandler {
   }
 
   private _addImageUrl = (recipe: Recipe, url: string): Promise<any> => {
-    recipe.addImageUrl(url);
+    recipe.setImageUrl(url);
     return Promise.resolve(recipe);
   }
 }

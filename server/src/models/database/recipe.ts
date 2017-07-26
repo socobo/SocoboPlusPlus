@@ -32,10 +32,10 @@ export class Recipe {
 
   constructor () {
     this.fields = new Map();
-    this.fields.set("title", this.addTitle);
-    this.fields.set("userId", this.addUserId);
-    this.fields.set("description", this.addDescription);
-    this.fields.set("imageUrl", this.addImageUrl);
+    this.fields.set("title", this.setTitle);
+    this.fields.set("userId", this.setUserId);
+    this.fields.set("description", this.setDescription);
+    this.fields.set("imageUrl", this.setImageUrl);
   }
 
   public of (recipe: Recipe) {
@@ -51,32 +51,32 @@ export class Recipe {
     return this;
   }
 
-  public addTitle (title: string) {
+  public setTitle (title: string) {
     this.title = title;
     return this;
   }
 
-  public addUserId (userId: number) {
+  public setUserId (userId: number) {
     this.userId = userId;
     return this;
   }
 
-  public addDescription (description: string) {
+  public setDescription (description: string) {
     this.description = description;
     return this;
   }
 
-  public addImageUrl (imageUrl: string) {
+  public setImageUrl (imageUrl: string) {
     this.imageUrl = imageUrl;
     return this;
   }
 
-  public addCreated (created: Date) {
+  public setCreated (created: Date) {
     this.created = created;
     return this;
   }
 
-  public addLastModified (lastModified: Date) {
+  public setLastModified (lastModified: Date) {
     this.lastModified = lastModified;
     return this;
   }

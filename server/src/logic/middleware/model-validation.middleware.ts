@@ -38,19 +38,27 @@ export class ModelValidationMiddleware {
     });
   }
 
-  public val (o: Validatable, req: Request, validationGroups: ValidationGroup[]): Promise<any> {
+  /**
+   * This validation approache enables also validation of nested objects
+   * @param objectToValidate 
+   * @param req 
+   * @param validationGroups 
+   */
+  public validateObject (
+    objectToValidate: Validatable, req: Request,
+    validationGroups: ValidationGroup[]): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {
       const obj: any = req.body;
       const mappedGroups: string[] = validationGroups.map((group) => group.toString());
 
-      o.of(obj);
+      objectToValidate.of(obj);
 
-      validate(o, { groups: mappedGroups })
+      validate(objectToValidate, { groups: mappedGroups })
         .then((errors: any[]) => {
           if (errors.length > 0) {
             const e = new ValidationError(ERRORS.VAL_INVALID_INPUT)
               .addSource(ModelValidationMiddleware.name)
-              .addSourceMethod("validate(..)")
+              .addSourceMethod("validateObject(..)")
               .addValidationErrors(errors);
             reject(e);
           } else {
@@ -60,7 +68,7 @@ export class ModelValidationMiddleware {
         .catch((error: any) => {
           const e = new ValidationError(ERRORS.VAL_INVALID_INPUT)
             .addSource(ModelValidationMiddleware.name)
-            .addSourceMethod("validate(..)")
+            .addSourceMethod("validateObject(..)")
             .addCause(error);
           reject(e);
         });
