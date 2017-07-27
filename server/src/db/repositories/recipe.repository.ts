@@ -95,16 +95,20 @@ export class RecipeRepository {
         recipe.imageUrl, recipe.created]);
   }
 
+  private _saveRecipeStepsQuery = (id: any, recipe: Recipe) => {
+    recipe.id = id.id;
+    return this._db.tx("SaveRecipeSteps", (t) => {
+        this._db.recipeSteps.save(recipe.steps, recipe);
+        return id;
+    });
+  }
+
   public save = (recipe: Recipe): Promise<any> => {
     return this._db.tx("SaveRecipeCoreDate", (t) => {
       return this._saveRecipeCoreQuery(recipe);
     })
     .then((id: any) => {
-      recipe.id = id.id;
-      return this._db.tx("SaveRecipeSteps", (t) => {
-          this._db.recipeSteps.save(recipe.steps, recipe);
-          return id;
-      });
+      return this._saveRecipeStepsQuery(id, recipe);
     })
     .catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
