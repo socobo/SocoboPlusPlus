@@ -91,19 +91,19 @@ export class SocoboUserRepository {
 
   private _transformResult = (result: any): SocoboUser => {
     const tranformedResult: SocoboUser = new SocoboUser()
-      .addId(result.hasOwnProperty("id") ? Number(result.id) : null)
-      .addSocoboUserRoleId(result.hasOwnProperty("socobouserroleid") ?
+      .setId(result.hasOwnProperty("id") ? Number(result.id) : null)
+      .setSocoboUserRoleId(result.hasOwnProperty("socobouserroleid") ?
           Number(result.socobouserroleid) : null)
-      .addSocoboUserProviderId(result.hasOwnProperty("socobouserproviderid") ?
+      .setSocoboUserProviderId(result.hasOwnProperty("socobouserproviderid") ?
           Number(result.socobouserproviderid) : null)
-      .addSocoboUserImageId(result.hasOwnProperty("socobouserimageid") ?
+      .setSocoboUserImageId(result.hasOwnProperty("socobouserimageid") ?
           Number(result.socobouserimageid) : null)
-      .addUsername(result.hasOwnProperty("username") ? result.username : null)
-      .addEmail(result.hasOwnProperty("email") ? result.email : null)
-      .addPassword(result.hasOwnProperty("password") ? result.password : null)
-      .addHasTermsAccepted(result.hasOwnProperty("hastermsaccepted") ? Boolean(result.hastermsaccepted) : null)
-      .addCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
-      .addLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
+      .setUsername(result.hasOwnProperty("username") ? result.username : null)
+      .setEmail(result.hasOwnProperty("email") ? result.email : null)
+      .setPassword(result.hasOwnProperty("password") ? result.password : null)
+      .setHasTermsAccepted(result.hasOwnProperty("hastermsaccepted") ? Boolean(result.hastermsaccepted) : null)
+      .setCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
+      .setLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
     return tranformedResult;
   }
 

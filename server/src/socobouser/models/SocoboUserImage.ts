@@ -18,12 +18,12 @@ export class SocoboUserImage extends BaseObject {
 
   constructor () { super(); }
 
-  public addId = (id: number): this => {
+  public setId = (id: number): this => {
     this.id = id;
     return this;
   }
 
-  public addUrl= (url: string): this => {
+  public setUrl= (url: string): this => {
     this.url = url;
     return this;
   }

@@ -10,10 +10,10 @@ export class SocoboUserImageRepository extends BaseRepository <SocoboUserImage> 
 
   private _transformResult = (result: any): SocoboUserImage => {
     const tranformedResult: SocoboUserImage = new SocoboUserImage()
-      .addId(result.hasOwnProperty("id") ? Number(result.id) : null)
-      .addUrl(result.hasOwnProperty("url") ? result.url : null)
-      .addCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
-      .addLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
+      .setId(result.hasOwnProperty("id") ? Number(result.id) : null)
+      .setUrl(result.hasOwnProperty("url") ? result.url : null)
+      .setCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
+      .setLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
     return tranformedResult;
   }
 }

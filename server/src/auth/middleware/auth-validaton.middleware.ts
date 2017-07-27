@@ -60,12 +60,12 @@ export class AuthValidationMiddleware {
 
   public checkValidToken (req: SocoboRequest): Promise<any> {
     return new Promise((resolve, reject) => {
-      const authHeader: string = (process.env.TOKEN_HEADER || Config.TOKEN_HEADER);
+      const authHeader: string = (process.env["TOKEN_HEADER"] || Config.TOKEN_HEADER);
       const token = req.body.token
                     || req.query.token
                     || req.headers[authHeader];
       if (token) {
-        jwt.verify(token, (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), (err: any, decoded: any) => {
+        jwt.verify(token, (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), (err: any, decoded: any) => {
           if (err) {
             let e: ApiError;
             if (err.name === "TokenExpiredError") {

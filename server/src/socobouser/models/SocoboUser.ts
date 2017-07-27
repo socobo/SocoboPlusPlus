@@ -63,42 +63,42 @@ export class SocoboUser extends BaseObject {
 
   constructor () { super(); }
 
-  public addId = (id: number): this => {
+  public setId = (id: number): this => {
     this.id = id;
     return this;
   }
 
-  public addSocoboUserRoleId = (id: number): this => {
+  public setSocoboUserRoleId = (id: number): this => {
     this.socoboUserRoleId = id;
     return this;
   }
 
-  public addSocoboUserProviderId = (id: number): this => {
+  public setSocoboUserProviderId = (id: number): this => {
     this.socoboUserProviderId = id;
     return this;
   }
 
-  public addSocoboUserImageId = (id: number): this => {
+  public setSocoboUserImageId = (id: number): this => {
     this.socoboUserImageId = id;
     return this;
   }
 
-  public addUsername = (username: string): this => {
+  public setUsername = (username: string): this => {
     this.username = username;
     return this;
   }
 
-  public addEmail = (email: string): this => {
+  public setEmail = (email: string): this => {
     this.email = email;
     return this;
   }
 
-  public addPassword = (password: string): this => {
+  public setPassword = (password: string): this => {
     this.password = password;
     return this;
   }
 
-  public addHasTermsAccepted = (hasTermsAccepted: boolean): this => {
+  public setHasTermsAccepted = (hasTermsAccepted: boolean): this => {
     this.hasTermsAccepted = hasTermsAccepted;
     return this;
   }

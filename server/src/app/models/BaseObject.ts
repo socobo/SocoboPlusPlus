@@ -8,12 +8,12 @@ export class BaseObject {
   @IsNotEmpty()
   public lastModified: number;
 
-  public addCreated = (created: number): this => {
+  public setCreated = (created: number): this => {
     this.created = created;
     return this;
   }
 
-  public addLastModified = (lastModified: number): this => {
+  public setLastModified = (lastModified: number): this => {
     this.lastModified = lastModified;
     return this;
   }

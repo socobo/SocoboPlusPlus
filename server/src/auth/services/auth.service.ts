@@ -97,9 +97,9 @@ export class AuthService {
 
   private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      jwt.sign(foundUser.getSigningInfo(), (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
-        expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION),
-        issuer: (process.env.TOKEN_ISSUER || Config.TOKEN_ISSUER)
+      jwt.sign(foundUser.getSigningInfo(), (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
+        expiresIn: (process.env["TOKEN_EXPIRATION"] || Config.TOKEN_EXPIRATION),
+        issuer: (process.env["TOKEN_ISSUER"] || Config.TOKEN_ISSUER)
       }, (err, token) => {
         if (err) {
           const e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
@@ -136,14 +136,14 @@ export class AuthService {
         return reject(e);
       }
       const user: SocoboUser = new SocoboUser()
-        .addSocoboUserRoleId(role)
-        .addSocoboUserProviderId(usernameOrEmail.includes("@") ?
+        .setSocoboUserRoleId(role)
+        .setSocoboUserProviderId(usernameOrEmail.includes("@") ?
                                     SocoboUserProviderTypes.Email : SocoboUserProviderTypes.Username)
-        .addSocoboUserImageId((process.env.DEFAULT_USER_IMAGE_ID || Config.DEFAULT_USER_IMAGE_ID))
-        .addUsername(usernameOrEmail)
-        .addEmail(usernameOrEmail)
-        .addPassword(hashedPassword)
-        .addHasTermsAccepted(true)
+        .setSocoboUserImageId(Number(process.env["DEFAULT_USER_IMAGE_ID"] || Config.DEFAULT_USER_IMAGE_ID))
+        .setUsername(usernameOrEmail)
+        .setEmail(usernameOrEmail)
+        .setPassword(hashedPassword)
+        .setHasTermsAccepted(true)
         .createDates();
       resolve(user);
     });

@@ -108,7 +108,7 @@ class Server {
 
   private _configLogging (): void {
     // check environment and setup winston
-    switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
+    switch ((process.env["NODE_ENV"] || Config.NODE_ENV)) {
       case "test":
         winston.configure({
           transports: [
@@ -148,7 +148,7 @@ class Server {
   }
 
   private _configServer (): void {
-    this._port = process.env.PORT || Config.PORT;
+    this._port = Number(process.env["PORT"] || Config.PORT);
     this._app.use(cors());
     this._app.use(bodyParser.urlencoded({ extended: true }));
     this._app.use(bodyParser.json());
@@ -199,7 +199,7 @@ class Server {
   private _uploader (): void {
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, `${process.cwd()}/${process.env.IMAGE_TMP_DIR || Config.IMAGE_TMP_DIR}`);
+        cb(null, `${process.cwd()}/${process.env["IMAGE_TMP_DIR"] || Config.IMAGE_TMP_DIR}`);
       },
       filename: (req, file, cb) => {
         cb(null, file.fieldname + "_" + uuid());

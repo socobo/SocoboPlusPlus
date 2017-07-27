@@ -10,17 +10,17 @@ import {
 const getConnectionUrl = (): string => {
   let connectionUrl: string;
 
-  switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
+  switch ((process.env["NODE_ENV"] || Config.NODE_ENV)) {
     case "test":
-      connectionUrl = process.env.DB_URL_TEST || Config.DB_URL_TEST;
+      connectionUrl = process.env["DB_URL_TEST"] || Config.DB_URL_TEST;
       break;
 
     case "development":
-      connectionUrl = process.env.DB_URL_DEV || Config.DB_URL_DEV;
+      connectionUrl = process.env["DB_URL_DEV"] || Config.DB_URL_DEV;
       break;
 
     case "production":
-      connectionUrl = process.env.DB_URL || Config.DB_URL;
+      connectionUrl = process.env["DB_URL"] || Config.DB_URL;
       break;
 
     default:

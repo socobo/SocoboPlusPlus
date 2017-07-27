@@ -10,10 +10,10 @@ export class SocoboUserProviderRepository extends BaseRepository <SocoboUserProv
 
   private _transformResult = (result: any): SocoboUserProvider => {
     const tranformedResult: SocoboUserProvider = new SocoboUserProvider()
-      .addId(result.hasOwnProperty("id") ? Number(result.id) : null)
-      .addName(result.hasOwnProperty("name") ? result.name : null)
-      .addCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
-      .addLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
+      .setId(result.hasOwnProperty("id") ? Number(result.id) : null)
+      .setName(result.hasOwnProperty("name") ? result.name : null)
+      .setCreated(result.hasOwnProperty("created") ? Number(result.created) : null)
+      .setLastModified(result.hasOwnProperty("lastmodified") ? Number(result.lastmodified) : null);
     return tranformedResult;
   }
 }

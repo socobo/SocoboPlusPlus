@@ -15,12 +15,12 @@ export class SocoboUserProvider extends BaseObject {
 
   constructor () { super(); }
 
-  public addId = (id: number): this => {
+  public setId = (id: number): this => {
     this.id = id;
     return this;
   }
 
-  public addName = (name: string): this => {
+  public setName = (name: string): this => {
     this.name = name;
     return this;
   }
