@@ -62,8 +62,8 @@ export class RecipeStepRepository {
   public get = (recipeId: Number) => {
     const query: string = `select * from recipe_steps
                             where recipe_steps.recipeId = $1`;
-    return this._db.many(query, [
-      recipeId]);
+    return this._db.many(query, [recipeId])
+      .then((result) => result.map(this._transformResult));
   }
 
   public delete = (recipeId: Number) => {
@@ -71,5 +71,16 @@ export class RecipeStepRepository {
                             where recipe_steps.recipeId = $1`;
     return this._db.none(query, [
       recipeId]);
+  }
+
+  private _transformResult = (result: any): RecipeStep => {
+    console.log('result', result)
+    const transformedResult: RecipeStep = new RecipeStep();
+    transformedResult.id = result.hasOwnProperty("id") ? Number(result.id) : null;
+    transformedResult.stepTitle = result.hasOwnProperty("title") ? result.title : null;
+    transformedResult.recipeId = result.hasOwnProperty("recipeid") ? Number(result.recipeid) : null;
+    transformedResult.stepDescription = result.hasOwnProperty("description") ? result.description : null;
+    transformedResult.stepNumber = result.hasOwnProperty("stepnumber") ? result.stepnumber : null;
+    return transformedResult;
   }
 }
