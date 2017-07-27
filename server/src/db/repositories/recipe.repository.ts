@@ -124,7 +124,12 @@ export class RecipeRepository {
       return this._db.none(query, [
         id, recipe.title, recipe.userId, recipe.description,
         recipe.imageUrl]);
-    }).catch((error: any) => {
+    })
+    .then(() => {
+      console.log('Try Update Recipe Steps')
+      return this._db.recipeSteps.update(recipe.steps);
+    })
+    .catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");
     });
   }

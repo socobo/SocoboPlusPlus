@@ -22,6 +22,14 @@ export class RecipeStepRepository {
       step.recipeId]);
   }
 
+  private _updateQuery = (step: RecipeStep) => {
+    const query: string = `update recipe_steps set
+                             title=$2, description=$3, stepNumber=$4
+                           where recipe_steps.id=$1`;
+    return this._db.none(query, [
+      step.id, step.stepTitle, step.stepDescription, step.stepNumber]);
+  }
+
   public save = (steps: RecipeStep[], recipe: Recipe) => {
 
     const queries: Array<Promise<any>> = [];
@@ -33,7 +41,20 @@ export class RecipeStepRepository {
       queries.push(this._saveQuery(recipeStep));
     });
 
-    return this._db.tx("SaveRecipeStep", (t) => {
+    return this._db.tx("SaveRecipeSteps", (t) => {
+      return t.batch(queries);
+    });
+  }
+
+  public update = (steps: RecipeStep[]) => {
+    const queries: Array<Promise<any>> = [];
+    console.log('Update Recipe Steps', steps)
+
+    steps.forEach((recipeStep: RecipeStep) => {
+      queries.push(this._updateQuery(recipeStep));
+    });
+
+    return this._db.tx("UpdateRecipeSteps", (t) => {
       return t.batch(queries);
     });
   }

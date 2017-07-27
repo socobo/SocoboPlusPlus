@@ -96,10 +96,12 @@ export class RecipeHandler {
   }
 
   public update = (req: Request, res: Response): void => {
-    const newRecipe: Recipe = req.body as Recipe;
+    const newRecipe: Recipe = new Recipe().of(req.body as Recipe);
 
     this._db.users.getUserById(newRecipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+
+    console.log('Recipe handler', newRecipe)
 
     this._db.recipes.update(req.params.id, newRecipe)
       .then(() => this.getById(req, res))

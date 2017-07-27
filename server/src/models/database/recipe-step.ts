@@ -29,6 +29,8 @@ export class RecipeStep {
   public lastModifiedDate: number;
 
   public of (step: RecipeStep) {
+      this.id = step.id;
+      this.recipeId = step.recipeId;
       this.stepTitle = step.stepTitle;
       this.stepDescription = step.stepDescription;
       this.stepNumber = step.stepNumber;
