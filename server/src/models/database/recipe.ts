@@ -1,4 +1,7 @@
-import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
+import { IsNotEmpty, IsNumber, Length, Validate, ValidateNested} from "class-validator";
+
+import { AreRecipeStepsOrdered } from "../../logic/validators/recipe-steps-order.validator";
+import { AreRecipeStepsUnique } from "../../logic/validators/recipe-steps-unique.validator";
 import { ValidationGroup } from "./../enums/validation-group";
 import { FoodItem, RecipeStep, SocoboUser } from "./../index";
 
@@ -24,6 +27,12 @@ export class Recipe {
   public imageUrl: string;
   public created: Date;
   public lastModified: Date;
+  @AreRecipeStepsUnique({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @AreRecipeStepsOrdered({
+    groups: [ ValidationGroup.RECIPE ]
+  })
   @ValidateNested({
     each: true,
     groups: [ ValidationGroup.RECIPE ]
