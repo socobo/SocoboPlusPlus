@@ -45,9 +45,11 @@ export class Recipe {
     this.imageUrl = recipe.imageUrl;
     this.userId = recipe.userId;
     this.steps = [];
-    recipe.steps.forEach((step) => {
-      this.steps.push(new RecipeStep().of(step));
-    });
+    if (recipe.hasOwnProperty("steps")) {
+      recipe.steps.forEach((step) => {
+        this.steps.push(new RecipeStep().of(step));
+      });
+    }
     return this;
   }
 

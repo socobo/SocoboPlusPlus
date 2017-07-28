@@ -48,8 +48,6 @@ export class RecipeStepRepository {
 
   public update = (steps: RecipeStep[]) => {
     const queries: Array<Promise<any>> = [];
-    console.log('Update Recipe Steps', steps)
-
     steps.forEach((recipeStep: RecipeStep) => {
       queries.push(this._updateQuery(recipeStep));
     });
@@ -74,7 +72,6 @@ export class RecipeStepRepository {
   }
 
   private _transformResult = (result: any): RecipeStep => {
-    console.log('result', result)
     const transformedResult: RecipeStep = new RecipeStep();
     transformedResult.id = result.hasOwnProperty("id") ? Number(result.id) : null;
     transformedResult.stepTitle = result.hasOwnProperty("title") ? result.title : null;

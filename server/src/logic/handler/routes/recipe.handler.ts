@@ -101,8 +101,6 @@ export class RecipeHandler {
     this._db.users.getUserById(newRecipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
 
-    console.log('Recipe handler', newRecipe)
-
     this._db.recipes.update(req.params.id, newRecipe)
       .then(() => this.getById(req, res))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));

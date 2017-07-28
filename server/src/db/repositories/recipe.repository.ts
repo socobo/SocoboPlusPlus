@@ -126,7 +126,6 @@ export class RecipeRepository {
         recipe.imageUrl]);
     })
     .then(() => {
-      console.log('Try Update Recipe Steps')
       return this._db.recipeSteps.update(recipe.steps);
     })
     .catch((error: any) => {
