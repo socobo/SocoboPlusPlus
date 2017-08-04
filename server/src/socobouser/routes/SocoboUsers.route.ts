@@ -2,7 +2,7 @@ import { Router } from "express";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
 import { AuthValidationHandler } from "../../auth/index";
 import { SocoboUserHandler } from "../handlers/SocoboUser.handler";
-import { SocoboUser } from "../index";
+import { SocoboUser, SocoboUserRoleTypes } from "../index";
 
 export class SocoboUsersRoute {
 
@@ -16,6 +16,7 @@ export class SocoboUsersRoute {
   public createRoutes (): Router {
     this._router.get("/",
       this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
       this._socoboUserHandler.getAll);
 
     this._router.get("/:id",
