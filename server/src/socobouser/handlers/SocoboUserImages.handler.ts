@@ -1,14 +1,16 @@
 import { Request, Response } from "express";
 import { IDatabase } from "pg-promise/typescript/pg-promise";
-import { DbExtensions } from "../../app/index";
+import { DataType, DbExtensions, ImageService, SocoboRequest } from "../../app/index";
 import { SocoboUserImage } from "../models/SocoboUserImage";
 
 export class SocoboUserImagesHandler {
 
   private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _imgService: ImageService;
 
-  constructor (db: any) {
+  constructor (db: any, imgService: ImageService) {
     this._db = db;
+    this._imgService = imgService;
   }
 
   public getAll = (req: Request, res: Response): void => {
@@ -37,5 +39,26 @@ export class SocoboUserImagesHandler {
     this._db.socobouserImages.deleteById(imageId)
       .then((result: Object) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  public save = (req: Request, res: Response): void => {
+    const url = req.body.url;
+    const image = new SocoboUserImage().setUrl(url).createDates();
+    this._db.socobouserImages.save(image)
+      .then((result: any) => res.status(200).json(Number(result.id)))
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  public upload = (req: SocoboRequest, res: Response): void => {
+    const email = req.requestData.decoded.email;
+    this._imgService.persistImage(req.file.filename, DataType.SOCOBO_USER_IMAGE, email)
+      .then((url: string) => this._createNewImage(url))
+      .then((image: SocoboUserImage) => this._db.socobouserImages.save(image))
+      .then((result: any) => res.status(200).json(Number(result.id)))
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
+
+  private _createNewImage = (url: string): Promise<SocoboUserImage> => {
+    return Promise.resolve(new SocoboUserImage().setUrl(url).createDates());
   }
 }
