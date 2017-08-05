@@ -4,6 +4,6 @@ export class LoginResponse {
 
   constructor (
     private token: string,
-    private user: SocoboUser
+    private socobouser: SocoboUser
   ) {}
 }
