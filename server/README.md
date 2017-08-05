@@ -127,21 +127,21 @@ Error body:
   }
   ```
 
-### **USERS**
+### **SOCOBO-USERS**
 
-**GET /api/v1/users**
+**GET /api/v1/socobousers**
 
 Response body:
   ```json
   [
     {
       id: number,
+      socoboUserRoleId: number,
+      socoboUserProviderId: number,
+      socoboUserImageId: number,
       username: string,
       email: string,
-      image: string,
       hasTermsAccepted: boolean,
-      role: Role,
-      provider: ProviderType,
       created: number,
       lastModified: number
     },
@@ -158,7 +158,7 @@ Error body:
   }
   ```
 
-**GET /api/v1/users/:id**
+**GET /api/v1/socobousers/:id**
 
 Path Parameter:
   - id: User id
@@ -167,12 +167,12 @@ Response body:
   ```json
   {
     id: number,
+    socoboUserRoleId: number,
+    socoboUserProviderId: number,
+    socoboUserImageId: number,
     username: string,
     email: string,
-    image: string,
     hasTermsAccepted: boolean,
-    role: Role,
-    provider: ProviderType,
     created: number,
     lastModified: number
   }
@@ -187,7 +187,7 @@ Error body:
   }
   ```
 
-**PUT /api/v1/users/:id**
+**PUT /api/v1/socobousers/:id**
 
 Path Parameter:
   - id: User id
@@ -207,12 +207,12 @@ Response body:
   ```json
   {
     id: number,
+    socoboUserRoleId: number,
+    socoboUserProviderId: number,
+    socoboUserImageId: number,
     username: string,
     email: string,
-    image: string,
     hasTermsAccepted: boolean,
-    role: Role,
-    provider: ProviderType,
     created: number,
     lastModified: number
   }
@@ -227,7 +227,7 @@ Error body:
   }
   ```
 
-**DELETE /api/v1/users/:id**
+**DELETE /api/v1/socobousers/:id**
 
 Path Parameter:
   - id: User id
