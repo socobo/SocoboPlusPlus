@@ -45,7 +45,8 @@ export class SocoboUserImagesHandler {
     const url = req.body.url;
     const image = new SocoboUserImage().setUrl(url).createDates();
     this._db.socobouserImages.save(image)
-      .then((result: any) => res.status(200).json(Number(result.id)))
+      .then((result: any) => this._db.socobouserImages.getById(Number(result.id)))
+      .then((suImage: SocoboUserImage) => res.status(200).json(suImage))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
@@ -54,7 +55,8 @@ export class SocoboUserImagesHandler {
     this._imgService.persistImage(req.file.filename, DataType.SOCOBO_USER_IMAGE, email)
       .then((url: string) => this._createNewImage(url))
       .then((image: SocoboUserImage) => this._db.socobouserImages.save(image))
-      .then((result: any) => res.status(200).json(Number(result.id)))
+      .then((result: any) => this._db.socobouserImages.getById(Number(result.id)))
+      .then((suImage: SocoboUserImage) => res.status(200).json(suImage))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 

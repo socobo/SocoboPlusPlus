@@ -36,6 +36,7 @@ export class SocoboUserImagesRoute {
     this._router.post("/",
       this._authValidationHandler.checkToken,
       this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
+      this._modelValidationHandler.validate(SocoboUserImage, [ValidationGroup.USER]),
       this._socoboUserImagesHandler.save);
 
     // save image that is stored into our storage
