@@ -25,7 +25,7 @@ export class SocoboUsersRoute {
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
-      this._modelValidationHandler.validate(SocoboUser, [ValidationGroup.LOGIN, ValidationGroup.REGISTRATION]),
+      this._modelValidationHandler.validate(SocoboUser, [ValidationGroup.USER]),
       this._socoboUserHandler.updateById);
 
     this._router.delete("/:id",

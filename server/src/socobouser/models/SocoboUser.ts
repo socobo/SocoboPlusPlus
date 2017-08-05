@@ -29,6 +29,12 @@ export class SocoboUser extends BaseObject {
   @MinLength(5, {
     groups: [ ValidationGroup.LOGIN ]
   })
+  @ValidateIf((o) => o.updateType === 1, {
+    groups: [ ValidationGroup.USER ]
+  })
+  @IsNotEmpty({
+    groups: [ ValidationGroup.LOGIN ]
+  })
   public username: string;
 
   @ValidateIf((o) => o.username === "", {
