@@ -30,6 +30,12 @@ export class SocoboUserProvidersRoute {
       this._modelValidationHandler.validate(SocoboUserProvider, [ValidationGroup.USER]),
       this._socoboUserProvidersHandler.updateById);
 
+    this._router.post("/",
+      this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
+      this._modelValidationHandler.validate(SocoboUserProvider, [ValidationGroup.USER]),
+      this._socoboUserProvidersHandler.save);
+
     this._router.delete("/:id",
       this._authValidationHandler.checkToken,
       this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
