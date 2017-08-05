@@ -23,32 +23,27 @@ export class SocoboUserImagesRoute {
 
     this._router.get("/:id",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
       this._socoboUserImagesHandler.getById);
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
       this._modelValidationHandler.validate(SocoboUserImage, [ValidationGroup.USER]),
       this._socoboUserImagesHandler.updateById);
 
     // save image that is not stored into our storage
     this._router.post("/",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
       this._modelValidationHandler.validate(SocoboUserImage, [ValidationGroup.USER]),
       this._socoboUserImagesHandler.save);
 
     // save image that is stored into our storage
     this._router.post("/upload",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
       this._multer.single("socoboUserImage"),
       this._socoboUserImagesHandler.upload);
 
     this._router.delete("/:id",
       this._authValidationHandler.checkToken,
-      this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
       this._socoboUserImagesHandler.deleteById);
 
     return this._router;
