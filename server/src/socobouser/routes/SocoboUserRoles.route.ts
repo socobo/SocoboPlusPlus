@@ -30,6 +30,12 @@ export class SocoboUserRolesRoute {
       this._modelValidationHandler.validate(SocoboUserRole, [ValidationGroup.USER]),
       this._socoboUserRolesHandler.updateById);
 
+    this._router.post("/",
+      this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),
+      this._modelValidationHandler.validate(SocoboUserRole, [ValidationGroup.USER]),
+      this._socoboUserRolesHandler.save);
+
     this._router.delete("/:id",
       this._authValidationHandler.checkToken,
       this._authValidationHandler.checkUser(SocoboUserRoleTypes.Admin),

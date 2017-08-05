@@ -37,4 +37,13 @@ export class SocoboUserRolesHandler {
       .then((result: Object) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
+
+  public save = (req: Request, res: Response): void => {
+    const name = req.body.name;
+    const role = new SocoboUserRole().setName(name).createDates();
+    this._db.socobouserRoles.save(role)
+      .then((result: any) => this._db.socobouserProviders.getById(Number(result.id)))
+      .then((suRole: SocoboUserRole) => res.status(200).json(suRole))
+      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  }
 }
