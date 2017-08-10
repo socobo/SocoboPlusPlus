@@ -27,6 +27,7 @@ export class Recipe {
   public imageUrl: string;
   public created: Date;
   public lastModified: Date;
+
   @AreRecipeStepsUnique({
     groups: [ ValidationGroup.RECIPE ]
   })

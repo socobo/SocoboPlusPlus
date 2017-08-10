@@ -27,7 +27,7 @@ describe("Model Validation Middleware", () => {
 
     const prom: any = new ModelValidationMiddleware().validate(Recipe, req, [ValidationGroup.RECIPE]);
     return prom.should.be.rejected.then((e: any) => {
-      e.should.to.have.deep.property("validationErrors").to.have.deep.lengthOf(2);
+      e.should.to.have.deep.property("validationErrors").to.have.deep.lengthOf(3);
     });
   });
 
@@ -72,6 +72,7 @@ describe("Model Validation Middleware", () => {
     const recipe: Recipe = new Recipe();
     recipe.title = "Test Title";
     recipe.userId = 2;
+    recipe.steps = [];
 
     req = mocks.createRequest({
       body: recipe

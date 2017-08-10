@@ -148,7 +148,7 @@ class Server {
   }
 
   private _configServer (): void {
-    this._port = process.env["PORT"] || Config.PORT;
+    this._port = Number(process.env["PORT"]) || Config.PORT;
     this._app.use(cors());
     this._app.use(bodyParser.urlencoded({ extended: true }));
     this._app.use(bodyParser.json());
