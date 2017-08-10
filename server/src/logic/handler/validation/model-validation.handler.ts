@@ -17,9 +17,7 @@ export class ModelValidationHandler {
     };
   }
 
-  public validateObject (
-    objectToValidate: Validatable,
-    validationGroups: ValidationGroup[]) {
+  public validateObject (objectToValidate: Validatable, validationGroups: ValidationGroup[]) {
     return (req: Request, res: Response, next: NextFunction): void => {
       this._modelValidationMiddleware.validateObject(objectToValidate, req, validationGroups)
         .then(() => next())

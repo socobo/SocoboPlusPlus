@@ -40,20 +40,18 @@ export class ModelValidationMiddleware {
 
   /**
    * This validation approache enables also validation of nested objects
-   * @param objectToValidate 
+   * @param objToValidate 
    * @param req 
    * @param validationGroups 
    */
-  public validateObject (
-    objectToValidate: Validatable, req: Request,
-    validationGroups: ValidationGroup[]): Promise<any> {
+  public validateObject (objToValidate: Validatable, req: Request, validationGroups: ValidationGroup[]): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {
       const obj: any = req.body;
       const mappedGroups: string[] = validationGroups.map((group) => group.toString());
 
-      objectToValidate.of(obj);
+      objToValidate.of(obj);
 
-      validate(objectToValidate, { groups: mappedGroups })
+      validate(objToValidate, { groups: mappedGroups })
         .then((errors: any[]) => {
           if (errors.length > 0) {
             const e = new ValidationError(ERRORS.VAL_INVALID_INPUT)

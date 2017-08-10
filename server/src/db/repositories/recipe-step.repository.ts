@@ -12,22 +12,17 @@ export class RecipeStepRepository {
   }
 
   private _saveQuery = (step: RecipeStep) => {
-    const query: string = `insert into recipe_steps(
-                             title, description, stepNumber,
-                             recipeId)
+    const query: string = `insert into recipe_steps(title, description, stepNumber, recipeId)
                            values($1, $2, $3, $4)
                            returning id`;
-    return this._db.one(query, [
-      step.stepTitle, step.stepDescription, step.stepNumber,
-      step.recipeId]);
+    return this._db.one(query, [step.stepTitle, step.stepDescription, step.stepNumber, step.recipeId]);
   }
 
   private _updateQuery = (step: RecipeStep) => {
     const query: string = `update recipe_steps set
                              title=$2, description=$3, stepNumber=$4
                            where recipe_steps.id=$1`;
-    return this._db.none(query, [
-      step.id, step.stepTitle, step.stepDescription, step.stepNumber]);
+    return this._db.none(query, [step.id, step.stepTitle, step.stepDescription, step.stepNumber]);
   }
 
   public save = (steps: RecipeStep[], recipe: Recipe) => {
@@ -58,17 +53,13 @@ export class RecipeStepRepository {
   }
 
   public get = (recipeId: Number) => {
-    const query: string = `select * from recipe_steps
-                            where recipe_steps.recipeId = $1`;
-    return this._db.many(query, [recipeId])
-      .then((result) => result.map(this._transformResult));
+    const query: string = `select * from recipe_steps where recipe_steps.recipeId = $1`;
+    return this._db.many(query, [recipeId]).then((result) => result.map(this._transformResult));
   }
 
   public delete = (recipeId: Number) => {
-    const query: string = `delete from recipe_steps
-                            where recipe_steps.recipeId = $1`;
-    return this._db.none(query, [
-      recipeId]);
+    const query: string = `delete from recipe_steps where recipe_steps.recipeId = $1`;
+    return this._db.none(query, [recipeId]);
   }
 
   private _transformResult = (result: any): RecipeStep => {

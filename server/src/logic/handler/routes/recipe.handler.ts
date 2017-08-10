@@ -82,8 +82,10 @@ export class RecipeHandler {
   public save = (req: Request, res: Response): void => {
     const recipe: Recipe = new Recipe().of(req.body as Recipe);
     recipe.created = new Date();
+
     this._db.users.getUserById(recipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+
     this._db.recipes.save(recipe)
       .then((result: any) => {
         recipe.id = result.id;
