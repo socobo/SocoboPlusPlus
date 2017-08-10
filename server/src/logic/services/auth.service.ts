@@ -98,9 +98,9 @@ export class AuthService {
 
   private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      jwt.sign(foundUser.getSigningInfo(), (process.env.TOKEN_SECRET || Config.TOKEN_SECRET), {
-        expiresIn: (process.env.TOKEN_EXPIRATION || Config.TOKEN_EXPIRATION),
-        issuer: (process.env.TOKEN_ISSUER || Config.TOKEN_ISSUER)
+      jwt.sign(foundUser.getSigningInfo(), (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
+        expiresIn: (process.env["TOKEN_EXPIRATION"] || Config.TOKEN_EXPIRATION),
+        issuer: (process.env["TOKEN_ISSUER"] || Config.TOKEN_ISSUER)
       }, (err, token) => {
         if (err) {
           const e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
@@ -139,7 +139,7 @@ export class AuthService {
         .addUsername(usernameOrEmail)
         .addEmail(usernameOrEmail)
         .addPassword(hashedPassword)
-        .addImage((process.env.DEFAULT_USER_IMAGE || Config.DEFAULT_USER_IMAGE))
+        .addImage((process.env["DEFAULT_USER_IMAGE"] || Config.DEFAULT_USER_IMAGE))
         .addHasTermsAccepted(true)
         .addRole(role)
         .addProvider(usernameOrEmail.includes("@") ? ProviderType.Email : ProviderType.Username)

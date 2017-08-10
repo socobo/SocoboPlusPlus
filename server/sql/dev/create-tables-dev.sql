@@ -21,3 +21,13 @@ CREATE TABLE recipes (
   imageUrl varchar(1000),
   created timestamp
 );
+
+CREATE TABLE recipe_steps (
+  ID SERIAL PRIMARY KEY,
+  title varchar(100) NOT NULL,
+  recipeId integer REFERENCES recipes(id) NOT NULL,
+  description text,
+  stepNumber integer,
+  lastModified NUMERIC,
+  created NUMERIC
+);

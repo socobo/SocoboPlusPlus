@@ -18,7 +18,7 @@ export class RecipeRoute {
   public createRoutes (): Router {
     this._router.post("/",
       this._authValidationHandler.checkToken,
-      this._modelValidationHandler.validate(Recipe, [ValidationGroup.RECIPE]),
+      this._modelValidationHandler.validateObject(new Recipe(), [ValidationGroup.RECIPE]),
       this._recipeHandler.save);
 
     this._router.post("/:id/image",
@@ -33,7 +33,7 @@ export class RecipeRoute {
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
       this._recipeHandler.updateRecipeProperties,
-      this._modelValidationHandler.validate(Recipe, [ValidationGroup.RECIPE]),
+      this._modelValidationHandler.validateObject(new Recipe(), [ValidationGroup.RECIPE]),
       this._recipeHandler.update);
 
     this._router.get("/",

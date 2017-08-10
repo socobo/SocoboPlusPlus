@@ -1,6 +1,6 @@
 import { IDatabase } from "pg-promise";
 import { ErrorUtils } from "./../../logic/utils/index";
-import { DbError, ERRORS, Recipe } from "./../../models/index";
+import { DbError, ERRORS, Recipe, RecipeStep } from "./../../models/index";
 import { DbExtensions } from "./../../models/index";
 
 export class RecipeRepository {
@@ -11,9 +11,23 @@ export class RecipeRepository {
     this._db = db;
   }
 
+  private _fetchSteps = (recipe: Recipe) => {
+    return this._db.recipeSteps.get(recipe.id)
+      .then((steps) => {
+        return {steps, recipe};
+      });
+  }
+
+  private _addStepsToRecipe = (obj: any) => {
+    obj.recipe.steps = obj.steps;
+    return obj.recipe;
+  }
+
   public getById = (id: number): Promise<Recipe> => {
     const query = `select * from recipes where recipes.id = $1`;
     return this._db.one(query, [id], this._transformResult)
+      .then((recipe) => this._fetchSteps(recipe))
+      .then((obj: any) => this._addStepsToRecipe(obj))
       .catch((error: any) => {
         return ErrorUtils.handleDbNotFound(
           ERRORS.RECIPE_NOT_FOUND, error,
@@ -58,26 +72,45 @@ export class RecipeRepository {
 
   public delete = (id: Number): Promise<void> => {
     const query: string = `delete from recipes where recipes.id = $1`;
-    return this._db.tx("DeleteRecipe", () => {
-      return this._db.none(query, [id])
-      .catch((error: any) => {
-        return ErrorUtils.handleDbError(
-          error, RecipeRepository.name, "delete(..)");
-      });
+    return this._db.tx("DeleteRecipe", (t) => {
+      const queries = [
+        this._db.recipeSteps.delete(id),
+        this._db.none(query, [id])];
+      return t.batch(queries)
+        .catch((error: any) => {
+          return ErrorUtils.handleDbError(
+            error, RecipeRepository.name, "delete(..)");
+        });
     });
   }
 
-  public save = (recipe: Recipe): Promise<any> => {
+  private _saveRecipeCoreQuery = (recipe: Recipe) => {
     const query: string = `insert into recipes(
                              title, userId, description,
                              imageUrl, created)
                            values($1, $2, $3, $4, $5)
                            returning id`;
-    return this._db.tx("SaveRecipe", () => {
-      return this._db.one(query, [
+    return this._db.one(query, [
         recipe.title, recipe.userId, recipe.description,
         recipe.imageUrl, recipe.created]);
-    }).catch((error: any) => {
+  }
+
+  private _saveRecipeStepsQuery = (id: any, recipe: Recipe) => {
+    recipe.id = id.id;
+    return this._db.tx("SaveRecipeSteps", (t) => {
+        this._db.recipeSteps.save(recipe.steps, recipe);
+        return id;
+    });
+  }
+
+  public save = (recipe: Recipe): Promise<any> => {
+    return this._db.tx("SaveRecipeCoreDate", (t) => {
+      return this._saveRecipeCoreQuery(recipe);
+    })
+    .then((id: any) => {
+      return this._saveRecipeStepsQuery(id, recipe);
+    })
+    .catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
     });
   }
@@ -91,7 +124,11 @@ export class RecipeRepository {
       return this._db.none(query, [
         id, recipe.title, recipe.userId, recipe.description,
         recipe.imageUrl]);
-    }).catch((error: any) => {
+    })
+    .then(() => {
+      return this._db.recipeSteps.update(recipe.steps);
+    })
+    .catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");
     });
   }
@@ -104,6 +141,7 @@ export class RecipeRepository {
     transformedResult.description = result.hasOwnProperty("description") ? result.description : null;
     transformedResult.imageUrl = result.hasOwnProperty("imageurl") ? result.imageurl : null;
     transformedResult.created = result.hasOwnProperty("created") ? new Date(result.created) : null;
+    transformedResult.steps = result.hasOwnProperty("steps") ? result.steps : null;
     delete transformedResult.fields;
     return transformedResult;
   }
