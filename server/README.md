@@ -262,7 +262,20 @@ Response body:
       description: number,
       imageurl: string,
       created: Date,
-      steps: [RecipeStep]
+      steps: [
+        {
+          id: number,
+          recipeId: number,
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string,
+          createdDate: number,
+          lastModifiedDate: number
+        },
+        {
+          ...
+        }
+      ]
     },
     {
       ...
@@ -294,7 +307,20 @@ Response body:
     description: number,
     imageurl: string,
     created: Date,
-    steps: [RecipeStep]
+    steps: [
+      {
+        id: number,
+        recipeId: number,
+        stepNumber: number,
+        stepTitle: string,
+        stepDescription?: string,
+        createdDate: number,
+        lastModifiedDate: number
+      },
+      {
+        ...
+      }
+    ]
   }
   ```
 
@@ -325,7 +351,20 @@ Response body:
       description: number,
       imageurl: string,
       created: Date,
-      steps: [RecipeStep]
+      steps: [
+        {
+          id: number,
+          recipeId: number,
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string,
+          createdDate: number,
+          lastModifiedDate: number
+        },
+        {
+          ...
+        }
+      ]
     },
     {
       ...
@@ -361,7 +400,20 @@ Response body:
       description: number,
       imageurl: string,
       created: Date,
-      steps: [RecipeStep]
+      steps: [
+        {
+          id: number,
+          recipeId: number,
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string,
+          createdDate: number,
+          lastModifiedDate: number
+        },
+        {
+          ...
+        }
+      ]
     },
     {
       ...
@@ -398,7 +450,17 @@ Request body (could also be a subset of these values):
     title?: string,
     userId?: string,
     description?: string,
-    imageurl?: string
+    imageurl?: string,
+    steps?: [
+      {
+        stepNumber: number,
+        stepTitle: string,
+        stepDescription?: string
+      },
+      {
+        ...
+      }
+    ]
   }
   ```
 
@@ -411,7 +473,20 @@ Response body:
     description: string,
     imageurl: string,
     created: Date,
-    steps: [RecipeStep]
+    steps: [
+      {
+        id: number,
+        recipeId: number,
+        stepNumber: number,
+        stepTitle: string,
+        stepDescription?: string,
+        createdDate: number,
+        lastModifiedDate: number
+      },
+      {
+        ...
+      }
+    ]
   }
   ```
 
@@ -432,7 +507,17 @@ Request body:
     title: string,
     userId: string,
     description?: string,
-    imageurl?: string
+    imageurl?: string,
+    steps?: [
+      {
+        stepNumber: number,
+        stepTitle: string,
+        stepDescription?: string
+      },
+      {
+        ...
+      }
+    ]
   }
   ```
 
@@ -444,8 +529,21 @@ Response body:
     title: string,
     description?: string,
     imageurl?: string,
-    steps: [RecipeStep],
-    created: Date
+    created: Date,
+    steps: [
+      {
+        id: number,
+        recipeId: number,
+        stepNumber: number,
+        stepTitle: string,
+        stepDescription?: string,
+        createdDate: number,
+        lastModifiedDate: number
+      },
+      {
+        ...
+      }
+    ]
   }
   ```
 
@@ -481,7 +579,20 @@ Response body:
     description?: string,
     imageurl: string,
     created: Date,
-    steps: [RecipeStep]
+    steps: [
+      {
+        id: number,
+        recipeId: number,
+        stepNumber: number,
+        stepTitle: string,
+        stepDescription?: string,
+        createdDate: number,
+        lastModifiedDate: number
+      },
+      {
+        ...
+      }
+    ]
   }
   ```
 
