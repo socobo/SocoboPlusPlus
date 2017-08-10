@@ -250,6 +250,36 @@ Error body:
 
 ### **RECIPES**
 
+**GET /api/v1/recipes**
+
+Response body:
+  ```json
+  [
+    {
+      id: number,
+      title: string,
+      userid: number,
+      description: number,
+      imageurl: string,
+      created: Date,
+      steps: [RecipeStep]
+    },
+    {
+      ...
+    }
+  ]
+  
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
 **GET /api/v1/recipes/:id**
 
 Path Parameter:
@@ -263,37 +293,9 @@ Response body:
     userid: number,
     description: number,
     imageurl: string,
-    created: Date
+    created: Date,
+    steps: [RecipeStep]
   }
-  ```
-
-Error body:
-  ```json
-  {
-    message: string,
-    method: string,
-    source: string
-  }
-  ```
-
-**GET /api/v1/recipes**
-
-Response body:
-  ```json
-  [
-    {
-      id: number,
-      title: string,
-      userid: number,
-      description: number,
-      imageurl: string,
-      created: Date
-    },
-    {
-      ...
-    }
-  ]
-  
   ```
 
 Error body:
@@ -322,7 +324,8 @@ Response body:
       userid: number,
       description: number,
       imageurl: string,
-      created: Date
+      created: Date,
+      steps: [RecipeStep]
     },
     {
       ...
@@ -357,7 +360,8 @@ Response body:
       userid: number,
       description: number,
       imageurl: string,
-      created: Date
+      created: Date,
+      steps: [RecipeStep]
     },
     {
       ...
@@ -366,90 +370,6 @@ Response body:
   
   ```
   
-Error body:
-  ```json
-  {
-    message: string,
-    method: string,
-    source: string
-  }
-  ```
-
-**DELETE /api/v1/recipes/:id**
-
-Deletes the recipe found for the given id
-
-Path Parameter:
-  - id: The id of the recipe which should be deleted
-
-Error body:
-  ```json
-  {
-    message: string,
-    method: string,
-    source: string
-  }
-  ```
-
-**POST /api/v1/recipes**
-
-Request body:
-  ```json
-  {
-    title: string,
-    userId: string,
-    description?: string,
-    imageurl?: string
-  }
-  ```
-
-Response body:
-  ```json
-  {
-    id: number,
-    title: string,
-    userid: number,
-    description?: string,
-    imageurl?: string,
-    created: Date
-  }
-  ```
-
-Error body:
-  ```json
-  {
-    message: string,
-    method: string,
-    source: string
-  }
-  ```
-
-**POST /api/v1/recipes/:id/image**
-
-Uploads a provided image file to the server for the current user and updates
-the related recipe in the database.
-
-Request body:
-
-```
-  multipart/form-data:
-
-  key: recipeImage
-  value: image file
-```
-
-Response body:
-  ```json
-  {
-    id: number,
-    title: string,
-    userid: number,
-    description?: string,
-    imageurl: string,
-    created: Date
-  }
-  ```
-
 Error body:
   ```json
   {
@@ -490,9 +410,96 @@ Response body:
     userid: number,
     description: string,
     imageurl: string,
+    created: Date,
+    steps: [RecipeStep]
+  }
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**POST /api/v1/recipes**
+
+Request body:
+  ```json
+  {
+    title: string,
+    userId: string,
+    description?: string,
+    imageurl?: string
+  }
+  ```
+
+Response body:
+  ```json
+  {
+    id: number,
+    userId: number,
+    title: string,
+    description?: string,
+    imageurl?: string,
+    steps: [RecipeStep],
     created: Date
   }
   ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**POST /api/v1/recipes/:id/image**
+
+Uploads a provided image file to the server for the current user and updates
+the related recipe in the database.
+
+Request body:
+
+```
+  multipart/form-data:
+
+  key: recipeImage
+  value: image file
+```
+
+Response body:
+  ```json
+  {
+    id: number,
+    title: string,
+    userid: number,
+    description?: string,
+    imageurl: string,
+    created: Date,
+    steps: [RecipeStep]
+  }
+  ```
+
+Error body:
+  ```json
+  {
+    message: string,
+    method: string,
+    source: string
+  }
+  ```
+
+**DELETE /api/v1/recipes/:id**
+
+Deletes the recipe found for the given id
+
+Path Parameter:
+  - id: The id of the recipe which should be deleted
 
 Error body:
   ```json

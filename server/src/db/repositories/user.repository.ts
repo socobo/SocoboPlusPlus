@@ -11,7 +11,7 @@ export class UserRepository {
     this._db = db;
   }
 
-  public getAll = (): Promise<SocoboUser[]> => {
+  public getAll = (): Promise<SocoboUser[] | DbError> => {
     const query: string = `
         SELECT
             id, username, email, image, hasTermsAccepted,
