@@ -1,11 +1,12 @@
 import { IsNotEmpty, IsNumber, Length, Validate, ValidateNested} from "class-validator";
 
+import { Validatable } from "../index";
 import { AreRecipeStepsOrdered } from "../../logic/validators/recipe-steps-order.validator";
 import { AreRecipeStepsUnique } from "../../logic/validators/recipe-steps-unique.validator";
 import { ValidationGroup } from "./../enums/validation-group";
 import { FoodItem, RecipeStep, SocoboUser } from "./../index";
 
-export class Recipe {
+export class Recipe implements Validatable{
 
   public fields: Map<string, Function>;
 
@@ -63,6 +64,11 @@ export class Recipe {
     return this;
   }
 
+  public setId (id: number) {
+    this.id = id;
+    return this;
+  }
+
   public setTitle (title: string) {
     this.title = title;
     return this;
@@ -90,6 +96,11 @@ export class Recipe {
 
   public setLastModified (lastModified: Date) {
     this.lastModified = lastModified;
+    return this;
+  }
+
+  public setSteps (steps: RecipeStep[]) {
+    this.steps = steps;
     return this;
   }
 }

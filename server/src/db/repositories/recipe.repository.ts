@@ -122,14 +122,14 @@ export class RecipeRepository {
   }
 
   private _transformResult = (result: any): Recipe => {
-    const transformedResult: Recipe = new Recipe();
-    transformedResult.id = result.hasOwnProperty("id") ? Number(result.id) : null;
-    transformedResult.title = result.hasOwnProperty("title") ? result.title : null;
-    transformedResult.userId = result.hasOwnProperty("userid") ? Number(result.userid) : null;
-    transformedResult.description = result.hasOwnProperty("description") ? result.description : null;
-    transformedResult.imageUrl = result.hasOwnProperty("imageurl") ? result.imageurl : null;
-    transformedResult.created = result.hasOwnProperty("created") ? new Date(result.created) : null;
-    transformedResult.steps = result.hasOwnProperty("steps") ? result.steps : null;
+    const transformedResult: Recipe = new Recipe()
+      .setId(result.hasOwnProperty("id") ? Number(result.id) : null)
+      .setTitle(result.hasOwnProperty("title") ? result.title : null)
+      .setUserId(result.hasOwnProperty("userid") ? Number(result.userid) : null)
+      .setDescription(result.hasOwnProperty("description") ? result.description : null)
+      .setImageUrl(result.hasOwnProperty("imageurl") ? result.imageurl : null)
+      .setCreated(result.hasOwnProperty("created") ? new Date(result.created) : null)
+      .setSteps(result.hasOwnProperty("steps") ? result.steps : null)
     delete transformedResult.fields;
     return transformedResult;
   }

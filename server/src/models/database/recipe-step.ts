@@ -1,7 +1,8 @@
+import { Validatable } from "../index";
 import { IsNotEmpty, IsNumber, IsString, Length, MinLength } from "class-validator";
 import { ValidationGroup } from "./../enums/validation-group";
 
-export class RecipeStep {
+export class RecipeStep implements Validatable{
   public id: number;
   public recipeId: number;
   @IsNotEmpty({
@@ -34,6 +35,11 @@ export class RecipeStep {
     this.stepTitle = step.stepTitle;
     this.stepDescription = step.stepDescription;
     this.stepNumber = step.stepNumber;
+    return this;
+  }
+
+  public setId (id: number): RecipeStep {
+    this.id = id;
     return this;
   }
 

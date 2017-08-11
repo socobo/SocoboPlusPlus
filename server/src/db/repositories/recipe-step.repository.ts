@@ -55,9 +55,7 @@ export class RecipeStepRepository {
   public get = (recipeId: Number) => {
     const query: string = `select * from recipe_steps where recipe_steps.recipeId = $1`;
     return this._db.many(query, [recipeId])
-      .then((result) => {
-        result.map(this._transformResult)
-      })
+      .then((result) => result.map(this._transformResult))
       .catch((error) => {
         return [];
       });
@@ -69,12 +67,12 @@ export class RecipeStepRepository {
   }
 
   private _transformResult = (result: any): RecipeStep => {
-    const transformedResult: RecipeStep = new RecipeStep();
-    transformedResult.id = result.hasOwnProperty("id") ? Number(result.id) : null;
-    transformedResult.stepTitle = result.hasOwnProperty("title") ? result.title : null;
-    transformedResult.recipeId = result.hasOwnProperty("recipeid") ? Number(result.recipeid) : null;
-    transformedResult.stepDescription = result.hasOwnProperty("description") ? result.description : null;
-    transformedResult.stepNumber = result.hasOwnProperty("stepnumber") ? result.stepnumber : null;
+    const transformedResult: RecipeStep = new RecipeStep()
+      .setId(result.hasOwnProperty("id") ? Number(result.id) : null)
+      .setTitle(result.hasOwnProperty("title") ? result.title : null)
+      .setRecipeId(result.hasOwnProperty("recipeid") ? Number(result.recipeid) : null)
+      .setDescription(result.hasOwnProperty("description") ? result.description : null)
+      .setDescription(result.hasOwnProperty("stepnumber") ? result.stepnumber : null)
     return transformedResult;
   }
 }
