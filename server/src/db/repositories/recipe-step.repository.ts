@@ -54,7 +54,13 @@ export class RecipeStepRepository {
 
   public get = (recipeId: Number) => {
     const query: string = `select * from recipe_steps where recipe_steps.recipeId = $1`;
-    return this._db.many(query, [recipeId]).then((result) => result.map(this._transformResult));
+    return this._db.many(query, [recipeId])
+      .then((result) => {
+        result.map(this._transformResult)
+      })
+      .catch((error) => {
+        return [];
+      });
   }
 
   public delete = (recipeId: Number) => {
