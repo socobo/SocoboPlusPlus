@@ -1,12 +1,11 @@
 import { IsNotEmpty, IsNumber, Length, Validate, ValidateNested} from "class-validator";
 
-import { Validatable } from "../index";
 import { AreRecipeStepsOrdered } from "../../logic/validators/recipe-steps-order.validator";
 import { AreRecipeStepsUnique } from "../../logic/validators/recipe-steps-unique.validator";
 import { ValidationGroup } from "./../enums/validation-group";
-import { FoodItem, RecipeStep, SocoboUser } from "./../index";
+import { FoodItem, RecipeStep, SocoboUser, Validatable} from "./../index";
 
-export class Recipe implements Validatable{
+export class Recipe implements Validatable {
 
   public fields: Map<string, Function>;
 
@@ -58,7 +57,7 @@ export class Recipe implements Validatable{
     this.steps = [];
     if (recipe.hasOwnProperty("steps")) {
       recipe.steps.forEach((step) => {
-        this.steps.push(new RecipeStep().of(step));
+        this.steps.push(new RecipeStep().clone(step));
       });
     }
     return this;

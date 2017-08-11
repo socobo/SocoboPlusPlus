@@ -129,7 +129,7 @@ export class RecipeRepository {
       .setDescription(result.hasOwnProperty("description") ? result.description : null)
       .setImageUrl(result.hasOwnProperty("imageurl") ? result.imageurl : null)
       .setCreated(result.hasOwnProperty("created") ? new Date(result.created) : null)
-      .setSteps(result.hasOwnProperty("steps") ? result.steps : null)
+      .setSteps(result.hasOwnProperty("steps") ? result.steps : null);
     delete transformedResult.fields;
     return transformedResult;
   }

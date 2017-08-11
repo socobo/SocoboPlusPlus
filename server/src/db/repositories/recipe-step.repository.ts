@@ -72,7 +72,7 @@ export class RecipeStepRepository {
       .setTitle(result.hasOwnProperty("title") ? result.title : null)
       .setRecipeId(result.hasOwnProperty("recipeid") ? Number(result.recipeid) : null)
       .setDescription(result.hasOwnProperty("description") ? result.description : null)
-      .setDescription(result.hasOwnProperty("stepnumber") ? result.stepnumber : null)
+      .setDescription(result.hasOwnProperty("stepnumber") ? result.stepnumber : null);
     return transformedResult;
   }
 }
