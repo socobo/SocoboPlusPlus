@@ -29,7 +29,7 @@ export class RecipeStep implements Validatable{
   public createdDate: number;
   public lastModifiedDate: number;
 
-  public of (step: RecipeStep): RecipeStep {
+  public clone (step: RecipeStep): RecipeStep {
     this.id = step.id;
     this.recipeId = step.recipeId;
     this.stepTitle = step.stepTitle;

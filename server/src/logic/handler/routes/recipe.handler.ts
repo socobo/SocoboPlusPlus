@@ -80,7 +80,7 @@ export class RecipeHandler {
   }
 
   public save = (req: Request, res: Response): void => {
-    const recipe: Recipe = new Recipe().of(req.body as Recipe);
+    const recipe: Recipe = new Recipe().clone(req.body as Recipe);
     recipe.created = new Date();
 
     this._db.users.getUserById(recipe.userId)
@@ -98,7 +98,7 @@ export class RecipeHandler {
   }
 
   public update = (req: Request, res: Response): void => {
-    const newRecipe: Recipe = new Recipe().of(req.body as Recipe);
+    const newRecipe: Recipe = new Recipe().clone(req.body as Recipe);
 
     this._db.users.getUserById(newRecipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));

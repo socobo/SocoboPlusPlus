@@ -7,16 +7,6 @@ import { RecipeStep } from "../../models/database/recipe-step";
 @ValidatorConstraint({ name: "RecipeStepsOrder", async: false })
 export class RecipeStepsAreOrderd implements ValidatorConstraintInterface {
 
-  private _sortAsc = (leftNumber: number, rightNumber: number): number => {
-    if (leftNumber < rightNumber) {
-      return -1;
-    } else if (leftNumber > rightNumber) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-
   public validate (recipeSteps: RecipeStep[], args: ValidationArguments): boolean {
     if (!recipeSteps) {
       return false;

@@ -49,7 +49,7 @@ export class Recipe implements Validatable{
     this.fields.set("imageUrl", this.setImageUrl);
   }
 
-  public of (recipe: Recipe) {
+  public clone (recipe: Recipe) {
     this.title = recipe.title;
     this.description = recipe.description;
     this.id = recipe.id;
