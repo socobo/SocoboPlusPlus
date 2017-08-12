@@ -1,6 +1,8 @@
 import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
 import { Validatable, ValidationGroup } from "../../app/index";
-import { AreRecipeStepsOrdered, AreRecipeStepsUnique, RecipeStep } from "../index";
+import { RecipeStep } from "../models/recipe-step";
+import { AreRecipeStepsOrdered } from "../validators/recipe-steps-order.validator";
+import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validator";
 
 export class Recipe implements Validatable {
 
