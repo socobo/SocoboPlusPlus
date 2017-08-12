@@ -1,10 +1,10 @@
-process.env.NODE_ENV = "test";
+process.env["NODE_ENV"] = "test";
 
 import * as chai from "chai";
 import * as mocha from "mocha";
 import chaiHttp = require("chai-http");
-import { ProviderType, Role, SocoboUser } from "./../src/models/index";
 import Server from "./../src/server";
+import { SocoboUser, SocoboUserProviderTypes, SocoboUserRoleTypes } from "./../src/socobouser/index";
 
 chai.use(chaiHttp);
 
@@ -26,35 +26,35 @@ describe("User Route v1", () => {
   let users: SocoboUser[];
 
   before((done) => {
+    // PW: SuperSecurePassword
     const user1: SocoboUser = new SocoboUser();
     user1.id = 1;
+    user1.socoboUserImageId = 1;
+    user1.socoboUserRoleId = SocoboUserRoleTypes.User;
+    user1.socoboUserProviderId = SocoboUserProviderTypes.Email;
     user1.username = "john-doe@test.test";
     user1.email = "john-doe@test.test";
-    // user1.password = "SuperSecurePassword";
-    user1.image = "http://placehold.it/350x150";
     user1.hasTermsAccepted = true;
-    user1.role = Role.User;
-    user1.provider = ProviderType.Email;
 
+    // PW: SuperMegaSecure
     const user2: SocoboUser = new SocoboUser();
     user2.id = 2;
+    user2.socoboUserImageId = 1;
+    user2.socoboUserRoleId = SocoboUserRoleTypes.User;
+    user2.socoboUserProviderId = SocoboUserProviderTypes.Username;
     user2.username = "MaxMustermann";
     user2.email = "MaxMustermann";
-    // user2.password = "SuperMegaSecure";
-    user2.image = "http://placehold.it/350x150";
     user2.hasTermsAccepted = true;
-    user2.role = Role.User;
-    user2.provider = ProviderType.Username;
 
+    // PW: password
     const user3: SocoboUser = new SocoboUser();
     user3.id = 3;
+    user3.socoboUserImageId = 1;
+    user3.socoboUserRoleId = SocoboUserRoleTypes.Admin;
+    user3.socoboUserProviderId = SocoboUserProviderTypes.Email;
     user3.username = "admin@test.test";
     user3.email = "admin@test.test";
-    // user3.password = "password";
-    user3.image = "http://placehold.it/350x150";
     user3.hasTermsAccepted = true;
-    user3.role = Role.Admin;
-    user3.provider = ProviderType.Email;
 
     users = [user1, user2, user3];
 
@@ -116,16 +116,16 @@ describe("User Route v1", () => {
 
           chai.request(Server).get("/api/v1/users/1").set("x-access-token", token)
             .then((res: ChaiHttp.Response) => {
-              expect(res.body).to.haveOwnProperty("id");
-              expect(res.body).to.haveOwnProperty("username");
-              expect(res.body).to.haveOwnProperty("email");
-              expect(res.body).to.haveOwnProperty("image");
-              expect(res.body).to.haveOwnProperty("hastermsaccepted");
-              expect(res.body).to.haveOwnProperty("isadmin");
-              expect(res.body).to.haveOwnProperty("provider");
-              expect(res.body).to.haveOwnProperty("created");
-              expect(res.body).to.haveOwnProperty("lastmodified");
-              expect(res.body).to.not.haveOwnProperty("password");
+              expect(res.body).to.deep.property("id");
+              expect(res.body).to.deep.property("socoboUserImageId");
+              expect(res.body).to.deep.property("socoboUserRoleId");
+              expect(res.body).to.deep.property("socoboUserProviderId");
+              expect(res.body).to.deep.property("username");
+              expect(res.body).to.deep.property("email");
+              expect(res.body).to.deep.property("hastermsaccepted");
+              expect(res.body).to.deep.property("created");
+              expect(res.body).to.deep.property("lastmodified");
+              expect(res.body).to.not.deep.property("password");
             })
             .catch((err: any) => {
               expect(err.message).equal("The 'GetUserById' Request with the Id: 1 are failed!");
