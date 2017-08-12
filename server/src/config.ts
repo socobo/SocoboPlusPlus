@@ -1,5 +1,3 @@
-import { DbConfig } from "./models/index";
-
 /* tslint:disable:max-line-length */
 export class Config {
   public static DB_USER: string = "postgres";
@@ -13,7 +11,7 @@ export class Config {
   public static TOKEN_EXPIRATION: string = "1d";
   public static TOKEN_ISSUER: string = "socobo";
   public static TOKEN_HEADER: string = "x-access-token";
-  public static DEFAULT_USER_IMAGE: string = "http://placehold.it/350x150";
+  public static DEFAULT_USER_IMAGE_ID: number = 1;
   public static IMAGE_TMP_DIR: string = "tmp";
   public static DATA_BASE_DIR: string = "socobo_data";
 }

@@ -1,9 +1,14 @@
 import { IDatabase, IMain, IOptions } from "pg-promise";
 import * as pgPromise from "pg-promise";
-
+import { DbExtensions } from "../app/index";
 import { Config } from "../config";
-import { DbConfig, DbExtensions } from "./../models/index";
-import { RecipeRepository, RecipeStepRepository, UserRepository } from "./repositories/index";
+import {
+  RecipeRepository, RecipeStepRepository
+} from "../recipe/index";
+import {
+  SocoboUserImageRepository, SocoboUserProviderRepository,
+  SocoboUserRepository, SocoboUserRoleRepository
+} from "./../socobouser/index";
 
 const getConnectionUrl = (): string => {
   let connectionUrl: string;
@@ -31,7 +36,10 @@ const getConnectionUrl = (): string => {
 // pg-promise initialization options:
 const options: IOptions<DbExtensions> = {
   extend: (obj: DbExtensions) => {
-    obj.users = new UserRepository(obj);
+    obj.socobousers = new SocoboUserRepository(obj);
+    obj.socobouserRoles = new SocoboUserRoleRepository(obj);
+    obj.socobouserProviders = new SocoboUserProviderRepository(obj);
+    obj.socobouserImages = new SocoboUserImageRepository(obj);
     obj.recipes = new RecipeRepository(obj);
     obj.recipeSteps = new RecipeStepRepository(obj);
   }
