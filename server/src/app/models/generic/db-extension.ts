@@ -1,5 +1,5 @@
 import {
-  RecipeRepository
+  RecipeRepository, RecipeStepRepository
 } from "../../../recipe/index";
 import {
   SocoboUserImageRepository, SocoboUserProviderRepository,
@@ -12,4 +12,5 @@ export interface DbExtensions {
   socobouserProviders: SocoboUserProviderRepository;
   socobouserImages: SocoboUserImageRepository;
   recipes: RecipeRepository;
+  recipeSteps: RecipeStepRepository;
 }

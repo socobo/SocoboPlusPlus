@@ -12,6 +12,7 @@ export * from "./models/generic/db-config";
 export * from "./models/generic/db-extension";
 export * from "./models/generic/IBase.repository";
 export * from "./models/generic/socobo-request";
+export * from "./models/generic/validatable";
 export * from "./models/responses/login-response";
 export * from "./models/results/compare-pw-result";
 export * from "./models/results/extract-request-body-result";

@@ -2,9 +2,12 @@ import { IDatabase, IMain, IOptions } from "pg-promise";
 import * as pgPromise from "pg-promise";
 import { DbExtensions } from "../app/index";
 import { Config } from "../config";
-import { RecipeRepository } from "../recipe/index";
 import {
-  SocoboUserImageRepository, SocoboUserProviderRepository, SocoboUserRepository, SocoboUserRoleRepository
+  RecipeRepository, RecipeStepRepository
+} from "../recipe/index";
+import {
+  SocoboUserImageRepository, SocoboUserProviderRepository,
+  SocoboUserRepository, SocoboUserRoleRepository
 } from "./../socobouser/index";
 
 const getConnectionUrl = (): string => {
@@ -38,6 +41,7 @@ const options: IOptions<DbExtensions> = {
     obj.socobouserProviders = new SocoboUserProviderRepository(obj);
     obj.socobouserImages = new SocoboUserImageRepository(obj);
     obj.recipes = new RecipeRepository(obj);
+    obj.recipeSteps = new RecipeStepRepository(obj);
   }
 };
 

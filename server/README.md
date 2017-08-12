@@ -749,12 +749,67 @@ npm run lint
         userid: number,
         description: number,
         imageurl: string,
-        created: Date
+        created: Date,
+        steps: [
+          {
+            id: number,
+            recipeId: number,
+            stepNumber: number,
+            stepTitle: string,
+            stepDescription?: string,
+            createdDate: number,
+            lastModifiedDate: number
+          },
+          {
+            ...
+          }
+        ]
       },
       {
         ...
       }
     ]
+    
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **GET /api/v1/recipes/:id**
+
+  Path Parameter:
+    - id: Recipe id
+
+  Response body:
+    ```json
+    {
+      id: number,
+      title: string,
+      userid: number,
+      description: number,
+      imageurl: string,
+      created: Date,
+      steps: [
+        {
+          id: number,
+          recipeId: number,
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string,
+          createdDate: number,
+          lastModifiedDate: number
+        },
+        {
+          ...
+        }
+      ]
+    }
     ```
 
   Error body:
@@ -768,7 +823,7 @@ npm run lint
 
 - **GET /api/v1/recipes?property=value**
 
-  Gets all recipes for the defined property value
+  Gets all recieps for the defined property value
 
   Query parameter:
     - property: The name of the recipe property which should be used as filter
@@ -783,7 +838,21 @@ npm run lint
         userid: number,
         description: number,
         imageurl: string,
-        created: Date
+        created: Date,
+        steps: [
+          {
+            id: number,
+            recipeId: number,
+            stepNumber: number,
+            stepTitle: string,
+            stepDescription?: string,
+            createdDate: number,
+            lastModifiedDate: number
+          },
+          {
+            ...
+          }
+        ]
       },
       {
         ...
@@ -819,7 +888,21 @@ npm run lint
         userid: number,
         description: number,
         imageurl: string,
-        created: Date
+        created: Date,
+        steps: [
+          {
+            id: number,
+            recipeId: number,
+            stepNumber: number,
+            stepTitle: string,
+            stepDescription?: string,
+            createdDate: number,
+            lastModifiedDate: number
+          },
+          {
+            ...
+          }
+        ]
       },
       {
         ...
@@ -828,32 +911,6 @@ npm run lint
     
     ```
     
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **GET /api/v1/recipes/:id**
-
-  Path Parameter:
-    - id: Recipe id
-
-  Response body:
-    ```json
-    {
-      id: number,
-      title: string,
-      userid: number,
-      description: number,
-      imageurl: string,
-      created: Date
-    }
-    ```
-
   Error body:
     ```json
     {
@@ -882,7 +939,17 @@ npm run lint
       title?: string,
       userId?: string,
       description?: string,
-      imageurl?: string
+      imageurl?: string,
+      steps?: [
+        {
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string
+        },
+        {
+          ...
+        }
+      ]
     }
     ```
 
@@ -894,7 +961,21 @@ npm run lint
       userid: number,
       description: string,
       imageurl: string,
-      created: Date
+      created: Date,
+      steps: [
+        {
+          id: number,
+          recipeId: number,
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string,
+          createdDate: number,
+          lastModifiedDate: number
+        },
+        {
+          ...
+        }
+      ]
     }
     ```
 
@@ -915,7 +996,17 @@ npm run lint
       title: string,
       userId: string,
       description?: string,
-      imageurl?: string
+      imageurl?: string,
+      steps?: [
+        {
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string
+        },
+        {
+          ...
+        }
+      ]
     }
     ```
 
@@ -923,11 +1014,25 @@ npm run lint
     ```json
     {
       id: number,
+      userId: number,
       title: string,
-      userid: number,
       description?: string,
       imageurl?: string,
-      created: Date
+      created: Date,
+      steps: [
+        {
+          id: number,
+          recipeId: number,
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string,
+          createdDate: number,
+          lastModifiedDate: number
+        },
+        {
+          ...
+        }
+      ]
     }
     ```
 
@@ -962,7 +1067,21 @@ npm run lint
       userid: number,
       description?: string,
       imageurl: string,
-      created: Date
+      created: Date,
+      steps: [
+        {
+          id: number,
+          recipeId: number,
+          stepNumber: number,
+          stepTitle: string,
+          stepDescription?: string,
+          createdDate: number,
+          lastModifiedDate: number
+        },
+        {
+          ...
+        }
+      ]
     }
     ```
 

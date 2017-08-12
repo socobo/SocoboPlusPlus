@@ -15,25 +15,6 @@ export class RecipeRoute {
   ) {}
 
   public createRoutes (): Router {
-    this._router.post("/",
-      this._authValidationHandler.checkToken,
-      this._modelValidationHandler.validate(Recipe, [ValidationGroup.RECIPE]),
-      this._recipeHandler.save);
-
-    this._router.post("/:id/image",
-      this._authValidationHandler.checkToken,
-      this._multer.single("recipeImage"),
-      this._recipeHandler.uploadImage);
-
-    this._router.get("/search",
-      this._authValidationHandler.checkToken,
-      this._recipeHandler.searchByField);
-
-    this._router.put("/:id",
-      this._authValidationHandler.checkToken,
-      this._recipeHandler.updateRecipeProperties,
-      this._modelValidationHandler.validate(Recipe, [ValidationGroup.RECIPE]),
-      this._recipeHandler.update);
 
     this._router.get("/",
       this._authValidationHandler.checkToken,
@@ -42,6 +23,26 @@ export class RecipeRoute {
     this._router.get("/:id",
       this._authValidationHandler.checkToken,
       this._recipeHandler.getById);
+
+    this._router.get("/search",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.searchByField);
+
+    this._router.put("/:id",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.updateRecipeProperties,
+      this._modelValidationHandler.validateObject(new Recipe(), [ValidationGroup.RECIPE]),
+      this._recipeHandler.update);
+
+    this._router.post("/",
+      this._authValidationHandler.checkToken,
+      this._modelValidationHandler.validateObject(new Recipe(), [ValidationGroup.RECIPE]),
+      this._recipeHandler.save);
+
+    this._router.post("/:id/image",
+      this._authValidationHandler.checkToken,
+      this._multer.single("recipeImage"),
+      this._recipeHandler.uploadImage);
 
     this._router.delete("/:id",
       this._authValidationHandler.checkToken,

@@ -78,22 +78,25 @@ export class RecipeHandler {
   }
 
   public save = (req: Request, res: Response): void => {
-    const recipe: Recipe = req.body as Recipe;
+    const recipe: Recipe = new Recipe().clone(req.body as Recipe);
     recipe.created = new Date();
 
     this._db.socobousers.getUserById(recipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
 
     this._db.recipes.save(recipe)
-      .then((result: Recipe) => {
+      .then((result: any) => {
         recipe.id = result.id;
+        delete recipe.fields;
         res.status(201).json(recipe);
       })
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+      .catch((e: any) => {
+        res.status(e.statusCode).json(e.forResponse());
+      });
   }
 
   public update = (req: Request, res: Response): void => {
-    const newRecipe: Recipe = req.body as Recipe;
+    const newRecipe: Recipe = new Recipe().clone(req.body as Recipe);
 
     this._db.socobousers.getUserById(newRecipe.userId)
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
@@ -112,10 +115,11 @@ export class RecipeHandler {
   public delete = (req: Request, res: Response): void => {
 
     this._db.recipes.getById(req.params.id)
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-
-    this._db.recipes.delete(req.params.id)
-      .then(() => res.status(200).json())
+      .then(() => {
+        this._db.recipes.delete(req.params.id)
+          .then(() => res.status(200).json())
+          .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+      })
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 
@@ -135,7 +139,7 @@ export class RecipeHandler {
   }
 
   private _addImageUrl = (recipe: Recipe, url: string): Promise<any> => {
-    recipe.addImageUrl(url);
+    recipe.setImageUrl(url);
     return Promise.resolve(recipe);
   }
 }
