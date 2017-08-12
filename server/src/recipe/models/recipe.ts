@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
-import { ValidationGroup } from "../../app/index";
+import { Validatable, ValidationGroup } from "../../app/index";
 import { AreRecipeStepsUnique, AreRecipeStepsOrdered, RecipeStep } from "../index";
 
-export class Recipe {
+export class Recipe implements Validatable {
 
   public fields: Map<string, Function>;
 
@@ -45,7 +45,7 @@ export class Recipe {
     this.fields.set("imageUrl", this.setImageUrl);
   }
 
-  public of (recipe: Recipe) {
+  public clone (recipe: Recipe) {
     this.title = recipe.title;
     this.description = recipe.description;
     this.id = recipe.id;
@@ -54,9 +54,14 @@ export class Recipe {
     this.steps = [];
     if (recipe.hasOwnProperty("steps")) {
       recipe.steps.forEach((step) => {
-        this.steps.push(new RecipeStep().of(step));
+        this.steps.push(new RecipeStep().clone(step));
       });
     }
+    return this;
+  }
+
+  public setId (id: number) {
+    this.id = id;
     return this;
   }
 
@@ -87,6 +92,11 @@ export class Recipe {
 
   public setLastModified (lastModified: Date) {
     this.lastModified = lastModified;
+    return this;
+  }
+
+  public setSteps (steps: RecipeStep[]) {
+    this.steps = steps;
     return this;
   }
 }

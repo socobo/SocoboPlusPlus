@@ -49,7 +49,7 @@ export class ModelValidationMiddleware {
       const obj: any = req.body;
       const mappedGroups: string[] = validationGroups.map((group) => group.toString());
 
-      objToValidate.of(obj);
+      objToValidate.clone(obj);
 
       validate(objToValidate, { groups: mappedGroups })
         .then((errors: any[]) => {
