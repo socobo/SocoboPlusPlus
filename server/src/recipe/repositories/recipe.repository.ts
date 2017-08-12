@@ -1,5 +1,5 @@
 import { IDatabase } from "pg-promise";
-import { DbExtensions, ErrorUtils, ERRORS, DbError } from "../../app/index";
+import { DbError, DbExtensions, ERRORS, ErrorUtils } from "../../app/index";
 import { Recipe, RecipeStep } from "../index";
 
 export class RecipeRepository {
@@ -10,16 +10,15 @@ export class RecipeRepository {
     this._db = db;
   }
 
-  private _fetchSteps = (recipe: Recipe) => {
-    return this._db.recipeSteps.get(recipe.id)
-      .then((steps: RecipeStep) => {
-        return {steps, recipe};
+  public getAll = (): Promise<Recipe[] | DbError> => {
+    const query = `select * from recipes`;
+    return this._db.many(query, [])
+      .then((result) => result.map(this._transformResult))
+      .catch((error: any) => {
+        return ErrorUtils.handleDbNotFound(
+          ERRORS.RECIPE_NON_AVAILABLE, error, RecipeRepository.name,
+          "getAll(..)");
       });
-  }
-
-  private _addStepsToRecipe = (obj: any) => {
-    obj.recipe.steps = obj.steps;
-    return obj.recipe;
   }
 
   public getById = (id: number): Promise<Recipe> => {
@@ -34,15 +33,16 @@ export class RecipeRepository {
       });
   }
 
-  public getAll = (): Promise<Recipe[] | DbError> => {
-    const query = `select * from recipes`;
-    return this._db.many(query, [])
-      .then((result) => result.map(this._transformResult))
-      .catch((error: any) => {
-        return ErrorUtils.handleDbNotFound(
-          ERRORS.RECIPE_NON_AVAILABLE, error, RecipeRepository.name,
-          "getAll(..)");
+  private _fetchSteps = (recipe: Recipe) => {
+    return this._db.recipeSteps.get(recipe.id)
+      .then((steps: RecipeStep[]) => {
+        return {steps, recipe};
       });
+  }
+
+  private _addStepsToRecipe = (obj: any) => {
+    obj.recipe.steps = obj.steps;
+    return obj.recipe;
   }
 
   public getByField = (field: string, value: string | number): Promise<Recipe[] | DbError> => {
@@ -67,14 +67,15 @@ export class RecipeRepository {
       });
   }
 
-  public delete = (id: Number): Promise<void> => {
-    const query: string = `delete from recipes where recipes.id = $1`;
-    return this._db.tx("DeleteRecipe", (t) => {
-      const queries = [this._db.recipeSteps.delete(id), this._db.none(query, [id])];
-      return t.batch(queries)
-        .catch((error: any) => {
-          return ErrorUtils.handleDbError(error, RecipeRepository.name, "delete(..)");
-        });
+  public save = (recipe: Recipe): Promise<any> => {
+    return this._db.tx("SaveRecipeCoreDate", (t) => {
+      return this._saveRecipeCoreQuery(recipe);
+    })
+    .then((id: any) => {
+      return this._saveRecipeStepsQuery(id, recipe);
+    })
+    .catch((error: any) => {
+      return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
     });
   }
 
@@ -93,18 +94,6 @@ export class RecipeRepository {
     });
   }
 
-  public save = (recipe: Recipe): Promise<any> => {
-    return this._db.tx("SaveRecipeCoreDate", (t) => {
-      return this._saveRecipeCoreQuery(recipe);
-    })
-    .then((id: any) => {
-      return this._saveRecipeStepsQuery(id, recipe);
-    })
-    .catch((error: any) => {
-      return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
-    });
-  }
-
   public update = (id: number, recipe: Recipe): Promise<Recipe> => {
     const query: string = `update recipes set
                              title=$2, userId=$3, description=$4, imageUrl=$5
@@ -117,6 +106,17 @@ export class RecipeRepository {
     })
     .catch((error: any) => {
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");
+    });
+  }
+
+  public delete = (id: Number): Promise<void> => {
+    const query: string = `delete from recipes where recipes.id = $1`;
+    return this._db.tx("DeleteRecipe", (t) => {
+      const queries = [this._db.recipeSteps.delete(id), this._db.none(query, [id])];
+      return t.batch(queries)
+        .catch((error: any) => {
+          return ErrorUtils.handleDbError(error, RecipeRepository.name, "delete(..)");
+        });
     });
   }
 

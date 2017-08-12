@@ -15,7 +15,7 @@ describe("Model Validation Middleware", () => {
 
   const mocks = require("node-mocks-http");
 
-  it("validation of a recipe with empty title and userId failes with two properties", () => {
+  it("validation of a recipe with empty title and userId failes with three properties", () => {
 
     let req: any;
     const recipe: Recipe = new Recipe();

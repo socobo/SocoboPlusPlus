@@ -2,7 +2,7 @@ import {
   registerDecorator, ValidationArguments, ValidationOptions,
   ValidatorConstraint, ValidatorConstraintInterface
 } from "class-validator";
-import { RecipeStep } from "../../models/database/recipe-step";
+import { RecipeStep } from "../index";
 
 @ValidatorConstraint({ name: "RecipeStepsUnique", async: false })
 export class RecipeStepsAreUnique implements ValidatorConstraintInterface {

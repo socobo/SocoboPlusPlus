@@ -1,7 +1,6 @@
 import { IDatabase } from "pg-promise";
-import { ErrorUtils } from "./../../logic/utils/index";
-import { DbError, ERRORS, Recipe, RecipeStep } from "./../../models/index";
-import { DbExtensions } from "./../../models/index";
+import { DbExtensions } from "../../app/index";
+import { Recipe, RecipeStep } from "../index";
 
 export class RecipeStepRepository {
 
@@ -11,22 +10,14 @@ export class RecipeStepRepository {
     this._db = db;
   }
 
-  private _saveQuery = (step: RecipeStep) => {
-    const query: string = `insert into recipe_steps(title, description, stepNumber, recipeId)
-                           values($1, $2, $3, $4)
-                           returning id`;
-    return this._db.one(query, [step.stepTitle, step.stepDescription, step.stepNumber, step.recipeId]);
-  }
-
-  private _updateQuery = (step: RecipeStep) => {
-    const query: string = `update recipe_steps set
-                             title=$2, description=$3, stepNumber=$4
-                           where recipe_steps.id=$1`;
-    return this._db.none(query, [step.id, step.stepTitle, step.stepDescription, step.stepNumber]);
+  public get = (recipeId: Number) => {
+    const query: string = `select * from recipe_steps where recipe_steps.recipeId = $1`;
+    return this._db.many(query, [recipeId])
+      .then((result) => result.map(this._transformResult))
+      .catch((error) => []);
   }
 
   public save = (steps: RecipeStep[], recipe: Recipe) => {
-
     const queries: Array<Promise<any>> = [];
     steps.forEach((recipeStep: RecipeStep) => {
       recipeStep
@@ -35,10 +26,16 @@ export class RecipeStepRepository {
         .setRecipeId(recipe.id);
       queries.push(this._saveQuery(recipeStep));
     });
-
     return this._db.tx("SaveRecipeSteps", (t) => {
       return t.batch(queries);
     });
+  }
+
+  private _saveQuery = (step: RecipeStep) => {
+    const query: string = `insert into recipe_steps(title, description, stepNumber, recipeId)
+                           values($1, $2, $3, $4)
+                           returning id`;
+    return this._db.one(query, [step.stepTitle, step.stepDescription, step.stepNumber, step.recipeId]);
   }
 
   public update = (steps: RecipeStep[]) => {
@@ -46,19 +43,16 @@ export class RecipeStepRepository {
     steps.forEach((recipeStep: RecipeStep) => {
       queries.push(this._updateQuery(recipeStep));
     });
-
     return this._db.tx("UpdateRecipeSteps", (t) => {
       return t.batch(queries);
     });
   }
 
-  public get = (recipeId: Number) => {
-    const query: string = `select * from recipe_steps where recipe_steps.recipeId = $1`;
-    return this._db.many(query, [recipeId])
-      .then((result) => result.map(this._transformResult))
-      .catch((error) => {
-        return [];
-      });
+  private _updateQuery = (step: RecipeStep) => {
+    const query: string = `update recipe_steps set
+                             title=$2, description=$3, stepNumber=$4
+                           where recipe_steps.id=$1`;
+    return this._db.none(query, [step.id, step.stepTitle, step.stepDescription, step.stepNumber]);
   }
 
   public delete = (recipeId: Number) => {
@@ -72,7 +66,7 @@ export class RecipeStepRepository {
       .setTitle(result.hasOwnProperty("title") ? result.title : null)
       .setRecipeId(result.hasOwnProperty("recipeid") ? Number(result.recipeid) : null)
       .setDescription(result.hasOwnProperty("description") ? result.description : null)
-      .setDescription(result.hasOwnProperty("stepnumber") ? result.stepnumber : null);
+      .setStep(result.hasOwnProperty("stepnumber") ? result.stepnumber : null);
     return transformedResult;
   }
 }
