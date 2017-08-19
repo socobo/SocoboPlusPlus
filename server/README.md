@@ -18,19 +18,18 @@
 ## Requirements
 - node
 - npm
-- postgres server
+- mongoDB server
+- homebrew (for mongoDB server service)
 
 ## Build and Run
 
-1. start your local postgres server
-2. create database, demo table and fill table with demo data
+1. start your local mongodb server
 
-    for production
     ```bash
-    npm run setup:db:p
+    npm run start:m
     ```
 
-    or
+2. create database, collections and fill collections with demo data
 
     for development
     ```bash
@@ -43,6 +42,7 @@
     ```bash
     npm run setup:db:t
     ```
+
 3. start server
 
     development server
