@@ -1,7 +1,8 @@
-import { IDatabase, IMain, IOptions } from "pg-promise";
-import * as pgPromise from "pg-promise";
-import { DbExtensions } from "../app/index";
+// import { IDatabase, IMain, IOptions } from "pg-promise";
+// import * as pgPromise from "pg-promise";
+import * as mongoose from "mongoose";
 import { Config } from "../config";
+import { DbExtensions } from "../app/index";
 import {
   RecipeRepository, RecipeStepRepository
 } from "../recipe/index";
@@ -33,26 +34,50 @@ const getConnectionUrl = (): string => {
   return connectionUrl;
 };
 
-// pg-promise initialization options:
-const options: IOptions<DbExtensions> = {
-  extend: (obj: DbExtensions) => {
-    obj.socobousers = new SocoboUserRepository(obj);
-    obj.socobouserRoles = new SocoboUserRoleRepository(obj);
-    obj.socobouserProviders = new SocoboUserProviderRepository(obj);
-    obj.socobouserImages = new SocoboUserImageRepository(obj);
-    obj.recipes = new RecipeRepository(obj);
-    obj.recipeSteps = new RecipeStepRepository(obj);
+
+class MongoDbExtension implements DbExtensions {
+  socobousers: SocoboUserRepository;
+  socobouserRoles: SocoboUserRoleRepository;
+  socobouserProviders: SocoboUserProviderRepository;
+  socobouserImages: SocoboUserImageRepository;
+  recipes: RecipeRepository;
+  recipeSteps: RecipeStepRepository;
+
+  constructor () {
+    this.socobousers = new SocoboUserRepository(null); // TODO: null wird zu SocoboUser Typegoose Schema Class
+    this.recipes = new RecipeRepository(null);
   }
-};
+}
+
+// pg-promise initialization options:
+// const options: IOptions<DbExtensions> = {
+//   extend: (obj: DbExtensions) => {
+//     obj.socobousers = new SocoboUserRepository(obj);
+//     obj.socobouserRoles = new SocoboUserRoleRepository(obj);
+//     obj.socobouserProviders = new SocoboUserProviderRepository(obj);
+//     obj.socobouserImages = new SocoboUserImageRepository(obj);
+//     obj.recipes = new RecipeRepository(obj);
+//     obj.recipeSteps = new RecipeStepRepository(obj);
+//   }
+// };
 
 // Choose the db configuration depending on the current environment
-const connectionUrl = getConnectionUrl();
+// const connectionUrl = getConnectionUrl();
 
-// Loading and initializing pg-promise:
-const pgp: IMain = pgPromise(options);
+// // Loading and initializing pg-promise:
+// const pgp: IMain = pgPromise(options);
 
-// Create the database instance with extensions:
-const db = pgp(connectionUrl) as IDatabase<DbExtensions>&DbExtensions;
+// // Create the database instance with extensions:
+// const db = pgp(connectionUrl) as IDatabase<DbExtensions>&DbExtensions;
+
+// export database object
+// export = db;
+
+// Create MongoDB connection
+mongoose.connect(getConnectionUrl());
+
+// Create DB Extension
+const db = new MongoDbExtension();
 
 // export database object
 export = db;
