@@ -1,24 +1,18 @@
 import * as jwt from "jsonwebtoken";
-// import { IDatabase } from "pg-promise";
-// import {
-//   ApiError, ComparePwResult, CryptoUtils, DbError,
-//   DbExtensions, ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
-// } from "../../app/index";
-
 import {
   ApiError, ComparePwResult, CryptoUtils, DbError,
   ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
 } from "../../app/index";
-
 import {
-  SocoboUser, SocoboUserProviderTypes, SocoboUserRoleTypes
+  SocoboUser, SocoboUserProviderType, SocoboUserRoleType
 } from "../../socobouser/index";
 import { Config } from "./../../config";
+import { DbExtension } from "../../db/interface/db-extension";
 
 export class AuthService {
 
   constructor (
-    private _db: any, // TODO: any wird zu DbExtension  // IDatabase<DbExtensions>&DbExtensions,
+    private _db: DbExtension,
     private _cryptoUtils: CryptoUtils
   ) {}
 
@@ -45,7 +39,7 @@ export class AuthService {
     });
   }
 
-  public register (erbr: ExtractRequestBodyResult): Promise<SocoboUser> {
+  public register (erbr: ExtractRequestBodyResult): Promise<SocoboUser | DbError> {
     return new Promise((resolve, reject) => {
       this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail, true)
         .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
@@ -63,14 +57,14 @@ export class AuthService {
   }
 
   private _getUserFromDatabase (isEmailLogin: boolean, usernameOrEmail: string,
-                                onlyEmailRegistration: boolean): Promise<SocoboUser> {
+                                onlyEmailRegistration: boolean): Promise<SocoboUser | DbError> {
 
     if (isEmailLogin) {
-      return this._db.socobousers.getUserByEmail(usernameOrEmail);
+      return this._db.socobouser.getUserByEmail(usernameOrEmail);
     }
 
     if (!onlyEmailRegistration) {
-      return this._db.socobousers.getUserByUsername(usernameOrEmail);
+      return this._db.socobouser.getUserByUsername(usernameOrEmail);
     }
 
     const e = new ApiError(ERRORS.AUTH_ONLY_EMAIL_ALLOWED)
@@ -135,7 +129,7 @@ export class AuthService {
   }
 
   private _createNewUser (hashedPassword: string, usernameOrEmail: string,
-                          role: SocoboUserRoleTypes): Promise<SocoboUser> {
+                          role: SocoboUserRoleType): Promise<SocoboUser | DbError> {
     return new Promise((resolve, reject) => {
       if (hashedPassword.length <= 0) {
         const e = new ApiError(ERRORS.AUTH_NO_HASHED_PASSWORD)
@@ -144,10 +138,9 @@ export class AuthService {
         return reject(e);
       }
       const user: SocoboUser = new SocoboUser()
-        .setSocoboUserRoleId(role)
-        .setSocoboUserProviderId(usernameOrEmail.includes("@") ?
-                                    SocoboUserProviderTypes.Email : SocoboUserProviderTypes.Username)
-        .setSocoboUserImageId(Number(process.env["DEFAULT_USER_IMAGE_ID"] || Config.DEFAULT_USER_IMAGE_ID))
+        .setRole(role)
+        .setProvider(usernameOrEmail.includes("@") ? SocoboUserProviderType.Email : SocoboUserProviderType.Username)
+        .setImageUrl(String(process.env["DEFAULT_USER_IMAGE"] || Config.DEFAULT_USER_IMAGE))
         .setUsername(usernameOrEmail)
         .setEmail(usernameOrEmail)
         .setPassword(hashedPassword)
@@ -157,9 +150,9 @@ export class AuthService {
     });
   }
 
-  private _returnSavedUser (user: SocoboUser): Promise<SocoboUser> {
+  private _returnSavedUser (user: SocoboUser): Promise<SocoboUser | DbError> {
     return new Promise((resolve, reject) => {
-      this._db.socobousers.save(user)
+      this._db.socobouser.save(user)
         .then((result: any) => {
           user.id = result.id;
           delete user.password;

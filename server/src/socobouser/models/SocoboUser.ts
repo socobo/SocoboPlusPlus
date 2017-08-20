@@ -1,24 +1,9 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
-import { BaseObject, ValidationGroup } from "../../app/index";
+import { prop, Typegoose } from "typegoose";
+import { ValidationGroup } from "../../app/index";
+import { SocoboUserRoleType, SocoboUserProviderType } from "../index";
 
-export class SocoboUser extends BaseObject {
-
-  public id: number;
-
-  @IsNotEmpty({
-    groups: [ ValidationGroup.REGISTRATION ]
-  })
-  public socoboUserRoleId: number;
-
-  @IsNotEmpty({
-    groups: [ ValidationGroup.REGISTRATION ]
-  })
-  public socoboUserProviderId: number;
-
-  @IsNotEmpty({
-    groups: [ ValidationGroup.REGISTRATION ]
-  })
-  public socoboUserImageId: number;
+export class SocoboUser extends Typegoose {
 
   @ValidateIf((o) => o.email === "", {
     groups: [ ValidationGroup.LOGIN ]
@@ -32,10 +17,8 @@ export class SocoboUser extends BaseObject {
   @ValidateIf((o) => o.updateType === 1, {
     groups: [ ValidationGroup.USER ]
   })
-  @IsNotEmpty({
-    groups: [ ValidationGroup.LOGIN ]
-  })
-  public username: string;
+  @prop()
+  username?: string;
 
   @ValidateIf((o) => o.username === "", {
     groups: [ ValidationGroup.LOGIN ]
@@ -49,7 +32,8 @@ export class SocoboUser extends BaseObject {
       ValidationGroup.REGISTRATION
     ]
   })
-  public email: string;
+  @prop()
+  email?: string;
 
   @IsNotEmpty({
     groups: [
@@ -63,31 +47,42 @@ export class SocoboUser extends BaseObject {
       ValidationGroup.REGISTRATION
     ]
   })
-  public password: string;
+  @prop({ required: true })
+  password: string;
+  
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
+  @prop()
+  hasTermsAccepted: boolean;
+  
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
+  @prop()
+  role: string;
 
-  public hasTermsAccepted: boolean;
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
+  @prop()
+  provider: string;
 
-  constructor () { super(); }
+  @IsNotEmpty({
+    groups: [ ValidationGroup.REGISTRATION ]
+  })
+  @prop()
+  imageUrl: string;
 
-  public setId = (id: number): this => {
-    this.id = id;
-    return this;
-  }
+  @IsNotEmpty()
+  @prop({ required: true, default: Date.now })
+  created: number;
 
-  public setSocoboUserRoleId = (id: number): this => {
-    this.socoboUserRoleId = id;
-    return this;
-  }
+  @IsNotEmpty()
+  @prop({ required: true, default: Date.now })
+  lastModified: number;
 
-  public setSocoboUserProviderId = (id: number): this => {
-    this.socoboUserProviderId = id;
-    return this;
-  }
 
-  public setSocoboUserImageId = (id: number): this => {
-    this.socoboUserImageId = id;
-    return this;
-  }
 
   public setUsername = (username: string): this => {
     this.username = username;
@@ -109,12 +104,43 @@ export class SocoboUser extends BaseObject {
     return this;
   }
 
-  public getSigningInfo = (): Object => {
+  public setRole = (role: SocoboUserRoleType): this => {
+    this.role = role;
+    return this;
+  }
+
+  public setProvider = (provider: SocoboUserProviderType): this => {
+    this.provider = provider;
+    return this;
+  }
+
+  public setImageUrl = (imageUrl: string): this => {
+    this.imageUrl = imageUrl;
+    return this;
+  }
+
+  public setCreated = (created: number): this => {
+    this.created = created;
+    return this;
+  }
+
+  public setLastModified = (lastModified: number): this => {
+    this.lastModified = lastModified;
+    return this;
+  }
+
+  public createDates = (): this => {
+    const now = Date.now();
+    this.created = now;
+    this.lastModified = now;
+    return this;
+  }
+
+  public getSigningInfo = (): object => {
     return {
       email: this.email,
-      image: this.socoboUserImageId,
-      provider: this.socoboUserProviderId,
-      role: this.socoboUserRoleId,
+      provider: this.provider,
+      role: this.role,
       username: this.username
     };
   }

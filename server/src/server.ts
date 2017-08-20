@@ -26,10 +26,7 @@ import {
   RecipeHandler, RecipeMiddleware, RecipeRoute
 } from "./recipe/index";
 // socobouser
-import {
-  SocoboUserHandler, SocoboUserImagesHandler, SocoboUserImagesRoute, SocoboUserProvidersHandler,
-  SocoboUserProvidersRoute, SocoboUserRolesHandler, SocoboUserRolesRoute, SocoboUsersRoute
-} from "./socobouser/index";
+import { SocoboUserHandler, SocoboUsersRoute } from "./socobouser/index";
 
 class Server {
   private _app: express.Application;
@@ -53,9 +50,6 @@ class Server {
 
   private _authHandler: AuthHandler;
   private _socoboUserHandler: SocoboUserHandler;
-  private _socoboUserImagesHandler: SocoboUserImagesHandler;
-  private _socoboUserProvidersHandler: SocoboUserProvidersHandler;
-  private _socoboUserRolesHandler: SocoboUserRolesHandler;
   private _recipeHandler: RecipeHandler;
   private _logHandler: LogHandler;
 
@@ -185,10 +179,7 @@ class Server {
     this._authValidationHandler = new AuthValidationHandler(this._authValidationMiddleware);
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
-    this._socoboUserHandler = new SocoboUserHandler(db);
-    this._socoboUserImagesHandler = new SocoboUserImagesHandler(db, this._imgService);
-    this._socoboUserProvidersHandler = new SocoboUserProvidersHandler(db);
-    this._socoboUserRolesHandler = new SocoboUserRolesHandler(db);
+    this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
     this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware, this._imgService);
     this._logHandler = new LogHandler();
   }
@@ -225,12 +216,9 @@ class Server {
   private _apiRoutes (): void {
     // set routes to paths
     this._app.use("/api/v1/auth", this._authRoute());
-    this._app.use("/api/v1/socobousers", this._socobousersRoute());
-    this._app.use("/api/v1/sobouserimages", this._socobouserImagesRoute());
-    this._app.use("/api/v1/sobouserproviders", this._socobouserProvidersRoute());
-    this._app.use("/api/v1/sobouserroles", this._socobouserRolesRoute());
-    this._app.use("/api/v1/recipes", this._recipeRoute());
-    this._app.use("/api/v1/logs", this._logsRoute());
+    this._app.use("/api/v1/socobouser", this._socobouserRoute());
+    this._app.use("/api/v1/recipe", this._recipeRoute());
+    this._app.use("/api/v1/log", this._logRoute());
   }
 
   private _authRoute (): express.Router {
@@ -241,37 +229,13 @@ class Server {
         this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
-  private _socobousersRoute (): express.Router {
+  private _socobouserRoute (): express.Router {
     // create new router
     const router: express.Router = express.Router();
     // init and return socobousers route
     return new SocoboUsersRoute(router, this._socoboUserHandler,
-        this._authValidationHandler, this._modelValidationHandler).createRoutes();
-  }
-
-  private _socobouserImagesRoute (): express.Router {
-    // create new router
-    const router: express.Router = express.Router();
-    // init and return socobouserImages route
-    return new SocoboUserImagesRoute(router, this._socoboUserImagesHandler,
         this._authValidationHandler, this._modelValidationHandler,
         this._socobouserImagesUpload).createRoutes();
-  }
-
-  private _socobouserProvidersRoute (): express.Router {
-    // create new router
-    const router: express.Router = express.Router();
-    // init and return socobouserProviders route
-    return new SocoboUserProvidersRoute(router, this._socoboUserProvidersHandler,
-        this._authValidationHandler, this._modelValidationHandler).createRoutes();
-  }
-
-  private _socobouserRolesRoute (): express.Router {
-    // create new router
-    const router: express.Router = express.Router();
-    // init and return socobouserRoles route
-    return new SocoboUserRolesRoute(router, this._socoboUserRolesHandler,
-        this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _recipeRoute (): express.Router {
@@ -282,7 +246,7 @@ class Server {
         this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
-  private _logsRoute (): express.Router {
+  private _logRoute (): express.Router {
     // create new router
     const router: express.Router = express.Router();
     // init and return logs route

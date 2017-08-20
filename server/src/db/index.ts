@@ -1,41 +1,7 @@
-// import { IDatabase, IMain, IOptions } from "pg-promise";
-// import * as pgPromise from "pg-promise";
-// import { DbExtensions } from "../app/index";
-// import {
-//   RecipeRepository, RecipeStepRepository
-// } from "../recipe/index";
-// import {
-//   SocoboUserImageRepository, SocoboUserProviderRepository,
-//   SocoboUserRepository, SocoboUserRoleRepository
-// } from "./../socobouser/index";
-
-import * as mongoose from "mongoose";
+import { connect } from "mongoose";
 import { Config } from "../config";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
-
-// pg-promise initialization options:
-// const options: IOptions<DbExtensions> = {
-//   extend: (obj: DbExtensions) => {
-//     obj.socobousers = new SocoboUserRepository(obj);
-//     obj.socobouserRoles = new SocoboUserRoleRepository(obj);
-//     obj.socobouserProviders = new SocoboUserProviderRepository(obj);
-//     obj.socobouserImages = new SocoboUserImageRepository(obj);
-//     obj.recipes = new RecipeRepository(obj);
-//     obj.recipeSteps = new RecipeStepRepository(obj);
-//   }
-// };
-
-// Choose the db configuration depending on the current environment
-// const connectionUrl = getConnectionUrl();
-
-// // Loading and initializing pg-promise:
-// const pgp: IMain = pgPromise(options);
-
-// // Create the database instance with extensions:
-// const db = pgp(connectionUrl) as IDatabase<DbExtensions>&DbExtensions;
-
-// export database object
-// export = db;
+import { SocoboUser } from "../socobouser/models/SocoboUser";
 
 // create Connectionstring
 const getConnectionUrl = (): string => {
@@ -62,10 +28,13 @@ const getConnectionUrl = (): string => {
 };
 
 // Create MongoDB connection
-mongoose.connect(getConnectionUrl());
+connect(getConnectionUrl());
+
+// Create Model classes
+const socoboUserModel = new SocoboUser().getModelForClass(SocoboUser);
 
 // Create DB Extension
-const db = new MongoDbExtension();
+const db = new MongoDbExtension(socoboUserModel);
 
 // export database object
 export = db;

@@ -9,7 +9,7 @@
 import { SocoboUserRepository } from "../../socobouser/index";
 
 // TODO: extend with new collection repositories
-export interface DbExtensions {
+export interface DbExtension {
   socobouser: SocoboUserRepository;
   // socobouserRoles: SocoboUserRoleRepository;
   // socobouserProviders: SocoboUserProviderRepository;
