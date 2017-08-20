@@ -9,7 +9,6 @@ export * from "./models/errors/errors";
 export * from "./models/errors/error-type";
 export * from "./models/errors/validation-error";
 export * from "./models/generic/db-config";
-export * from "./models/generic/db-extension";
 export * from "./models/generic/IBase.repository";
 export * from "./models/generic/socobo-request";
 export * from "./models/generic/validatable";

@@ -1,9 +1,15 @@
 import * as jwt from "jsonwebtoken";
-import { IDatabase } from "pg-promise";
+// import { IDatabase } from "pg-promise";
+// import {
+//   ApiError, ComparePwResult, CryptoUtils, DbError,
+//   DbExtensions, ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
+// } from "../../app/index";
+
 import {
   ApiError, ComparePwResult, CryptoUtils, DbError,
-  DbExtensions, ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
+  ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
 } from "../../app/index";
+
 import {
   SocoboUser, SocoboUserProviderTypes, SocoboUserRoleTypes
 } from "../../socobouser/index";
@@ -12,7 +18,7 @@ import { Config } from "./../../config";
 export class AuthService {
 
   constructor (
-    private _db: IDatabase<DbExtensions>&DbExtensions,
+    private _db: any, // TODO: any wird zu DbExtension  // IDatabase<DbExtensions>&DbExtensions,
     private _cryptoUtils: CryptoUtils
   ) {}
 

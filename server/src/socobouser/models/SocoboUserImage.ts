@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsUrl, MinLength } from "class-validator";
 import { BaseObject, ValidationGroup } from "../../app/index";
 
+// TODO: remove this class --> now integrated into socobouser collection
 export class SocoboUserImage extends BaseObject {
 
   public id: number;

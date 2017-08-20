@@ -1,10 +1,12 @@
-import { IDatabase } from "pg-promise";
-import { DbExtensions } from "../../app/index";
+// import { IDatabase } from "pg-promise";
+// import { DbExtensions } from "../../app/index";
 import { Recipe, RecipeStep } from "../index";
 
+
+// TODO: remove this --> now part of recipe collection
 export class RecipeStepRepository {
 
-  private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _db: any; // IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
     this._db = db;
@@ -13,8 +15,8 @@ export class RecipeStepRepository {
   public get = (recipeId: Number) => {
     const query: string = `select * from recipe_steps where recipe_steps.recipeId = $1`;
     return this._db.many(query, [recipeId])
-      .then((result) => result.map(this._transformResult))
-      .catch((error) => []);
+      .then((result: any) => result.map(this._transformResult))
+      // .catch((error) => []);
   }
 
   public save = (steps: RecipeStep[], recipe: Recipe) => {
@@ -26,7 +28,7 @@ export class RecipeStepRepository {
         .setRecipeId(recipe.id);
       queries.push(this._saveQuery(recipeStep));
     });
-    return this._db.tx("SaveRecipeSteps", (t) => {
+    return this._db.tx("SaveRecipeSteps", (t: any) => {
       return t.batch(queries);
     });
   }
@@ -43,7 +45,7 @@ export class RecipeStepRepository {
     steps.forEach((recipeStep: RecipeStep) => {
       queries.push(this._updateQuery(recipeStep));
     });
-    return this._db.tx("UpdateRecipeSteps", (t) => {
+    return this._db.tx("UpdateRecipeSteps", (t: any) => {
       return t.batch(queries);
     });
   }

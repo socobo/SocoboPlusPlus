@@ -1,11 +1,16 @@
-import { IDatabase } from "pg-promise";
+// import { IDatabase } from "pg-promise";
+// import {
+//   DbExtensions, ERRORS, ErrorUtils, IBaseRepositiory
+// } from "../index";
+
 import {
-  DbExtensions, ERRORS, ErrorUtils, IBaseRepositiory
+  ERRORS, ErrorUtils, IBaseRepositiory
 } from "../index";
 
+// TODO: Remove this class
 export class BaseRepository <T> implements IBaseRepositiory <T> {
 
-  private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _db: any; //IDatabase<DbExtensions>&DbExtensions;
   private _tableName: string;
   private _updateFieldName: string;
   private _transformFunction: any;

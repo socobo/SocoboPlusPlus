@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { IDatabase } from "pg-promise";
-import { DbExtensions } from "../../app/index";
+// import { IDatabase } from "pg-promise";
+// import { DbExtensions } from "../../app/index";
 import { Recipe } from "../index";
 
 export class RecipeMiddleware {
 
-  private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _db: any; // TODO: any wird zu DbExtension // IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
     this._db = db;

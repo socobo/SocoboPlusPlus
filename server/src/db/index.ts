@@ -1,53 +1,17 @@
 // import { IDatabase, IMain, IOptions } from "pg-promise";
 // import * as pgPromise from "pg-promise";
+// import { DbExtensions } from "../app/index";
+// import {
+//   RecipeRepository, RecipeStepRepository
+// } from "../recipe/index";
+// import {
+//   SocoboUserImageRepository, SocoboUserProviderRepository,
+//   SocoboUserRepository, SocoboUserRoleRepository
+// } from "./../socobouser/index";
+
 import * as mongoose from "mongoose";
 import { Config } from "../config";
-import { DbExtensions } from "../app/index";
-import {
-  RecipeRepository, RecipeStepRepository
-} from "../recipe/index";
-import {
-  SocoboUserImageRepository, SocoboUserProviderRepository,
-  SocoboUserRepository, SocoboUserRoleRepository
-} from "./../socobouser/index";
-
-const getConnectionUrl = (): string => {
-  let connectionUrl: string;
-
-  switch ((process.env["NODE_ENV"] || Config.NODE_ENV)) {
-    case "test":
-      connectionUrl = process.env["DB_URL_TEST"] || Config.DB_URL_TEST;
-      break;
-
-    case "development":
-      connectionUrl = process.env["DB_URL_DEV"] || Config.DB_URL_DEV;
-      break;
-
-    case "production":
-      connectionUrl = process.env["DB_URL"] || Config.DB_URL;
-      break;
-
-    default:
-      throw new Error("NODE_ENV is not known!");
-  }
-
-  return connectionUrl;
-};
-
-
-class MongoDbExtension implements DbExtensions {
-  socobousers: SocoboUserRepository;
-  socobouserRoles: SocoboUserRoleRepository;
-  socobouserProviders: SocoboUserProviderRepository;
-  socobouserImages: SocoboUserImageRepository;
-  recipes: RecipeRepository;
-  recipeSteps: RecipeStepRepository;
-
-  constructor () {
-    this.socobousers = new SocoboUserRepository(null); // TODO: null wird zu SocoboUser Typegoose Schema Class
-    this.recipes = new RecipeRepository(null);
-  }
-}
+import { MongoDbExtension } from "./implementation/mongo-db-extension";
 
 // pg-promise initialization options:
 // const options: IOptions<DbExtensions> = {
@@ -72,6 +36,30 @@ class MongoDbExtension implements DbExtensions {
 
 // export database object
 // export = db;
+
+// create Connectionstring
+const getConnectionUrl = (): string => {
+  let connectionUrl: string;
+
+  switch ((process.env["NODE_ENV"] || Config.NODE_ENV)) {
+    case "test":
+      connectionUrl = process.env["DB_URL_TEST"] || Config.DB_URL_TEST;
+      break;
+
+    case "development":
+      connectionUrl = process.env["DB_URL_DEV"] || Config.DB_URL_DEV;
+      break;
+
+    case "production":
+      connectionUrl = process.env["DB_URL"] || Config.DB_URL;
+      break;
+
+    default:
+      throw new Error("NODE_ENV is not known!");
+  }
+
+  return connectionUrl;
+};
 
 // Create MongoDB connection
 mongoose.connect(getConnectionUrl());
