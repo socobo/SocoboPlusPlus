@@ -1,10 +1,10 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
 import { prop, Typegoose } from "typegoose";
-import { ValidationGroup } from "../../app/index";
+import { ValidationGroup, Validatable } from "../../app/index";
 import { SocoboUserRoleType, SocoboUserProviderType } from "../index";
 
-export class SocoboUser extends Typegoose {
-
+export class SocoboUser extends Typegoose implements Validatable {
+  
   @ValidateIf((o) => o.email === "", {
     groups: [ ValidationGroup.LOGIN ]
   })
@@ -18,7 +18,7 @@ export class SocoboUser extends Typegoose {
     groups: [ ValidationGroup.USER ]
   })
   @prop()
-  username?: string;
+  public username: string;
 
   @ValidateIf((o) => o.username === "", {
     groups: [ ValidationGroup.LOGIN ]
@@ -33,7 +33,7 @@ export class SocoboUser extends Typegoose {
     ]
   })
   @prop()
-  email?: string;
+  public email: string;
 
   @IsNotEmpty({
     groups: [
@@ -48,41 +48,39 @@ export class SocoboUser extends Typegoose {
     ]
   })
   @prop({ required: true })
-  password: string;
+  public password: string;
   
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
   @prop()
-  hasTermsAccepted: boolean;
+  public hasTermsAccepted: boolean;
   
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
   @prop()
-  role: string;
+  public role: string;
 
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
   @prop()
-  provider: string;
+  public provider: string;
 
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
   @prop()
-  imageUrl: string;
+  public imageUrl: string;
 
   @IsNotEmpty()
   @prop({ required: true, default: Date.now })
-  created: number;
+  public created: number;
 
   @IsNotEmpty()
   @prop({ required: true, default: Date.now })
-  lastModified: number;
-
-
+  public lastModified: number;
 
   public setUsername = (username: string): this => {
     this.username = username;
@@ -126,6 +124,18 @@ export class SocoboUser extends Typegoose {
 
   public setLastModified = (lastModified: number): this => {
     this.lastModified = lastModified;
+    return this;
+  }
+
+  public clone = (socoboUser: SocoboUser): this => {
+    this.setUsername(socoboUser.username);
+    this.email = socoboUser.email;
+    this.password = socoboUser.password;
+    this.hasTermsAccepted = socoboUser.hasTermsAccepted;
+    this.role = socoboUser.role;
+    this.provider = socoboUser.provider;
+    this.imageUrl = socoboUser.imageUrl;
+    this.createDates();
     return this;
   }
 

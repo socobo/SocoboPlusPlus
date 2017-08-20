@@ -1,4 +1,4 @@
-import { connect } from "mongoose";
+import * as mongoose from "mongoose";
 import { Config } from "../config";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
 import { SocoboUser } from "../socobouser/models/SocoboUser";
@@ -27,8 +27,11 @@ const getConnectionUrl = (): string => {
   return connectionUrl;
 };
 
+// Add Promise Lin
+(<any>mongoose).Promise = global.Promise;
+
 // Create MongoDB connection
-connect(getConnectionUrl());
+mongoose.connect(getConnectionUrl(), { useMongoClient: true });
 
 // Create Model classes
 const socoboUserModel = new SocoboUser().getModelForClass(SocoboUser);

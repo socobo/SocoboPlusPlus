@@ -11,7 +11,7 @@ export class ModelValidationMiddleware {
       const mappedGroups: string[] = validationGroups.map((group) => group.toString());
 
       for (const prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
+        if (prop && obj.hasOwnProperty(prop)) {
           (objectToValidate as any)[prop] = obj[prop];
         }
       }
