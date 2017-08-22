@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { Config } from "../config";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
-import { SocoboUser } from "../socobouser/models/SocoboUser";
+import { SocoboUserSchema, ISocoboUserModel } from "../socobouser/index";
 
 // create Connectionstring
 const getConnectionUrl = (): string => {
@@ -34,7 +34,7 @@ const getConnectionUrl = (): string => {
 mongoose.connect(getConnectionUrl(), { useMongoClient: true });
 
 // Create Model classes
-const socoboUserModel = new SocoboUser().getModelForClass(SocoboUser);
+const socoboUserModel: mongoose.Model<ISocoboUserModel> = mongoose.model<ISocoboUserModel>("SocoboUser", SocoboUserSchema, "socobousers", true);
 
 // Create DB Extension
 const db = new MongoDbExtension(socoboUserModel);

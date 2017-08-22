@@ -17,8 +17,8 @@ export class SocoboUsersRoute {
 
   public createRoutes (): Router {
     this._router.get("/",
-      // this._authValidationHandler.checkToken,
-      // this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
+      this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._socoboUserHandler.getAll);
 
     this._router.get("/:id",

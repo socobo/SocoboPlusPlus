@@ -1,9 +1,8 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
-import { prop, Typegoose } from "typegoose";
 import { ValidationGroup, Validatable } from "../../app/index";
 import { SocoboUserRoleType, SocoboUserProviderType } from "../index";
 
-export class SocoboUser extends Typegoose implements Validatable {
+export class SocoboUser implements Validatable {
   
   @ValidateIf((o) => o.email === "", {
     groups: [ ValidationGroup.LOGIN ]
@@ -17,7 +16,6 @@ export class SocoboUser extends Typegoose implements Validatable {
   @ValidateIf((o) => o.updateType === 1, {
     groups: [ ValidationGroup.USER ]
   })
-  @prop()
   public username: string;
 
   @ValidateIf((o) => o.username === "", {
@@ -32,7 +30,6 @@ export class SocoboUser extends Typegoose implements Validatable {
       ValidationGroup.REGISTRATION
     ]
   })
-  @prop()
   public email: string;
 
   @IsNotEmpty({
@@ -47,39 +44,32 @@ export class SocoboUser extends Typegoose implements Validatable {
       ValidationGroup.REGISTRATION
     ]
   })
-  @prop({ required: true })
   public password: string;
   
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
-  @prop()
   public hasTermsAccepted: boolean;
   
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
-  @prop()
   public role: string;
 
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
-  @prop()
   public provider: string;
 
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
-  @prop()
   public imageUrl: string;
 
   @IsNotEmpty()
-  @prop({ required: true, default: Date.now })
   public created: number;
 
   @IsNotEmpty()
-  @prop({ required: true, default: Date.now })
   public lastModified: number;
 
   public setUsername = (username: string): this => {
@@ -128,7 +118,7 @@ export class SocoboUser extends Typegoose implements Validatable {
   }
 
   public clone = (socoboUser: SocoboUser): this => {
-    this.setUsername(socoboUser.username);
+    this.username = socoboUser.username;
     this.email = socoboUser.email;
     this.password = socoboUser.password;
     this.hasTermsAccepted = socoboUser.hasTermsAccepted;

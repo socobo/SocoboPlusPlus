@@ -4,7 +4,7 @@ import {
   ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
 } from "../../app/index";
 import {
-  SocoboUser, SocoboUserProviderType, SocoboUserRoleType
+  SocoboUser, SocoboUserProviderType, SocoboUserRoleType, ISocoboUserModel
 } from "../../socobouser/index";
 import { Config } from "./../../config";
 import { DbExtension } from "../../db/interface/db-extension";
@@ -99,7 +99,13 @@ export class AuthService {
 
   private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      jwt.sign(foundUser.getSigningInfo(), (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
+      const signingInfo = {
+        email: foundUser.email,
+        provider: foundUser.provider,
+        role: foundUser.role,
+        username: foundUser.username
+      };
+      jwt.sign(signingInfo, (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
         expiresIn: (process.env["TOKEN_EXPIRATION"] || Config.TOKEN_EXPIRATION),
         issuer: (process.env["TOKEN_ISSUER"] || Config.TOKEN_ISSUER)
       }, (err, token) => {
@@ -154,7 +160,7 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       this._db.socobouser.save(user)
         .then((result: any) => {
-          user.id = result.id;
+          // user.id = result.id;
           delete user.password;
           resolve(user);
         })

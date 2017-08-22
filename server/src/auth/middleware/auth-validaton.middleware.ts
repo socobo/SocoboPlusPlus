@@ -3,13 +3,13 @@ import * as jwt from "jsonwebtoken";
 import {
   ApiError, ERRORS, ExtractRequestBodyResult, SocoboRequest
 } from "../../app/index";
-
+import { DbExtension } from "../../db/interface/db-extension";
 import { SocoboUser, SocoboUserRoleType } from "../../socobouser/index";
 import { Config } from "./../../config";
 
 export class AuthValidationMiddleware {
 
-  constructor (private _db: any) {} // TODO: any wird zu DbExtension
+  constructor (private _db: DbExtension) {}
 
   public checkRequest (req: SocoboRequest): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -98,7 +98,7 @@ export class AuthValidationMiddleware {
           .addSourceMethod("checkValidUser(..)");
         return reject(err);
       }
-      this._db.socobousers.getUserByEmail(req.requestData.decoded.email)
+      this._db.socobouser.getUserByEmail(req.requestData.decoded.email)
         .then((user: SocoboUser) => {
           req.requestData = {};
           if (user.role === restrictedRole) {

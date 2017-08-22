@@ -1,7 +1,7 @@
 import { Document, Model } from "mongoose";
 import { DbExtension } from "../interface/db-extension";
-import { SocoboUserRepository } from "../../socobouser/index";
-import { SocoboUser } from "../../socobouser/models/SocoboUser";
+import { SocoboUserRepository, SocoboUser } from "../../socobouser/index";
+import { ISocoboUserModel } from "../../socobouser/interfaces/ISocoboUserModel";
 
 export class MongoDbExtension implements DbExtension {
   socobouser: SocoboUserRepository;
@@ -11,7 +11,7 @@ export class MongoDbExtension implements DbExtension {
   // recipes: RecipeRepository;
   // recipeSteps: RecipeStepRepository;
 
-  constructor (socoboUserModel: Model<SocoboUser & Document>) {
+  constructor (socoboUserModel: Model<ISocoboUserModel>) {
     this.socobouser = new SocoboUserRepository(socoboUserModel);
   }
 }

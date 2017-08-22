@@ -1,11 +1,11 @@
 import { Document, Model, Types } from "mongoose";
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
-import { SocoboUser } from "../models/SocoboUser";
+import { SocoboUser, ISocoboUserModel } from "../index";
 
 export class SocoboUserRepository {
 
-  constructor (private _socoboUserModel: Model<SocoboUser & Document>) {}
+  constructor (private _socoboUserModel: Model<ISocoboUserModel>) {}
 
   public getAll = async (): Promise<SocoboUser[] | DbError> => {
     try {
@@ -44,8 +44,8 @@ export class SocoboUserRepository {
 
   public save = async (user: SocoboUser): Promise<Types.ObjectId | DbError> => {
     try {
-      const createdSocoboUser: SocoboUser = await this._socoboUserModel.create(user);
-      return new Types.ObjectId(createdSocoboUser.id);
+      const createdSocoboUser = await this._socoboUserModel.create(user);
+      return new Types.ObjectId(createdSocoboUser._id);
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "save(..)");
     }

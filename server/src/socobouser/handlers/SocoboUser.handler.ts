@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Types } from "mongoose";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
-import { SocoboUser } from "../models/SocoboUser";
+import { SocoboUser } from "../index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { ImageService, SocoboRequest, DataType } from "../../app/index";
 
