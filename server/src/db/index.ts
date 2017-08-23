@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 import { ApiError, ErrorType, ErrorUtils, LogService } from "../app/index";
 import { Config } from "../config";
+import { Recipe, recipeSchema } from "../recipe/index";
 import { SocoboUser, socoboUserSchema } from "../socobouser/index";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
 
@@ -40,9 +41,10 @@ mongoose.connect(getConnectionUrl(), { useMongoClient: true }, (err) => {
 
 // Create Model classes
 const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser", socoboUserSchema, "socobousers");
+const recipeModel = mongoose.model<mongoose.Document & Recipe> ("Recipe", recipeSchema, "recipes");
 
 // Create DB Extension
-const db = new MongoDbExtension(socoboUserModel);
+const db = new MongoDbExtension(socoboUserModel, recipeModel);
 
 // export database object
 export = db;

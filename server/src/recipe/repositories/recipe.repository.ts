@@ -1,137 +1,81 @@
-// import { IDatabase } from "pg-promise";
-// import { DbError, DbExtensions, ERRORS, ErrorUtils } from "../../app/index";
+import { Document, Model } from "mongoose";
+import * as winston from "winston";
 
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
-import { Recipe, RecipeStep } from "../index";
+import { DbExtension } from "../../db/interface/db-extension";
+import { Recipe, recipeSchema, RecipeStep } from "../index";
 
 export class RecipeRepository {
 
-  private _db: any; // TODO: any wird zu Typegoose Schema class // IDatabase<DbExtensions>&DbExtensions;
+  constructor (private _recipeModel: Model<Document & Recipe>) {  }
 
-  constructor (db: any) {
-    this._db = db;
+  private _handleNotFound = (foundItem: any, id: string, method: string) => {
+    if (!foundItem) {
+      throw new DbError(
+        ERRORS.RECIPE_NOT_FOUND.withArgs("ID", id))
+        .addSource(RecipeRepository.name)
+        .addSourceMethod(method);
+    }
   }
 
-  public getAll = (): Promise<Recipe[] | DbError> => {
-    const query = `select * from recipes`;
-    return this._db.many(query, [])
-      .then((result: any) => result.map(this._transformResult))
-      .catch((error: any) => {
-        return ErrorUtils.handleDbNotFound(
-          ERRORS.RECIPE_NON_AVAILABLE, error, RecipeRepository.name,
-          "getAll(..)");
-      });
-  }
+  public save = async (recipe: Recipe): Promise<Recipe | DbError> => {
 
-  public getById = (id: number): Promise<Recipe> => {
-    const query = `select * from recipes where recipes.id = $1`;
-    return this._db.one(query, [id], this._transformResult)
-      .then((recipe: any) => this._fetchSteps(recipe))
-      .then((obj: any) => this._addStepsToRecipe(obj))
-      .catch((error: any) => {
-        return ErrorUtils.handleDbNotFound(
-          ERRORS.RECIPE_NOT_FOUND, error,
-          RecipeRepository.name, "getById(..)", "id", id.toString());
-      });
-  }
-
-  private _fetchSteps = (recipe: Recipe) => {
-    return this._db.recipeSteps.get(recipe.id)
-      .then((steps: RecipeStep[]) => {
-        return {steps, recipe};
-      });
-  }
-
-  private _addStepsToRecipe = (obj: any) => {
-    obj.recipe.steps = obj.steps;
-    return obj.recipe;
-  }
-
-  public getByField = (field: string, value: string | number): Promise<Recipe[] | DbError> => {
-    const query: string = `select * from recipes where ${field} = $1`;
-    return this._db.many(query, [value])
-      .then((result: any) => result.map(this._transformResult))
-      .catch((error: any) => {
-        return ErrorUtils.handleDbNotFound(
-          ERRORS.RECIPE_NOT_FOUND, error, RecipeRepository.name,
-          "getByField(..)", "a field of value", value.toString());
-      });
-  }
-
-  public searchByField = (field: string, value: string | number): Promise<Recipe[] | DbError> => {
-    const query: string = `select * from recipes where ${field} like '%${value}%'`;
-    return this._db.many(query, [])
-      .then((result: any) => result.map(this._transformResult))
-      .catch((error: any) => {
-        return ErrorUtils.handleDbNotFound (
-          ERRORS.RECIPE_NOT_FOUND, error, RecipeRepository.name,
-          "searchByField(..)", "a field of value", value.toString());
-      });
-  }
-
-  public save = (recipe: Recipe): Promise<any> => {
-    return this._db.tx("SaveRecipeCoreDate", (t: any) => {
-      return this._saveRecipeCoreQuery(recipe);
-    })
-    .then((id: any) => {
-      return this._saveRecipeStepsQuery(id, recipe);
-    })
-    .catch((error: any) => {
+    try {
+      return await new this._recipeModel(recipe).save();
+    } catch (error) {
+      winston.error(error);
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
-    });
+    }
   }
 
-  private _saveRecipeCoreQuery = (recipe: Recipe) => {
-    const query: string = `insert into recipes(title, userId, description, imageUrl, created)
-                           values($1, $2, $3, $4, $5)
-                           returning id`;
-    return this._db.one(query, [recipe.title, recipe.userId, recipe.description, recipe.imageUrl, recipe.created]);
+  public getById = async (id: string): Promise<Recipe | DbError> => {
+    try {
+      const foundRecipe = await this._recipeModel.findById(id);
+      this._handleNotFound(foundRecipe, id, "findById()");
+      return foundRecipe;
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeRepository.name, "getById(..)");
+    }
   }
 
-  private _saveRecipeStepsQuery = (id: any, recipe: Recipe) => {
-    recipe.id = id.id;
-    return this._db.tx("SaveRecipeSteps", (t: any) => {
-      this._db.recipeSteps.save(recipe.steps, recipe);
-      return id;
-    });
+  public getAll = async (): Promise<Recipe[] | DbError> => {
+    try {
+      const foundRecipes = await this._recipeModel.find();
+      return foundRecipes;
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeRepository.name, "getAll(..)");
+    }
   }
 
-  public update = (id: number, recipe: Recipe): Promise<Recipe> => {
-    const query: string = `update recipes set
-                             title=$2, userId=$3, description=$4, imageUrl=$5
-                           where recipes.id = $1`;
-    return this._db.tx("UpdateRecipe", () => {
-      return this._db.none(query, [id, recipe.title, recipe.userId, recipe.description, recipe.imageUrl]);
-    })
-    .then(() => {
-      return this._db.recipeSteps.update(recipe.steps);
-    })
-    .catch((error: any) => {
+  public searchByField = async (fieldName: string, value: string): Promise<Recipe[] | DbError> => {
+    try {
+      const searchCritiria = { [fieldName]: new RegExp (value, "i") };
+      const foundRecipes = await this._recipeModel.find(searchCritiria);
+      return foundRecipes;
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeRepository.name, "searchByField(..)");
+    }
+  }
+
+  public update = async (id: string, recipe: Recipe): Promise<Recipe | DbError> => {
+    try {
+      const foundRecipe = await this._recipeModel.findByIdAndUpdate(id, recipe);
+      this._handleNotFound(foundRecipe, id, "update()");
+    } catch (error) {
+      winston.error(error);
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");
-    });
+    }
   }
 
-  public delete = (id: number): Promise<void> => {
-    const query: string = `delete from recipes where recipes.id = $1`;
-    return this._db.tx("DeleteRecipe", (t: any) => {
-      const queries = [this._db.recipeSteps.delete(id), this._db.none(query, [id])];
-      return t.batch(queries)
-        .catch((error: any) => {
-          return ErrorUtils.handleDbError(error, RecipeRepository.name, "delete(..)");
-        });
-    });
-  }
-
-  private _transformResult = (result: any): Recipe => {
-    const transformedResult: Recipe = new Recipe()
-      .setId(result.hasOwnProperty("id") ? Number(result.id) : null)
-      .setTitle(result.hasOwnProperty("title") ? result.title : null)
-      .setUserId(result.hasOwnProperty("userid") ? Number(result.userid) : null)
-      .setDescription(result.hasOwnProperty("description") ? result.description : null)
-      .setImageUrl(result.hasOwnProperty("imageurl") ? result.imageurl : null)
-      .setCreated(result.hasOwnProperty("created") ? new Date(result.created) : null)
-      .setSteps(result.hasOwnProperty("steps") ? result.steps : null);
-    delete transformedResult.fields;
-    return transformedResult;
+  public delete = async (id: string): Promise<void | DbError> => {
+    try {
+      return await this._recipeModel.remove({_id: id});
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeRepository.name, "delete(..)");
+    }
   }
 }

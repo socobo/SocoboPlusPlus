@@ -336,12 +336,9 @@ npm run lint
         steps: [
           {
             id: number,
-            recipeId: number,
             stepNumber: number,
             stepTitle: string,
-            stepDescription?: string,
-            createdDate: number,
-            lastModifiedDate: number
+            stepDescription?: string
           },
           {
             ...
@@ -381,12 +378,9 @@ npm run lint
       steps: [
         {
           id: number,
-          recipeId: number,
           stepNumber: number,
           stepTitle: string,
-          stepDescription?: string,
-          createdDate: number,
-          lastModifiedDate: number
+          stepDescription?: string
         },
         {
           ...
@@ -404,56 +398,7 @@ npm run lint
     }
     ```
 
-- **GET /api/v1/recipes?property=value**
-
-  Gets all recieps for the defined property value
-
-  Query parameter:
-    - property: The name of the recipe property which should be used as filter
-    - value: The to filter on
-
-  Response body:
-    ```json
-    [
-      {
-        id: number,
-        title: string,
-        userid: number,
-        description: number,
-        imageurl: string,
-        created: Date,
-        steps: [
-          {
-            id: number,
-            recipeId: number,
-            stepNumber: number,
-            stepTitle: string,
-            stepDescription?: string,
-            createdDate: number,
-            lastModifiedDate: number
-          },
-          {
-            ...
-          }
-        ]
-      },
-      {
-        ...
-      }
-    ]
-    
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **GET /api/v1/recipes/search?property=searchTerm**
+- **GET /api/v1/recipes//search/field?property=searchTerm**
 
   Searches for a specified term inside a the given recipe property and returns
   the matching subset of recipes
@@ -475,12 +420,9 @@ npm run lint
         steps: [
           {
             id: number,
-            recipeId: number,
             stepNumber: number,
             stepTitle: string,
-            stepDescription?: string,
-            createdDate: number,
-            lastModifiedDate: number
+            stepDescription?: string
           },
           {
             ...
@@ -506,15 +448,14 @@ npm run lint
 - **PUT /api/v1/recipes/:id**
 
   Alters the properties, defined in the request body, on the recipe with the
-  provided id. The request body must contain all recipe properties except the id.
-  To update only specific field you need to define these fields in the fields query parameter.
-  If a fields query prameter is defined, only these fields will be updated.
+  provided id.
+  If the request body only conatains single fields of a recipe, only these fields
+  will be updated. This is true for the first level of properties. E.g. if you update
+  the steps of a recipe and you only provide a single step all remaining steps are
+  removed since there are no data in the request.
 
   Path Parameter:
     - id: Recipe id
-
-  Query Parameter:
-    - fields: The fields which should be updated (title, description, imageUrl, userId)
 
   Request body (could also be a subset of these values):
     ```json
@@ -548,12 +489,9 @@ npm run lint
       steps: [
         {
           id: number,
-          recipeId: number,
           stepNumber: number,
           stepTitle: string,
-          stepDescription?: string,
-          createdDate: number,
-          lastModifiedDate: number
+          stepDescription?: string
         },
         {
           ...
@@ -605,12 +543,9 @@ npm run lint
       steps: [
         {
           id: number,
-          recipeId: number,
           stepNumber: number,
           stepTitle: string,
-          stepDescription?: string,
-          createdDate: number,
-          lastModifiedDate: number
+          stepDescription?: string
         },
         {
           ...
@@ -654,12 +589,9 @@ npm run lint
       steps: [
         {
           id: number,
-          recipeId: number,
           stepNumber: number,
           stepTitle: string,
-          stepDescription?: string,
-          createdDate: number,
-          lastModifiedDate: number
+          stepDescription?: string
         },
         {
           ...
