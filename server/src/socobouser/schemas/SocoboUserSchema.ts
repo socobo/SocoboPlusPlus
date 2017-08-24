@@ -1,34 +1,34 @@
 import { Schema } from "mongoose";
 
-export const SocoboUserSchema = new Schema({
-  username: {
-    type: String
+export const socoboUserSchema = new Schema({
+  created: {
+    required: true,
+    type: Number
   },
   email: {
     type: String
   },
-  password: {
-    type: String,
-    required: true
-  },
   hasTermsAccepted: {
     type: Boolean
   },
-  role: {
+  imageUrl: {
+    type: String
+  },
+  lastModified: {
+    required: true,
+    type: Number
+  },
+  password: {
+    required: true,
     type: String
   },
   provider: {
     type: String
   },
-  imageUrl: {
+  role: {
     type: String
   },
-  created: {
-    type: Number,
-    required: false
-  },
-  lastModified: {
-    type: Number,
-    required: false
+  username: {
+    type: String
   }
 });

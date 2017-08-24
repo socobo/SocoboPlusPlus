@@ -1,3 +1,5 @@
+/*tslint:disable:no-unused-expression*/
+
 process.env["NODE_ENV"] = "test";
 
 import * as chai from "chai";
@@ -300,3 +302,5 @@ describe("Recipe Handler", () => {
     });
   });
 });
+
+/*tslint:enable:no-unused-expression*/

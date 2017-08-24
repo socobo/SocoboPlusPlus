@@ -1,8 +1,8 @@
 import * as mongoose from "mongoose";
+import { ApiError, ErrorType, ErrorUtils, LogService } from "../app/index";
 import { Config } from "../config";
+import { SocoboUser, socoboUserSchema } from "../socobouser/index";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
-import { SocoboUser, SocoboUserSchema } from "../socobouser/index";
-import { ApiError, ErrorType, LogService, ErrorUtils } from "../app/index";
 
 // create Connectionstring
 const getConnectionUrl = (): string => {
@@ -29,7 +29,7 @@ const getConnectionUrl = (): string => {
 };
 
 // Add Promise Lin
-(<any>mongoose).Promise = global.Promise;
+(<any> mongoose).Promise = global.Promise;
 
 // Create MongoDB connection
 mongoose.connect(getConnectionUrl(), { useMongoClient: true }, (err) => {
@@ -38,7 +38,7 @@ mongoose.connect(getConnectionUrl(), { useMongoClient: true }, (err) => {
 });
 
 // Create Model classes
-const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser", SocoboUserSchema, "socobousers");
+const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser", socoboUserSchema, "socobousers");
 
 // Create DB Extension
 const db = new MongoDbExtension(socoboUserModel);

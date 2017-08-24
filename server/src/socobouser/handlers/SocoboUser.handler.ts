@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { Types } from "mongoose";
+import { DataType, ImageService, SocoboRequest } from "../../app/index";
+import { DbExtension } from "../../db/interface/db-extension";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
 import { SocoboUser } from "../index";
-import { DbExtension } from "../../db/interface/db-extension";
-import { ImageService, SocoboRequest, DataType } from "../../app/index";
 
 export class SocoboUserHandler {
 
@@ -45,7 +45,7 @@ export class SocoboUserHandler {
   public deleteById = (req: Request, res: Response): void => {
     const userId: number = +req.params.id;
     this._db.socobouser.deleteById(new Types.ObjectId(userId))
-      .then((result: Object) => res.status(200).json(result))
+      .then((result: object) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 }

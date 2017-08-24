@@ -1,10 +1,13 @@
+/*tslint:disable:no-console*/
+
 process.env["NODE_ENV"] = "test";
 
 import * as chai from "chai";
-import * as mocha from "mocha";
 import chaiHttp = require("chai-http");
+import * as mocha from "mocha";
+import * as mongoose from "mongoose";
 import Server from "./../src/server";
-import { SocoboUser, SocoboUserProviderTypes, SocoboUserRoleTypes } from "./../src/socobouser/index";
+import { SocoboUser, SocoboUserProviderType, SocoboUserRoleType } from "./../src/socobouser/index";
 
 chai.use(chaiHttp);
 
@@ -28,33 +31,33 @@ describe("User Route v1", () => {
   before((done) => {
     // PW: SuperSecurePassword
     const user1: SocoboUser = new SocoboUser();
-    user1.id = 1;
-    user1.socoboUserImageId = 1;
-    user1.socoboUserRoleId = SocoboUserRoleTypes.User;
-    user1.socoboUserProviderId = SocoboUserProviderTypes.Email;
+    user1.id = new mongoose.Types.ObjectId(123456);
     user1.username = "john-doe@test.test";
     user1.email = "john-doe@test.test";
     user1.hasTermsAccepted = true;
+    user1.provider = SocoboUserProviderType.Email;
+    user1.role = SocoboUserRoleType.User;
+    user1.imageUrl = "tmp_data/user.png";
 
     // PW: SuperMegaSecure
     const user2: SocoboUser = new SocoboUser();
-    user2.id = 2;
-    user2.socoboUserImageId = 1;
-    user2.socoboUserRoleId = SocoboUserRoleTypes.User;
-    user2.socoboUserProviderId = SocoboUserProviderTypes.Username;
+    user2.id = new mongoose.Types.ObjectId(98765);
     user2.username = "MaxMustermann";
     user2.email = "MaxMustermann";
     user2.hasTermsAccepted = true;
+    user2.provider = SocoboUserProviderType.Username;
+    user2.role = SocoboUserRoleType.User;
+    user2.imageUrl = "tmp_data/user.png";
 
     // PW: password
     const user3: SocoboUser = new SocoboUser();
-    user3.id = 3;
-    user3.socoboUserImageId = 1;
-    user3.socoboUserRoleId = SocoboUserRoleTypes.Admin;
-    user3.socoboUserProviderId = SocoboUserProviderTypes.Email;
+    user3.id = new mongoose.Types.ObjectId(34113);
     user3.username = "admin@test.test";
     user3.email = "admin@test.test";
     user3.hasTermsAccepted = true;
+    user3.provider = SocoboUserProviderType.Email;
+    user3.role = SocoboUserRoleType.Admin;
+    user3.imageUrl = "tmp_data/user.png";
 
     users = [user1, user2, user3];
 
@@ -135,3 +138,4 @@ describe("User Route v1", () => {
 
   });
 });
+/*tslint:enable:no-console*/

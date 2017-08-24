@@ -111,7 +111,7 @@ export class RecipeRepository {
     });
   }
 
-  public delete = (id: Number): Promise<void> => {
+  public delete = (id: number): Promise<void> => {
     const query: string = `delete from recipes where recipes.id = $1`;
     return this._db.tx("DeleteRecipe", (t: any) => {
       const queries = [this._db.recipeSteps.delete(id), this._db.none(query, [id])];

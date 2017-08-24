@@ -2,7 +2,6 @@
 // import { DbExtensions } from "../../app/index";
 import { Recipe, RecipeStep } from "../index";
 
-
 // TODO: remove this --> now part of recipe collection
 export class RecipeStepRepository {
 
@@ -12,10 +11,10 @@ export class RecipeStepRepository {
     this._db = db;
   }
 
-  public get = (recipeId: Number) => {
+  public get = (recipeId: number) => {
     const query: string = `select * from recipe_steps where recipe_steps.recipeId = $1`;
     return this._db.many(query, [recipeId])
-      .then((result: any) => result.map(this._transformResult))
+      .then((result: any) => result.map(this._transformResult));
       // .catch((error) => []);
   }
 
@@ -57,7 +56,7 @@ export class RecipeStepRepository {
     return this._db.none(query, [step.id, step.stepTitle, step.stepDescription, step.stepNumber]);
   }
 
-  public delete = (recipeId: Number) => {
+  public delete = (recipeId: number) => {
     const query: string = `delete from recipe_steps where recipe_steps.recipeId = $1`;
     return this._db.none(query, [recipeId]);
   }

@@ -1,7 +1,7 @@
 import { Document, Model, Types } from "mongoose";
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
-import { SocoboUser, SocoboUserRoleType, SocoboUserProviderType } from "../index";
+import { SocoboUser, SocoboUserProviderType, SocoboUserRoleType } from "../index";
 
 export class SocoboUserRepository {
 
@@ -28,7 +28,7 @@ export class SocoboUserRepository {
 
   public getUserByEmail = async (email: string): Promise<SocoboUser | DbError> => {
     try {
-      const user = await this._socoboUserModel.findOne({ email: email });
+      const user = await this._socoboUserModel.findOne({ email });
       return this._transformResult(user);
     } catch (error) {
       return ErrorUtils.handleDbNotFound (ERRORS.USER_NOT_FOUND, error,
@@ -38,7 +38,7 @@ export class SocoboUserRepository {
 
   public getUserByUsername = async (username: string): Promise<SocoboUser | DbError> => {
     try {
-      const user = await this._socoboUserModel.findOne({ username: username });
+      const user = await this._socoboUserModel.findOne({ username });
       return this._transformResult(user);
     } catch (error) {
       return ErrorUtils.handleDbNotFound (ERRORS.USER_NOT_FOUND, error,
@@ -68,59 +68,59 @@ export class SocoboUserRepository {
   }
 
   private _checkValidUpdateFields = (updateType: SocoboUserUpdateType, fieldsToUpdate: object): object => {
-    let result: {[x: string]: any} = {};
+    const result: {[x: string]: any} = {};
 
     switch (updateType) {
       case SocoboUserUpdateType.full:
         Object.entries(fieldsToUpdate).forEach(([key, value]) => {
-          if (key === "username") { result.username = value }
-          if (key === "email") { result.email = value }
-          if (key === "password") { result.password = value }
-          if (key === "imageUrl") { result.imageUrl = value }
-          if (key === "role") { result.role = value }
-          if (key === "provider") { result.provider = value }
+          if (key === "username") { result.username = value; }
+          if (key === "email") { result.email = value; }
+          if (key === "password") { result.password = value; }
+          if (key === "imageUrl") { result.imageUrl = value; }
+          if (key === "role") { result.role = value; }
+          if (key === "provider") { result.provider = value; }
         });
         result["lastModified"] = Date.now();
         break;
 
       case SocoboUserUpdateType.username:
         Object.entries(fieldsToUpdate).forEach(([key, value]) => {
-          if (key === "username") { result.username = value }
+          if (key === "username") { result.username = value; }
         });
         result["lastModified"] = Date.now();
         break;
 
       case SocoboUserUpdateType.email:
         Object.entries(fieldsToUpdate).forEach(([key, value]) => {
-          if (key === "email") { result.email = value }
+          if (key === "email") { result.email = value; }
         });
         result["lastModified"] = Date.now();
         break;
 
       case SocoboUserUpdateType.password:
         Object.entries(fieldsToUpdate).forEach(([key, value]) => {
-          if (key === "password") { result.password = value }
+          if (key === "password") { result.password = value; }
         });
         result["lastModified"] = Date.now();
         break;
 
       case SocoboUserUpdateType.image:
         Object.entries(fieldsToUpdate).forEach(([key, value]) => {
-          if (key === "imageUrl") { result.imageUrl = value }
+          if (key === "imageUrl") { result.imageUrl = value; }
         });
         result["lastModified"] = Date.now();
         break;
 
       case SocoboUserUpdateType.role:
         Object.entries(fieldsToUpdate).forEach(([key, value]) => {
-          if (key === "role") { result.role = value }
+          if (key === "role") { result.role = value; }
         });
         result["lastModified"] = Date.now();
         break;
 
       case SocoboUserUpdateType.provider:
         Object.entries(fieldsToUpdate).forEach(([key, value]) => {
-          if (key === "provider") { result.provider = value }
+          if (key === "provider") { result.provider = value; }
         });
         result["lastModified"] = Date.now();
         break;
@@ -134,7 +134,7 @@ export class SocoboUserRepository {
 
   public deleteById = async (id: Types.ObjectId): Promise<Types.ObjectId | DbError> => {
     try {
-      const t = await this._socoboUserModel.remove({_id: id})
+      const t = await this._socoboUserModel.remove({_id: id});
       return id;
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "deleteById(..)");

@@ -6,7 +6,7 @@ import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validato
 
 export class Recipe implements Validatable {
 
-  public fields: Map<string, Function>;
+  public fields: Map<string, Function >;
 
   public id: number;
 

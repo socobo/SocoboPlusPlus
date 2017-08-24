@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
 import { Types } from "mongoose";
-import { ValidationGroup, Validatable } from "../../app/index";
-import { SocoboUserRoleType, SocoboUserProviderType } from "../index";
+import { Validatable, ValidationGroup } from "../../app/index";
+import { SocoboUserProviderType, SocoboUserRoleType } from "../index";
 
 export class SocoboUser implements Validatable {
 
@@ -48,12 +48,12 @@ export class SocoboUser implements Validatable {
     ]
   })
   public password: string;
-  
+
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
   public hasTermsAccepted: boolean;
-  
+
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
