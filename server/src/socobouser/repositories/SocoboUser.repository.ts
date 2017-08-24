@@ -1,15 +1,16 @@
 import { Document, Model, Types } from "mongoose";
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
-import { SocoboUser, ISocoboUserModel } from "../index";
+import { SocoboUser, SocoboUserRoleType, SocoboUserProviderType } from "../index";
 
 export class SocoboUserRepository {
 
-  constructor (private _socoboUserModel: Model<ISocoboUserModel>) {}
+  constructor (private _socoboUserModel: Model<Document & SocoboUser>) {}
 
   public getAll = async (): Promise<SocoboUser[] | DbError> => {
     try {
-      return await this._socoboUserModel.find({});
+      const users = await this._socoboUserModel.find({});
+      return users.map(this._transformResult);
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "getAll(..)");
     }
@@ -17,7 +18,8 @@ export class SocoboUserRepository {
 
   public getUserById = async (id: Types.ObjectId): Promise<SocoboUser | DbError> => {
     try {
-      return await this._socoboUserModel.findById(id);
+      const user = await this._socoboUserModel.findById(id);
+      return this._transformResult(user);
     } catch (error) {
       return ErrorUtils.handleDbNotFound(ERRORS.USER_NOT_FOUND, error,
         SocoboUserRepository.name, "getUserById(..)", "id", id.toString());
@@ -26,7 +28,8 @@ export class SocoboUserRepository {
 
   public getUserByEmail = async (email: string): Promise<SocoboUser | DbError> => {
     try {
-      return await this._socoboUserModel.findOne({ email: email });
+      const user = await this._socoboUserModel.findOne({ email: email });
+      return this._transformResult(user);
     } catch (error) {
       return ErrorUtils.handleDbNotFound (ERRORS.USER_NOT_FOUND, error,
         SocoboUserRepository.name, "getUserByEmail(..)", "email", email);
@@ -35,7 +38,8 @@ export class SocoboUserRepository {
 
   public getUserByUsername = async (username: string): Promise<SocoboUser | DbError> => {
     try {
-      return await this._socoboUserModel.findOne({ username: username });
+      const user = await this._socoboUserModel.findOne({ username: username });
+      return this._transformResult(user);
     } catch (error) {
       return ErrorUtils.handleDbNotFound (ERRORS.USER_NOT_FOUND, error,
         SocoboUserRepository.name, "getUserByUsername(..)", "username", username);
@@ -55,9 +59,9 @@ export class SocoboUserRepository {
                              fieldsToUpdate: object): Promise<SocoboUser | DbError> => {
     try {
       const checkedFieldsToUpdate = this._checkValidUpdateFields(updateType, fieldsToUpdate);
-      const foundSocoboUser: SocoboUser = await this._socoboUserModel.findById(id);
+      const foundSocoboUser = await this._socoboUserModel.findById(id);
       const t = await this._socoboUserModel.update(checkedFieldsToUpdate, foundSocoboUser);
-      return foundSocoboUser;
+      return this._transformResult(foundSocoboUser);
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "updateById(..)");
     }
@@ -135,5 +139,20 @@ export class SocoboUserRepository {
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "deleteById(..)");
     }
+  }
+
+  private _transformResult = (result: Document & SocoboUser): SocoboUser => {
+    const tranformedResult: SocoboUser = new SocoboUser()
+      .setId(new Types.ObjectId(result.id))
+      .setUsername(result.username)
+      .setEmail(result.email)
+      .setPassword(result.password)
+      .setHasTermsAccepted(result.hasTermsAccepted)
+      .setRole(result.role as SocoboUserRoleType)
+      .setProvider(result.provider as SocoboUserProviderType)
+      .setImageUrl(result.imageUrl)
+      .setCreated(result.created)
+      .setLastModified(result.lastModified);
+    return tranformedResult;
   }
 }

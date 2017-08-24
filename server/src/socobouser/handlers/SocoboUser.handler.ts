@@ -34,10 +34,10 @@ export class SocoboUserHandler {
   }
 
   public uploadById = (req: SocoboRequest, res: Response): void => {
-    const userId: number = +req.params.id;
+    const userId: Types.ObjectId = new Types.ObjectId(req.params.id);
     const email: string = req.requestData.decoded.email;
     this._imgService.persistImage(req.file.filename, DataType.SOCOBO_USER_IMAGE, email)
-      .then((url: string) => this._db.socobouser.updateById(new Types.ObjectId(userId), SocoboUserUpdateType.image, [url]))
+      .then((url: string) => this._db.socobouser.updateById(userId, SocoboUserUpdateType.image, {imageUrl: url}))
       .then((user: SocoboUser) => res.status(200).json(user))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }

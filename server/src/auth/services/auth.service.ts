@@ -3,9 +3,7 @@ import {
   ApiError, ComparePwResult, CryptoUtils, DbError,
   ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
 } from "../../app/index";
-import {
-  SocoboUser, SocoboUserProviderType, SocoboUserRoleType, ISocoboUserModel
-} from "../../socobouser/index";
+import { SocoboUser, SocoboUserProviderType, SocoboUserRoleType } from "../../socobouser/index";
 import { Config } from "./../../config";
 import { DbExtension } from "../../db/interface/db-extension";
 
@@ -99,13 +97,7 @@ export class AuthService {
 
   private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
     return new Promise((resolve, reject) => {
-      const signingInfo = {
-        email: foundUser.email,
-        provider: foundUser.provider,
-        role: foundUser.role,
-        username: foundUser.username
-      };
-      jwt.sign(signingInfo, (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
+      jwt.sign(foundUser.getSigningInfo(), (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
         expiresIn: (process.env["TOKEN_EXPIRATION"] || Config.TOKEN_EXPIRATION),
         issuer: (process.env["TOKEN_ISSUER"] || Config.TOKEN_ISSUER)
       }, (err, token) => {
