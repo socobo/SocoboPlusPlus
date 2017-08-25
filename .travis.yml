@@ -1,5 +1,8 @@
 language: node_js
-node_js: 8
+node_js:
+  - 8
+os:
+  - osx
 env:
   - NODE_ENV=test
 # addons: # TODO: uncomment for frontend testing
@@ -10,7 +13,7 @@ cache:
   directories:
     - server/node_modules
     - client/node_modules
-before_install: # TODO: uncomment for frontend testing
+# before_install: # TODO: uncomment for frontend testing
   # - export CHROME_BIN=/usr/bin/google-chrome
   # - export DISPLAY=:99.0 
   # - sh -e /etc/init.d/xvfb start
