@@ -6,12 +6,9 @@
 * [Lint](#running-lint) 
 * [API Documentation](#api-documentation)
   * [Auth](#auth)
-  * [SocoboUsers](#socobousers)
-  * [SocoboUserImages](#socobouserimages)
-  * [SocoboUserProviders](#socobouserproviders)
-  * [SocoboUserRoles](#socobouserroles)
+  * [SocoboUser](#socobouser)
   * [Recipes](#recipes)
-  * [Logs](#logs)
+  * [Log](#log)
 * [Enums](#enums)
 
 
@@ -19,11 +16,11 @@
 - node
 - npm
 - mongoDB server
-- homebrew (for mongoDB server service)
+- _OPTIONAL homebrew (for mongoDB server service)_
 
 ## Build and Run
 
-1. start your local mongodb server
+1. start your local mongodb server (_OPTIONAL_)
 
     ```bash
     npm run start:m
@@ -97,13 +94,13 @@ npm run lint
     {
       token: string,
       socobouser: {
-        id: number,
-        socoboUserRoleId: number|Role,
-        socoboUserProviderId: number|Provider,
-        socoboUserImageId: number,
+        id: string,
         username: string,
         email: string,
         hasTermsAccepted: boolean,
+        role: string|Role,
+        provider: string|Provider,
+        imageUrl: string,
         created: number,
         lastModified: number
       }
@@ -133,13 +130,13 @@ npm run lint
   Response body:
     ```json
     {
-      id: number,
-      socoboUserRoleId: number|Role,
-      socoboUserProviderId: number|Provider,
-      socoboUserImageId: number,
+      id: string,
       username: string,
       email: string,
       hasTermsAccepted: boolean,
+      role: string|Role,
+      provider: string|Provider,
+      imageUrl: string,
       created: number,
       lastModified: number
     }
@@ -154,9 +151,9 @@ npm run lint
     }
     ```
 
-### **SocoboUsers**
+### **SocoboUser**
 
-- **GET /api/v1/socobousers**
+- **GET /api/v1/socobouser**
 
   **_This route is only with admin rights accessable!_**
 
@@ -164,13 +161,13 @@ npm run lint
     ```json
     [
       {
-        id: number,
-        socoboUserRoleId: number|Role,
-        socoboUserProviderId: number|Provider,
-        socoboUserImageId: number,
+        id: string,
         username: string,
         email: string,
         hasTermsAccepted: boolean,
+        role: string|Role,
+        provider: string|Provider,
+        imageUrl: string,
         created: number,
         lastModified: number
       },
@@ -189,7 +186,7 @@ npm run lint
     }
     ```
 
-- **GET /api/v1/socobousers/:id**
+- **GET /api/v1/socobouser/:id**
 
   Path Parameter:
     - id: User id
@@ -197,13 +194,13 @@ npm run lint
   Response body:
     ```json
     {
-      id: number,
-      socoboUserRoleId: number|Role,
-      socoboUserProviderId: number|Provider,
-      socoboUserImageId: number,
+      id: string,
       username: string,
       email: string,
       hasTermsAccepted: boolean,
+      role: string|Role,
+      provider: string|Provider,
+      imageUrl: string,
       created: number,
       lastModified: number
     }
@@ -218,7 +215,7 @@ npm run lint
     }
     ```
 
-- **PUT /api/v1/socobousers/:id**
+- **PUT /api/v1/socobouser/:id**
 
   Path Parameter:
     - id: User id
@@ -227,23 +224,23 @@ npm run lint
     ```json
     {
       updateType: UpdateType,
-      fieldValues: [
-        value: string|number,
+      fieldValues: {
+        update-type specific socoboUser-Property: number|string|boolean|Role|Provider,
         ...
-      ]
+      }
     }
     ```
 
   Response body:
     ```json
     {
-      id: number,
-      socoboUserRoleId: number|Role,
-      socoboUserProviderId: number|Provider,
-      socoboUserImageId: number,
+      id: string,
       username: string,
       email: string,
       hasTermsAccepted: boolean,
+      role: string|Role,
+      provider: string|Provider,
+      imageUrl: string,
       created: number,
       lastModified: number
     }
@@ -258,155 +255,20 @@ npm run lint
     }
     ```
 
-- **DELETE /api/v1/socobousers/:id**
+- **POST /api/v1/socobouser/:id/upload**
+
+  Uploads a provided image file to the server for the current user and updates
+  the related user in the database.
 
   Path Parameter:
     - id: User id
 
-  Response body:
-    ```json
-    {
-      id: number
-    }
+  Request header:
+    ```bash
+    Content-Type = multipart/form-data
     ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-### **SocoboUserImages**
-
-- **GET /api/v1/socobouserimages**
-
-  **_This route is only with admin rights accessable!_**
-
-  Response body:
-    ```json
-    [
-      {
-        id: number,
-        url: string,
-        created: number,
-        lastModified: number
-      },
-      {
-        ...
-      }
-    ]
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **GET /api/v1/socobouserimages/:id**
-
-  Path Parameter:
-    - id: SocoboUserImage id
-
-  Response body:
-    ```json
-    {
-      id: number,
-      url: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **PUT /api/v1/socobouserimages/:id**
-
-  Path Parameter:
-    - id: SocoboUserImage id
 
   Request body:
-    ```json
-    {
-      url: string
-    }
-    ```
-
-  Response body:
-    ```json
-    {
-      id: number,
-      url: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **POST /api/v1/socobouserimages**
-
-  This route save images that are _not_ stored into our storage.
-  
-  **ATTENTION**
-  
-  After calling this API route it's needed to call the SocoboUser Update Route with the newly created SocoboUserImage Id. One API call should only manipulate the called resource and not multiple resources.
-
-  Request body:
-    ```json
-    {
-      url: string
-    }
-    ```
-
-  Response body:
-    ```json
-    {
-      id: number,
-      url: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **POST /api/v1/socobouserimages/upload**
-
-  This route save images that are stored into our storage.
-
-  **ATTENTION**
-  
-  After calling this API route it's needed to call the SocoboUser Update Route with the newly created SocoboUserImage Id. One API call should only manipulate the called resource and not multiple resources.
-
-  Request body as form-data:
     ```bash
     key = socoboUserImage,
     value = file
@@ -415,8 +277,13 @@ npm run lint
   Response body:
     ```json
     {
-      id: number,
-      url: string,
+      id: string,
+      username: string,
+      email: string,
+      hasTermsAccepted: boolean,
+      role: string|Role,
+      provider: string|Provider,
+      imageUrl: string,
       created: number,
       lastModified: number
     }
@@ -431,294 +298,10 @@ npm run lint
     }
     ```
 
-- **DELETE /api/v1/socobouserimages/:id**
+- **DELETE /api/v1/socobouser/:id**
 
   Path Parameter:
-    - id: SocoboUserImage id
-
-  Response body:
-    ```json
-    {
-      id: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-### **SocoboUserProviders**
-
-- **GET /api/v1/sobouserproviders**
-
-  **_This route is only with admin rights accessable!_**
-
-  Response body:
-    ```json
-    [
-      {
-        id: number,
-        name: string,
-        created: number,
-        lastModified: number
-      },
-      {
-        ...
-      }
-    ]
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **GET /api/v1/sobouserproviders/:id**
-
-  **_This route is only with admin rights accessable!_**
-
-  Path Parameter:
-    - id: SocoboUserProvider id
-
-  Response body:
-    ```json
-    {
-      id: number,
-      name: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **PUT /api/v1/sobouserproviders/:id**
-
-  **_This route is only with admin rights accessable!_**
-
-  Path Parameter:
-    - id: SocoboUserProvider id
-
-  Request body:
-    ```json
-    {
-      name: string
-    }
-    ```
-
-  Response body:
-    ```json
-    {
-      id: number,
-      name: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **POST /api/v1/sobouserproviders**
-
-  **_This route is only with admin rights accessable!_**
-
-  Request body:
-    ```json
-    {
-      name: string
-    }
-    ```
-
-  Response body:
-    ```json
-    {
-      id: number,
-      name: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **DELETE /api/v1/sobouserproviders/:id**
-
-  **_This route is only with admin rights accessable!_**
-
-  Path Parameter:
-    - id: SocoboUserProvider id
-
-  Response body:
-    ```json
-    {
-      id: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-### **SocoboUserRoles**
-
-- **GET /api/v1/sobouserroles**
-
-  **_This route is only with admin rights accessable!_**
-
-  Response body:
-    ```json
-    [
-      {
-        id: number,
-        name: string,
-        created: number,
-        lastModified: number
-      },
-      {
-        ...
-      }
-    ]
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **GET /api/v1/sobouserroles/:id**
-
-  **_This route is only with admin rights accessable!_**
-
-  Path Parameter:
-    - id: SocoboUserRole id
-
-  Response body:
-    ```json
-    {
-      id: number,
-      name: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **PUT /api/v1/sobouserroles/:id**
-
-  **_This route is only with admin rights accessable!_**
-
-  Path Parameter:
-    - id: SocoboUserRole id
-
-  Request body:
-    ```json
-    {
-      name: string
-    }
-    ```
-
-  Response body:
-    ```json
-    {
-      id: number,
-      name: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **POST /api/v1/sobouserroles**
-
-  **_This route is only with admin rights accessable!_**
-
-  Request body:
-    ```json
-    {
-      name: string
-    }
-    ```
-
-  Response body:
-    ```json
-    {
-      id: number,
-      name: string,
-      created: number,
-      lastModified: number
-    }
-    ```
-
-  Error body:
-    ```json
-    {
-      message: string,
-      method: string,
-      source: string
-    }
-    ```
-
-- **DELETE /api/v1/sobouserroles/:id**
-
-  **_This route is only with admin rights accessable!_**
-
-  Path Parameter:
-    - id: SocoboUserRoles id
+    - id: User id
 
   Response body:
     ```json
@@ -1110,9 +693,9 @@ npm run lint
     }
     ```
 
-### **Logs**
+### **Log**
 
-- **GET /api/v1/logs/errors**
+- **GET /api/v1/log/errors**
 
   **_This route is only with admin rights accessable!_**
 
@@ -1137,16 +720,16 @@ npm run lint
 ## Enums
 
   - Role:
-    - 1 = Admin
-    - 2 = User
+    - Admin
+    - User
 
   - Provider:
-    - 1 = Email
-    - 2 = Username
+    - Email
+    - Username
 
   - UpdateType:
     - 0 = full
-      - fields: username, email, password
+      - fields: username, email, password, imageUrl, role, provider
     - 1 = username
       - fields: username
     - 2 = email
@@ -1154,8 +737,8 @@ npm run lint
     - 3 = password
       - fields: password
     - 4 = image
-      - fields: socoboUserImageId
+      - fields: imageUrl
     - 5 = role
-      - fields: socoboUserRoleId
+      - fields: role
     - 6 = provider:
-      - fields: socoboUserProviderId
+      - fields: provider
