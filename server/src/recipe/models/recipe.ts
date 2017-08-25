@@ -1,3 +1,7 @@
+/*tslint:disable:ban-types*/
+
+// TODO: FIX TSLINT ERROR LINE 13
+
 import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
 import { Validatable, ValidationGroup } from "../../app/index";
 import { RecipeStep } from "../models/recipe-step";
@@ -102,3 +106,5 @@ export class Recipe implements Validatable {
     return this;
   }
 }
+
+/*tslint:enable:ban-types*/

@@ -31,12 +31,7 @@ export class AuthValidationMiddleware {
       }
 
       req.requestData = {};
-
-      if (hasEmailProperty) {
-        req.requestData.isEmailLogin = true;
-      } else {
-        req.requestData.isEmailLogin = false;
-      }
+      req.requestData.isEmailLogin = hasEmailProperty;
 
       resolve();
     });

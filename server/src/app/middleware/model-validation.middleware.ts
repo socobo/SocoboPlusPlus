@@ -40,9 +40,9 @@ export class ModelValidationMiddleware {
 
   /**
    * This validation approache enables also validation of nested objects
-   * @param objToValidate 
-   * @param req 
-   * @param validationGroups 
+   * @param objToValidate
+   * @param req
+   * @param validationGroups
    */
   public validateObject (objToValidate: Validatable, req: Request, validationGroups: ValidationGroup[]): Promise<any> {
     return new Promise<any>((resolve: any, reject: any) => {

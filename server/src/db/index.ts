@@ -28,13 +28,14 @@ const getConnectionUrl = (): string => {
   return connectionUrl;
 };
 
-// Add Promise Lin
-(<any> mongoose).Promise = global.Promise;
+// Add Promise Lib
+(mongoose as any).Promise = global.Promise;
 
 // Create MongoDB connection
 mongoose.connect(getConnectionUrl(), { useMongoClient: true }, (err) => {
-  if (err)
+  if (err) {
     return LogService.addError(err.message, ErrorUtils.handleError(err, "InitDatabase", "mongoose.connect(..)"));
+  }
 });
 
 // Create Model classes

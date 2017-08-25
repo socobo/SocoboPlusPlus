@@ -1,5 +1,7 @@
 /*tslint:disable:no-unused-expression*/
 
+// TODO: FIX TSLINT ERROR
+
 process.env["NODE_ENV"] = "test";
 
 import * as chai from "chai";

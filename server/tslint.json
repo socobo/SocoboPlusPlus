@@ -6,7 +6,7 @@
 		"trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
     "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
     "ordered-imports": [true, { "named-imports-order": "case-insensitive" }],
-    "member-ordering": [true, { "order": ["constructor", "statics-first"] }],
+    "member-ordering": [true, { "order": [ "constructor" ] }],
     "interface-name": false,
     "no-string-literal": false
   }

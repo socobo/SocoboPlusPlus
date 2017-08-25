@@ -1,9 +1,9 @@
 import { Document, Model } from "mongoose";
+import { SocoboUser, SocoboUserRepository } from "../../socobouser/index";
 import { DbExtension } from "../interface/db-extension";
-import { SocoboUserRepository, SocoboUser } from "../../socobouser/index";
 
 export class MongoDbExtension implements DbExtension {
-  socobouser: SocoboUserRepository;
+  public socobouser: SocoboUserRepository;
   // TODO: recipe: RecipeRepository;
 
   constructor (socoboUserModel: Model<Document & SocoboUser>) {

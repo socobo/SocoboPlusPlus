@@ -1,11 +1,11 @@
 language: node_js
 # sudo: enabled
-dist: trusty
+# dist: trusty
 node_js: 8
 env:
   - NODE_ENV=test
-addons:
-  firefox: latest
+# addons:
+  # firefox: latest
 services:
   - mongodb
 cache:
@@ -13,14 +13,14 @@ cache:
     - server/node_modules
     - client/node_modules
 before_install: 
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - export DISPLAY=:99.0 
-  - sh -e /etc/init.d/xvfb start
-  - sudo apt-get update
-  - sudo apt-get install -y libappindicator1 fonts-liberation
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome*.deb
+  # - export CHROME_BIN=/usr/bin/google-chrome
+  # - export DISPLAY=:99.0 
+  # - sh -e /etc/init.d/xvfb start
+  # - sudo apt-get update
+  # - sudo apt-get install -y libappindicator1 fonts-liberation
+  # - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  # - sudo dpkg -i google-chrome*.deb
 script:
-  - cd server && npm install && npm run tsc # TODO: fix lint and test errors- cd server && npm install && npm run lint && npm test
+  - cd server && npm install && npm run tsc && npm run lint # TODO: fix test errors: && npm test
   # - cd .. 
   # - cd client && npm install && npm run lint:t && npm run test:t 

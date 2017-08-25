@@ -3,9 +3,9 @@ import {
   ApiError, ComparePwResult, CryptoUtils, DbError,
   ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
 } from "../../app/index";
+import { DbExtension } from "../../db/interface/db-extension";
 import { SocoboUser, SocoboUserProviderType, SocoboUserRoleType } from "../../socobouser/index";
 import { Config } from "./../../config";
-import { DbExtension } from "../../db/interface/db-extension";
 
 export class AuthService {
 
