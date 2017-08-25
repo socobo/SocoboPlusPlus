@@ -7,10 +7,10 @@ env:
   # firefox: latest
 services:
   - mongodb
-cache:
-  directories:
-    - server/node_modules
-    - client/node_modules
+# cache:
+  # directories:
+    # - server/node_modules
+    # - client/node_modules
 before_install: # TODO: uncomment for frontend testing
   # - export CHROME_BIN=/usr/bin/google-chrome
   # - export DISPLAY=:99.0 
