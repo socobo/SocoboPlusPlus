@@ -18,7 +18,7 @@ export class SocoboUserRepository {
 
   public getUserById = async (id: Types.ObjectId): Promise<SocoboUser | DbError> => {
     try {
-      const user = await this._socoboUserModel.findById(id);
+      const user = await this._socoboUserModel.findOne({_id: id});
       return this._transformResult(user);
     } catch (error) {
       return ErrorUtils.handleDbNotFound(ERRORS.USER_NOT_FOUND, error,
@@ -59,9 +59,8 @@ export class SocoboUserRepository {
                              fieldsToUpdate: object): Promise<SocoboUser | DbError> => {
     try {
       const checkedFieldsToUpdate = this._checkValidUpdateFields(updateType, fieldsToUpdate);
-      const foundSocoboUser = await this._socoboUserModel.findById(id);
-      const t = await this._socoboUserModel.update(checkedFieldsToUpdate, foundSocoboUser);
-      return this._transformResult(foundSocoboUser);
+      const updatedUser = await this._socoboUserModel.findByIdAndUpdate({ _id: id}, { $set: checkedFieldsToUpdate })
+      return this._transformResult(updatedUser);
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "updateById(..)");
     }
