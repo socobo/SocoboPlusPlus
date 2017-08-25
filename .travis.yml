@@ -19,7 +19,6 @@ before_install: # TODO: uncomment for frontend testing
   # - sudo apt-get install -y libappindicator1 fonts-liberation
   # - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   # - sudo dpkg -i google-chrome*.deb
-  - npm i -g node-gyp
 script:
   - cd server && npm install && npm run tsc && npm run lint # TODO: fix test errors: && npm test
   # - cd .. # TODO: uncomment for frontend testing
