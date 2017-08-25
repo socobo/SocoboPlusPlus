@@ -131,10 +131,10 @@ export class SocoboUserRepository {
     return result;
   }
 
-  public deleteById = async (id: Types.ObjectId): Promise<Types.ObjectId | DbError> => {
+  public deleteById = async (id: Types.ObjectId): Promise<object | DbError> => {
     try {
-      const t = await this._socoboUserModel.remove({_id: id});
-      return id;
+      await this._socoboUserModel.findByIdAndRemove({_id: id});
+      return { id };
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "deleteById(..)");
     }

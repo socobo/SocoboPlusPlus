@@ -152,7 +152,6 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       this._db.socobouser.save(user)
         .then((result: any) => {
-          // user.id = result.id;
           delete user.password;
           resolve(user);
         })
