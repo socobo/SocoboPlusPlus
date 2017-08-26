@@ -59,7 +59,7 @@ export class SocoboUserRepository {
                              fieldsToUpdate: object): Promise<SocoboUser | DbError> => {
     try {
       const checkedFieldsToUpdate = this._checkValidUpdateFields(updateType, fieldsToUpdate);
-      const updatedUser = await this._socoboUserModel.findByIdAndUpdate({ _id: id}, { $set: checkedFieldsToUpdate })
+      const updatedUser = await this._socoboUserModel.findByIdAndUpdate({ _id: id}, { $set: checkedFieldsToUpdate });
       return this._transformResult(updatedUser);
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "updateById(..)");
