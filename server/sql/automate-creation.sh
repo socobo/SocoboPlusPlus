@@ -3,7 +3,7 @@
 if [ "$1" = "-d" ]
 then
 
-  mongoimport --db socobo_dev --collection socobousers --drop --file ./dev/create-socoboUser.json
+  mongoimport --db socobo_dev --collection socobousers --drop --file ./dev/create-socoboUser.json --jsonArray
   # TODO: Add Demo Data: mongoimport --db socobo_dev --collection recipe --drop --file ./dev/create-recipe.json
   # TODO: Add Demo Data: mongoimport --db socobo_dev --collection recipeCategory --drop --file ./dev/create-recipeCategory.json
   # TODO: Add Demo Data: mongoimport --db socobo_dev --collection recipeIngredient --drop --file ./dev/create-recipeIngredient.json
@@ -15,7 +15,7 @@ then
 elif [ "$1" = "-t" ]
 then
 
-  mongoimport --db socobo_test --collection socobousers --drop --file ./test/create-socoboUser.json
+  mongoimport --db socobo_test --collection socobousers --drop --file ./test/create-socoboUser.json --jsonArray
   # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipe --drop --file ./test/create-recipe.json
   # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeCategory --drop --file ./test/create-recipeCategory.json
   # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeIngredient --drop --file ./test/create-recipeIngredient.json
