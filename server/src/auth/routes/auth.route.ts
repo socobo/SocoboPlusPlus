@@ -21,7 +21,7 @@ export class AuthRoute {
 
     this._router.post("/register",
       this._authValidationHandler.checkRequest,
-      this._modelValidationHandler.validate(SocoboUser, [ValidationGroup.REGISTRATION]),
+      this._modelValidationHandler.validateObject(new SocoboUser(), [ValidationGroup.REGISTRATION]),
       this._authValidationHandler.extractBody,
       this._authHandler.register);
 

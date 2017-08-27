@@ -27,7 +27,7 @@ export class SocoboUsersRoute {
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
-      this._modelValidationHandler.validate(SocoboUser, [ValidationGroup.USER]),
+      this._modelValidationHandler.validateObject(new SocoboUser(), [ValidationGroup.USER]),
       this._socoboUserHandler.updateById);
 
     this._router.post("/:id/upload",

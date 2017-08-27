@@ -15,7 +15,7 @@ describe("Model Validation Middleware", () => {
 
   const mocks = require("node-mocks-http");
 
-  it("validation of a recipe with empty title and userId failes with three properties", () => {
+  it("validation of a recipe with empty title and userId failes with two properties", () => {
 
     let req: any;
     const recipe: Recipe = new Recipe();
@@ -25,9 +25,9 @@ describe("Model Validation Middleware", () => {
       body: recipe
     });
 
-    const prom: any = new ModelValidationMiddleware().validate(Recipe, req, [ValidationGroup.RECIPE]);
+    const prom: any = new ModelValidationMiddleware().validateObject(new Recipe(), req, [ValidationGroup.RECIPE]);
     return prom.should.be.rejected.then((e: any) => {
-      e.should.to.have.deep.property("validationErrors").to.have.deep.lengthOf(3);
+      e.should.to.have.deep.property("validationErrors").to.have.deep.lengthOf(2);
     });
   });
 
@@ -64,10 +64,10 @@ describe("Model Validation Middleware", () => {
       body: recipe
     });
 
-    const prom: any = new ModelValidationMiddleware().validate(Recipe, req, [ValidationGroup.RECIPE]);
+    const prom: any = new ModelValidationMiddleware().validateObject(new Recipe(), req, [ValidationGroup.RECIPE]);
     return prom.should.be.rejected.then((e: any) => {
       e.should.to.have.deep.property("message", "The provided input is invalid");
-      e.should.to.have.deep.property("sourceMethod", "validate(..)");
+      e.should.to.have.deep.property("sourceMethod", "validateObject(..)");
       e.should.to.have.deep.property("source", "ModelValidationMiddleware");
     });
   });
