@@ -6,7 +6,6 @@ import * as chai from "chai";
 import chaiHttp = require("chai-http");
 import { readFileSync } from "fs";
 import * as mocha from "mocha";
-import * as mongoose from "mongoose";
 import Server from "./../src/server";
 import {
   SocoboUser, SocoboUserProviderType, SocoboUserRoleType, SocoboUserUpdateType
@@ -64,7 +63,7 @@ describe("SocoboUserRoute - API v1", () => {
   it("GET /api/v1/socobouser should return all users", async () => {
     const accessToken = await login(SocoboUserRoleType.Admin);
     const result = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
-    expect(result.body.length).to.equal(3);
+    expect(result.body.length).to.equal(5);
   });
 
   it("GET /api/v1/socobouser/:id should return one user", async () => {
