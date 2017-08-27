@@ -29,7 +29,7 @@ export class FoodItemTemplate implements Validatable {
     return this;
   }
 
-  public addName = (name: string): this => {
+  public setName = (name: string): this => {
     this.name = name;
     return this;
   }

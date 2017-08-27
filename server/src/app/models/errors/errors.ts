@@ -5,6 +5,8 @@ import { ErrorType } from "./error-type";
  * 1 => User errors
  * 2 => Auth errors
  * 3 => Validation errors
+ * 4 => Recipe errors
+ * 5 => FoodItem errors
  */
 export class ERRORS {
   public static INTERNAL_SERVER_ERROR = new ErrorType(
@@ -135,6 +137,11 @@ export class ERRORS {
   public static RECIPE_NON_AVAILABLE = new ErrorType(
     "40003",
     "recipes.empty",
+    404
+  );
+  public static FOODITEMTEMPLTE_NOT_FOUND = new ErrorType(
+    "50001",
+    "fooditem.template.not.found",
     404
   );
 }
