@@ -1,5 +1,6 @@
 [
   {
+    "_id" : {"$oid":"59a2ee598ae9b7b45243d503"},
     "username": "john-doe@test.test",
     "email": "john-doe@test.test",
     "password": "$2a$10$3Zmu33SdHvByHW5vdIJafu45eKybWeSe9lnL6EdSlDzTiWLCAHdUC",
@@ -10,6 +11,7 @@
     "created": 1484401066602,
     "lastModified": 1484401066602
   },{
+    "_id" : {"$oid":"59a2ee5be2c06ab513940b84"},
     "username": "MaxMustermann",
     "email": "MaxMustermann",
     "password": "$2a$10$CuivooymnRoJrfUQi6i3BOfRMGomihRxSymdhhkKmZLQubMjWglzK",
@@ -20,6 +22,7 @@
     "created": 1484401066602,
     "lastModified": 1484401066602
   },{
+    "_id" : {"$oid":"59a2ee5d6b1ad6c629e9b2fc"},
     "username": "admin",
     "email": "admin",
     "password": "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga",
