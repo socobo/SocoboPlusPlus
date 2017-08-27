@@ -79,12 +79,7 @@ export class ERRORS {
   );
   public static AUTH_NO_HASHED_PASSWORD = new ErrorType(
     "20007",
-    "internal.no.password.hash",
-    500
-  );
-  public static AUTH_PW_HASH_GENERATION = new ErrorType(
-    "20008",
-    "internal.error.create.salt",
+    "internal.error.create.hash",
     500
   );
   public static AUTH_SALT_GENERATION = new ErrorType(

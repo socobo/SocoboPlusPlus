@@ -16,7 +16,7 @@ export class SocoboUser implements Validatable {
   @MinLength(5, {
     groups: [ ValidationGroup.LOGIN ]
   })
-  @ValidateIf((o) => o.updateType === 1, {
+  @ValidateIf((o) => o.updateType === 1 || o.updateType === 0, {
     groups: [ ValidationGroup.USER ]
   })
   public username: string;
@@ -33,6 +33,9 @@ export class SocoboUser implements Validatable {
       ValidationGroup.REGISTRATION
     ]
   })
+  @ValidateIf((o) => o.updateType === 2 || o.updateType === 0, {
+    groups: [ ValidationGroup.USER ]
+  })
   public email: string;
 
   @IsNotEmpty({
@@ -47,27 +50,39 @@ export class SocoboUser implements Validatable {
       ValidationGroup.REGISTRATION
     ]
   })
+  @ValidateIf((o) => o.updateType === 3 || o.updateType === 0, {
+    groups: [ ValidationGroup.USER ]
+  })
   public password: string;
+
+  public hasTermsAccepted: boolean;
+
+  @ValidateIf((o) => o.updateType === 4 || o.updateType === 0, {
+    groups: [ ValidationGroup.USER ]
+  })
+  @IsNotEmpty({
+    groups: [ ValidationGroup.USER ]
+  })
+  public imageUrl: string;
 
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
-  public hasTermsAccepted: boolean;
-
+  @ValidateIf((o) => o.updateType === 5 || o.updateType === 0, {
+    groups: [ ValidationGroup.USER ]
+  })
   @IsNotEmpty({
-    groups: [ ValidationGroup.REGISTRATION ]
+    groups: [ ValidationGroup.USER ]
   })
   public role: string;
 
+  @ValidateIf((o) => o.updateType === 6 || o.updateType === 0, {
+    groups: [ ValidationGroup.USER ]
+  })
   @IsNotEmpty({
-    groups: [ ValidationGroup.REGISTRATION ]
+    groups: [ ValidationGroup.USER ]
   })
   public provider: string;
-
-  @IsNotEmpty({
-    groups: [ ValidationGroup.REGISTRATION ]
-  })
-  public imageUrl: string;
 
   @IsNotEmpty()
   public created: number;

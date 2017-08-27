@@ -1,4 +1,5 @@
 import * as jwt from "jsonwebtoken";
+import { Types } from "mongoose";
 import {
   ApiError, ComparePwResult, CryptoUtils, DbError,
   ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
@@ -20,68 +21,24 @@ export class AuthService {
     return await this._createLoginResult(foundUser);
   }
 
-  public register (erbr: ExtractRequestBodyResult): Promise<SocoboUser | DbError> {
-    return new Promise((resolve, reject) => {
-      this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail, true)
-        .then((user: SocoboUser) => this._checkIfUserIsAlreadyRegistered(user))
-        .catch((errorOne: any) => {
-          if (errorOne.code === ERRORS.USER_NOT_FOUND.code) {
-            this._cryptoUtils.hashPassword(erbr.password)
-              .then((hashedPassword: string) => this._createNewUser(hashedPassword, erbr.usernameOrEmail, erbr.role))
-              .then((createdUser: SocoboUser) => resolve(this._returnSavedUser(createdUser)))
-              .catch((errorTwo: any) => reject(errorTwo));
-          } else {
-            reject(errorOne);
-          }
-        });
-    });
-  }
-
-  private _checkIfUserIsAlreadyRegistered (user: SocoboUser): Promise<any> {
-    return new Promise((resolve, reject) => {
-      if (user) {
-        const e = new ApiError(ERRORS.AUTH_USED_PASSWORD_EMAIL)
-          .addSource(AuthService.name)
-          .addSourceMethod("register(..)");
-        return reject(e);
+  public register = async (erbr: ExtractRequestBodyResult): Promise<SocoboUser> => {
+    try {
+      const foundUser = await this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail, true);
+      await this._checkIfUserIsAlreadyRegistered(foundUser as SocoboUser);
+    } catch (error) {
+      if (error.code === ERRORS.USER_NOT_FOUND.code) {
+        const hashedPassword = await this._cryptoUtils.hashPassword(erbr.password);
+        const createdUser = await this._createNewUser(hashedPassword, erbr.usernameOrEmail, erbr.role);
+        const createdUserId = await this._db.socobouser.save(createdUser);
+        return createdUser.setId(createdUserId as Types.ObjectId).removePassword();
       }
-      resolve();
-    });
+      throw error;
+    }
   }
 
-  private _createNewUser (hashedPassword: string, usernameOrEmail: string,
-                          role: SocoboUserRoleType): Promise<SocoboUser | DbError> {
-    return new Promise((resolve, reject) => {
-      if (hashedPassword.length <= 0) {
-        const e = new ApiError(ERRORS.AUTH_NO_HASHED_PASSWORD)
-          .addSource(AuthService.name)
-          .addSourceMethod("_createNewUser(..)");
-        return reject(e);
-      }
-      const user: SocoboUser = new SocoboUser()
-        .setRole(role)
-        .setProvider(usernameOrEmail.includes("@") ? SocoboUserProviderType.Email : SocoboUserProviderType.Username)
-        .setImageUrl(String(process.env["DEFAULT_USER_IMAGE"] || Config.DEFAULT_USER_IMAGE))
-        .setUsername(usernameOrEmail)
-        .setEmail(usernameOrEmail)
-        .setPassword(hashedPassword)
-        .setHasTermsAccepted(true)
-        .createDates();
-      resolve(user);
-    });
-  }
-
-  private _returnSavedUser (user: SocoboUser): Promise<SocoboUser | DbError> {
-    return new Promise((resolve, reject) => {
-      this._db.socobouser.save(user)
-        .then((result: any) => {
-          delete user.password;
-          resolve(user);
-        })
-        .catch((error: any) => reject(error));
-    });
-  }
-
+  /**
+   * LOGIN AND REGISTRATION
+   */
   private _getUserFromDatabase = async (isEmailLogin: boolean, usernameOrEmail: string,
                                         onlyEmailRegistration: boolean): Promise<SocoboUser | DbError> => {
     // Registration is only possible with an email address
@@ -101,6 +58,9 @@ export class AuthService {
     }
   }
 
+  /**
+   * ONLY LOGIN
+   */
   private _createLoginResult = async (foundUser: SocoboUser): Promise<LoginResponse> => {
     try {
       const token = await jwt.sign(foundUser.getSigningInfo(), (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
@@ -115,5 +75,39 @@ export class AuthService {
         .addSourceMethod("_createLoginResult(..)")
         .addCause(error);
     }
+  }
+
+  /**
+   * ONLY REGISTRATION
+   */
+  private _checkIfUserIsAlreadyRegistered = async (user: SocoboUser): Promise<void> => {
+    if (user) {
+      throw new ApiError(ERRORS.AUTH_USED_PASSWORD_EMAIL)
+        .addSource(AuthService.name)
+        .addSourceMethod("register(..)");
+    }
+  }
+
+  /**
+   * ONLY REGISTRATION
+   */
+  private _createNewUser = async (hashedPassword: string, usernameOrEmail: string,
+                                  role: SocoboUserRoleType): Promise<SocoboUser> => {
+
+    if (hashedPassword.length <= 0) {
+      throw new ApiError(ERRORS.AUTH_NO_HASHED_PASSWORD)
+        .addSource(AuthService.name)
+        .addSourceMethod("_createNewUser(..)");
+    }
+
+    return new SocoboUser()
+      .setRole(role)
+      .setProvider(usernameOrEmail.includes("@") ? SocoboUserProviderType.Email : SocoboUserProviderType.Username)
+      .setImageUrl(String(process.env["DEFAULT_USER_IMAGE"] || Config.DEFAULT_USER_IMAGE))
+      .setUsername(usernameOrEmail)
+      .setEmail(usernameOrEmail)
+      .setPassword(hashedPassword)
+      .setHasTermsAccepted(true)
+      .createDates();
   }
 }

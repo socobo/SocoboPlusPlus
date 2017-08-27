@@ -22,6 +22,7 @@
     "serve:w": "nodemon dist/server.js",
     "test": "npm-run-all setup:db:t create:l test:m",
     "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts'",
+    "test:bc": "npm-run-all tsc lint test",
     "create:l": "mkdir -p logs",
     "create:f": "mkdir -p socobo_data tmp",
     "clean": "rm -rf dist/",
