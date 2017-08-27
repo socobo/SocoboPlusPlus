@@ -1,1 +1,3 @@
-export * from "./models/food-item";
+export * from "./models/FoodItemTemplate";
+export * from "./repositories/FoodItemTemplate.repository";
+export * from "./schemas/FoodItemTemplateSchema";

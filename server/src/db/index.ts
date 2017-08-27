@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 import { ApiError, ErrorType, ErrorUtils, LogService } from "../app/index";
 import { Config } from "../config";
+import { FoodItemTemplate, foodItemTemplateSchema } from "../food/index";
 import { SocoboUser, socoboUserSchema } from "../socobouser/index";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
 
@@ -39,10 +40,15 @@ mongoose.connect(getConnectionUrl(), { useMongoClient: true }, (err) => {
 });
 
 // Create Model classes
-const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser", socoboUserSchema, "socobousers");
+const fooditemTemplateModel = mongoose.model<mongoose.Document & FoodItemTemplate>("FoodItemTemplate",
+                                                                                   foodItemTemplateSchema,
+                                                                                   "foodItemTemplate");
+const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser",
+                                                                       socoboUserSchema,
+                                                                       "socobousers");
 
 // Create DB Extension
-const db = new MongoDbExtension(socoboUserModel);
+const db = new MongoDbExtension(fooditemTemplateModel, socoboUserModel);
 
 // export database object
 export = db;
