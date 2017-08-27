@@ -20,7 +20,7 @@
     "tsc:w": "tsc -w",
     "serve": "node dist/server.js",
     "serve:w": "nodemon dist/server.js",
-    "test": "npm-run-all setup:db:t create:l test:m",
+    "test": "npm-run-all setup:db:t create:l create:f test:m",
     "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts'",
     "test:bc": "npm-run-all tsc lint test",
     "create:l": "mkdir -p logs",
