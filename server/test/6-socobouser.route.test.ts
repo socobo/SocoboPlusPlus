@@ -1,4 +1,5 @@
 /*tslint:disable:no-unused-expression*/
+/*tslint:disable:no-console*/
 
 process.env["NODE_ENV"] = "test";
 
@@ -142,3 +143,4 @@ describe("SocoboUserRoute - API v1", () => {
 });
 
 /*tslint:enable:no-unused-expression*/
+/*tslint:enable:no-console*/
