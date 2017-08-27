@@ -32,20 +32,26 @@ export class ErrorUtils {
 
   public static handleDbNotFound (errorType: ErrorType, error: any, source: string,
                                   method: string, ...msgVariables: string[]): Promise<DbError> {
-    if (ErrorUtils.notFound(error)) {
-      const e = new DbError(errorType.withArgs(...msgVariables))
-        .addSource(source)
-        .addSourceMethod(method)
-        .addCause(error)
-        .addQuery(error.query);
-      return Promise.reject(e);
-    } else {
-      const e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
-        .addSource(source)
-        .addSourceMethod(method)
-        .addCause(error)
-        .addQuery(error.query);
-      return Promise.reject(e);
-    }
+    // if (ErrorUtils.notFound(error)) {
+    //   const e = new DbError(errorType.withArgs(...msgVariables))
+    //     .addSource(source)
+    //     .addSourceMethod(method)
+    //     .addCause(error)
+    //     .addQuery(error.query);
+    //   return Promise.reject(e);
+    // } else {
+    //   const e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
+    //     .addSource(source)
+    //     .addSourceMethod(method)
+    //     .addCause(error)
+    //     .addQuery(error.query);
+    //   return Promise.reject(e);
+    // }
+    const e = new DbError(errorType.withArgs(...msgVariables))
+      .addSource(source)
+      .addSourceMethod(method)
+      .addCause(error)
+      .addQuery(error.query);
+    return Promise.reject(e);
   }
 }

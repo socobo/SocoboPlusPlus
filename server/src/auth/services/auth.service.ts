@@ -5,36 +5,19 @@ import {
 } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { SocoboUser, SocoboUserProviderType, SocoboUserRoleType } from "../../socobouser/index";
-import { Config } from "./../../config";
+import { Config  } from "./../../config";
 
 export class AuthService {
 
   constructor (
     private _db: DbExtension,
     private _cryptoUtils: CryptoUtils
-  ) {}
+  ) { }
 
-  public login (erbr: ExtractRequestBodyResult): Promise<LoginResponse> {
-    return new Promise((resolve, reject) => {
-      this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail, false)
-        .then((user: SocoboUser) => this._validateUser(user))
-        .then((foundUser: SocoboUser) => this._cryptoUtils.comparePasswords(erbr.password, foundUser))
-        .then((cr: ComparePwResult) => this._validateComparePasswords(cr.isPasswordMatch, cr.user))
-        .then((user: SocoboUser) => resolve(this._createLoginResult(user)))
-        .catch((error: any) => {
-          if (error.code === ERRORS.USER_NOT_FOUND.code) {
-            const e = new DbError(ERRORS.AUTH_NOT_REGISTERED.withArgs(erbr.usernameOrEmail))
-              .addSource(AuthService.name)
-              .addSourceMethod("login(..)")
-              .addCause(error)
-              .addQuery(error.query);
-            reject(e);
-          } else {
-            const e = ErrorUtils.handleError(error, AuthService.name, "login()");
-            reject(e);
-          }
-        });
-    });
+  public login = async (erbr: ExtractRequestBodyResult): Promise<LoginResponse> => {
+    const foundUser = await this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail, false) as SocoboUser;
+    await this._cryptoUtils.comparePasswords(erbr.password, foundUser.password);
+    return await this._createLoginResult(foundUser);
   }
 
   public register (erbr: ExtractRequestBodyResult): Promise<SocoboUser | DbError> {
@@ -51,66 +34,6 @@ export class AuthService {
             reject(errorOne);
           }
         });
-    });
-  }
-
-  private _getUserFromDatabase (isEmailLogin: boolean, usernameOrEmail: string,
-                                onlyEmailRegistration: boolean): Promise<SocoboUser | DbError> {
-
-    if (isEmailLogin) {
-      return this._db.socobouser.getUserByEmail(usernameOrEmail);
-    }
-
-    if (!onlyEmailRegistration) {
-      return this._db.socobouser.getUserByUsername(usernameOrEmail);
-    }
-
-    const e = new ApiError(ERRORS.AUTH_ONLY_EMAIL_ALLOWED)
-      .addSource(AuthService.name)
-      .addSourceMethod("_getUserFromDatabase(..)");
-    return Promise.reject(e);
-  }
-
-  private _validateUser (user: SocoboUser): Promise<SocoboUser> {
-    return new Promise((resolve, reject) => {
-      if (!user) {
-        const e = new ApiError(ERRORS.USER_NOT_FOUND.withArgs("provided email or", "username"))
-          .addSource(AuthService.name)
-          .addSourceMethod("_validateUser(..)");
-        return reject(e);
-      }
-      resolve(user);
-    });
-  }
-
-  private _validateComparePasswords (compareSuccessful: boolean, foundUser: SocoboUser): Promise<SocoboUser> {
-    return new Promise((resolve, reject) => {
-      if (!compareSuccessful) {
-        const e = new ApiError(ERRORS.AUTH_WRONG_PASSWORD)
-          .addSource(AuthService.name)
-          .addSourceMethod("_validateComparePasswords(..)");
-        return reject(e);
-      }
-      resolve(foundUser);
-    });
-  }
-
-  private _createLoginResult (foundUser: SocoboUser): Promise<LoginResponse> {
-    return new Promise((resolve, reject) => {
-      jwt.sign(foundUser.getSigningInfo(), (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
-        expiresIn: (process.env["TOKEN_EXPIRATION"] || Config.TOKEN_EXPIRATION),
-        issuer: (process.env["TOKEN_ISSUER"] || Config.TOKEN_ISSUER)
-      }, (err, token) => {
-        if (err) {
-          const e = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
-            .addSource(AuthService.name)
-            .addSourceMethod("_createLoginResult(..)")
-            .addCause(err);
-          return reject(e);
-        }
-        delete foundUser.password;
-        resolve(new LoginResponse(token, foundUser));
-      });
     });
   }
 
@@ -157,5 +80,40 @@ export class AuthService {
         })
         .catch((error: any) => reject(error));
     });
+  }
+
+  private _getUserFromDatabase = async (isEmailLogin: boolean, usernameOrEmail: string,
+                                        onlyEmailRegistration: boolean): Promise<SocoboUser | DbError> => {
+    // Registration is only possible with an email address
+    // Login is possible with email address or username
+    if (onlyEmailRegistration && !isEmailLogin) {
+      throw new ApiError(ERRORS.AUTH_ONLY_EMAIL_ALLOWED)
+        .addSource(AuthService.name)
+        .addSourceMethod("_getUserFromDatabase(..)");
+    }
+
+    if (isEmailLogin) {
+      return await this._db.socobouser.getUserByEmail(usernameOrEmail);
+    }
+
+    if (!onlyEmailRegistration) {
+      return await this._db.socobouser.getUserByUsername(usernameOrEmail);
+    }
+  }
+
+  private _createLoginResult = async (foundUser: SocoboUser): Promise<LoginResponse> => {
+    try {
+      const token = await jwt.sign(foundUser.getSigningInfo(), (process.env["TOKEN_SECRET"] || Config.TOKEN_SECRET), {
+        expiresIn: (process.env["TOKEN_EXPIRATION"] || Config.TOKEN_EXPIRATION),
+        issuer: (process.env["TOKEN_ISSUER"] || Config.TOKEN_ISSUER)
+      });
+      delete foundUser.password;
+      return new LoginResponse(token, foundUser);
+    } catch (error) {
+      throw new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+        .addSource(AuthService.name)
+        .addSourceMethod("_createLoginResult(..)")
+        .addCause(error);
+    }
   }
 }

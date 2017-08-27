@@ -31,7 +31,7 @@ export class SocoboUserRepository {
       const user = await this._socoboUserModel.findOne({ email });
       return this._transformResult(user);
     } catch (error) {
-      return ErrorUtils.handleDbNotFound (ERRORS.USER_NOT_FOUND, error,
+      return ErrorUtils.handleDbNotFound(ERRORS.USER_NOT_FOUND, error,
         SocoboUserRepository.name, "getUserByEmail(..)", "email", email);
     }
   }
@@ -41,7 +41,7 @@ export class SocoboUserRepository {
       const user = await this._socoboUserModel.findOne({ username });
       return this._transformResult(user);
     } catch (error) {
-      return ErrorUtils.handleDbNotFound (ERRORS.USER_NOT_FOUND, error,
+      return ErrorUtils.handleDbNotFound(ERRORS.USER_NOT_FOUND, error,
         SocoboUserRepository.name, "getUserByUsername(..)", "username", username);
     }
   }
@@ -65,6 +65,15 @@ export class SocoboUserRepository {
       return this._transformResult(updatedUser);
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "updateById(..)");
+    }
+  }
+
+  public deleteById = async (id: Types.ObjectId): Promise<object | DbError> => {
+    try {
+      await this._socoboUserModel.findByIdAndRemove({_id: id});
+      return { id };
+    } catch (error) {
+      return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "deleteById(..)");
     }
   }
 
@@ -133,16 +142,8 @@ export class SocoboUserRepository {
     return result;
   }
 
-  public deleteById = async (id: Types.ObjectId): Promise<object | DbError> => {
-    try {
-      await this._socoboUserModel.findByIdAndRemove({_id: id});
-      return { id };
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "deleteById(..)");
-    }
-  }
-
   private _transformResult = (result: Document & SocoboUser): SocoboUser => {
+    if (!result) { throw new Error("SocoboUser not found!"); }
     const tranformedResult: SocoboUser = new SocoboUser()
       .setId(new Types.ObjectId(result.id))
       .setUsername(result.username)

@@ -28,18 +28,19 @@ export class CryptoUtils {
     });
   }
 
-  public comparePasswords (firstPw: string, user: SocoboUser): Promise<ComparePwResult> {
-    return new Promise((resolve, reject) => {
-      bcrypt.compare(firstPw, user.password, (err, isMatch) => {
-        if (err) {
-          const e = new ApiError(ERRORS.AUTH_PW_MISSMATCH)
-            .addSource(CryptoUtils.name)
-            .addSourceMethod("comparePasswords(..)")
-            .addCause(err);
-          return reject(e);
-        }
-        resolve(new ComparePwResult(isMatch, user));
-      });
-    });
+  public comparePasswords = async (firstPw: string, secondPw: string): Promise<void> => {
+    try {
+      const result = await bcrypt.compare(firstPw, secondPw);
+      if (!result) {
+        throw new ApiError(ERRORS.AUTH_PW_MISSMATCH)
+          .addSource(CryptoUtils.name)
+          .addSourceMethod("comparePasswords(..)");
+      }
+    } catch (error) {
+      throw new ApiError(ERRORS.AUTH_WRONG_PASSWORD)
+        .addSource(CryptoUtils.name)
+        .addSourceMethod("_validateComparePasswords(..)")
+        .addCause(error);
+    }
   }
 }
