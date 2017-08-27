@@ -2,7 +2,7 @@
 export class Config {
   public static DB_USER: string = "";
   public static DB_PW: string = "";
-  public static DB_URL_TEST: string = `mongodb://${Config.DB_USER}:${Config.DB_PW}@localhost:27017/socobo_test?ssl=false`;
+  public static DB_URL_TEST: string = `mongodb://localhost:27017/socobo_test`;
   public static DB_URL_DEV: string = `mongodb://localhost:27017/socobo_dev`;
   public static DB_URL: string = `mongodb://${Config.DB_USER}:${Config.DB_PW}@localhost:27017/socobo?ssl=true`;
   public static PORT: number = 8282;

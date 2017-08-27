@@ -144,6 +144,11 @@ export class SocoboUser implements Validatable {
     return this;
   }
 
+  public removePassword = (): this => {
+    delete this.password;
+    return this;
+  }
+
   public getSigningInfo = (): object => {
     return {
       email: this.email,
