@@ -119,6 +119,9 @@ describe("SocoboUserRoute - API v1", () => {
     const id = resultAll.body[0].id;
     const resultBefore = await chai.request(Server).get(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
 
+    console.log(`${__dirname}/img/image.jpg`);
+    console.log(readFileSync(`${__dirname}/img/image.jpg`));
+
     const resultAfter = await chai.request(Server)
       .post(`/api/v1/socobouser/${id}/upload`)
       .set("x-access-token", accessToken)
