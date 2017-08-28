@@ -36,8 +36,9 @@ export class FoodItemTemplateRepository {
 
   public updateById = async (id: Types.ObjectId, name: string): Promise<FoodItemTemplate | DbError> => {
     try {
+      const updateValues = { name, lastModified: Date.now() };
       const updatedTemplate = await this._fooditemTemplateModel.findByIdAndUpdate({ _id: id},
-                                                                              { $set: { name } },
+                                                                              { $set: updateValues },
                                                                               { new: true });
       return this._transformResult(updatedTemplate);
     } catch (error) {

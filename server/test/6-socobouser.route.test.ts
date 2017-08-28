@@ -20,7 +20,7 @@ describe("SocoboUserRoute - API v1", () => {
   // define login function
   const login = async (role: SocoboUserRoleType): Promise<string|any> => {
     const user = (role === SocoboUserRoleType.Admin)
-      ? { email: "admin", password: "password" }
+      ? { email: "admin@test.test", password: "password" }
       : { email: "john-doe@test.test", password: "SuperSecurePassword" };
 
     try {

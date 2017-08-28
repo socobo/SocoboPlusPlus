@@ -45,7 +45,7 @@ const fooditemTemplateModel = mongoose.model<mongoose.Document & FoodItemTemplat
                                                                                    "fooditemtemplate");
 const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser",
                                                                        socoboUserSchema,
-                                                                       "socobousers");
+                                                                       "socobouser");
 
 // Create DB Extension
 const db = new MongoDbExtension(fooditemTemplateModel, socoboUserModel);
