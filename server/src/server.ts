@@ -220,7 +220,7 @@ class Server {
   private _apiRoutes (): void {
     // set routes to paths
     this._app.use("/api/v1/auth", this._authRoute());
-    this._app.use("/apu/v1/fooditemtemplate", this._fooditemTemplateRoute());
+    this._app.use("/api/v1/fooditemtemplate", this._fooditemTemplateRoute());
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
     this._app.use("/api/v1/log", this._logRoute());

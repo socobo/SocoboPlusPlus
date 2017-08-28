@@ -42,7 +42,7 @@ mongoose.connect(getConnectionUrl(), { useMongoClient: true }, (err) => {
 // Create Model classes
 const fooditemTemplateModel = mongoose.model<mongoose.Document & FoodItemTemplate>("FoodItemTemplate",
                                                                                    foodItemTemplateSchema,
-                                                                                   "foodItemTemplate");
+                                                                                   "fooditemtemplate");
 const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser",
                                                                        socoboUserSchema,
                                                                        "socobousers");
