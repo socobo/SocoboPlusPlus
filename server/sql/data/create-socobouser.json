@@ -32,5 +32,16 @@
     "imageUrl": "socobo_data/placeholder/admin_image.png",
     "created": 1484401066602,
     "lastModified": 1484401066602
+  },{
+    "_id" : {"$oid":"59a5a4013eeef0c7a9d00640"},
+    "username": "admin2@test.test",
+    "email": "admin2@test.test",
+    "password": "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga",
+    "hasTermsAccepted": true,
+    "role": "ADMIN",
+    "provider": "EMAIL",
+    "imageUrl": "socobo_data/placeholder/admin_image.png",
+    "created": 1484401066602,
+    "lastModified": 1484401066602
   }
 ]

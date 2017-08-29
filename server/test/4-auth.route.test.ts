@@ -15,7 +15,7 @@ describe("AuthRoute - API v1", () => {
   const expect = chai.expect;
 
   it("POST /api/v1/login as ADMIN w/ EMAIL should create a token and return the user", async () => {
-    const user = { email: "admin@test.test", password: "password" };
+    const user = { email: "admin", password: "password" };
     const result = await chai.request(Server).post("/api/v1/auth/login").send(user);
     expect(result.body).to.have.deep.property("token");
     expect(result.body.token).to.not.null;
@@ -121,7 +121,7 @@ describe("AuthRoute - API v1", () => {
   });
 
   it("POST /api/v1/register as ADMIN should create and return the user", async () => {
-    const user = { email: "admin2@test.test", password: "password", role: "ADMIN" };
+    const user = { email: "adminXYZ@test.test", password: "password", role: "ADMIN" };
     const result = await chai.request(Server).post("/api/v1/auth/register").send(user);
     expect(result.body).to.have.deep.property("id");
     expect(result.body).to.have.deep.property("username");
