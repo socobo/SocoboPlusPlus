@@ -1,7 +1,7 @@
-import { errors } from "pg-promise";
+// import { errors } from "pg-promise";
 import { ApiError, DbError, ERRORS, ErrorType } from "../index";
 
-const errorCode = errors.queryResultErrorCode;
+const errorCode = { noData: 400 }; // TODO: find mongoose equivalent //errors.queryResultErrorCode;
 
 export class ErrorUtils {
 

@@ -6,7 +6,6 @@ import * as express from "express";
 import * as http from "http";
 import * as multer from "multer";
 import * as path from "path";
-import * as pgPromise from "pg-promise";
 import * as uuid from "uuid";
 import * as winston from "winston";
 // app

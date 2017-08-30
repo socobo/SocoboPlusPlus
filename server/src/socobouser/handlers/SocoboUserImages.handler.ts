@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
-import { IDatabase } from "pg-promise/typescript/pg-promise";
-import { DataType, DbExtensions, ImageService, SocoboRequest } from "../../app/index";
+// import { IDatabase } from "pg-promise/typescript/pg-promise";
+// import { DataType, DbExtensions, ImageService, SocoboRequest } from "../../app/index";
+import { DataType, ImageService, SocoboRequest } from "../../app/index";
 import { SocoboUserImage } from "../models/SocoboUserImage";
 
+// TODO: remove this class --> now integrated into socobouser collection
 export class SocoboUserImagesHandler {
 
-  private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _db: any; // IDatabase<DbExtensions>&DbExtensions;
   private _imgService: ImageService;
 
   constructor (db: any, imgService: ImageService) {

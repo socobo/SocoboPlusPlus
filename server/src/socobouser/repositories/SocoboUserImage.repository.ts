@@ -1,6 +1,7 @@
 import { BaseRepository } from "../../app/index";
 import { SocoboUserImage } from "../models/SocoboUserImage";
 
+// TODO: remove this class --> now integrated into socobouser collection
 export class SocoboUserImageRepository extends BaseRepository <SocoboUserImage> {
 
   constructor (db: any) {

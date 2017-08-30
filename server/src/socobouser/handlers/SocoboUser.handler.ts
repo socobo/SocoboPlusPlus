@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { IDatabase } from "pg-promise";
-import { DbExtensions } from "../../app/index";
+// import { IDatabase } from "pg-promise";
+// import { DbExtensions } from "../../app/index";
 import { SocoboUserUpdateTypes } from "../enums/SocoboUserUpdateTypes";
 import { SocoboUser } from "../models/SocoboUser";
 
 export class SocoboUserHandler {
 
-  private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _db: any; // TODO: any wird zu DbExtensions // IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
     this._db = db;

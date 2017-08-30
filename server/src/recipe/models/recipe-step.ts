@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsNumber, IsString, Length, MinLength } from "class-validator";
 import { Validatable, ValidationGroup } from "../../app/index";
 
+// TODO: remove this --> now part of recipe collection
 export class RecipeStep implements Validatable {
   public id: number;
   public recipeId: number;

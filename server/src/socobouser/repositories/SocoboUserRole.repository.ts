@@ -1,6 +1,7 @@
 import { BaseRepository } from "../../app/index";
 import { SocoboUserRole } from "../models/SocoboUserRole";
 
+// TODO: remove this class --> now integrated into socobouser collection
 export class SocoboUserRoleRepository extends BaseRepository <SocoboUserRole> {
 
   constructor (db: any) {

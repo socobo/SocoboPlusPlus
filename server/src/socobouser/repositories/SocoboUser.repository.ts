@@ -1,11 +1,13 @@
-import { IDatabase } from "pg-promise";
-import { DbError, DbExtensions, ERRORS, ErrorUtils } from "../../app/index";
+// import { IDatabase } from "pg-promise";
+// import { DbError, DbExtensions, ERRORS, ErrorUtils } from "../../app/index";
+
+import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { SocoboUserUpdateTypes } from "../enums/SocoboUserUpdateTypes";
 import { SocoboUser } from "../models/SocoboUser";
 
 export class SocoboUserRepository {
 
-  private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _db: any; // TODO: any wird zu Typegoose Schema class // IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
     this._db = db;

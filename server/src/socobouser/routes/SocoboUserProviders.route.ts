@@ -4,6 +4,7 @@ import { AuthValidationHandler } from "../../auth/index";
 import { SocoboUserProvidersHandler } from "../handlers/SocoboUserProviders.handler";
 import { SocoboUserProvider, SocoboUserRoleTypes } from "../index";
 
+// TODO: remove this class --> now integrated into socobouser collection
 export class SocoboUserProvidersRoute {
 
   constructor (

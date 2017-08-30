@@ -1,13 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import { IDatabase } from "pg-promise";
+// import { IDatabase } from "pg-promise";
+// import {
+//   ApiError, DataType, DbExtensions, ERRORS, ImageService, SocoboRequest
+// } from "../../app/index";
+
 import {
-  ApiError, DataType, DbExtensions, ERRORS, ImageService, SocoboRequest
+  ApiError, DataType, ERRORS, ImageService, SocoboRequest
 } from "../../app/index";
+
 import { Recipe, RecipeMiddleware } from "../index";
 
 export class RecipeHandler {
 
-  private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _db: any; // TODO: any wird zu DbExtension //IDatabase<DbExtensions>&DbExtensions;
   private _recipeMiddleware: RecipeMiddleware;
   private _imgService: ImageService;
 

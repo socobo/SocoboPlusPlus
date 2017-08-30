@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { IDatabase } from "pg-promise/typescript/pg-promise";
-import { DbExtensions } from "../../app/index";
+// import { IDatabase } from "pg-promise/typescript/pg-promise";
+// import { DbExtensions } from "../../app/index";
 import { SocoboUserRole } from "../models/SocoboUserRole";
 
+// TODO: remove this class --> now integrated into socobouser collection
 export class SocoboUserRolesHandler {
-  private _db: IDatabase<DbExtensions>&DbExtensions;
+  private _db: any; // IDatabase<DbExtensions>&DbExtensions;
 
   constructor (db: any) {
     this._db = db;
