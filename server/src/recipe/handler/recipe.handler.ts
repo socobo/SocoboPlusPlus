@@ -21,6 +21,11 @@ export class RecipeHandler {
     };
   }
 
+  private _removeImageProp = (recipe: Recipe) => {
+    delete recipe.images;
+    return recipe;
+  }
+
   public getById = async (req: Request, res: Response) => {
     try {
       const result = await this._db.recipe.getById(req.params.id);
@@ -63,7 +68,8 @@ export class RecipeHandler {
   }
 
   public save = async (req: Request, res: Response) => {
-    const recipe: Recipe = new Recipe().clone(req.body as Recipe);
+    let recipe: Recipe = new Recipe().clone(req.body as Recipe);
+    recipe = this._removeImageProp(recipe);
 
     try {
       await this._db.socobouser.getUserById(recipe.userId);
@@ -75,7 +81,9 @@ export class RecipeHandler {
   }
 
   public update = async (req: Request, res: Response) => {
-    const recipe: Recipe = new Recipe().clone(req.body as Recipe);
+    let recipe: Recipe = new Recipe().clone(req.body as Recipe);
+    recipe = this._removeImageProp(recipe);
+    
     try {
       await this._db.socobouser.getUserById(recipe.userId);
       const result = await this._db.recipe.update(req.params.id, recipe);
