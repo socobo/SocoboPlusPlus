@@ -23,6 +23,10 @@ export const recipeSchema = new Schema({
   userId: {
     ref: "SocoboUser",
     type: ObjectId
+  },
+  level: {
+    required: true,
+    type: String
   }
 },
 {
