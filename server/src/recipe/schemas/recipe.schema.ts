@@ -27,6 +27,10 @@ export const recipeSchema = new Schema({
   level: {
     required: true,
     type: String
+  },
+  duration: {
+    required: false,
+    type: Number
   }
 },
 {

@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
-import { Types } from "mongoose";
+
+import { IsInt, IsNotEmpty, IsNumber, Min, Length, ValidateNested} from "class-validator";
+import { Schema } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
 import { Level, RecipeStep } from "../index";
@@ -9,7 +10,7 @@ import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validato
 
 export class Recipe implements Validatable {
 
-  public _id: Types.ObjectId;
+  public _id: Schema.Types.ObjectId;
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
@@ -44,6 +45,14 @@ export class Recipe implements Validatable {
   })
   public level: Level;
 
+  @IsInt({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @Min(0, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public duration: number;
+
   public clone (recipe: Recipe) {
     this._id = recipe._id;
     this.title = recipe.title;
@@ -52,6 +61,7 @@ export class Recipe implements Validatable {
     this.userId = recipe.userId;
     this.steps = [];
     this.level = recipe.level;
+    this.duration = recipe.duration;
     if (recipe.steps) {
       recipe.steps.forEach((step: RecipeStep) => {
         this.steps.push(new RecipeStep().clone(step));
@@ -92,6 +102,11 @@ export class Recipe implements Validatable {
 
   public setLevel (level: Level) {
     this.level = level;
+    return this;
+  }
+
+  public setDuration (duration: Level) {
+    this.duration = duration;
     return this;
   }
 }
