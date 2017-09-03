@@ -1,6 +1,7 @@
 export * from "./handler/recipe.handler";
 export * from "./models/recipe";
 export * from "./models/recipe-step";
+export * from "./enums/levels";
 export * from "./repositories/recipe.repository";
 export * from "./routes/recipe.route";
 export * from "./schemas/recipe.schema";

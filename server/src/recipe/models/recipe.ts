@@ -2,7 +2,7 @@ import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
-import { RecipeStep } from "../index";
+import { Level, RecipeStep } from "../index";
 import { AreRecipeStepsOrdered } from "../validators/recipe-steps-order.validator";
 import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validator";
 export class Recipe implements Validatable {
@@ -34,6 +34,9 @@ export class Recipe implements Validatable {
   })
   public steps: RecipeStep[];
 
+  @IsNotEmpty()
+  public level: Level;
+
   public clone (recipe: Recipe) {
     this._id = recipe._id;
     this.title = recipe.title;
@@ -41,6 +44,7 @@ export class Recipe implements Validatable {
     this.imageUrl = recipe.imageUrl;
     this.userId = recipe.userId;
     this.steps = [];
+    this.level = recipe.level;
     if (recipe.steps) {
       recipe.steps.forEach((step: RecipeStep) => {
         this.steps.push(new RecipeStep().clone(step));
@@ -76,6 +80,11 @@ export class Recipe implements Validatable {
 
   public setSteps (steps: RecipeStep[]) {
     this.steps = steps;
+    return this;
+  }
+
+  public setLevel (level: Level) {
+    this.level = level;
     return this;
   }
 }
