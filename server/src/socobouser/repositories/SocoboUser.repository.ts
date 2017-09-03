@@ -1,4 +1,4 @@
-import { Document, Model, Types } from "mongoose";
+import { Document, Model } from "mongoose";
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
 import { SocoboUser, SocoboUserProviderType, SocoboUserRoleType } from "../index";
@@ -16,7 +16,7 @@ export class SocoboUserRepository {
     }
   }
 
-  public getUserById = async (id: Types.ObjectId): Promise<SocoboUser | DbError> => {
+  public getUserById = async (id: string): Promise<SocoboUser | DbError> => {
     try {
       const user = await this._socoboUserModel.findOne({_id: id});
       return this._transformResult(user);
@@ -46,16 +46,16 @@ export class SocoboUserRepository {
     }
   }
 
-  public save = async (user: SocoboUser): Promise<Types.ObjectId | DbError> => {
+  public save = async (user: SocoboUser): Promise<string | DbError> => {
     try {
       const createdSocoboUser = await this._socoboUserModel.create(user);
-      return new Types.ObjectId(createdSocoboUser._id);
+      return createdSocoboUser._id;
     } catch (error) {
       return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "save(..)");
     }
   }
 
-  public updateById = async (id: Types.ObjectId, updateType: SocoboUserUpdateType,
+  public updateById = async (id: string, updateType: SocoboUserUpdateType,
                              fieldsToUpdate: object): Promise<SocoboUser | DbError> => {
     try {
       const checkedFieldsToUpdate = this._checkValidUpdateFields(updateType, fieldsToUpdate);
@@ -68,7 +68,7 @@ export class SocoboUserRepository {
     }
   }
 
-  public deleteById = async (id: Types.ObjectId): Promise<object | DbError> => {
+  public deleteById = async (id: string): Promise<object | DbError> => {
     try {
       await this._socoboUserModel.findByIdAndRemove({_id: id});
       return { id };
@@ -145,7 +145,7 @@ export class SocoboUserRepository {
   private _transformResult = (result: Document & SocoboUser): SocoboUser => {
     if (!result) { throw new Error("SocoboUser not found!"); }
     const tranformedResult: SocoboUser = new SocoboUser()
-      .setId(new Types.ObjectId(result.id))
+      .setId(result.id)
       .setUsername(result.username)
       .setEmail(result.email)
       .setPassword(result.password)

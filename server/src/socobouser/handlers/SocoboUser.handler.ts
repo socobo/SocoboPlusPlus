@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Types } from "mongoose";
 import { DataType, ImageService, SocoboRequest } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
@@ -12,39 +11,55 @@ export class SocoboUserHandler {
     private _imgService: ImageService
   ) {}
 
-  public getAll = (req: Request, res: Response): void => {
-    this._db.socobouser.getAll()
-      .then((result: SocoboUser[]) => res.status(200).json(result.map((item: SocoboUser) => item.removePassword())))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  public getAll = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const result: SocoboUser[] = await this._db.socobouser.getAll() as SocoboUser[];
+      res.status(200).json(result.map((item: SocoboUser) => item.removePassword()));
+    } catch (error) {
+      res.status(error.statusCode).json(error.forResponse());
+    }
   }
 
-  public getById = (req: Request, res: Response): void => {
-    this._db.socobouser.getUserById(new Types.ObjectId(req.params.id))
-      .then((result: SocoboUser) => res.status(200).json(result.removePassword()))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  public getById = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const result: SocoboUser = await this._db.socobouser.getUserById(req.params.id) as SocoboUser;
+      res.status(200).json(result.removePassword());
+    } catch (error) {
+      res.status(error.statusCode).json(error.forResponse());
+    }
   }
 
-  public updateById = (req: Request, res: Response): void => {
-    const userId: Types.ObjectId = new Types.ObjectId(req.params.id);
-    const updateType: SocoboUserUpdateType = req.body.updateType;
-    const fieldsToUpdate: object = req.body.fieldsToUpdate;
-    this._db.socobouser.updateById(userId, updateType, fieldsToUpdate)
-      .then((result: SocoboUser) => res.status(200).json(result.removePassword()))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  public updateById = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const userId: string = req.params.id;
+      const updateType: SocoboUserUpdateType = req.body.updateType;
+      const fieldsToUpdate: object = req.body.fieldsToUpdate;
+      const result: SocoboUser = await this._db.socobouser.updateById(userId, updateType, fieldsToUpdate) as SocoboUser;
+      res.status(200).json(result.removePassword());
+    } catch (error) {
+      res.status(error.statusCode).json(error.forResponse());
+    }
   }
 
-  public uploadById = (req: SocoboRequest, res: Response): void => {
-    const userId: Types.ObjectId = new Types.ObjectId(req.params.id);
-    const email: string = req.requestData.decoded.email;
-    this._imgService.persistImage(req.file.filename, DataType.SOCOBO_USER_IMAGE, email)
-      .then((url: string) => this._db.socobouser.updateById(userId, SocoboUserUpdateType.image, {imageUrl: url}))
-      .then((user: SocoboUser) => res.status(200).json(user.removePassword()))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  public uploadById = async (req: SocoboRequest, res: Response): Promise<void> => {
+    try {
+      const userId: string = req.params.id;
+      const email: string = req.requestData.decoded.email;
+      const type: SocoboUserUpdateType = SocoboUserUpdateType.image;
+      const url: string = await this._imgService.persistImage(req.file.filename, DataType.SOCOBO_USER_IMAGE, email);
+      const result: SocoboUser = await this._db.socobouser.updateById(userId, type, {imageUrl: url}) as SocoboUser;
+      res.status(200).json(result.removePassword());
+    } catch (error) {
+      res.status(error.statusCode).json(error.forResponse());
+    }
   }
 
-  public deleteById = (req: Request, res: Response): void => {
-    this._db.socobouser.deleteById(new Types.ObjectId(req.params.id))
-      .then((result: object) => res.status(200).json(result))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  public deleteById = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const result: object = await this._db.socobouser.deleteById(req.params.id);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(error.statusCode).json(error.forResponse());
+    }
   }
 }
