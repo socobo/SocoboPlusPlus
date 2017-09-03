@@ -72,11 +72,6 @@ export class ERRORS {
     "auth.token.error",
     401
   );
-  public static AUTH_PW_MISSMATCH = new ErrorType(
-    "20006",
-    "auth.password.missmatch",
-    401
-  );
   public static AUTH_NO_HASHED_PASSWORD = new ErrorType(
     "20007",
     "internal.error.create.hash",
