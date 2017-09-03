@@ -113,6 +113,32 @@ describe("SocoboUserRoute - API v1", () => {
     expect(resultAfter.body.lastModified).to.not.equal(resultBefore.body.lastModified);
   });
 
+  it("PUT /api/v1/socobouser/:id should fail if no updateType is provided", async () => {
+    const accessToken = await login(SocoboUserRoleType.Admin);
+    const resultAll = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
+    const id = resultAll.body[0].id;
+    const resultBefore = await chai.request(Server).get(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
+
+    try {
+      const updateRequestBody = {
+        fieldsToUpdate: { username: "HansPeter" }
+      };
+
+      const resultAfter = await chai.request(Server)
+        .put(`/api/v1/socobouser/${id}`)
+        .set("x-access-token", accessToken)
+        .set("Content-Type", "application/json")
+        .send(updateRequestBody);
+
+    } catch (error) {
+      expect(error.status).to.be.eql(400);
+      const msg = "There is no update type provided. This is required for updating a user.";
+      expect(error.response.body).to.have.property("message", msg);
+      expect(error.response.body).to.have.property("method", "checkUpdateType(..)");
+      expect(error.response.body).to.have.property("source", "SocoboUserMiddleware");
+    }
+  });
+
   it("POST /api/v1/socobouser/:id/upload should save a new user image and return the modified user", async () => {
     const accessToken = await login(SocoboUserRoleType.Admin);
     const resultAll = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
