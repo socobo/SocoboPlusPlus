@@ -149,6 +149,11 @@ export class ERRORS {
     "recipes.empty",
     404
   );
+  public static RECIPE_NO_IMAGE_TITLE = new ErrorType(
+    "40004",
+    "recipes.no.image.title",
+    400
+  );
   public static FOODITEMTEMPLTE_NOT_FOUND = new ErrorType(
     "50001",
     "fooditem.template.not.found",

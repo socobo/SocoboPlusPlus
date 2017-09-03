@@ -16,6 +16,7 @@ export class ModelValidationMiddleware {
     objToValidate.clone(req.body);
     // get validation groups
     const mappedGroups = validationGroups.map((group: ValidationGroup) => group.toString());
+    console.log('GROUPS', mappedGroups)
     // validate newly created object
     const result = await validate(objToValidate, {groups: mappedGroups });
     // throw error if the object is not valid

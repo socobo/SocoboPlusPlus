@@ -1,14 +1,19 @@
 import { NextFunction, Request, Response } from "express";
+import { Types } from "mongoose";
+import { validate } from "class-validator";
 
 import {
-  ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest
+  ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
 } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
-import { Recipe} from "../index";
+import { Recipe, RecipeImage} from "../index";
 
 export class RecipeHandler {
 
-  constructor (private _db: DbExtension, private _imgService: ImageService) {}
+  constructor (
+    private _db: DbExtension, 
+    private _imgService: ImageService
+  ) {}
 
   private _sendError = (res: Response) => {
     return (error: any) => {
@@ -107,16 +112,23 @@ export class RecipeHandler {
   public uploadImage = async (req: SocoboRequest, res: Response) => {
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
-
-    try {
-      const url = await this._imgService.persistImage(
-        req.file.filename, DataType.RECIPE_IMAGE, userEmail);
-      const recipe: any = await this._db.recipe.getById(recipeId);
-      recipe.imageUrl = url;
-      await this._db.recipe.update(recipeId, recipe);
-      res.status(200).json(recipe);
-    } catch (error) {
-      this._sendError(res)(error);
+    const imageTitle = req.query.title;
+    if(!imageTitle){
+      let error = new ValidationError(ERRORS.RECIPE_NO_IMAGE_TITLE)
+        .addSourceMethod("uploadImage()")
+        .addSource(RecipeHandler.name);
+      res.status(400).json(error.forResponse());
+    } else {
+      try {
+        const url = await this._imgService.persistImage(
+          req.file.filename, DataType.RECIPE_IMAGE, userEmail);
+        const recipe: any = await this._db.recipe.getById(recipeId);
+        recipe.images.push(new RecipeImage().setUrl(url).setTitle(req.query.title));
+        await this._db.recipe.update(recipeId, recipe);
+        res.status(200).json(recipe);
+      } catch (error) {
+        this._sendError(res)(error);
+      }
     }
   }
 }

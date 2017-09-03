@@ -16,6 +16,7 @@ export const ERROR_MESSAGES: any = {
   "internal.error.upload.image": "Failed to upload the image",
   "internal.no.password.hash": "No password hash",
   "recipe.field.not.found": "Recipes have no field {0}",
+  "recipes.no.image.title": "Image title is required",
   "recipe.not.found": "Recipe with {0} {1} could not be found",
   "recipes.empty": "No recipes available",
   "update.model.values": "Field {0} does not exist or is not updatable",
