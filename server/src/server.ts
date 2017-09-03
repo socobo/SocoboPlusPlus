@@ -43,7 +43,6 @@ class Server {
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
-  private _recipeMiddleware: RecipeMiddleware;
   private _socoboUserMiddleware: SocoboUserMiddleware;
 
   private _authValidationHandler: AuthValidationHandler;
@@ -170,7 +169,6 @@ class Server {
   private _middleware (): void {
     this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
-    this._recipeMiddleware = new RecipeMiddleware(db);
     this._socoboUserMiddleware = new SocoboUserMiddleware();
   }
 

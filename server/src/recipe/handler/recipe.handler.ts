@@ -62,7 +62,7 @@ export class RecipeHandler {
     const recipe: Recipe = new Recipe().clone(req.body as Recipe);
 
     try {
-      await this._db.socobouser.getUserById(Types.ObjectId(recipe.userId));
+      await this._db.socobouser.getUserById(recipe.userId);
       const result = await this._db.recipe.save(recipe);
       res.status(201).json(result);
     } catch (error) {
@@ -73,7 +73,7 @@ export class RecipeHandler {
   public update = async (req: Request, res: Response) => {
     const recipe: Recipe = new Recipe().clone(req.body as Recipe);
     try {
-      await this._db.socobouser.getUserById(Types.ObjectId(recipe.userId));
+      await this._db.socobouser.getUserById(recipe.userId);
       const result = await this._db.recipe.update(req.params.id, recipe);
       res.status(201).json(result);
     } catch (error) {
