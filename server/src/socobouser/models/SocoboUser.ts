@@ -1,11 +1,10 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
-import { Types } from "mongoose";
 import { Validatable, ValidationGroup } from "../../app/index";
 import { SocoboUserProviderType, SocoboUserRoleType } from "../index";
 
 export class SocoboUser implements Validatable {
 
-  public id: Types.ObjectId;
+  public id: string;
 
   @ValidateIf((o) => o.email === "", {
     groups: [ ValidationGroup.LOGIN ]
@@ -90,7 +89,7 @@ export class SocoboUser implements Validatable {
   @IsNotEmpty()
   public lastModified: number;
 
-  public setId = (id: Types.ObjectId): this => {
+  public setId = (id: string): this => {
     this.id = id;
     return this;
   }

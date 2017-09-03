@@ -67,7 +67,7 @@ describe("AuthRoute - API v1", () => {
     } catch (error) {
       expect(error.status).to.be.eql(401);
       expect(error.response.body).to.have.property("message", "Authentication failed. Wrong password");
-      expect(error.response.body).to.have.property("method", "_validateComparePasswords(..)");
+      expect(error.response.body).to.have.property("method", "comparePasswords(..)");
       expect(error.response.body).to.have.property("source", "CryptoUtils");
     }
   });
@@ -103,7 +103,7 @@ describe("AuthRoute - API v1", () => {
     } catch (error) {
       expect(error.status).to.be.eql(401);
       expect(error.response.body).to.have.property("message", "Authentication failed. Wrong password");
-      expect(error.response.body).to.have.property("method", "_validateComparePasswords(..)");
+      expect(error.response.body).to.have.property("method", "comparePasswords(..)");
       expect(error.response.body).to.have.property("source", "CryptoUtils");
     }
   });
