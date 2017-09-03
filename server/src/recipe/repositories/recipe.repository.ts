@@ -20,6 +20,8 @@ export class RecipeRepository {
 
   public save = async (recipe: Recipe): Promise<Recipe | DbError> => {
 
+    console.log('SAVE', recipe)
+
     try {
       return await new this._recipeModel(recipe).save();
     } catch (error) {

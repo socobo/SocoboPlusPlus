@@ -3,7 +3,7 @@ import { IsInt, IsNotEmpty, IsNumber, Min, Length, ValidateNested} from "class-v
 import { Schema } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
-import { Level, RecipeStep } from "../index";
+import { Level, RecipeImage, RecipeStep } from "../index";
 import { IsCorrectRecipeLevelUsed } from "../validators/recipe-level.validator";
 import { AreRecipeStepsOrdered } from "../validators/recipe-steps-order.validator";
 import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validator";
@@ -23,7 +23,12 @@ export class Recipe implements Validatable {
   })
   public userId: string;
   public description: string;
-  public imageUrl: string;
+
+  @ValidateNested({
+    each: true,
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public images: RecipeImage[];
 
   @AreRecipeStepsUnique({
     groups: [ ValidationGroup.RECIPE ]
@@ -57,11 +62,16 @@ export class Recipe implements Validatable {
     this._id = recipe._id;
     this.title = recipe.title;
     this.description = recipe.description;
-    this.imageUrl = recipe.imageUrl;
     this.userId = recipe.userId;
-    this.steps = [];
     this.level = recipe.level;
     this.duration = recipe.duration;
+    this.images = [];
+    if (recipe.images) {
+      recipe.images.forEach((image: RecipeImage) => {
+        this.images.push(new RecipeImage().clone(image));
+      });
+    }
+    this.steps = [];
     if (recipe.steps) {
       recipe.steps.forEach((step: RecipeStep) => {
         this.steps.push(new RecipeStep().clone(step));
@@ -90,8 +100,8 @@ export class Recipe implements Validatable {
     return this;
   }
 
-  public setImageUrl (imageUrl: string) {
-    this.imageUrl = imageUrl;
+  public setImageUrl (images: RecipeImage[]) {
+    this.images = images;
     return this;
   }
 

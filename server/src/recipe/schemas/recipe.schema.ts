@@ -6,9 +6,12 @@ export const recipeSchema = new Schema({
     required: true,
     type: String
   },
-  imageUrl: {
-    type: String
-  },
+  images: [
+    {
+      url: String,
+      title: String
+    }
+  ],
   steps: [
     {
       stepDescription: String,
