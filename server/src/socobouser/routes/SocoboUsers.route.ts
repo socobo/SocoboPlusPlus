@@ -3,7 +3,7 @@ import { Instance } from "multer";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
 import { AuthValidationHandler } from "../../auth/index";
 import { SocoboUserHandler } from "../handlers/SocoboUser.handler";
-import { SocoboUser, SocoboUserRoleType } from "../index";
+import { SocoboUser, SocoboUserMiddleware, SocoboUserRoleType } from "../index";
 
 export class SocoboUsersRoute {
 
@@ -12,7 +12,8 @@ export class SocoboUsersRoute {
     private _socoboUserHandler: SocoboUserHandler,
     private _authValidationHandler: AuthValidationHandler,
     private _modelValidationHandler: ModelValidationHandler,
-    private _multer: Instance
+    private _multer: Instance,
+    private _socoboUserMiddleware: SocoboUserMiddleware
   ) {}
 
   public createRoutes (): Router {
@@ -27,6 +28,8 @@ export class SocoboUsersRoute {
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
+      this._socoboUserMiddleware.checkUpdateType,
+      this._socoboUserMiddleware.checkUpdateBody,
       this._modelValidationHandler.validateObject(new SocoboUser(), [ValidationGroup.USER]),
       this._socoboUserHandler.updateById);
 

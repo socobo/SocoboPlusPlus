@@ -26,7 +26,7 @@ import {
   RecipeHandler, RecipeMiddleware, RecipeRoute
 } from "./recipe/index";
 // socobouser
-import { SocoboUserHandler, SocoboUsersRoute } from "./socobouser/index";
+import { SocoboUserHandler, SocoboUserMiddleware, SocoboUsersRoute } from "./socobouser/index";
 
 class Server {
   private _app: express.Application;
@@ -44,6 +44,7 @@ class Server {
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
   private _recipeMiddleware: RecipeMiddleware;
+  private _socoboUserMiddleware: SocoboUserMiddleware;
 
   private _authValidationHandler: AuthValidationHandler;
   private _modelValidationHandler: ModelValidationHandler;
@@ -170,6 +171,7 @@ class Server {
     this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
     this._recipeMiddleware = new RecipeMiddleware(db);
+    this._socoboUserMiddleware = new SocoboUserMiddleware();
   }
 
   /**
@@ -235,7 +237,7 @@ class Server {
     // init and return socobousers route
     return new SocoboUsersRoute(router, this._socoboUserHandler,
         this._authValidationHandler, this._modelValidationHandler,
-        this._socobouserImagesUpload).createRoutes();
+        this._socobouserImagesUpload, this._socoboUserMiddleware).createRoutes();
   }
 
   private _recipeRoute (): express.Router {

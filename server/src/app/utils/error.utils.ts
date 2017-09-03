@@ -1,4 +1,4 @@
-import { ApiError, DbError, ERRORS, ErrorType } from "../index";
+import { ApiError, DbError, ERRORS, ErrorType, ValidationError } from "../index";
 
 export class ErrorUtils {
 
@@ -30,5 +30,19 @@ export class ErrorUtils {
       .addCause(error)
       .addQuery(error.query);
     return Promise.reject(e);
+  }
+
+  public static handleRequestError (errorType: ErrorType, source: string, method: string): ApiError {
+    return new ApiError(errorType)
+      .addSource(source)
+      .addSourceMethod(method);
+  }
+
+  public static handleValidationError (errorType: ErrorType, source: string,
+                                       method: string, validationErrors: any): ValidationError {
+    return new ValidationError(errorType)
+      .addSource(source)
+      .addSourceMethod(method)
+      .addValidationErrors(validationErrors);
   }
 }
