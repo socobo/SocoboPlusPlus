@@ -27,12 +27,20 @@ export class SocoboUserMiddleware {
 
     const updateType: SocoboUserUpdateType = req.body.updateType;
     const fieldsToUpdate: object = req.body.fieldsToUpdate;
+
+    if (!fieldsToUpdate) {
+      const error = ErrorUtils.handleValidationError(ERRORS.USER_INVALID_UPDATE_TYPE,
+        SocoboUserMiddleware.name, "checkUpdateBody(..)", ["No fieldsToUpdate provided"]);
+      res.status(error.statusCode).json(error.forResponse());
+      return;
+    }
+
     const fieldLength = Object.entries(fieldsToUpdate).length;
 
     switch (updateType) {
       case SocoboUserUpdateType.full:
         if (fieldLength <= 0 || fieldLength > 6) { errors.push("Invalid Property length"); }
-        if (!fieldsToUpdate.hasOwnProperty("username")) { errors.push("Username URL is missing"); }
+        if (!fieldsToUpdate.hasOwnProperty("username")) { errors.push("Username is missing"); }
         if (!fieldsToUpdate.hasOwnProperty("email")) { errors.push("Email is missing"); }
         if (!fieldsToUpdate.hasOwnProperty("password")) { errors.push("Password is missing"); }
         if (!fieldsToUpdate.hasOwnProperty("imageUrl")) { errors.push("Image URL is missing"); }
@@ -42,7 +50,7 @@ export class SocoboUserMiddleware {
 
       case SocoboUserUpdateType.username:
         if (fieldLength <= 0 || fieldLength > 1) { errors.push("Invalid Property length"); }
-        if (!fieldsToUpdate.hasOwnProperty("username")) { errors.push("Username URL is missing"); }
+        if (!fieldsToUpdate.hasOwnProperty("username")) { errors.push("Username is missing"); }
         break;
 
       case SocoboUserUpdateType.email:

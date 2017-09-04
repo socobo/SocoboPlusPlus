@@ -1,8 +1,10 @@
 import { IsEmail, IsNotEmpty, MinLength, ValidateIf } from "class-validator";
 import { Validatable, ValidationGroup } from "../../app/index";
-import { SocoboUserProviderType, SocoboUserRoleType } from "../index";
+import { SocoboUserProviderType, SocoboUserRoleType, SocoboUserUpdateType } from "../index";
 
 export class SocoboUser implements Validatable {
+
+  private _updateType: SocoboUserUpdateType;
 
   public id: string;
 
@@ -15,7 +17,13 @@ export class SocoboUser implements Validatable {
   @MinLength(5, {
     groups: [ ValidationGroup.LOGIN ]
   })
-  @ValidateIf((o) => o.updateType === 1 || o.updateType === 0, {
+  @ValidateIf((o) => o._updateType === 1 || o._updateType === 0, {
+    groups: [ ValidationGroup.USER ]
+  })
+  @IsNotEmpty({
+    groups: [ ValidationGroup.USER ]
+  })
+  @MinLength(5, {
     groups: [ ValidationGroup.USER ]
   })
   public username: string;
@@ -32,7 +40,13 @@ export class SocoboUser implements Validatable {
       ValidationGroup.REGISTRATION
     ]
   })
-  @ValidateIf((o) => o.updateType === 2 || o.updateType === 0, {
+  @ValidateIf((o) => o._updateType === 2 || o._updateType === 0, {
+    groups: [ ValidationGroup.USER ]
+  })
+  @IsNotEmpty({
+    groups: [ ValidationGroup.USER ]
+  })
+  @IsEmail({}, {
     groups: [ ValidationGroup.USER ]
   })
   public email: string;
@@ -49,14 +63,20 @@ export class SocoboUser implements Validatable {
       ValidationGroup.REGISTRATION
     ]
   })
-  @ValidateIf((o) => o.updateType === 3 || o.updateType === 0, {
+  @ValidateIf((o) => o._updateType === 3 || o._updateType === 0, {
+    groups: [ ValidationGroup.USER ]
+  })
+  @IsNotEmpty({
+    groups: [ ValidationGroup.USER ]
+  })
+  @MinLength(8, {
     groups: [ ValidationGroup.USER ]
   })
   public password: string;
 
   public hasTermsAccepted: boolean;
 
-  @ValidateIf((o) => o.updateType === 4 || o.updateType === 0, {
+  @ValidateIf((o) => o._updateType === 4 || o._updateType === 0, {
     groups: [ ValidationGroup.USER ]
   })
   @IsNotEmpty({
@@ -67,7 +87,7 @@ export class SocoboUser implements Validatable {
   @IsNotEmpty({
     groups: [ ValidationGroup.REGISTRATION ]
   })
-  @ValidateIf((o) => o.updateType === 5 || o.updateType === 0, {
+  @ValidateIf((o) => o._updateType === 5 || o._updateType === 0, {
     groups: [ ValidationGroup.USER ]
   })
   @IsNotEmpty({
@@ -75,7 +95,7 @@ export class SocoboUser implements Validatable {
   })
   public role: string;
 
-  @ValidateIf((o) => o.updateType === 6 || o.updateType === 0, {
+  @ValidateIf((o) => o._updateType === 6 || o._updateType === 0, {
     groups: [ ValidationGroup.USER ]
   })
   @IsNotEmpty({
@@ -139,15 +159,19 @@ export class SocoboUser implements Validatable {
     return this;
   }
 
-  public clone = (socoboUser: SocoboUser): this => {
-    this.username = socoboUser.username;
-    this.email = socoboUser.email;
-    this.password = socoboUser.password;
-    this.hasTermsAccepted = socoboUser.hasTermsAccepted;
-    this.role = socoboUser.role;
-    this.provider = socoboUser.provider;
-    this.imageUrl = socoboUser.imageUrl;
+  public clone = (obj: any): this => {
+    const tmp = obj.hasOwnProperty("fieldsToUpdate") ? obj.fieldsToUpdate : obj;
+    this.username = tmp.username;
+    this.email = tmp.email;
+    this.password = tmp.password;
+    this.hasTermsAccepted = tmp.hasTermsAccepted;
+    this.role = tmp.role;
+    this.provider = tmp.provider;
+    this.imageUrl = tmp.imageUrl;
     this.createDates();
+    if (obj.hasOwnProperty("updateType")) {
+      this._updateType = obj.updateType as SocoboUserUpdateType;
+    }
     return this;
   }
 
