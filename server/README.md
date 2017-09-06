@@ -729,7 +729,7 @@ npm run lint
 
   - UpdateType:
     - 0 = full
-      - fields: username, email, password, imageUrl, role, provider
+      - fields: username, email, password, imageUrl, role, provider, hasTermsAccepted
     - 1 = username
       - fields: username
     - 2 = email
@@ -742,3 +742,5 @@ npm run lint
       - fields: role
     - 6 = provider:
       - fields: provider
+    - 7 = terms
+      - fields: hasTermsAccepted

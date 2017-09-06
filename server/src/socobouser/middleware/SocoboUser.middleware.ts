@@ -6,7 +6,7 @@ export class SocoboUserMiddleware {
 
   public checkUpdateType = (req: Request, res: Response, next: NextFunction): void => {
     const updateType: SocoboUserUpdateType = req.body.updateType;
-    if (!String(updateType)) {
+    if (typeof updateType === "undefined") {
       const error = ErrorUtils.handleRequestError(ERRORS.USER_NO_UPDATE_TYPE,
         SocoboUserMiddleware.name, "checkUpdateType(..)");
       res.status(error.statusCode).json(error.forResponse());
@@ -46,6 +46,7 @@ export class SocoboUserMiddleware {
         if (!fieldsToUpdate.hasOwnProperty("imageUrl")) { errors.push("Image URL is missing"); }
         if (!fieldsToUpdate.hasOwnProperty("role")) { errors.push("Role is missing"); }
         if (!fieldsToUpdate.hasOwnProperty("provider")) { errors.push("Provider is missing"); }
+        if (!fieldsToUpdate.hasOwnProperty("hasTermsAccepted")) { errors.push("Has Terms Accepted is missing"); }
         break;
 
       case SocoboUserUpdateType.username:
@@ -76,6 +77,11 @@ export class SocoboUserMiddleware {
       case SocoboUserUpdateType.provider:
         if (fieldLength <= 0 || fieldLength > 1) { errors.push("Invalid Property length"); }
         if (!fieldsToUpdate.hasOwnProperty("provider")) { errors.push("Provider is missing"); }
+        break;
+
+      case SocoboUserUpdateType.terms:
+        if (fieldLength <= 0 || fieldLength > 1) { errors.push("Invalid Property length"); }
+        if (!fieldsToUpdate.hasOwnProperty("hasTermsAccepted")) { errors.push("Has Terms Accepted is missing"); }
         break;
 
       default:
