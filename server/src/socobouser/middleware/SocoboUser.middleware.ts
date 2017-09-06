@@ -6,7 +6,7 @@ export class SocoboUserMiddleware {
 
   public checkUpdateType = (req: Request, res: Response, next: NextFunction): void => {
     const updateType: SocoboUserUpdateType = req.body.updateType;
-    if (!updateType) {
+    if (!String(updateType)) {
       const error = ErrorUtils.handleRequestError(ERRORS.USER_NO_UPDATE_TYPE,
         SocoboUserMiddleware.name, "checkUpdateType(..)");
       res.status(error.statusCode).json(error.forResponse());
