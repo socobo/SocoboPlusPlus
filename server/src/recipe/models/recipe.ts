@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
-import { Schema } from "mongoose";
+import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
 import { RecipeStep } from "../index";
@@ -7,7 +7,7 @@ import { AreRecipeStepsOrdered } from "../validators/recipe-steps-order.validato
 import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validator";
 export class Recipe implements Validatable {
 
-  public _id: Schema.Types.ObjectId;
+  public _id: Types.ObjectId;
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
@@ -49,7 +49,7 @@ export class Recipe implements Validatable {
     return this;
   }
 
-  public setRecipeId (recipeId: Schema.Types.ObjectId) {
+  public setRecipeId (recipeId: Types.ObjectId) {
     this._id = recipeId;
     return this;
   }

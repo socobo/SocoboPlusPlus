@@ -30,7 +30,7 @@ export class RecipeRepository {
 
   public getById = async (id: string): Promise<Recipe | DbError> => {
     try {
-      const foundRecipe = await this._recipeModel.findById(id);
+      const foundRecipe = await this._recipeModel.findById(id).lean() as Recipe;
       this._handleNotFound(foundRecipe, id, "findById()");
       return foundRecipe;
     } catch (error) {
@@ -62,8 +62,9 @@ export class RecipeRepository {
 
   public update = async (id: string, recipe: Recipe): Promise<Recipe | DbError> => {
     try {
-      const foundRecipe = await this._recipeModel.findByIdAndUpdate(id, recipe);
+      const foundRecipe = await this._recipeModel.findByIdAndUpdate(id, recipe, { new: true });
       this._handleNotFound(foundRecipe, id, "update()");
+      return foundRecipe;
     } catch (error) {
       winston.error(error);
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");

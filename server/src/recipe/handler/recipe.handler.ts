@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { Types } from "mongoose";
 
 import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest
@@ -87,7 +86,8 @@ export class RecipeHandler {
     delete requestBody._id;
     try {
       const recipe = await this._db.recipe.getById(req.params.id);
-      req.body = Object.assign(recipe, requestBody);
+      const updatedRecipe = {...recipe, ...requestBody};
+      req.body = updatedRecipe;
       next();
     } catch (error) {
       this._sendError(res)(error);
