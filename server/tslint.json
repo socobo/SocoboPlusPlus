@@ -8,7 +8,6 @@
     "ordered-imports": [true, { "named-imports-order": "case-insensitive" }],
     "member-ordering": [true, { "order": [ "constructor" ] }],
     "interface-name": false,
-    "no-string-literal": false,
-    "prefer-object-spread": false
+    "no-string-literal": false
   }
 }
