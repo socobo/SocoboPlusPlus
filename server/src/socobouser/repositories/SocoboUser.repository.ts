@@ -89,6 +89,7 @@ export class SocoboUserRepository {
           if (key === "imageUrl") { result.imageUrl = value; }
           if (key === "role") { result.role = value; }
           if (key === "provider") { result.provider = value; }
+          if (key === "hasTermsAccepted") { result.hasTermsAccepted = value; }
         });
         result["lastModified"] = Date.now();
         break;
@@ -131,6 +132,13 @@ export class SocoboUserRepository {
       case SocoboUserUpdateType.provider:
         Object.entries(fieldsToUpdate).forEach(([key, value]) => {
           if (key === "provider") { result.provider = value; }
+        });
+        result["lastModified"] = Date.now();
+        break;
+
+      case SocoboUserUpdateType.terms:
+        Object.entries(fieldsToUpdate).forEach(([key, value]) => {
+          if (key === "hasTermsAccepted") { result.provider = value; }
         });
         result["lastModified"] = Date.now();
         break;
