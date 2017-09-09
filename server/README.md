@@ -54,6 +54,31 @@
     npm run start:p
     ```
 
+### Use Docker to run a mongo db with mock data
+
+1. Install some Docker engine for your system (e.g Docker for Mac)
+
+2. Go to server/sql/dev
+
+3. npm scripts to start the mongodb via docker
+
+```bash
+#Start a mongo db on the default port which is populated with mock data
+npm run docker:mongodb:d
+
+#Start a mongodb terminal client 
+npm run docker:client
+
+# Clean up your containers
+npm run docker:rm
+```
+
+4. To add new mock data, add a new mongodb-seed section in the docker-compose file
+
+in your terminal
+
+6. 
+
 ## Running tests
 
 ```bash
