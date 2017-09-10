@@ -423,7 +423,7 @@ npm run lint
     }
     ```
 
-- **GET /api/v1/recipes//search/field?property=searchTerm**
+- **GET /api/v1/recipes/search/field?property=searchTerm**
 
   Searches for a specified term inside a the given recipe property and returns
   the matching subset of recipes
