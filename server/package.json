@@ -31,7 +31,11 @@
     "clean:a": "rm -rf dist/ node_modules/ logs/ tmp/ socobo_data/",
     "open:b": "open http://localhost:8282",
     "lint": "tslint 'src/**/*.ts' 'test/**/*.test.ts'",
-    "lint:f": "tslint --force --format codeFrame 'src/**/*.ts' 'test/**/*.test.ts'"
+    "lint:f": "tslint --force --format codeFrame 'src/**/*.ts' 'test/**/*.test.ts'",
+    "docker:rm": "docker rm --force $(docker ps -a -q)",
+    "docker:mongodb:d": "cd ./sql && ./start-mongodb.sh -d",
+    "docker:mongodb:t": "cd ./sql && ./start-mongodb.sh -t",
+    "docker:client": "docker run -it --link socobo_mongodb_1:mongo --net socobo_default  --rm mongo sh -c 'exec mongo \"mongodb:27017\"'"
   },
   "dependencies": {
     "body-parser": "~1.17.2",

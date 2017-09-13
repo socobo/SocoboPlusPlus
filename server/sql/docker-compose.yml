@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  mongo-seed-user:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection socobousers --type json --file /seed-data/create-socoboUser.json --jsonArray"'
+  mongo-seed-recipe:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection recipes --type json --file /seed-data/create-recipe.json --jsonArray"'
+
+      

@@ -10,7 +10,7 @@ import * as uuid from "uuid";
 import * as winston from "winston";
 // app
 import {
-  CryptoUtils, FilesystemImageService, ImageService,
+  ApiError, CryptoUtils, ERRORS, FilesystemImageService, ImageService,
   LogHandler, LogRoute, ModelValidationHandler, ModelValidationMiddleware
 } from "./app/index";
 // auth
@@ -25,10 +25,10 @@ import * as db from "./db/index";
 import { FoodItemTemplateHandler, FoodItemTemplateRoute } from "./food/index";
 // recipe
 import {
-  RecipeHandler, RecipeMiddleware, RecipeRoute
+  RecipeHandler, RecipeRoute
 } from "./recipe/index";
 // socobouser
-import { SocoboUserHandler, SocoboUsersRoute } from "./socobouser/index";
+import { SocoboUserHandler, SocoboUserMiddleware, SocoboUsersRoute } from "./socobouser/index";
 
 class Server {
   private _app: express.Application;
@@ -45,7 +45,7 @@ class Server {
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
-  private _recipeMiddleware: RecipeMiddleware;
+  private _socoboUserMiddleware: SocoboUserMiddleware;
 
   private _authValidationHandler: AuthValidationHandler;
   private _modelValidationHandler: ModelValidationHandler;
@@ -172,7 +172,7 @@ class Server {
   private _middleware (): void {
     this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
-    this._recipeMiddleware = new RecipeMiddleware(db);
+    this._socoboUserMiddleware = new SocoboUserMiddleware();
   }
 
   /**
@@ -184,7 +184,7 @@ class Server {
     this._authHandler = new AuthHandler(this._authService);
     this._fooditemTemplateHandler = new FoodItemTemplateHandler(db);
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
-    this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware, this._imgService);
+    this._recipeHandler = new RecipeHandler(db, this._imgService);
     this._logHandler = new LogHandler();
   }
 
@@ -197,7 +197,7 @@ class Server {
         cb(null, `${process.cwd()}/${process.env["IMAGE_TMP_DIR"] || Config.IMAGE_TMP_DIR}`);
       },
       filename: (req, file, cb) => {
-        cb(null, file.fieldname + "_" + uuid());
+        cb(null, file.fieldname + "_" + uuid() + "_" + file.originalname);
       }
     });
     this._recipeUpload = multer({storage});
@@ -224,6 +224,14 @@ class Server {
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
     this._app.use("/api/v1/log", this._logRoute());
+
+    // Generic Error Handling for all errors which were not handled by the app
+    this._app.use((err: any, req: any, res: any, next: any) => {
+      winston.error(err);
+      const error = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+        .addCause(err);
+      res.status(error.statusCode).json(error.forResponse());
+    });
   }
 
   private _authRoute (): express.Router {
@@ -248,7 +256,7 @@ class Server {
     // init and return socobousers route
     return new SocoboUsersRoute(router, this._socoboUserHandler,
         this._authValidationHandler, this._modelValidationHandler,
-        this._socobouserImagesUpload).createRoutes();
+        this._socobouserImagesUpload, this._socoboUserMiddleware).createRoutes();
   }
 
   private _recipeRoute (): express.Router {

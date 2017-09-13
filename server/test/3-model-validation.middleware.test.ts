@@ -58,7 +58,7 @@ describe("Model Validation Middleware", () => {
 
     const recipe: Recipe = new Recipe();
     recipe.title = "Test Title";
-    recipe.userId = 2;
+    recipe.userId = "2";
     recipe.steps = [];
 
     const req = mocks.createRequest({

@@ -2,6 +2,7 @@ import * as mongoose from "mongoose";
 import { ApiError, ErrorType, ErrorUtils, LogService } from "../app/index";
 import { Config } from "../config";
 import { FoodItemTemplate, foodItemTemplateSchema } from "../food/index";
+import { Recipe, recipeSchema } from "../recipe/index";
 import { SocoboUser, socoboUserSchema } from "../socobouser/index";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
 
@@ -46,9 +47,11 @@ const fooditemTemplateModel = mongoose.model<mongoose.Document & FoodItemTemplat
 const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser",
                                                                        socoboUserSchema,
                                                                        "socobouser");
-
+const recipeModel = mongoose.model<mongoose.Document & Recipe>("Recipe",
+                                                               recipeSchema,
+                                                               "recipes");
 // Create DB Extension
-const db = new MongoDbExtension(fooditemTemplateModel, socoboUserModel);
+const db = new MongoDbExtension(fooditemTemplateModel, socoboUserModel, recipeModel);
 
 // export database object
 export = db;

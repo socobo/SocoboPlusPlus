@@ -17,18 +17,11 @@ export class CryptoUtils {
   }
 
   public comparePasswords = async (firstPw: string, secondPw: string): Promise<void> => {
-    try {
-      const result = await bcrypt.compare(firstPw, secondPw);
-      if (!result) {
-        throw new ApiError(ERRORS.AUTH_PW_MISSMATCH)
-          .addSource(CryptoUtils.name)
-          .addSourceMethod("comparePasswords(..)");
-      }
-    } catch (error) {
+    const result = await bcrypt.compare(firstPw, secondPw);
+    if (!result) {
       throw new ApiError(ERRORS.AUTH_WRONG_PASSWORD)
         .addSource(CryptoUtils.name)
-        .addSourceMethod("_validateComparePasswords(..)")
-        .addCause(error);
+        .addSourceMethod("comparePasswords(..)");
     }
   }
 }

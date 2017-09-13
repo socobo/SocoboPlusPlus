@@ -1,7 +1,6 @@
 export const ERROR_MESSAGES: any = {
   "auth.not.authorized": "The user has unsufficient permission to access the requested resource",
   "auth.only.email.allowed": "The Registration is only with an email address allowed.",
-  "auth.password.missmatch": "Passwords do not match",
   "auth.token.error": "Token error",
   "auth.token.expired": "Token expired",
   "auth.token.missing": "Missing auth token",
@@ -20,6 +19,9 @@ export const ERROR_MESSAGES: any = {
   "recipe.not.found": "Recipe with {0} {1} could not be found",
   "recipes.empty": "No recipes available",
   "update.model.values": "Field {0} does not exist or is not updatable",
+  "user.invalid.update.body": "The provided update body is invalid!",
+  "user.invalid.update.type": "The provided update type is invalid!",
+  "user.no.update.type": "There is no update type provided. This is required for updating a user.",
   "user.not.an.admin": "The User is not entitled to get the requested resource",
   "user.not.found": "User with {0} {1} could not be found",
   "validation.invalid.input": "The provided input is invalid",

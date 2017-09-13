@@ -1,5 +1,4 @@
 import * as jwt from "jsonwebtoken";
-import { Types } from "mongoose";
 import {
   ApiError, ComparePwResult, CryptoUtils, DbError,
   ERRORS, ErrorUtils, ExtractRequestBodyResult, LoginResponse
@@ -29,8 +28,8 @@ export class AuthService {
       if (error.code === ERRORS.USER_NOT_FOUND.code) {
         const hashedPassword = await this._cryptoUtils.hashPassword(erbr.password);
         const createdUser = await this._createNewUser(hashedPassword, erbr.usernameOrEmail, erbr.role);
-        const createdUserId = await this._db.socobouser.save(createdUser);
-        return createdUser.setId(createdUserId as Types.ObjectId).removePassword();
+        const createdUserId = await this._db.socobouser.save(createdUser) as string;
+        return createdUser.setId(createdUserId).removePassword();
       }
       throw error;
     }

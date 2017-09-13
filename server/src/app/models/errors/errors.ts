@@ -49,6 +49,21 @@ export class ERRORS {
     "user.not.an.admin",
     403
   );
+  public static USER_NO_UPDATE_TYPE = new ErrorType(
+    "10003",
+    "user.no.update.type",
+    400
+  );
+  public static USER_INVALID_UPDATE_TYPE = new ErrorType(
+    "10004",
+    "user.invalid.update.type",
+    400
+  );
+  public static USER_INVALID_UPDATE_BODY = new ErrorType(
+    "10005",
+    "user.invalid.update.body",
+    400
+  );
   public static AUTH_WRONG_PASSWORD = new ErrorType(
     "20001",
     "auth.wrong.password",
@@ -72,11 +87,6 @@ export class ERRORS {
   public static AUTH_TOKEN_ERROR = new ErrorType(
     "20005",
     "auth.token.error",
-    401
-  );
-  public static AUTH_PW_MISSMATCH = new ErrorType(
-    "20006",
-    "auth.password.missmatch",
     401
   );
   public static AUTH_NO_HASHED_PASSWORD = new ErrorType(

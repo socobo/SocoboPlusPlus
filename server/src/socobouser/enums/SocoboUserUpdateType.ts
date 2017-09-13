@@ -5,5 +5,6 @@ export enum SocoboUserUpdateType {
   password = 3,
   image = 4,
   role = 5,
-  provider = 6
+  provider = 6,
+  terms = 7
 }
