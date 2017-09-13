@@ -1,0 +1,21 @@
+[
+  {
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "title": "newTrial",
+    "description": "z",
+    "userId": "59a30e9cba14db79b2382628",
+    "steps": [
+        {
+            "stepTitle": "s",
+            "stepDescription": "x",
+            "stepNumber": 1
+        },
+        {
+            "stepTitle": "s",
+            "stepDescription": "x",
+            "stepNumber": 2
+        }
+    ]
+  }
+]

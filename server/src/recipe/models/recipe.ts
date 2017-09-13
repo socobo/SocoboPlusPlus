@@ -1,19 +1,13 @@
-/*tslint:disable:ban-types*/
-
-// TODO: FIX TSLINT ERROR LINE 13
-
 import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
+import { Types } from "mongoose";
+
 import { Validatable, ValidationGroup } from "../../app/index";
-import { RecipeStep } from "../models/recipe-step";
+import { RecipeStep } from "../index";
 import { AreRecipeStepsOrdered } from "../validators/recipe-steps-order.validator";
 import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validator";
-
 export class Recipe implements Validatable {
 
-  public fields: Map<string, Function >;
-
-  public id: number;
-
+  public _id: Types.ObjectId;
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
@@ -21,15 +15,12 @@ export class Recipe implements Validatable {
     groups: [ ValidationGroup.RECIPE ]
   })
   public title: string;
-
-  @IsNumber({
+  @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
-  public userId: number;
+  public userId: string;
   public description: string;
   public imageUrl: string;
-  public created: Date;
-  public lastModified: Date;
 
   @AreRecipeStepsUnique({
     groups: [ ValidationGroup.RECIPE ]
@@ -43,31 +34,23 @@ export class Recipe implements Validatable {
   })
   public steps: RecipeStep[];
 
-  constructor () {
-    this.fields = new Map();
-    this.fields.set("title", this.setTitle);
-    this.fields.set("userId", this.setUserId);
-    this.fields.set("description", this.setDescription);
-    this.fields.set("imageUrl", this.setImageUrl);
-  }
-
   public clone (recipe: Recipe) {
+    this._id = recipe._id;
     this.title = recipe.title;
     this.description = recipe.description;
-    this.id = recipe.id;
     this.imageUrl = recipe.imageUrl;
     this.userId = recipe.userId;
     this.steps = [];
-    if (recipe.hasOwnProperty("steps")) {
-      recipe.steps.forEach((step) => {
+    if (recipe.steps) {
+      recipe.steps.forEach((step: RecipeStep) => {
         this.steps.push(new RecipeStep().clone(step));
       });
     }
     return this;
   }
 
-  public setId (id: number) {
-    this.id = id;
+  public setRecipeId (recipeId: Types.ObjectId) {
+    this._id = recipeId;
     return this;
   }
 
@@ -76,7 +59,7 @@ export class Recipe implements Validatable {
     return this;
   }
 
-  public setUserId (userId: number) {
+  public setUserId (userId: string) {
     this.userId = userId;
     return this;
   }
@@ -91,20 +74,8 @@ export class Recipe implements Validatable {
     return this;
   }
 
-  public setCreated (created: Date) {
-    this.created = created;
-    return this;
-  }
-
-  public setLastModified (lastModified: Date) {
-    this.lastModified = lastModified;
-    return this;
-  }
-
   public setSteps (steps: RecipeStep[]) {
     this.steps = steps;
     return this;
   }
 }
-
-/*tslint:enable:ban-types*/

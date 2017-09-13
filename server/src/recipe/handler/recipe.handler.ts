@@ -1,63 +1,40 @@
 import { NextFunction, Request, Response } from "express";
-// import { IDatabase } from "pg-promise";
-// import {
-//   ApiError, DataType, DbExtensions, ERRORS, ImageService, SocoboRequest
-// } from "../../app/index";
 
 import {
-  ApiError, DataType, ERRORS, ImageService, SocoboRequest
+  ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest
 } from "../../app/index";
-
-import { Recipe, RecipeMiddleware } from "../index";
+import { DbExtension } from "../../db/interface/db-extension";
+import { Recipe} from "../index";
 
 export class RecipeHandler {
 
-  private _db: any; // TODO: any wird zu DbExtension //IDatabase<DbExtensions>&DbExtensions;
-  private _recipeMiddleware: RecipeMiddleware;
-  private _imgService: ImageService;
+  constructor (private _db: DbExtension, private _imgService: ImageService) {}
 
-  constructor (db: any, recipeMiddleware: RecipeMiddleware, imgService: ImageService) {
-    this._db = db;
-    this._recipeMiddleware = recipeMiddleware;
-    this._imgService = imgService;
+  private _sendError = (res: Response) => {
+    return (error: any) => {
+      res.status(error.statusCode).json(error.forResponse());
+    };
   }
 
-  public getById = (req: Request, res: Response): void => {
-    this._db.recipes.getById(req.params.id)
-      .then((result: Recipe) => res.status(200).json(result))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-  }
-
-  public getAll = (req: Request, res: Response): void => {
-
-    const queryPramas = req.query;
-    const allQueryParams = Object.getOwnPropertyNames(queryPramas);
-    const firstQueryParam = allQueryParams[0];
-    const valueFirstQueryParam = queryPramas[firstQueryParam];
-
-    if (firstQueryParam && valueFirstQueryParam) {
-      if (!(new Recipe().fields.has(firstQueryParam))) {
-        const e = new ApiError(ERRORS.RECIPE_INVALID_FIELD.withArgs(firstQueryParam))
-          .addSource(RecipeHandler.name)
-          .addSourceMethod("getAll()");
-        res.status(e.statusCode).json(e.forResponse());
-      }
-      this._db.recipes.getByField(firstQueryParam, valueFirstQueryParam)
-        .then((result: Recipe[]) => res.status(200).json(result))
-        .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-    } else {
-      this._db.recipes.getAll()
-        .then((result: Recipe[]) => res.status(200).json(result))
-        .catch((e: any) => {
-          if (e.code === ERRORS.RECIPE_NON_AVAILABLE.code) {
-            res.status(200).json([]);
-          }
-          res.status(e.statusCode).json(e.forResponse());
-      });
+  public getById = async (req: Request, res: Response) => {
+    try {
+      const result = await this._db.recipe.getById(req.params.id);
+      res.status(200).json(result);
+    } catch (error) {
+      this._sendError(res)(error);
     }
   }
 
-  public searchByField = (req: Request, res: Response): void => {
+  public getAll = async (req: Request, res: Response) => {
+    try {
+      const result = await this._db.recipe.getAll();
+      res.status(200).json(result);
+    } catch (error) {
+      this._sendError(res)(error);
+    }
+  }
+
+  public searchByField = async (req: Request, res: Response) => {
 
     const queryPramas = req.query;
     const allQueryParams = Object.getOwnPropertyNames(queryPramas);
@@ -65,86 +42,81 @@ export class RecipeHandler {
     const valueFirstQueryParam = queryPramas[firstQueryParam];
 
     if (firstQueryParam && valueFirstQueryParam) {
-      if (!(new Recipe().fields.has(firstQueryParam))) {
-        const e = new ApiError(ERRORS.RECIPE_INVALID_FIELD.withArgs(firstQueryParam))
-          .addSource(RecipeHandler.name)
-          .addSourceMethod("searchByField()");
-        res.status(e.statusCode).json(e.forResponse());
+      try {
+        const result = await this._db.recipe
+          .searchByField(firstQueryParam, valueFirstQueryParam);
+        res.status(200).json(result);
+      } catch (error) {
+        this._sendError(res)(error);
       }
-      this._db.recipes.searchByField(firstQueryParam, valueFirstQueryParam)
-        .then((result: Recipe[]) => res.status(200).json(result))
-        .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
     } else {
-      const e = new ApiError(ERRORS.VAL_INVALID_QUERY_PARAM_FORMAT)
+      const error = new ApiError(ERRORS.VAL_INVALID_QUERY_PARAM_FORMAT)
         .addSource(RecipeHandler.name)
         .addSourceMethod("searchByField()");
-      res.status(e.statusCode).json(e.forResponse());
+      this._sendError(res)(error);
     }
   }
 
-  public save = (req: Request, res: Response): void => {
+  public save = async (req: Request, res: Response) => {
     const recipe: Recipe = new Recipe().clone(req.body as Recipe);
-    recipe.created = new Date();
 
-    this._db.socobousers.getUserById(recipe.userId)
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-
-    this._db.recipes.save(recipe)
-      .then((result: any) => {
-        recipe.id = result.id;
-        delete recipe.fields;
-        res.status(201).json(recipe);
-      })
-      .catch((e: any) => {
-        res.status(e.statusCode).json(e.forResponse());
-      });
+    try {
+      await this._db.socobouser.getUserById(recipe.userId);
+      const result = await this._db.recipe.save(recipe);
+      res.status(201).json(result);
+    } catch (error) {
+      this._sendError(res)(error);
+    }
   }
 
-  public update = (req: Request, res: Response): void => {
-    const newRecipe: Recipe = new Recipe().clone(req.body as Recipe);
-
-    this._db.socobousers.getUserById(newRecipe.userId)
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-
-    this._db.recipes.update(req.params.id, newRecipe)
-      .then(() => this.getById(req, res))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  public update = async (req: Request, res: Response) => {
+    const recipe: Recipe = new Recipe().clone(req.body as Recipe);
+    try {
+      await this._db.socobouser.getUserById(recipe.userId);
+      const result = await this._db.recipe.update(req.params.id, recipe);
+      res.status(201).json(result);
+    } catch (error) {
+      this._sendError(res)(error);
+    }
   }
 
-  public updateRecipeProperties = (req: Request, res: Response, next: NextFunction) => {
-    this._recipeMiddleware.updateRecipes(req, res)
-      .then(() => next())
-      .catch((error) => res.status(error.statusCode).json(error.forResponse()));
+  public merge = async (req: Request, res: Response, next: NextFunction) => {
+    const requestBody = req.body;
+    // Remove id, because a different id than in the db would cause problems
+    delete requestBody._id;
+    try {
+      const recipe = await this._db.recipe.getById(req.params.id);
+      const updatedRecipe = {...recipe, ...requestBody};
+      req.body = updatedRecipe;
+      next();
+    } catch (error) {
+      this._sendError(res)(error);
+    }
   }
 
-  public delete = (req: Request, res: Response): void => {
-
-    this._db.recipes.getById(req.params.id)
-      .then(() => {
-        this._db.recipes.delete(req.params.id)
-          .then(() => res.status(200).json())
-          .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-      })
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
+  public delete = async (req: Request, res: Response) => {
+    try {
+      const recipe = await this._db.recipe.getById(req.params.id);
+      await this._db.recipe.delete(req.params.id);
+      res.status(200).json();
+    } catch (error) {
+      this._sendError(res)(error);
+    }
   }
 
-  public uploadImage = (req: SocoboRequest, res: Response) => {
+  public uploadImage = async (req: SocoboRequest, res: Response) => {
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
-    this._imgService.persistImage(req.file.filename, DataType.RECIPE_IMAGE, userEmail)
-      .then((url) => this._getRecipe(recipeId, url))
-      .then((obj: any) => this._addImageUrl(obj.recipe, obj.url))
-      .then((recipe: Recipe) => this._db.recipes.update(recipeId, recipe))
-      .then(() => this.getById(req, res))
-      .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
-  }
 
-  private _getRecipe = (recipeId: number, url: string): Promise<any> => {
-    return this._db.recipes.getById(recipeId).then((recipe: Recipe) => ({recipe, url}));
-  }
-
-  private _addImageUrl = (recipe: Recipe, url: string): Promise<any> => {
-    recipe.setImageUrl(url);
-    return Promise.resolve(recipe);
+    try {
+      const url = await this._imgService.persistImage(
+        req.file.filename, DataType.RECIPE_IMAGE, userEmail);
+      const recipe: any = await this._db.recipe.getById(recipeId);
+      recipe.imageUrl = url;
+      await this._db.recipe.update(recipeId, recipe);
+      res.status(200).json(recipe);
+    } catch (error) {
+      this._sendError(res)(error);
+    }
   }
 }

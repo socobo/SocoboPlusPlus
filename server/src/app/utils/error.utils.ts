@@ -14,6 +14,9 @@ export class ErrorUtils {
   }
 
   public static handleDbError (error: any, source: string, sourceMethod: string): Promise<DbError> {
+    if (error.name === "DbError") {
+      return Promise.reject(error);
+    }
     const e = new DbError(ERRORS.INTERNAL_SERVER_ERROR)
       .addSource(source)
       .addSourceMethod(sourceMethod)
