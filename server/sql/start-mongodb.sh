@@ -3,7 +3,7 @@
 if [ "$1" = "-d" ]
 then
 
-  DB=socobo_dev MOCKDATA_DIR=dev docker-compose --project-name socobo up
+  DB=socobo_dev MOCKDATA_DIR=data docker-compose --project-name socobo up
 
 elif [ "$1" = "-t" ]
 then

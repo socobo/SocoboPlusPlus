@@ -22,5 +22,36 @@ services:
       - ./${MOCKDATA_DIR}/:/seed-data
     command:
       'bash -c "mongoimport --host mongodb --db ${DB} --collection recipes --type json --file /seed-data/create-recipe.json --jsonArray"'
-
+  mongo-seed-fooditemtemplate:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection fooditemtemplate --type json --file ./seed-data/create-fooditemtemplate.json --jsonArray"'
+  mongo-seed-fooditem:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection fooditem --type json --file /seed-data/create-fooditem.json --jsonArray"'
+  mongo-seed-fooditemcategory:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection fooditemcategory --type json --file /seed-data/create-fooditemcategory.json --jsonArray"'
+  mongo-seed-fooditemunit:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection fooditemunit --type json --file /seed-data/create-fooditemunit.json --jsonArray"'
       
