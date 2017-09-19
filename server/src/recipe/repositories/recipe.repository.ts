@@ -34,6 +34,9 @@ export class RecipeRepository {
     try {
       const foundRecipe = await this._recipeModel.findById(id).lean() as Recipe;
       this._handleNotFound(foundRecipe, id, "findById()");
+      if(!foundRecipe.images){
+        foundRecipe.images = [];
+      }
       return foundRecipe;
     } catch (error) {
       winston.error(error);
@@ -44,6 +47,7 @@ export class RecipeRepository {
   public getAll = async (): Promise<Recipe[] | DbError> => {
     try {
       const foundRecipes = await this._recipeModel.find();
+      console.log('found recipe', foundRecipes)
       return foundRecipes;
     } catch (error) {
       winston.error(error);

@@ -121,20 +121,26 @@ export class RecipeHandler {
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
     const imageTitle = req.query.title;
-    if(!imageTitle){
+    if(!imageTitle || !req.file.filename){
       let error = new ValidationError(ERRORS.RECIPE_NO_IMAGE_TITLE)
         .addSourceMethod("uploadImage()")
         .addSource(RecipeHandler.name);
       res.status(400).json(error.forResponse());
     } else {
       try {
+        console.log('before persist')
         const url = await this._imgService.persistImage(
           req.file.filename, DataType.RECIPE_IMAGE, userEmail);
+          console.log('recipe id', recipeId)
+          
         const recipe: any = await this._db.recipe.getById(recipeId);
+        console.log('recipe', recipe)
+        
         recipe.images.push(new RecipeImage().setUrl(url).setTitle(req.query.title));
         await this._db.recipe.update(recipeId, recipe);
         res.status(200).json(recipe);
       } catch (error) {
+        console.log('error', error)
         this._sendError(res)(error);
       }
     }

@@ -1,6 +1,6 @@
 
 import { IsInt, IsNotEmpty, IsNumber, Min, Length, ValidateNested} from "class-validator";
-import { Schema } from "mongoose";
+import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
 import { Level, RecipeImage, RecipeStep } from "../index";
@@ -10,7 +10,7 @@ import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validato
 
 export class Recipe implements Validatable {
 
-  public _id: Schema.Types.ObjectId;
+  public _id: Types.ObjectId;
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
