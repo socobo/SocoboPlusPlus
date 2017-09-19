@@ -22,7 +22,7 @@ export class FoodItemTemplateHandler {
   public save = (req: Request, res: Response): void => {
     const template = new FoodItemTemplate().clone(req.body);
     this._db.fooditemTemplate.save(template)
-      .then((result: any) => res.status(201).json(template.setId(result.id)))
+      .then((result: any) => res.status(201).json(template.setId(result)))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }
 

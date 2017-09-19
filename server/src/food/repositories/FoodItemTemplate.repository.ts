@@ -28,7 +28,7 @@ export class FoodItemTemplateRepository {
   public save = async (template: FoodItemTemplate): Promise<Types.ObjectId | DbError> => {
     try {
       const createdFooditemTemplate = await this._fooditemTemplateModel.create(template);
-      return new Types.ObjectId(createdFooditemTemplate._id);
+      return createdFooditemTemplate._id;
     } catch (error) {
       return ErrorUtils.handleDbError(error, FoodItemTemplateRepository.name, "save(..)");
     }
