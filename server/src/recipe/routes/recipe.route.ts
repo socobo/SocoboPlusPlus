@@ -43,6 +43,10 @@ export class RecipeRoute {
       this._multer.single("recipeImage"),
       this._recipeHandler.uploadImage);
 
+    this._router.delete("/:id/image/:imgId",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.deleteImage);
+
     this._router.delete("/:id",
       this._authValidationHandler.checkToken,
       this._recipeHandler.delete);

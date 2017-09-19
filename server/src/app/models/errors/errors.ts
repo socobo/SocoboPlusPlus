@@ -34,6 +34,11 @@ export class ERRORS {
     "internal.error.upload.image",
     500
   );
+  public static IMAGE_DELETION = new ErrorType(
+    "00008",
+    "internal.error.delete.image",
+    500
+  );
   public static GENERIC_BASE_NOT_FOUND = new ErrorType(
     "10000",
     "generic.base.not.found",

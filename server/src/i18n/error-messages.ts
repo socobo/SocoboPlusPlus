@@ -14,6 +14,7 @@ export const ERROR_MESSAGES: any = {
   "internal.error.request.body": "Something went wrong with extracting request body",
   "internal.error.request.body.authcheck": "The request body doesn't have {0}",
   "internal.error.upload.image": "Failed to upload the image",
+  "internal.error.delete.image": "Failed to delete image {0}",
   "internal.no.password.hash": "No password hash",
   "recipe.field.not.found": "Recipes have no field {0}",
   "recipes.no.image.title": "Image title is required",

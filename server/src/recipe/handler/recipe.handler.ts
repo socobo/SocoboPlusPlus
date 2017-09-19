@@ -117,7 +117,7 @@ export class RecipeHandler {
     }
   }
 
-  public uploadImage = async (req: SocoboRequest, res: Response) => {
+  public uploadImage = async (req: SocoboRequest, res: Response) => {    
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
     const imageTitle = req.query.title;
@@ -144,5 +144,18 @@ export class RecipeHandler {
         this._sendError(res)(error);
       }
     }
+  }
+
+  public deleteImage = async (req: SocoboRequest, res: Response) => {
+    try{
+      const image = await this._db.recipe
+        .getImageById(req.params.id, req.params.imgId) as RecipeImage;
+      await this._imgService.deleteImage(image.url);
+      await this._db.recipe.removeImage(req.params.id, req.params.imgId);
+      res.status(200).json();
+    } catch (error) {
+      this._sendError(res)(error);
+    }
+
   }
 }

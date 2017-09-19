@@ -1,7 +1,9 @@
+import { Schema } from "mongoose";
 import { IsNotEmpty, IsNumber, IsString, Min, Length, MinLength } from "class-validator";
 import { Validatable, ValidationGroup } from "../../app/index";
 
 export class RecipeImage implements Validatable {
+  public _id: Schema.Types.ObjectId;
   @IsNotEmpty({
     groups: [ValidationGroup.RECIPE]
   })
