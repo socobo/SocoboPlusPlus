@@ -121,7 +121,7 @@ describe("AuthRoute - API v1", () => {
   });
 
   it("POST /api/v1/register as ADMIN should create and return the user", async () => {
-    const user = { email: "admin2@test.test", password: "password", role: "ADMIN" };
+    const user = { email: "adminXYZ@test.test", password: "password", role: "ADMIN" };
     const result = await chai.request(Server).post("/api/v1/auth/register").send(user);
     expect(result.body).to.have.deep.property("id");
     expect(result.body).to.have.deep.property("username");

@@ -6,9 +6,10 @@
 * [Lint](#running-lint) 
 * [API Documentation](#api-documentation)
   * [Auth](#auth)
-  * [SocoboUser](#socobouser)
-  * [Recipes](#recipes)
+  * [FoodItemTemplate](#fooditemtemplate)
   * [Log](#log)
+  * [Recipe](#recipe)
+  * [SocoboUser](#socobouser)
 * [Enums](#enums)
 
 
@@ -176,23 +177,16 @@ npm run lint
     }
     ```
 
-### **SocoboUser**
+### **FoodItemTemplate**
 
-- **GET /api/v1/socobouser**
-
-  **_This route is only with admin rights accessable!_**
+- **GET /api/v1/fooditemtemplate**
 
   Response body:
     ```json
     [
       {
         id: string,
-        username: string,
-        email: string,
-        hasTermsAccepted: boolean,
-        role: string|Role,
-        provider: string|Provider,
-        imageUrl: string,
+        name: string,
         created: number,
         lastModified: number
       },
@@ -211,21 +205,16 @@ npm run lint
     }
     ```
 
-- **GET /api/v1/socobouser/:id**
+- **GET /api/v1/fooditemtemplate/:id**
 
   Path Parameter:
-    - id: User id
+    - id: Fooditem Template id
 
   Response body:
     ```json
     {
       id: string,
-      username: string,
-      email: string,
-      hasTermsAccepted: boolean,
-      role: string|Role,
-      provider: string|Provider,
-      imageUrl: string,
+      name: string,
       created: number,
       lastModified: number
     }
@@ -240,19 +229,15 @@ npm run lint
     }
     ```
 
-- **PUT /api/v1/socobouser/:id**
+- **PUT /api/v1/fooditemtemplate/:id**
 
   Path Parameter:
-    - id: User id
+    - Fooditem Template id
 
   Request body:
     ```json
     {
-      updateType: UpdateType,
-      fieldValues: {
-        update-type specific socoboUser-Property: number|string|boolean|Role|Provider,
-        ...
-      }
+      name: string
     }
     ```
 
@@ -260,12 +245,7 @@ npm run lint
     ```json
     {
       id: string,
-      username: string,
-      email: string,
-      hasTermsAccepted: boolean,
-      role: string|Role,
-      provider: string|Provider,
-      imageUrl: string,
+      name: string,
       created: number,
       lastModified: number
     }
@@ -280,35 +260,23 @@ npm run lint
     }
     ```
 
-- **POST /api/v1/socobouser/:id/upload**
-
-  Uploads a provided image file to the server for the current user and updates
-  the related user in the database.
+- **POST /api/v1/fooditemtemplate/**
 
   Path Parameter:
-    - id: User id
-
-  Request header:
-    ```bash
-    Content-Type = multipart/form-data
-    ```
+    - Fooditem Template id
 
   Request body:
-    ```bash
-    key = socoboUserImage,
-    value = file
+    ```json
+    {
+      name: string
+    }
     ```
 
   Response body:
     ```json
     {
       id: string,
-      username: string,
-      email: string,
-      hasTermsAccepted: boolean,
-      role: string|Role,
-      provider: string|Provider,
-      imageUrl: string,
+      name: string,
       created: number,
       lastModified: number
     }
@@ -323,10 +291,10 @@ npm run lint
     }
     ```
 
-- **DELETE /api/v1/socobouser/:id**
+- **DELETE /api/v1/fooditemtemplate/:id**
 
   Path Parameter:
-    - id: User id
+    - id: Fooditem Template id
 
   Response body:
     ```json
@@ -344,7 +312,31 @@ npm run lint
     }
     ```
 
-### **Recipes**
+### **Log**
+
+- **GET /api/v1/log/errors**
+
+  **_This route is only with admin rights accessable!_**
+
+  Response body:
+    ```json
+    [
+      {
+        message: string.
+        name: string
+        timestamp: number,
+        statusCode: number,
+        code: string,
+        source: string,
+        sourceMethod: string,
+        error: Object,
+        query?: string
+      },
+      {...}
+    ]
+    ```
+
+### **Recipe**
 
 - **GET /api/v1/recipes**
 
@@ -650,9 +642,9 @@ npm run lint
     }
     ```
 
-### **Log**
+### **SocoboUser**
 
-- **GET /api/v1/log/errors**
+- **GET /api/v1/socobouser**
 
   **_This route is only with admin rights accessable!_**
 
@@ -660,18 +652,162 @@ npm run lint
     ```json
     [
       {
-        message: string.
-        name: string
-        timestamp: number,
-        statusCode: number,
-        code: string,
-        source: string,
-        sourceMethod: string,
-        error: Object,
-        query?: string
+        id: string,
+        username: string,
+        email: string,
+        hasTermsAccepted: boolean,
+        role: string|Role,
+        provider: string|Provider,
+        imageUrl: string,
+        created: number,
+        lastModified: number
       },
-      {...}
+      {
+        ...
+      }
     ]
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **GET /api/v1/socobouser/:id**
+
+  Path Parameter:
+    - id: User id
+
+  Response body:
+    ```json
+    {
+      id: string,
+      username: string,
+      email: string,
+      hasTermsAccepted: boolean,
+      role: string|Role,
+      provider: string|Provider,
+      imageUrl: string,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **PUT /api/v1/socobouser/:id**
+
+  Path Parameter:
+    - id: User id
+
+  Request body:
+    ```json
+    {
+      updateType: UpdateType,
+      fieldValues: {
+        update-type specific socoboUser-Property: number|string|boolean|Role|Provider,
+        ...
+      }
+    }
+    ```
+
+  Response body:
+    ```json
+    {
+      id: string,
+      username: string,
+      email: string,
+      hasTermsAccepted: boolean,
+      role: string|Role,
+      provider: string|Provider,
+      imageUrl: string,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **POST /api/v1/socobouser/:id/upload**
+
+  Uploads a provided image file to the server for the current user and updates
+  the related user in the database.
+
+  Path Parameter:
+    - id: User id
+
+  Request header:
+    ```bash
+    Content-Type = multipart/form-data
+    ```
+
+  Request body:
+    ```bash
+    key = socoboUserImage,
+    value = file
+    ```
+
+  Response body:
+    ```json
+    {
+      id: string,
+      username: string,
+      email: string,
+      hasTermsAccepted: boolean,
+      role: string|Role,
+      provider: string|Provider,
+      imageUrl: string,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **DELETE /api/v1/socobouser/:id**
+
+  Path Parameter:
+    - id: User id
+
+  Response body:
+    ```json
+    {
+      id: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
     ```
 
 ## Enums

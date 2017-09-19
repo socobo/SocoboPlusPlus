@@ -21,6 +21,8 @@ import {
 import { Config } from "./config";
 // database setup
 import * as db from "./db/index";
+// fooditem
+import { FoodItemTemplateHandler, FoodItemTemplateRoute } from "./food/index";
 // recipe
 import {
   RecipeHandler, RecipeRoute
@@ -49,6 +51,7 @@ class Server {
   private _modelValidationHandler: ModelValidationHandler;
 
   private _authHandler: AuthHandler;
+  private _fooditemTemplateHandler: FoodItemTemplateHandler;
   private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
   private _logHandler: LogHandler;
@@ -179,6 +182,7 @@ class Server {
     this._authValidationHandler = new AuthValidationHandler(this._authValidationMiddleware);
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
+    this._fooditemTemplateHandler = new FoodItemTemplateHandler(db);
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
     this._recipeHandler = new RecipeHandler(db, this._imgService);
     this._logHandler = new LogHandler();
@@ -216,6 +220,7 @@ class Server {
   private _apiRoutes (): void {
     // set routes to paths
     this._app.use("/api/v1/auth", this._authRoute());
+    this._app.use("/api/v1/fooditemtemplate", this._fooditemTemplateRoute());
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
     this._app.use("/api/v1/log", this._logRoute());
@@ -234,6 +239,14 @@ class Server {
     const router: express.Router = express.Router();
     // init and return auth route
     return new AuthRoute(router, this._authHandler,
+        this._authValidationHandler, this._modelValidationHandler).createRoutes();
+  }
+
+  private _fooditemTemplateRoute (): express.Router {
+    // create new router
+    const router: express.Router = express.Router();
+    // init and return fooditem template route
+    return new FoodItemTemplateRoute(router, this._fooditemTemplateHandler,
         this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 

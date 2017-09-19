@@ -18,9 +18,12 @@ describe("SocoboUserRoute - API v1", () => {
   const expect = chai.expect;
 
   // define login function
+  // User 1 PW: SuperSecurePassword
+  // User 2 PW: SuperMegaSecure
+  // User 3 PW: password
   const login = async (role: SocoboUserRoleType): Promise<string|any> => {
     const user = (role === SocoboUserRoleType.Admin)
-      ? { email: "admin", password: "password" }
+      ? { email: "admin2@test.test", password: "password" }
       : { email: "john-doe@test.test", password: "SuperSecurePassword" };
 
     try {
@@ -30,13 +33,6 @@ describe("SocoboUserRoute - API v1", () => {
       return error;
     }
   };
-
-  before((done) => {
-    // User 1 PW: SuperSecurePassword
-    // User 2 PW: SuperMegaSecure
-    // User 3 PW: password
-    done();
-  });
 
   it("GET /api/v1/socobouser should fail if user is not an admin", async () => {
     try {
@@ -63,21 +59,19 @@ describe("SocoboUserRoute - API v1", () => {
   it("GET /api/v1/socobouser should return all users", async () => {
     const accessToken = await login(SocoboUserRoleType.Admin);
     const result = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
-    expect(result.body.length).to.equal(5);
+    expect(result.body.length).to.equal(6);
   });
 
   it("GET /api/v1/socobouser/:id should return one user", async () => {
+    const id = "59a2ee5be2c06ab513940b84";
     const accessToken = await login(SocoboUserRoleType.Admin);
-    const resultAll = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
-    const id = resultAll.body[0].id;
     const resultOne = await chai.request(Server).get(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
     expect(resultOne.body).to.not.null;
   });
 
   it("GET /api/v1/socobouser/:id should return one user without password property", async () => {
+    const id = "59a2ee5be2c06ab513940b84";
     const accessToken = await login(SocoboUserRoleType.Admin);
-    const resultAll = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
-    const id = resultAll.body[0].id;
     const resultOne = await chai.request(Server).get(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
     expect(resultOne.body).to.deep.property("id");
     expect(resultOne.body).to.deep.property("username");
@@ -92,9 +86,8 @@ describe("SocoboUserRoute - API v1", () => {
   });
 
   it("PUT /api/v1/socobouser/:id should update the user and return modified user", async () => {
+    const id = "59a2ee5be2c06ab513940b84";
     const accessToken = await login(SocoboUserRoleType.Admin);
-    const resultAll = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
-    const id = resultAll.body[0].id;
     const resultBefore = await chai.request(Server).get(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
 
     const updateRequestBody = {
@@ -256,9 +249,8 @@ describe("SocoboUserRoute - API v1", () => {
   });
 
   it("POST /api/v1/socobouser/:id/upload should save a new user image and return the modified user", async () => {
+    const id = "59a2ee5be2c06ab513940b84";
     const accessToken = await login(SocoboUserRoleType.Admin);
-    const resultAll = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
-    const id = resultAll.body[0].id;
     const resultBefore = await chai.request(Server).get(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
 
     const resultAfter = await chai.request(Server)
@@ -271,9 +263,8 @@ describe("SocoboUserRoute - API v1", () => {
   });
 
   it("DELETE /api/v1/socobouser/:id should delete the user and return the removed user id", async () => {
+    const id = "59a2ee5be2c06ab513940b84";
     const accessToken = await login(SocoboUserRoleType.Admin);
-    const resultAll = await chai.request(Server).get("/api/v1/socobouser").set("x-access-token", accessToken);
-    const id = resultAll.body[0].id;
     const resultDelete = await chai.request(Server).del(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
 
     expect(resultDelete.body.id).to.equal(id);
