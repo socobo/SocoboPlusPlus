@@ -1,5 +1,5 @@
+import { IsNotEmpty, IsNumber, IsString, Length, Min, MinLength } from "class-validator";
 import { Schema } from "mongoose";
-import { IsNotEmpty, IsNumber, IsString, Min, Length, MinLength } from "class-validator";
 import { Validatable, ValidationGroup } from "../../app/index";
 
 export class RecipeImage implements Validatable {
@@ -12,7 +12,7 @@ export class RecipeImage implements Validatable {
   @IsNotEmpty({
     groups: [ValidationGroup.RECIPE]
   })
-  @Length(1,100, {
+  @Length(1, 100, {
     groups: [ValidationGroup.RECIPE]
   })
   public title: string;

@@ -6,12 +6,20 @@ export const recipeSchema = new Schema({
     required: true,
     type: String
   },
+  duration: {
+    required: false,
+    type: Number
+  },
   images: [
     {
-      url: String,
-      title: String
+      title: String,
+      url: String
     }
   ],
+  level: {
+    required: true,
+    type: String
+  },
   steps: [
     {
       stepDescription: String,
@@ -26,14 +34,6 @@ export const recipeSchema = new Schema({
   userId: {
     ref: "SocoboUser",
     type: ObjectId
-  },
-  level: {
-    required: true,
-    type: String
-  },
-  duration: {
-    required: false,
-    type: Number
   }
 },
 {

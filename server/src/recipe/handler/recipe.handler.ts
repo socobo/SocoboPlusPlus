@@ -1,6 +1,6 @@
+import { validate } from "class-validator";
 import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
-import { validate } from "class-validator";
 
 import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
@@ -11,7 +11,7 @@ import { Recipe, RecipeImage} from "../index";
 export class RecipeHandler {
 
   constructor (
-    private _db: DbExtension, 
+    private _db: DbExtension,
     private _imgService: ImageService
   ) {}
 
@@ -83,7 +83,7 @@ export class RecipeHandler {
   public update = async (req: Request, res: Response) => {
     let recipe: Recipe = new Recipe().clone(req.body as Recipe);
     recipe = this._removeImageProp(recipe);
-    
+
     try {
       await this._db.socobouser.getUserById(recipe.userId);
       const result = await this._db.recipe.update(req.params.id, recipe);
@@ -117,37 +117,32 @@ export class RecipeHandler {
     }
   }
 
-  public uploadImage = async (req: SocoboRequest, res: Response) => {    
+  public uploadImage = async (req: SocoboRequest, res: Response) => {
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
     const imageTitle = req.query.title;
-    if(!imageTitle || !req.file.filename){
-      let error = new ValidationError(ERRORS.RECIPE_NO_IMAGE_TITLE)
+    if (!imageTitle || !req.file.filename) {
+      const error = new ValidationError(ERRORS.RECIPE_NO_IMAGE_TITLE)
         .addSourceMethod("uploadImage()")
         .addSource(RecipeHandler.name);
       res.status(400).json(error.forResponse());
     } else {
       try {
-        console.log('before persist')
         const url = await this._imgService.persistImage(
           req.file.filename, DataType.RECIPE_IMAGE, userEmail);
-          console.log('recipe id', recipeId)
-          
+
         const recipe: any = await this._db.recipe.getById(recipeId);
-        console.log('recipe', recipe)
-        
         recipe.images.push(new RecipeImage().setUrl(url).setTitle(req.query.title));
         await this._db.recipe.update(recipeId, recipe);
         res.status(200).json(recipe);
       } catch (error) {
-        console.log('error', error)
         this._sendError(res)(error);
       }
     }
   }
 
   public deleteImage = async (req: SocoboRequest, res: Response) => {
-    try{
+    try {
       const image = await this._db.recipe
         .getImageById(req.params.id, req.params.imgId) as RecipeImage;
       await this._imgService.deleteImage(image.url);

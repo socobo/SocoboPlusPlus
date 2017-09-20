@@ -19,9 +19,6 @@ export class RecipeRepository {
   }
 
   public save = async (recipe: Recipe): Promise<Recipe | DbError> => {
-
-    console.log('SAVE', recipe)
-
     try {
       return await new this._recipeModel(recipe).save();
     } catch (error) {
@@ -34,7 +31,7 @@ export class RecipeRepository {
     try {
       const foundRecipe = await this._recipeModel.findById(id).lean() as Recipe;
       this._handleNotFound(foundRecipe, id, "findById()");
-      if(!foundRecipe.images){
+      if (!foundRecipe.images) {
         foundRecipe.images = [];
       }
       return foundRecipe;
@@ -46,9 +43,9 @@ export class RecipeRepository {
 
   public getImageById = async (recipeId: string, imageId: string): Promise<RecipeImage | DbError> => {
     try {
-      const foundRecipe = <Recipe>await this.getById(recipeId);      
+      const foundRecipe = await this.getById(recipeId) as Recipe;
       const image = foundRecipe.images
-        .find((image:RecipeImage) => image._id.toString() === imageId);
+        .find((img: RecipeImage) => img._id.toString() === imageId);
       this._handleNotFound(image, imageId, "getImageById()");
       return image;
     } catch (error) {
@@ -60,7 +57,6 @@ export class RecipeRepository {
   public getAll = async (): Promise<Recipe[] | DbError> => {
     try {
       const foundRecipes = await this._recipeModel.find();
-      console.log('found recipe', foundRecipes)
       return foundRecipes;
     } catch (error) {
       winston.error(error);
@@ -94,7 +90,7 @@ export class RecipeRepository {
   public removeImage = async (id: string, imgId: string): Promise<Recipe | DbError> => {
     try {
       const updatedRecipe = await this._recipeModel
-        .findByIdAndUpdate(id, {$pull: {"images._id": imgId}}, { new: true });
+        .findByIdAndUpdate(id, {$pull: {images: {_id: imgId}}}, { new: true });
       this._handleNotFound(updatedRecipe, id, "removeImage()");
       return updatedRecipe;
     } catch (error) {

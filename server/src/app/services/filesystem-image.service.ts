@@ -26,7 +26,6 @@ export class FilesystemImageService implements ImageService {
   }
 
   private _removeSourceFile (dir: string): Promise<any> {
-    console.log('remove', dir)
     return new Promise((resolve, reject) => {
       fs.unlink(dir, (deleteErr) => {
         deleteErr
@@ -50,12 +49,11 @@ export class FilesystemImageService implements ImageService {
   }
 
   public persistImage (fileName: string, dataType: string, userIdentifier: string): Promise<string> {
-    console.log('in persist')
     return new Promise((resolve, reject) => {
       const sourcePath = `${process.cwd()}/${process.env["IMAGE_TMP_DIR"] || Config.IMAGE_TMP_DIR}/${fileName}`;
       const userDataDir = `${process.cwd()}/${process.env["DATA_BASE_DIR"] || Config.DATA_BASE_DIR}/${userIdentifier}`;
       const dataTypeDir = `${userDataDir}/${dataType}`;
-      const targetPath = `${dataTypeDir}/${fileName}`;      
+      const targetPath = `${dataTypeDir}/${fileName}`;
 
       fs.readFile(sourcePath, (readErr, data) => {
         readErr

@@ -12,16 +12,16 @@ export class RecipeLevel implements ValidatorConstraintInterface {
       return false;
     }
 
-    let inLevel = (level in Level) && isNaN(+level);
+    const inLevel = (level in Level) && isNaN(+level);
 
     return inLevel;
   }
 
   public defaultMessage (args: ValidationArguments): string {
     let levels = "";
-    for(let level in Level){
-      if(isNaN(+level)){
-        levels += level + ", "
+    for (const level in Level) {
+      if (isNaN(+level)) {
+        levels += level + ", ";
       }
     }
     levels = levels.substring(0, levels.length - 2);

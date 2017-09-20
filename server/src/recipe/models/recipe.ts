@@ -1,5 +1,4 @@
-
-import { IsInt, IsNotEmpty, IsNumber, Min, Length, ValidateNested} from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateNested} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
