@@ -38,7 +38,7 @@ describe("RecipeRoute - API v1", () => {
     expect(result.body.length).to.equal(2);
   });
 
-  it("GET /api/v1/recipe/:id should return one template", async () => {
+  it("GET /api/v1/recipe/:id should return one recipe", async () => {
     const id = "59a2ef66b9c6c5139160b4d1";
     const accessToken = await login();
     const result = await chai.request(Server).get(`/api/v1/recipe/${id}`).set("x-access-token", accessToken);
@@ -64,15 +64,45 @@ describe("RecipeRoute - API v1", () => {
       userId: "59a5a4013eeef0c7a9d00640"
     };
     const accessToken = await login();
-    let result = null;
-    try {
-      result = await chai.request(Server).post(`/api/v1/recipe`)
+    const result = await chai.request(Server).post(`/api/v1/recipe`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
       .send(JSON.stringify(recipe));
-      expect(result.body.title).to.be.equal("NewRecipe");
+    expect(result.body.title).to.be.equal("NewRecipe");
+
+  });
+
+  it("POST /api/v1/recipe should fail for wrongly orderd step numbers", async () => {
+    const recipe = {
+      description: "NewRecipe",
+      steps: [
+        {
+            stepDescription: "NewRecipe",
+            stepNumber: 2,
+            stepTitle: "NewRecipe"
+        },
+        {
+            stepDescription: "NewRecipe",
+            stepNumber: 3,
+            stepTitle: "NewRecipe"
+        }
+      ],
+      title: "NewRecipe",
+      userId: "59a5a4013eeef0c7a9d00640"
+    };
+
+    try {
+      const accessToken = await login();
+      const result = await chai.request(Server).post(`/api/v1/recipe`)
+        .set("x-access-token", accessToken)
+        .set("Content-Type", "application/json")
+        .send(JSON.stringify(recipe));
+
     } catch (error) {
-      // console.log(error);
+      expect(error.status).to.be.eql(400);
+      const msg = "The provided input is invalid";
+      expect(error.response.body).to.have.property("message", msg);
+      expect(error.response.body.validationErrors[0].constraints).to.have.property("RecipeStepsOrder");
     }
   });
 
