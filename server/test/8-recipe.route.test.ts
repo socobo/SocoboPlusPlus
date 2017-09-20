@@ -61,13 +61,13 @@ describe("RecipeRoute - API v1", () => {
         }
       ],
       title: "NewRecipe",
-      userId: "59a5a4013eeef0c7a9d00640"
+      userId: "59a2ee5d6b1ad6c629e9b2fc"
     };
     const accessToken = await login();
     const result = await chai.request(Server).post(`/api/v1/recipe`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
-      .send(JSON.stringify(recipe));
+      .send(recipe);
     expect(result.body.title).to.be.equal("NewRecipe");
 
   });
@@ -96,7 +96,7 @@ describe("RecipeRoute - API v1", () => {
       const result = await chai.request(Server).post(`/api/v1/recipe`)
         .set("x-access-token", accessToken)
         .set("Content-Type", "application/json")
-        .send(JSON.stringify(recipe));
+        .send(recipe);
 
     } catch (error) {
       expect(error.status).to.be.eql(400);

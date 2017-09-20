@@ -17,7 +17,7 @@ export const recipeSchema = new Schema({
     }
   ],
   level: {
-    required: true,
+    required: false,
     type: String
   },
   steps: [
