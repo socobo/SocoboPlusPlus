@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateNested} from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateIf, ValidateNested} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
@@ -41,6 +41,9 @@ export class Recipe implements Validatable {
   })
   public steps: RecipeStep[];
 
+  @ValidateIf((o) => !!o.level, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
@@ -49,6 +52,9 @@ export class Recipe implements Validatable {
   })
   public level: Level;
 
+  @ValidateIf((o) => !!o.duration, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
   @IsInt({
     groups: [ ValidationGroup.RECIPE ]
   })
