@@ -6,7 +6,6 @@ import { Level, RecipeImage, RecipeStep } from "../index";
 import { IsCorrectRecipeLevelUsed } from "../validators/recipe-level.validator";
 import { AreRecipeStepsOrdered } from "../validators/recipe-steps-order.validator";
 import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validator";
-
 export class Recipe implements Validatable {
 
   public _id: Types.ObjectId;
