@@ -1,4 +1,6 @@
 
+import { Document, Model } from "mongoose";
+
 import { FoodItemTemplate, FoodItemTemplateRepository } from "../../food/index";
 import { Recipe, RecipeRepository} from "../../recipe/index";
 import { SocoboUser, SocoboUserRepository } from "../../socobouser/index";
@@ -15,8 +17,6 @@ export class MongoDbExtension implements DbExtension {
   // recipes: RecipeRepository;
   // recipeSteps: RecipeStepRepository;
 
-  constructor (socoboUserModel: Model<Document & SocoboUser>) {
-    this.socobouser = new SocoboUserRepository(socoboUserModel);
   constructor (
     private _fooditemTemplateModel: Model<Document & FoodItemTemplate>,
     private _socoboUserModel: Model<Document & SocoboUser>,
