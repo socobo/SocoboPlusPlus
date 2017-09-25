@@ -109,7 +109,7 @@ export class Recipe implements Validatable {
     return this;
   }
 
-  public setImageUrl (images: RecipeImage[]) {
+  public setImages (images: RecipeImage[]) {
     this.images = images;
     return this;
   }

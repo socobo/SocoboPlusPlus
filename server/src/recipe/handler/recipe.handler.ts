@@ -1,4 +1,3 @@
-import { validate } from "class-validator";
 import { NextFunction, Request, Response } from "express";
 
 import {
@@ -117,12 +116,12 @@ export class RecipeHandler {
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
     const imageTitle = req.query.title;
-    if (!imageTitle || !req.file.filename) {
-      const error = new ValidationError(ERRORS.RECIPE_NO_IMAGE_TITLE)
-        .addSourceMethod("uploadImage()")
-        .addSource(RecipeHandler.name);
-      res.status(400).json(error.forResponse());
-    } else {
+    // if (!imageTitle || !req.file.filename) {
+    //   const error = new ValidationError(ERRORS.RECIPE_NO_IMAGE_TITLE)
+    //     .addSourceMethod("uploadImage()")
+    //     .addSource(RecipeHandler.name);
+    //   res.status(400).json(error.forResponse());
+    // } else {
       try {
         const url = await this._imgService.persistImage(
           req.file.filename, DataType.RECIPE_IMAGE, userEmail);
@@ -134,7 +133,7 @@ export class RecipeHandler {
       } catch (error) {
         this._sendError(res)(error);
       }
-    }
+    // }
   }
 
   public deleteImage = async (req: SocoboRequest, res: Response) => {
