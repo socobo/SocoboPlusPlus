@@ -116,24 +116,17 @@ export class RecipeHandler {
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
     const imageTitle = req.query.title;
-    // if (!imageTitle || !req.file.filename) {
-    //   const error = new ValidationError(ERRORS.RECIPE_NO_IMAGE_TITLE)
-    //     .addSourceMethod("uploadImage()")
-    //     .addSource(RecipeHandler.name);
-    //   res.status(400).json(error.forResponse());
-    // } else {
-      try {
-        const url = await this._imgService.persistImage(
-          req.file.filename, DataType.RECIPE_IMAGE, userEmail);
+    try {
+      const url = await this._imgService.persistImage(
+        req.file.filename, DataType.RECIPE_IMAGE, userEmail);
 
-        const recipe: any = await this._db.recipe.getById(recipeId);
-        recipe.images.push(new RecipeImage().setUrl(url).setTitle(req.query.title));
-        await this._db.recipe.update(recipeId, recipe);
-        res.status(200).json(recipe);
-      } catch (error) {
-        this._sendError(res)(error);
-      }
-    // }
+      const recipe: any = await this._db.recipe.getById(recipeId);
+      recipe.images.push(new RecipeImage().setUrl(url).setTitle(req.query.title));
+      await this._db.recipe.update(recipeId, recipe);
+      res.status(200).json(recipe);
+    } catch (error) {
+      this._sendError(res)(error);
+    }
   }
 
   public deleteImage = async (req: SocoboRequest, res: Response) => {
