@@ -84,6 +84,11 @@ export class Recipe implements Validatable {
     return this;
   }
 
+  public removeImageProp = () => {
+    delete this.images;
+    return this;
+  }
+
   public setRecipeId (recipeId: Types.ObjectId) {
     this._id = recipeId;
     return this;

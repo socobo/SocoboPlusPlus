@@ -1,6 +1,5 @@
 import { validate } from "class-validator";
 import { NextFunction, Request, Response } from "express";
-import { Types } from "mongoose";
 
 import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
@@ -19,11 +18,6 @@ export class RecipeHandler {
     return (error: any) => {
       res.status(error.statusCode).json(error.forResponse());
     };
-  }
-
-  private _removeImageProp = (recipe: Recipe) => {
-    delete recipe.images;
-    return recipe;
   }
 
   public getById = async (req: Request, res: Response) => {
@@ -68,8 +62,9 @@ export class RecipeHandler {
   }
 
   public save = async (req: Request, res: Response) => {
-    let recipe: Recipe = new Recipe().clone(req.body as Recipe);
-    recipe = this._removeImageProp(recipe);
+    const recipe: Recipe = new Recipe()
+      .clone(req.body as Recipe)
+      .removeImageProp();
 
     try {
       await this._db.socobouser.getUserById(recipe.userId);
@@ -81,8 +76,9 @@ export class RecipeHandler {
   }
 
   public update = async (req: Request, res: Response) => {
-    let recipe: Recipe = new Recipe().clone(req.body as Recipe);
-    recipe = this._removeImageProp(recipe);
+    const recipe: Recipe = new Recipe()
+      .clone(req.body as Recipe)
+      .removeImageProp();
 
     try {
       await this._db.socobouser.getUserById(recipe.userId);
