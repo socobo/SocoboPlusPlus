@@ -28,7 +28,7 @@ export class RecipeStepsAreOrderd implements ValidatorConstraintInterface {
 }
 
 export function AreRecipeStepsOrdered (validationOptions?: ValidationOptions) {
-   return (object: Object, propertyName: string) => {
+   return (object: object, propertyName: string) => {
       registerDecorator({
         constraints: [],
         options: validationOptions,

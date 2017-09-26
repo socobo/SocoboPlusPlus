@@ -1,6 +1,6 @@
 import { NextFunction, Response, Router } from "express";
 import { SocoboRequest } from "../../app/index";
-import { SocoboUserRoleTypes } from "../../socobouser/index";
+import { SocoboUserRoleType } from "../../socobouser/index";
 import { AuthValidationMiddleware } from "../index";
 
 export class AuthValidationHandler {
@@ -25,7 +25,7 @@ export class AuthValidationHandler {
       .catch((e: any) => this._sendErrorResponse(e, res));
   }
 
-  public checkUser = (restrictedRole: SocoboUserRoleTypes) => {
+  public checkUser = (restrictedRole: SocoboUserRoleType) => {
     return (req: SocoboRequest, res: Response, next: NextFunction): void => {
       this._authValidationMiddleware.checkValidUser(req, restrictedRole)
         .then(() => next())
