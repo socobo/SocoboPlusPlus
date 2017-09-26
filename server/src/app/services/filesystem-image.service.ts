@@ -29,7 +29,10 @@ export class FilesystemImageService implements ImageService {
     return new Promise((resolve, reject) => {
       fs.unlink(dir, (deleteErr) => {
         deleteErr
-          ? reject(this._error.addCause(deleteErr))
+          ? reject(new ApiError(ERRORS.IMAGE_DELETION.withArgs(dir))
+            .addSource(FilesystemImageService.name)
+            .addSourceMethod("deleteImage")
+            .addCause(deleteErr))
           : resolve();
       });
     });
@@ -62,5 +65,9 @@ export class FilesystemImageService implements ImageService {
               .catch((error: ApiError) => reject(error));
       });
     });
+  }
+
+  public deleteImage = (path: string): Promise<any>  => {
+    return this._removeSourceFile(path);
   }
 }

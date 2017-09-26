@@ -2,7 +2,7 @@ import { Router } from "express";
 import { Instance } from "multer";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
 import { AuthValidationHandler } from "../../auth/index";
-import { Recipe, RecipeHandler } from "../index";
+import { Recipe, RecipeHandler, RecipeMiddleware } from "../index";
 
 export class RecipeRoute {
 
@@ -11,7 +11,8 @@ export class RecipeRoute {
     private _multer: Instance,
     private _recipeHandler: RecipeHandler,
     private _authValidationHandler: AuthValidationHandler,
-    private _modelValidationHandler: ModelValidationHandler) {}
+    private _modelValidationHandler: ModelValidationHandler,
+    private _recipeMiddleware: RecipeMiddleware) {}
 
   public createRoutes (): Router {
 
@@ -41,7 +42,12 @@ export class RecipeRoute {
     this._router.post("/:id/image",
       this._authValidationHandler.checkToken,
       this._multer.single("recipeImage"),
+      this._recipeMiddleware.checkTitle,
       this._recipeHandler.uploadImage);
+
+    this._router.delete("/:id/image/:imgId",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.deleteImage);
 
     this._router.delete("/:id",
       this._authValidationHandler.checkToken,

@@ -3,7 +3,7 @@ import * as winston from "winston";
 
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
-import { Recipe, recipeSchema, RecipeStep } from "../index";
+import { Recipe, RecipeImage, recipeSchema, RecipeStep } from "../index";
 
 export class RecipeRepository {
 
@@ -19,7 +19,6 @@ export class RecipeRepository {
   }
 
   public save = async (recipe: Recipe): Promise<Recipe | DbError> => {
-
     try {
       return await new this._recipeModel(recipe).save();
     } catch (error) {
@@ -32,10 +31,26 @@ export class RecipeRepository {
     try {
       const foundRecipe = await this._recipeModel.findById(id).lean() as Recipe;
       this._handleNotFound(foundRecipe, id, "findById()");
+      if (!foundRecipe.images) {
+        foundRecipe.images = [];
+      }
       return foundRecipe;
     } catch (error) {
       winston.error(error);
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "getById(..)");
+    }
+  }
+
+  public getImageById = async (recipeId: string, imageId: string): Promise<RecipeImage | DbError> => {
+    try {
+      const foundRecipe = await this.getById(recipeId) as Recipe;
+      const image = foundRecipe.images
+        .find((img: RecipeImage) => img._id.toString() === imageId);
+      this._handleNotFound(image, imageId, "getImageById()");
+      return image;
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeRepository.name, "getImageById(..)");
     }
   }
 
@@ -62,12 +77,25 @@ export class RecipeRepository {
 
   public update = async (id: string, recipe: Recipe): Promise<Recipe | DbError> => {
     try {
-      const foundRecipe = await this._recipeModel.findByIdAndUpdate(id, recipe, { new: true });
+      const foundRecipe = await this._recipeModel
+        .findByIdAndUpdate(id, recipe, { new: true });
       this._handleNotFound(foundRecipe, id, "update()");
       return foundRecipe;
     } catch (error) {
       winston.error(error);
       return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");
+    }
+  }
+
+  public removeImage = async (id: string, imgId: string): Promise<Recipe | DbError> => {
+    try {
+      const updatedRecipe = await this._recipeModel
+        .findByIdAndUpdate(id, {$pull: {images: {_id: imgId}}}, { new: true });
+      this._handleNotFound(updatedRecipe, id, "removeImage()");
+      return updatedRecipe;
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeRepository.name, "removeImage(..)");
     }
   }
 

@@ -25,7 +25,7 @@ import * as db from "./db/index";
 import { FoodItemTemplateHandler, FoodItemTemplateRoute } from "./food/index";
 // recipe
 import {
-  RecipeHandler, RecipeRoute
+  RecipeHandler, RecipeMiddleware, RecipeRoute
 } from "./recipe/index";
 // socobouser
 import { SocoboUserHandler, SocoboUserMiddleware, SocoboUsersRoute } from "./socobouser/index";
@@ -46,6 +46,7 @@ class Server {
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
   private _socoboUserMiddleware: SocoboUserMiddleware;
+  private _recipeMiddleware: RecipeMiddleware;
 
   private _authValidationHandler: AuthValidationHandler;
   private _modelValidationHandler: ModelValidationHandler;
@@ -173,6 +174,7 @@ class Server {
     this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
     this._socoboUserMiddleware = new SocoboUserMiddleware();
+    this._recipeMiddleware = new RecipeMiddleware();
   }
 
   /**
@@ -264,7 +266,8 @@ class Server {
     const router: express.Router = express.Router();
     // init and return recipe route
     return new RecipeRoute(router, this._recipeUpload, this._recipeHandler,
-        this._authValidationHandler, this._modelValidationHandler).createRoutes();
+        this._authValidationHandler, this._modelValidationHandler,
+        this._recipeMiddleware).createRoutes();
   }
 
   private _logRoute (): express.Router {

@@ -34,6 +34,11 @@ export class ERRORS {
     "internal.error.upload.image",
     500
   );
+  public static IMAGE_DELETION = new ErrorType(
+    "00008",
+    "internal.error.delete.image",
+    500
+  );
   public static GENERIC_BASE_NOT_FOUND = new ErrorType(
     "10000",
     "generic.base.not.found",
@@ -148,6 +153,11 @@ export class ERRORS {
     "40003",
     "recipes.empty",
     404
+  );
+  public static RECIPE_NO_IMAGE_TITLE = new ErrorType(
+    "40004",
+    "recipes.no.image.title",
+    400
   );
   public static FOODITEMTEMPLTE_NOT_FOUND = new ErrorType(
     "50001",

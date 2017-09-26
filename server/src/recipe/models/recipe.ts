@@ -1,8 +1,9 @@
-import { IsNotEmpty, IsNumber, Length, ValidateNested} from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateIf, ValidateNested} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
-import { RecipeStep } from "../index";
+import { Level, RecipeImage, RecipeStep } from "../index";
+import { IsCorrectRecipeLevelUsed } from "../validators/recipe-level.validator";
 import { AreRecipeStepsOrdered } from "../validators/recipe-steps-order.validator";
 import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validator";
 export class Recipe implements Validatable {
@@ -20,7 +21,12 @@ export class Recipe implements Validatable {
   })
   public userId: string;
   public description: string;
-  public imageUrl: string;
+
+  @ValidateNested({
+    each: true,
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public images: RecipeImage[];
 
   @AreRecipeStepsUnique({
     groups: [ ValidationGroup.RECIPE ]
@@ -34,18 +40,52 @@ export class Recipe implements Validatable {
   })
   public steps: RecipeStep[];
 
+  @ValidateIf((o) => !!o.level, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @IsNotEmpty({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @IsCorrectRecipeLevelUsed({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public level: Level;
+
+  @ValidateIf((o) => !!o.duration, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @IsInt({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @Min(0, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public duration: number;
+
   public clone (recipe: Recipe) {
     this._id = recipe._id;
     this.title = recipe.title;
     this.description = recipe.description;
-    this.imageUrl = recipe.imageUrl;
     this.userId = recipe.userId;
+    this.level = recipe.level;
+    this.duration = recipe.duration;
+    this.images = [];
+    if (recipe.images) {
+      recipe.images.forEach((image: RecipeImage) => {
+        this.images.push(new RecipeImage().clone(image));
+      });
+    }
     this.steps = [];
     if (recipe.steps) {
       recipe.steps.forEach((step: RecipeStep) => {
         this.steps.push(new RecipeStep().clone(step));
       });
     }
+    return this;
+  }
+
+  public removeImageProp = () => {
+    delete this.images;
     return this;
   }
 
@@ -69,13 +109,23 @@ export class Recipe implements Validatable {
     return this;
   }
 
-  public setImageUrl (imageUrl: string) {
-    this.imageUrl = imageUrl;
+  public setImages (images: RecipeImage[]) {
+    this.images = images;
     return this;
   }
 
   public setSteps (steps: RecipeStep[]) {
     this.steps = steps;
+    return this;
+  }
+
+  public setLevel (level: Level) {
+    this.level = level;
+    return this;
+  }
+
+  public setDuration (duration: Level) {
+    this.duration = duration;
     return this;
   }
 }
