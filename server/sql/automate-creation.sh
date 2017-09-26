@@ -1,24 +1,27 @@
 #!/bin/bash
 
-PW="socobo"
-
 if [ "$1" = "-d" ]
 then
 
-  PGPASSWORD=$PW psql -h localhost -U postgres -f ./dev/create-db-dev.sql
-  PGPASSWORD=$PW psql -h localhost -U postgres -f ./dev/create-tables-dev.sql
-  PGPASSWORD=$PW psql -h localhost -U postgres -f ./dev/fill-tables-dev.sql
+  mongoimport --db socobo_dev --collection socobouser --drop --file ./data/create-socobouser.json --jsonArray
+  mongoimport --db socobo_dev --collection recipe --drop --file ./data/create-recipe.json --jsonArray
+  # TODO: Add Demo Data: mongoimport --db socobo_dev --collection recipeCategory --drop --file ./dev/create-recipeCategory.json
+  # TODO: Add Demo Data: mongoimport --db socobo_dev --collection recipeIngredient --drop --file ./dev/create-recipeIngredient.json
+  mongoimport --db socobo_dev --collection fooditemtemplate --drop --file ./data/create-fooditemtemplate.json --jsonArray
+  mongoimport --db socobo_dev --collection fooditem --drop --file ./data/create-fooditem.json --jsonArray
+  mongoimport --db socobo_dev --collection fooditemcategory --drop --file ./data/create-fooditemcategory.json --jsonArray
+  mongoimport --db socobo_dev --collection fooditemunit --drop --file ./data/create-fooditemunit.json --jsonArray
 
 elif [ "$1" = "-t" ]
 then
 
-  PGPASSWORD=$PW psql -h localhost -U postgres -f ./test/create-db-test.sql
-  PGPASSWORD=$PW psql -h localhost -U postgres -f ./test/create-tables-test.sql
-  PGPASSWORD=$PW psql -h localhost -U postgres -f ./test/fill-tables-test.sql
-
-else
-
-  PGPASSWORD=$PW psql -h localhost -U postgres -f ./prod/create-db.sql
-  PGPASSWORD=$PW psql -h localhost -U postgres -f ./prod/create-tables.sql
+  mongoimport --db socobo_test --collection socobouser --drop --file ./data/create-socobouser.json --jsonArray
+  mongoimport --db socobo_test --collection recipe --drop --file ./data/create-recipe.json --jsonArray
+  # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeCategory --drop --file ./test/create-recipeCategory.json
+  # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeIngredient --drop --file ./test/create-recipeIngredient.json
+  mongoimport --db socobo_test --collection fooditemtemplate --drop --file ./data/create-fooditemtemplate.json --jsonArray
+  # TODO: Add Demo Data: mongoimport --db socobo_test --collection foodItem --drop --file ./test/create-foodItem.json
+  # TODO: Add Demo Data: mongoimport --db socobo_test --collection foodItemCategory --drop --file ./test/create-foodItemCategory.json
+  # TODO: Add Demo Data: mongoimport --db socobo_test --collection foodItemUnit --drop --file ./test/create-foodItemUnit.json
 
 fi

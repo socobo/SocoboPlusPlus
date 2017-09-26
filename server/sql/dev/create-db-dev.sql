@@ -1,2 +1,0 @@
-DROP DATABASE IF EXISTS socobo_dev;
-CREATE DATABASE socobo_dev;

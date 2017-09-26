@@ -2,8 +2,6 @@ import { IsNotEmpty, IsNumber, IsString, Length, MinLength } from "class-validat
 import { Validatable, ValidationGroup } from "../../app/index";
 
 export class RecipeStep implements Validatable {
-  public id: number;
-  public recipeId: number;
   @IsNotEmpty({
     groups: [ValidationGroup.RECIPE]
   })
@@ -25,25 +23,11 @@ export class RecipeStep implements Validatable {
     groups: [ValidationGroup.RECIPE]
   })
   public stepDescription: string;
-  public createdDate: number;
-  public lastModifiedDate: number;
 
   public clone (step: RecipeStep): RecipeStep {
-    this.id = step.id;
-    this.recipeId = step.recipeId;
     this.stepTitle = step.stepTitle;
     this.stepDescription = step.stepDescription;
     this.stepNumber = step.stepNumber;
-    return this;
-  }
-
-  public setId (id: number): RecipeStep {
-    this.id = id;
-    return this;
-  }
-
-  public setRecipeId (recipeId: number): RecipeStep {
-    this.recipeId = recipeId;
     return this;
   }
 
@@ -59,16 +43,6 @@ export class RecipeStep implements Validatable {
 
   public setTitle (stepTitle: string): RecipeStep {
     this.stepTitle = stepTitle;
-    return this;
-  }
-
-  public setCreated (createdDate: number): RecipeStep {
-    this.createdDate = createdDate;
-    return this;
-  }
-
-  public setLastModified (lastModifiedDate: number): RecipeStep {
-    this.lastModifiedDate = lastModifiedDate;
     return this;
   }
 }

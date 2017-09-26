@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  mongo-seed-user:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection socobouser --drop --file /seed-data/create-socoboUser.json --jsonArray"'
+  mongo-seed-recipe:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection recipe --drop --file /seed-data/create-recipe.json --jsonArray"'
+  mongo-seed-fooditemtemplate:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection fooditemtemplate --drop --file ./seed-data/create-fooditemtemplate.json --jsonArray"'
+  mongo-seed-fooditem:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection fooditem --drop --file /seed-data/create-fooditem.json --jsonArray"'
+  mongo-seed-fooditemcategory:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection fooditemcategory --drop --file /seed-data/create-fooditemcategory.json --jsonArray"'
+  mongo-seed-fooditemunit:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection fooditemunit --drop --file /seed-data/create-fooditemunit.json --jsonArray"'
