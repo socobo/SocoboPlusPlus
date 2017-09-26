@@ -1,0 +1,15 @@
+[
+  {
+    "_id" : {"$oid":"59a2f14d7f4daed7367bc676"},
+    "name": "litre",
+    "created": 1503849392349,
+    "lastModified": 1503849392349,
+    "foodItem_id": {"$oid":"59a2ef66b9c6c5139160b4d8"}
+  },{
+    "_id" : {"$oid":"59a2f14eae4fedd7d86f2d9b"},
+    "name": "millilitre",
+    "created": 1503849392349,
+    "lastModified": 1503849392349,
+    "foodItem_id": {"$oid":"59a2ef66b9c6c5139160b4d8"}
+  }
+]

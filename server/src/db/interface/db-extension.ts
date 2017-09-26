@@ -1,19 +1,12 @@
-// import {
-//   RecipeRepository, RecipeStepRepository
-// } from "../../../recipe/index";
-// import {
-//   SocoboUserImageRepository, SocoboUserProviderRepository,
-//   SocoboUserRepository, SocoboUserRoleRepository
-// } from "../../../socobouser/index";
-
+import { FoodItemTemplateRepository } from "../../food/index";
+import { RecipeRepository } from "../../recipe/index";
 import { SocoboUserRepository } from "../../socobouser/index";
 
 // TODO: extend with new collection repositories
-export interface DbExtensions {
+export interface DbExtension {
+  fooditemTemplate: FoodItemTemplateRepository;
   socobouser: SocoboUserRepository;
-  // socobouserRoles: SocoboUserRoleRepository;
-  // socobouserProviders: SocoboUserProviderRepository;
-  // socobouserImages: SocoboUserImageRepository;
+  recipe: RecipeRepository;
   // recipes: RecipeRepository;
   // recipeSteps: RecipeStepRepository;
 }

@@ -1,20 +1,15 @@
 import { NextFunction, Response } from "express";
 import * as jwt from "jsonwebtoken";
-// import { IDatabase } from "pg-promise";
-// import {
-//   ApiError, DbExtensions, ERRORS, ExtractRequestBodyResult, SocoboRequest
-// } from "../../app/index";
-
 import {
   ApiError, ERRORS, ExtractRequestBodyResult, SocoboRequest
 } from "../../app/index";
-
-import { SocoboUser, SocoboUserRoleTypes } from "../../socobouser/index";
+import { DbExtension } from "../../db/interface/db-extension";
+import { SocoboUser, SocoboUserRoleType } from "../../socobouser/index";
 import { Config } from "./../../config";
 
 export class AuthValidationMiddleware {
 
-  constructor (private _db: any) {} // TODO: any wird zu DbExtension
+  constructor (private _db: DbExtension) {}
 
   public checkRequest (req: SocoboRequest): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -36,12 +31,7 @@ export class AuthValidationMiddleware {
       }
 
       req.requestData = {};
-
-      if (hasEmailProperty) {
-        req.requestData.isEmailLogin = true;
-      } else {
-        req.requestData.isEmailLogin = false;
-      }
+      req.requestData.isEmailLogin = hasEmailProperty;
 
       resolve();
     });
@@ -95,7 +85,7 @@ export class AuthValidationMiddleware {
     });
   }
 
-  public checkValidUser (req: SocoboRequest, restrictedRole: SocoboUserRoleTypes): Promise<any> {
+  public checkValidUser (req: SocoboRequest, restrictedRole: SocoboUserRoleType): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!req.requestData.hasOwnProperty("decoded")) {
         const err: ApiError = new ApiError(ERRORS.REQUEST_BODY_AUTHCHECK.withArgs("a decoded Object"))
@@ -103,10 +93,10 @@ export class AuthValidationMiddleware {
           .addSourceMethod("checkValidUser(..)");
         return reject(err);
       }
-      this._db.socobousers.getUserByEmail(req.requestData.decoded.email)
+      this._db.socobouser.getUserByEmail(req.requestData.decoded.email)
         .then((user: SocoboUser) => {
           req.requestData = {};
-          if (user.socoboUserRoleId === restrictedRole) {
+          if (user.role === restrictedRole) {
             resolve();
           } else {
             const err: ApiError = new ApiError(ERRORS.USER_NOT_AUTHORIZED)
