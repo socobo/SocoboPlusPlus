@@ -6,34 +6,29 @@ import * as express from "express";
 import * as http from "http";
 import * as multer from "multer";
 import * as path from "path";
-import * as pgPromise from "pg-promise";
 import * as uuid from "uuid";
 import * as winston from "winston";
+// app
+import {
+  ApiError, CryptoUtils, ERRORS, FilesystemImageService, ImageService,
+  LogHandler, LogRoute, ModelValidationHandler, ModelValidationMiddleware
+} from "./app/index";
+// auth
+import {
+  AuthHandler, AuthRoute, AuthService, AuthValidationHandler, AuthValidationMiddleware
+} from "./auth/index";
 // server config
 import { Config } from "./config";
 // database setup
 import * as db from "./db/index";
-// handler
-import { AuthValidationHandler, ModelValidationHandler } from "./logic/handler/index";
-import { AuthHandler, LogHandler, RecipeHandler, UserHandler } from "./logic/handler/index";
-// middleware
+// fooditem
+import { FoodItemTemplateHandler, FoodItemTemplateRoute } from "./food/index";
+// recipe
 import {
-  AuthValidationMiddleware, ModelValidationMiddleware, RecipeMiddleware
-} from "./logic/middleware/index";
-// services
-import {
-  AuthService,
-  FilesystemImageService,
-  ImageService
-} from "./logic/services/index";
-// server utils
-import {
-  CryptoUtils
-} from "./logic/utils/index";
-// routes
-import {
-  AuthRoute, LogRoute, RecipeRoute, UsersRoute
-} from "./routes/api/v1/index";
+  RecipeHandler, RecipeMiddleware, RecipeRoute
+} from "./recipe/index";
+// socobouser
+import { SocoboUserHandler, SocoboUserMiddleware, SocoboUsersRoute } from "./socobouser/index";
 
 class Server {
   private _app: express.Application;
@@ -43,19 +38,22 @@ class Server {
   private _cryptoUtils: CryptoUtils;
 
   private _recipeUpload: multer.Instance;
+  private _socobouserImagesUpload: multer.Instance;
 
   private _authService: AuthService;
   private _imgService: ImageService;
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
+  private _socoboUserMiddleware: SocoboUserMiddleware;
   private _recipeMiddleware: RecipeMiddleware;
 
   private _authValidationHandler: AuthValidationHandler;
   private _modelValidationHandler: ModelValidationHandler;
 
   private _authHandler: AuthHandler;
-  private _userHandler: UserHandler;
+  private _fooditemTemplateHandler: FoodItemTemplateHandler;
+  private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
   private _logHandler: LogHandler;
 
@@ -108,7 +106,7 @@ class Server {
 
   private _configLogging (): void {
     // check environment and setup winston
-    switch ((process.env.NODE_ENV || Config.NODE_ENV)) {
+    switch ((process.env["NODE_ENV"] || Config.NODE_ENV)) {
       case "test":
         winston.configure({
           transports: [
@@ -148,7 +146,7 @@ class Server {
   }
 
   private _configServer (): void {
-    this._port = process.env.PORT || Config.PORT;
+    this._port = Number(process.env["PORT"]) || Config.PORT;
     this._app.use(cors());
     this._app.use(bodyParser.urlencoded({ extended: true }));
     this._app.use(bodyParser.json());
@@ -175,7 +173,8 @@ class Server {
   private _middleware (): void {
     this._authValidationMiddleware = new AuthValidationMiddleware(db);
     this._modelValidationMiddleware = new ModelValidationMiddleware();
-    this._recipeMiddleware = new RecipeMiddleware(db);
+    this._socoboUserMiddleware = new SocoboUserMiddleware();
+    this._recipeMiddleware = new RecipeMiddleware();
   }
 
   /**
@@ -185,8 +184,9 @@ class Server {
     this._authValidationHandler = new AuthValidationHandler(this._authValidationMiddleware);
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
-    this._userHandler = new UserHandler(db);
-    this._recipeHandler = new RecipeHandler(db, this._recipeMiddleware, this._imgService);
+    this._fooditemTemplateHandler = new FoodItemTemplateHandler(db);
+    this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
+    this._recipeHandler = new RecipeHandler(db, this._imgService);
     this._logHandler = new LogHandler();
   }
 
@@ -196,13 +196,14 @@ class Server {
   private _uploader (): void {
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, `${process.cwd()}/${process.env.IMAGE_TMP_DIR || Config.IMAGE_TMP_DIR}`);
+        cb(null, `${process.cwd()}/${process.env["IMAGE_TMP_DIR"] || Config.IMAGE_TMP_DIR}`);
       },
       filename: (req, file, cb) => {
-        cb(null, file.fieldname + "_" + uuid());
+        cb(null, file.fieldname + "_" + uuid() + "_" + file.originalname);
       }
     });
     this._recipeUpload = multer({storage});
+    this._socobouserImagesUpload = multer({storage});
   }
 
   /**
@@ -221,9 +222,18 @@ class Server {
   private _apiRoutes (): void {
     // set routes to paths
     this._app.use("/api/v1/auth", this._authRoute());
-    this._app.use("/api/v1/users", this._usersRoute());
-    this._app.use("/api/v1/recipes", this._recipeRoute());
-    this._app.use("/api/v1/logs", this._logsRoute());
+    this._app.use("/api/v1/fooditemtemplate", this._fooditemTemplateRoute());
+    this._app.use("/api/v1/socobouser", this._socobouserRoute());
+    this._app.use("/api/v1/recipe", this._recipeRoute());
+    this._app.use("/api/v1/log", this._logRoute());
+
+    // Generic Error Handling for all errors which were not handled by the app
+    this._app.use((err: any, req: any, res: any, next: any) => {
+      winston.error(err);
+      const error = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+        .addCause(err);
+      res.status(error.statusCode).json(error.forResponse());
+    });
   }
 
   private _authRoute (): express.Router {
@@ -234,11 +244,21 @@ class Server {
         this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
-  private _usersRoute (): express.Router {
+  private _fooditemTemplateRoute (): express.Router {
     // create new router
     const router: express.Router = express.Router();
-    // init and return users route
-    return new UsersRoute(router, this._userHandler, this._authValidationHandler).createRoutes();
+    // init and return fooditem template route
+    return new FoodItemTemplateRoute(router, this._fooditemTemplateHandler,
+        this._authValidationHandler, this._modelValidationHandler).createRoutes();
+  }
+
+  private _socobouserRoute (): express.Router {
+    // create new router
+    const router: express.Router = express.Router();
+    // init and return socobousers route
+    return new SocoboUsersRoute(router, this._socoboUserHandler,
+        this._authValidationHandler, this._modelValidationHandler,
+        this._socobouserImagesUpload, this._socoboUserMiddleware).createRoutes();
   }
 
   private _recipeRoute (): express.Router {
@@ -246,10 +266,11 @@ class Server {
     const router: express.Router = express.Router();
     // init and return recipe route
     return new RecipeRoute(router, this._recipeUpload, this._recipeHandler,
-        this._authValidationHandler, this._modelValidationHandler).createRoutes();
+        this._authValidationHandler, this._modelValidationHandler,
+        this._recipeMiddleware).createRoutes();
   }
 
-  private _logsRoute (): express.Router {
+  private _logRoute (): express.Router {
     // create new router
     const router: express.Router = express.Router();
     // init and return logs route

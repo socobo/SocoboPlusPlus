@@ -1,0 +1,72 @@
+[
+  {
+    "_id" : {"$oid":"59a2ef66b9c6c5139160b4d1"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "title": "TestData1",
+    "description": "TestData1",
+    "userId": "59a2ee5d6b1ad6c629e9b2fc",
+    "steps": [
+        {
+            "stepTitle": "TestDataStep1",
+            "stepDescription": "TestDataStep1",
+            "stepNumber": 1
+        },
+        {
+            "stepTitle": "TestDataStep2",
+            "stepDescription": "TestDataStep2",
+            "stepNumber": 2
+        }
+    ]
+  },
+  {
+    "_id" : {"$oid":"59a2ef66b9c6c5139160b4d2"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "title": "TestData1",
+    "description": "TestData1",
+    "userId": "59a2ee5d6b1ad6c629e9b2fc",
+    "steps": [
+        {
+            "stepTitle": "TestDataStep1",
+            "stepDescription": "TestDataStep1",
+            "stepNumber": 1
+        },
+        {
+            "stepTitle": "TestDataStep2",
+            "stepDescription": "TestDataStep2",
+            "stepNumber": 2
+        },
+        {
+            "stepTitle": "TestDataStep3",
+            "stepDescription": "TestDataStep3",
+            "stepNumber": 3
+        }
+    ]
+  },
+  {
+    "_id" : {"$oid":"59a2ef66b9c6c5139160b4d3"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "title": "TestData3",
+    "description": "TestData3",
+    "userId": "59a2ee5d6b1ad6c629e9b2fc",
+    "steps": [
+        {
+            "stepTitle": "TestDataStep1",
+            "stepDescription": "TestDataStep1",
+            "stepNumber": 1
+        },
+        {
+            "stepTitle": "TestDataStep2",
+            "stepDescription": "TestDataStep2",
+            "stepNumber": 2
+        },
+        {
+            "stepTitle": "TestDataStep3",
+            "stepDescription": "TestDataStep3",
+            "stepNumber": 3
+        }
+    ]
+  }
+]
