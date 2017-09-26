@@ -5,6 +5,8 @@ import { ErrorType } from "./error-type";
  * 1 => User errors
  * 2 => Auth errors
  * 3 => Validation errors
+ * 4 => Recipe errors
+ * 5 => FoodItem errors
  */
 export class ERRORS {
   public static INTERNAL_SERVER_ERROR = new ErrorType(
@@ -32,6 +34,11 @@ export class ERRORS {
     "internal.error.upload.image",
     500
   );
+  public static IMAGE_DELETION = new ErrorType(
+    "00008",
+    "internal.error.delete.image",
+    500
+  );
   public static GENERIC_BASE_NOT_FOUND = new ErrorType(
     "10000",
     "generic.base.not.found",
@@ -46,6 +53,21 @@ export class ERRORS {
     "10002",
     "user.not.an.admin",
     403
+  );
+  public static USER_NO_UPDATE_TYPE = new ErrorType(
+    "10003",
+    "user.no.update.type",
+    400
+  );
+  public static USER_INVALID_UPDATE_TYPE = new ErrorType(
+    "10004",
+    "user.invalid.update.type",
+    400
+  );
+  public static USER_INVALID_UPDATE_BODY = new ErrorType(
+    "10005",
+    "user.invalid.update.body",
+    400
   );
   public static AUTH_WRONG_PASSWORD = new ErrorType(
     "20001",
@@ -72,19 +94,9 @@ export class ERRORS {
     "auth.token.error",
     401
   );
-  public static AUTH_PW_MISSMATCH = new ErrorType(
-    "20006",
-    "auth.password.missmatch",
-    401
-  );
   public static AUTH_NO_HASHED_PASSWORD = new ErrorType(
     "20007",
-    "internal.no.password.hash",
-    500
-  );
-  public static AUTH_PW_HASH_GENERATION = new ErrorType(
-    "20008",
-    "internal.error.create.salt",
+    "internal.error.create.hash",
     500
   );
   public static AUTH_SALT_GENERATION = new ErrorType(
@@ -140,6 +152,16 @@ export class ERRORS {
   public static RECIPE_NON_AVAILABLE = new ErrorType(
     "40003",
     "recipes.empty",
+    404
+  );
+  public static RECIPE_NO_IMAGE_TITLE = new ErrorType(
+    "40004",
+    "recipes.no.image.title",
+    400
+  );
+  public static FOODITEMTEMPLTE_NOT_FOUND = new ErrorType(
+    "50001",
+    "fooditem.template.not.found",
     404
   );
 }

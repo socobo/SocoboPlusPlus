@@ -23,11 +23,10 @@ export class RecipeStepsAreUnique implements ValidatorConstraintInterface {
   public defaultMessage (args: ValidationArguments): string {
     return "Recipe step numbers must be unique";
   }
-
 }
 
 export function AreRecipeStepsUnique (validationOptions?: ValidationOptions) {
-  return (object: Object, propertyName: string) => {
+  return (object: object, propertyName: string) => {
     registerDecorator({
       constraints: [],
       options: validationOptions,

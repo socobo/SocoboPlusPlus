@@ -1,0 +1,21 @@
+[
+  {
+    "_id" : {"$oid":"59a2f0667898dca760b01e56"},
+    "name": "h-milk",
+    "created": 1503849392349,
+    "lastModified": 1503849392349,
+    "foodItem_id": {"$oid":"59a2ef66b9c6c5139160b4d8"}
+  },{
+    "_id" : {"$oid":"59a2f07e5db28c0e121d48d2"},
+    "name": "raw milk",
+    "created": 1503849392349,
+    "lastModified": 1503849392349,
+    "foodItem_id": {"$oid":"59a2ef66b9c6c5139160b4d8"}
+  },{
+    "_id" : {"$oid":"59a2f080218278a691dc5d41"},
+    "name": "gen-milk",
+    "created": 1503849392349,
+    "lastModified": 1503849392349,
+    "foodItem_id": {"$oid":"59a2ef66b9c6c5139160b4d8"}
+  }
+]
