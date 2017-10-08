@@ -2,45 +2,29 @@
 
 process.env["NODE_ENV"] = "test";
 
-import * as chai from "chai";
-import chaiHttp = require("chai-http");
+import { expect } from "chai";
 import * as mocha from "mocha";
-import Server from "./../src/server";
-
-chai.use(chaiHttp);
+import { TestHelper } from "./helper/TestHelper";
 
 describe("RecipeRoute - API v1", () => {
 
-  const expect = chai.expect;
-
-  // define login function
-  const login = async (): Promise<string|any> => {
-    try {
-      const user = { email: "admin2@test.test", password: "password" };
-      const result = await chai.request(Server).post("/api/v1/auth/login").send(user);
-      return result.body.token;
-    } catch (error) {
-      return error;
-    }
-  };
-
   it("GET /api/v1/recipe should pass if a token is provided", async () => {
-    const accessToken = await login();
-    const result = await chai.request(Server).get("/api/v1/recipe").set("x-access-token", accessToken);
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().get("/api/v1/recipe").set("x-access-token", accessToken);
     expect(result.body).to.be.not.null;
     expect(result).to.be.json;
     expect(result).to.be.status(200);
   });
 
   it("GET /api/v1/recipe should return all recipes", async () => {
-    const accessToken = await login();
-    const result = await chai.request(Server).get("/api/v1/recipe").set("x-access-token", accessToken);
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().get("/api/v1/recipe").set("x-access-token", accessToken);
     expect(result.body.length).to.equal(3);
   });
 
   it("GET /api/v1/recipe/search?property=searchTerm should return the searched recipe", async () => {
-    const accessToken = await login();
-    const result = await chai.request(Server).get("/api/v1/recipe/search/field")
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().get("/api/v1/recipe/search/field")
       .query({title: "TestData3"})
       .set("x-access-token", accessToken);
     expect(result.body[0].title).to.equal("TestData3");
@@ -48,8 +32,8 @@ describe("RecipeRoute - API v1", () => {
 
   it("GET /api/v1/recipe/:id should return one recipe", async () => {
     const id = "59a2ef66b9c6c5139160b4d1";
-    const accessToken = await login();
-    const result = await chai.request(Server).get(`/api/v1/recipe/${id}`).set("x-access-token", accessToken);
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().get(`/api/v1/recipe/${id}`).set("x-access-token", accessToken);
     expect(result.body.title).to.be.equal("TestData1");
   });
 
@@ -73,8 +57,8 @@ describe("RecipeRoute - API v1", () => {
       title: "NewRecipe",
       userId: "59a2ee5d6b1ad6c629e9b2fc"
     };
-    const accessToken = await login();
-    const result = await chai.request(Server).post(`/api/v1/recipe`)
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().post(`/api/v1/recipe`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
       .send(recipe);
@@ -102,8 +86,8 @@ describe("RecipeRoute - API v1", () => {
     };
 
     try {
-      const accessToken = await login();
-      const result = await chai.request(Server).post(`/api/v1/recipe`)
+      const accessToken = await TestHelper.getToken();
+      const result = await TestHelper.getAgent().post(`/api/v1/recipe`)
         .set("x-access-token", accessToken)
         .set("Content-Type", "application/json")
         .send(recipe);
@@ -140,8 +124,8 @@ describe("RecipeRoute - API v1", () => {
     };
 
     try {
-      const accessToken = await login();
-      const result = await chai.request(Server).post(`/api/v1/recipe`)
+      const accessToken = await TestHelper.getToken();
+      const result = await TestHelper.getAgent().post(`/api/v1/recipe`)
         .set("x-access-token", accessToken)
         .set("Content-Type", "application/json")
         .send(recipe);
@@ -158,14 +142,14 @@ describe("RecipeRoute - API v1", () => {
 
   it("DELETE /api/v1/recipe:id should delete the recipe", async () => {
     const id = "59a2ef66b9c6c5139160b4d1";
-    const accessToken = await login();
-    const resultBeforeDeletion = await chai.request(Server)
+    const accessToken = await TestHelper.getToken();
+    const resultBeforeDeletion = await TestHelper.getAgent()
       .get("/api/v1/recipe")
       .set("x-access-token", accessToken);
-    const result = await chai.request(Server).del(`/api/v1/recipe/${id}`)
+    const result = await TestHelper.getAgent().del(`/api/v1/recipe/${id}`)
       .set("x-access-token", accessToken);
     expect(result).to.be.status(200);
-    const resultAfterDeletion = await chai.request(Server)
+    const resultAfterDeletion = await TestHelper.getAgent()
       .get("/api/v1/recipe")
       .set("x-access-token", accessToken);
     expect(resultAfterDeletion.body.length).to.equal(resultBeforeDeletion.body.length - 1);
@@ -193,8 +177,8 @@ describe("RecipeRoute - API v1", () => {
       title: "ChangedRecipe",
       userId: "59a2ee5d6b1ad6c629e9b2fc"
     };
-    const accessToken = await login();
-    const result = await chai.request(Server).put(`/api/v1/recipe/${id}`)
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
       .send(newRecipe);
@@ -210,8 +194,8 @@ describe("RecipeRoute - API v1", () => {
       duration: 1,
       title: "ChangedRecipe"
     };
-    const accessToken = await login();
-    const result = await chai.request(Server).put(`/api/v1/recipe/${id}`)
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
       .send(newRecipe);
@@ -220,61 +204,6 @@ describe("RecipeRoute - API v1", () => {
     expect(result.body.description).to.be.equal("TestData3");
     expect(result.body.steps[1].stepTitle).to.be.equal("TestDataStep2");
   });
-
-  // it("GET /api/v1/fooditemtemplate/:id should return one template w/ id, name, created & lastModified property",
-  //   async () => {
-  //     const id = "59a2eea98a5a150e9e829409";
-  //     const token = await login();
-  //     const result = await chai.request(Server).get(`/api/v1/fooditemtemplate/${id}`).set("x-access-token", token);
-  //     expect(result.body).to.deep.property("id");
-  //     expect(result.body).to.deep.property("name");
-  //     expect(result.body).to.deep.property("created");
-  //     expect(result.body).to.deep.property("lastModified");
-  //   });
-
-  // it("PUT /api/v1/fooditemtemplate/:id should update the template and return the modified", async () => {
-  //   const id = "59a2eea98a5a150e9e829409";
-  //   const accessToken = await login();
-
-  //   const resultBefore = await chai.request(Server)
-  //     .get(`/api/v1/fooditemtemplate/${id}`)
-  //     .set("x-access-token", accessToken);
-
-  //   const resultAfter = await chai.request(Server)
-  //     .put(`/api/v1/fooditemtemplate/${id}`)
-  //     .set("x-access-token", accessToken)
-  //     .set("Content-Type", "application/json")
-  //     .send({ name: "milkXY"});
-
-  //   expect(resultAfter.body.name).to.equal("milkXY");
-  //   expect(resultAfter.body.name).to.not.equal(resultBefore.body.name);
-  //   expect(resultAfter.body.lastModified).to.not.equal(resultBefore.body.lastModified);
-  // });
-
-  // it("POST /api/v1/fooditemtemplate should save a new template return it", async () => {
-  //   const accessToken = await login();
-  //   const result = await chai.request(Server)
-  //     .post(`/api/v1/fooditemtemplate`)
-  //     .set("x-access-token", accessToken)
-  //     .set("Content-Type", "application/json")
-  //     .send({ name: "sugar"});
-
-  //   expect(result.body.name).to.equal("sugar");
-  //   expect(result.body).to.deep.property("id");
-  //   expect(result.body).to.deep.property("name");
-  //   expect(result.body).to.deep.property("created");
-  //   expect(result.body).to.deep.property("lastModified");
-  // });
-
-  // it("DELETE /api/v1/fooditemtemplate/:id should delete
-  // the template and return the removed template id", async () => {
-  //   const id = "59a2eea98a5a150e9e829409";
-  //   const accessToken = await login();
-  //   const result = await chai.request(Server)
-  //     .del(`/api/v1/fooditemtemplate/${id}`)
-  //     .set("x-access-token", accessToken);
-  //   expect(result.body.id).to.equal(id);
-  // });
 });
 
 /*tslint:enable:no-unused-expression*/
