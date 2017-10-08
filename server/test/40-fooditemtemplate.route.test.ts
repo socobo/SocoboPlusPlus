@@ -2,54 +2,40 @@
 
 process.env["NODE_ENV"] = "test";
 
-import * as chai from "chai";
-import chaiHttp = require("chai-http");
+import { expect } from "chai";
 import * as mocha from "mocha";
-import Server from "./../src/server";
-
-chai.use(chaiHttp);
+import { TestHelper } from "./helper/TestHelper";
 
 describe("FoodItemTemplateRoute - API v1", () => {
 
-  const expect = chai.expect;
-
-  // define login function
-  const login = async (): Promise<string|any> => {
-    try {
-      const user = { email: "admin2@test.test", password: "password" };
-      const result = await chai.request(Server).post("/api/v1/auth/login").send(user);
-      return result.body.token;
-    } catch (error) {
-      return error;
-    }
-  };
-
   it("GET /api/v1/fooditemtemplate should pass if a token is provided", async () => {
-    const accessToken = await login();
-    const result = await chai.request(Server).get("/api/v1/fooditemtemplate").set("x-access-token", accessToken);
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().get("/api/v1/fooditemtemplate").set("x-access-token", accessToken);
     expect(result.body).to.be.not.null;
     expect(result).to.be.json;
     expect(result).to.be.status(200);
   });
 
   it("GET /api/v1/fooditemtemplate should return all templates", async () => {
-    const accessToken = await login();
-    const result = await chai.request(Server).get("/api/v1/fooditemtemplate").set("x-access-token", accessToken);
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().get("/api/v1/fooditemtemplate").set("x-access-token", accessToken);
     expect(result.body.length).to.equal(3);
   });
 
   it("GET /api/v1/fooditemtemplate/:id should return one template", async () => {
     const id = "59a2eea98a5a150e9e829409";
-    const accessToken = await login();
-    const result = await chai.request(Server).get(`/api/v1/fooditemtemplate/${id}`).set("x-access-token", accessToken);
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().get(`/api/v1/fooditemtemplate/${id}`).set("x-access-token", accessToken);
     expect(result.body).to.not.null;
   });
 
   it("GET /api/v1/fooditemtemplate/:id should return one template w/ id, name, created & lastModified property",
     async () => {
       const id = "59a2eea98a5a150e9e829409";
-      const token = await login();
-      const result = await chai.request(Server).get(`/api/v1/fooditemtemplate/${id}`).set("x-access-token", token);
+      const accessToken = await TestHelper.getToken();
+      const result = await TestHelper.getAgent()
+        .get(`/api/v1/fooditemtemplate/${id}`)
+        .set("x-access-token", accessToken);
       expect(result.body).to.deep.property("id");
       expect(result.body).to.deep.property("name");
       expect(result.body).to.deep.property("created");
@@ -58,13 +44,12 @@ describe("FoodItemTemplateRoute - API v1", () => {
 
   it("PUT /api/v1/fooditemtemplate/:id should update the template and return the modified", async () => {
     const id = "59a2eea98a5a150e9e829409";
-    const accessToken = await login();
-
-    const resultBefore = await chai.request(Server)
+    const accessToken = await TestHelper.getToken();
+    const resultBefore = await TestHelper.getAgent()
       .get(`/api/v1/fooditemtemplate/${id}`)
       .set("x-access-token", accessToken);
 
-    const resultAfter = await chai.request(Server)
+    const resultAfter = await TestHelper.getAgent()
       .put(`/api/v1/fooditemtemplate/${id}`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
@@ -76,8 +61,8 @@ describe("FoodItemTemplateRoute - API v1", () => {
   });
 
   it("POST /api/v1/fooditemtemplate should save a new template return it", async () => {
-    const accessToken = await login();
-    const result = await chai.request(Server)
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent()
       .post(`/api/v1/fooditemtemplate`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
@@ -92,8 +77,8 @@ describe("FoodItemTemplateRoute - API v1", () => {
 
   it("DELETE /api/v1/fooditemtemplate/:id should delete the template and return the removed template id", async () => {
     const id = "59a2eea98a5a150e9e829409";
-    const accessToken = await login();
-    const result = await chai.request(Server)
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent()
       .del(`/api/v1/fooditemtemplate/${id}`)
       .set("x-access-token", accessToken);
     expect(result.body.id).to.equal(id);
