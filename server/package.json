@@ -1,6 +1,6 @@
 {
   "name": "socobo-backend",
-  "version": "0.0.12",
+  "version": "0.1.1",
   "description": "Backend for Socobo",
   "private": true,
   "author": {
@@ -11,32 +11,47 @@
   ],
   "license": "MIT",
   "scripts": {
-    "start:p": "npm-run-all create:f create:l tsc --parallel serve open:b",
-    "start:d": "npm-run-all create:f create:l tsc --parallel tsc:w serve:w",
-    "start:m": "brew services start mongodb",
-    "setup:db:d": "cd ./sql && ./automate-creation.sh -d",
-    "setup:db:t": "cd ./sql && ./automate-creation.sh -t",
-    "tsc": "tsc",
-    "tsc:w": "tsc -w",
-    "serve": "node dist/server.js",
-    "serve:w": "nodemon dist/server.js",
-    "test": "npm-run-all setup:db:t create:l create:f test:m",
-    "test:docker": "npm-run-all docker:mongodb:t create:l create:f test:m",
-    "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts'",
-    "test:bc": "npm-run-all tsc lint test",
-    "create:l": "mkdir -p logs",
-    "create:f": "mkdir -p socobo_data tmp",
-    "clean": "rm -rf dist/",
+
+    "clean": "npm-run-all clean:d clean:f clean:l",
+    "clean:a": "npm-run-all clean clean:n",
+    "clean:d": "rm -rf dist/",
     "clean:f": "rm -rf tmp/ socobo_data/",
     "clean:l": "rm -rf logs/",
-    "clean:a": "rm -rf dist/ node_modules/ logs/ tmp/ socobo_data/",
-    "open:b": "open http://localhost:8282",
+    "clean:n": "rm -rf node_modules/",
+
+    "create": "npm-run-all create:l create:f",
+    "create:l": "mkdir -p logs",
+    "create:f": "mkdir -p socobo_data tmp",
+
+    "docker:c": "docker run -it --link socobo_mongodb_1:mongo --net socobo_default --rm mongo sh -c 'exec mongo \"mongodb:27017\"'",
+    "docker:db:d": "cd ./sql && ./docker-start-mongodb.sh -d",
+    "docker:db:t": "cd ./sql && ./docker-start-mongodb.sh -t",
+    "docker:r": "docker rm --force $(docker ps -a -q)",
+
     "lint": "tslint 'src/**/*.ts' 'test/**/*.test.ts'",
     "lint:f": "tslint --force --format codeFrame 'src/**/*.ts' 'test/**/*.test.ts'",
-    "docker:rm": "docker rm --force $(docker ps -a -q)",
-    "docker:mongodb:d": "cd ./sql && ./start-mongodb.sh -d",
-    "docker:mongodb:t": "cd ./sql && ./start-mongodb.sh -t",
-    "docker:client": "docker run -it --link socobo_mongodb_1:mongo --net socobo_default  --rm mongo sh -c 'exec mongo \"mongodb:27017\"'"
+
+    "serve": "node dist/server.js",
+    "serve:w": "nodemon dist/server.js",
+
+    "setup:db:d": "cd ./sql && ./locale-demo-data-creation.sh -d",
+    "setup:db:t": "cd ./sql && ./locale-demo-data-creation.sh -t",
+
+    "start:p": "npm-run-all create tsc --parallel serve open:b",
+    "start:d": "npm-run-all create tsc --parallel tsc:w serve:w",
+
+    "start:m": "brew services start mongodb",
+    "stop:m": "brew services stop mongodb",
+
+    "test": "npm-run-all setup:db:t create test:m",
+    "test:bc": "npm-run-all tsc lint test",
+    "test:d": "npm-run-all docker:mongodb:t create test:m",
+    "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts'",
+
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+
+    "open:b": "open http://localhost:8282"
   },
   "dependencies": {
     "body-parser": "~1.17.2",

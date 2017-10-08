@@ -65,13 +65,13 @@
 
 ```bash
 #Start a mongo db on the default port which is populated with mock data
-npm run docker:mongodb:d
+npm run docker:db:d
 
 #Start a mongodb terminal client 
-npm run docker:client
+npm run docker:c
 
 # Clean up your containers
-npm run docker:rm
+npm run docker:r
 ```
 
 4. To add new mock data, add a new mongodb-seed section in the docker-compose file
