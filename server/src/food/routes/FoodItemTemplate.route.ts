@@ -23,12 +23,12 @@ export class FoodItemTemplateRoute {
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
-      this._modelValidationHandler.validateObject(new FoodItemTemplate(), [ValidationGroup.FOODITEMTEMPLATE]),
+      this._modelValidationHandler.validateObject(new FoodItemTemplate(), [ValidationGroup.FOODITEMBASE]),
       this._fooditemTemplateHandler.updateById);
 
     this._router.post("/",
       this._authValidationHandler.checkToken,
-      this._modelValidationHandler.validateObject(new FoodItemTemplate(), [ValidationGroup.FOODITEMTEMPLATE]),
+      this._modelValidationHandler.validateObject(new FoodItemTemplate(), [ValidationGroup.FOODITEMBASE]),
       this._fooditemTemplateHandler.save);
 
     this._router.delete("/:id",
