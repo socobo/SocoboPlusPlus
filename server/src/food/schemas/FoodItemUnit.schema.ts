@@ -1,4 +1,4 @@
-import { Schema, Types } from "mongoose";
+import { Schema } from "mongoose";
 
 export const foodItemUnitSchema = new Schema({
   created: {
@@ -7,7 +7,7 @@ export const foodItemUnitSchema = new Schema({
   },
   foodItemId: {
     ref: "FoodItem",
-    type: Types.ObjectId
+    type: Schema.Types.ObjectId
   },
   lastModified: {
     required: true,

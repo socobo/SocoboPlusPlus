@@ -17,11 +17,11 @@ then
 
   mongoimport --db socobo_test --collection socobouser --drop --file ./data/create-socobouser.json --jsonArray
   mongoimport --db socobo_test --collection recipe --drop --file ./data/create-recipe.json --jsonArray
-  # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeCategory --drop --file ./test/create-recipeCategory.json
-  # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeIngredient --drop --file ./test/create-recipeIngredient.json
+  # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeCategory --drop --file ./data/create-recipeCategory.json --jsonArray
+  # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeIngredient --drop --file ./data/create-recipeIngredient.json --jsonArray
+  mongoimport --db socobo_test --collection fooditem --drop --file ./data/create-fooditem.json --jsonArray
   mongoimport --db socobo_test --collection fooditemtemplate --drop --file ./data/create-fooditemtemplate.json --jsonArray
-  # TODO: Add Demo Data: mongoimport --db socobo_test --collection foodItem --drop --file ./test/create-foodItem.json
-  # TODO: Add Demo Data: mongoimport --db socobo_test --collection foodItemCategory --drop --file ./test/create-foodItemCategory.json
-  # TODO: Add Demo Data: mongoimport --db socobo_test --collection foodItemUnit --drop --file ./test/create-foodItemUnit.json
+  mongoimport --db socobo_test --collection fooditemunit --drop --file ./data/create-fooditemunit.json --jsonArray
+  # TODO: Add Demo Data: mongoimport --db socobo_test --collection fooditemcategory --drop --file ./data/create-fooditemcategory.json --jsonArray
 
 fi

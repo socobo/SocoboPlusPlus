@@ -2,6 +2,7 @@ import * as mongoose from "mongoose";
 import { ApiError, ErrorType, ErrorUtils, LogService } from "../app/index";
 import { Config } from "../config";
 import {
+  FoodItem, foodItemSchema,
   FoodItemTemplate, foodItemTemplateSchema,
   FoodItemUnit, foodItemUnitSchema
 } from "../food/index";
@@ -46,6 +47,9 @@ const fooditemTemplateModel = mongoose.model<mongoose.Document & FoodItemTemplat
 const fooditemUnitModel = mongoose.model<mongoose.Document & FoodItemUnit>("FoodItemUnit",
                                                                            foodItemUnitSchema,
                                                                            "fooditemunit");
+const fooditemModel = mongoose.model<mongoose.Document & FoodItem>("FoodItem",
+                                                                   foodItemSchema,
+                                                                   "fooditem");
 const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUser",
                                                                        socoboUserSchema,
                                                                        "socobouser");
