@@ -18,7 +18,7 @@ export class FoodItemUnitHandler {
 
   public getAllByFooditemId = async (req: Request, res: Response): Promise<void> => {
     try {
-      const foodItemId = new Types.ObjectId(req.params.foodItemId);
+      const foodItemId = new Types.ObjectId(req.params.id);
       const result = await this._db.fooditemUnit.getAllByFooditemId(foodItemId);
       res.status(200).json(result);
     } catch (error) {
@@ -39,6 +39,9 @@ export class FoodItemUnitHandler {
   public save = async (req: Request, res: Response): Promise<void> => {
     try {
       const unit = new FoodItemUnit().clone(req.body);
+
+      // TODO:  await this._db.fooditem.getById(unit.foodItemId);
+
       const result = await this._db.fooditemUnit.save(unit) as Types.ObjectId;
       res.status(201).json(unit.setId(result));
     } catch (error) {
@@ -49,7 +52,11 @@ export class FoodItemUnitHandler {
   public updateById = async (req: Request, res: Response): Promise<void> => {
     try {
       const unitId = new Types.ObjectId(req.params.id);
-      const updatedUnitName: string = req.body.name;
+      const foodItemId = req.body.foodItemId;
+      const updatedUnitName = req.body.name;
+
+      // TODO:  await this._db.fooditem.getById(foodItemId);
+
       const result = await this._db.fooditemUnit.updateById(unitId, updatedUnitName);
       res.status(200).json(result);
     } catch (error) {

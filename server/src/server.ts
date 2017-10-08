@@ -22,13 +22,18 @@ import { Config } from "./config";
 // database setup
 import * as db from "./db/index";
 // fooditem
-import { FoodItemTemplateHandler, FoodItemTemplateRoute } from "./food/index";
+import {
+  FoodItemTemplateHandler, FoodItemTemplateRoute,
+  FoodItemUnitHandler, FoodItemUnitRoute
+} from "./food/index";
 // recipe
 import {
   RecipeHandler, RecipeMiddleware, RecipeRoute
 } from "./recipe/index";
 // socobouser
-import { SocoboUserHandler, SocoboUserMiddleware, SocoboUsersRoute } from "./socobouser/index";
+import {
+  SocoboUserHandler, SocoboUserMiddleware, SocoboUsersRoute
+} from "./socobouser/index";
 
 class Server {
   private _app: express.Application;
@@ -53,6 +58,7 @@ class Server {
 
   private _authHandler: AuthHandler;
   private _fooditemTemplateHandler: FoodItemTemplateHandler;
+  private _fooditemUnitHandler: FoodItemUnitHandler;
   private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
   private _logHandler: LogHandler;
@@ -105,7 +111,6 @@ class Server {
   }
 
   private _configLogging (): void {
-    // check environment and setup winston
     switch ((process.env["NODE_ENV"] || Config.NODE_ENV)) {
       case "test":
         winston.configure({
@@ -185,6 +190,7 @@ class Server {
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
     this._fooditemTemplateHandler = new FoodItemTemplateHandler(db);
+    this._fooditemUnitHandler = new FoodItemUnitHandler(db);
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
     this._recipeHandler = new RecipeHandler(db, this._imgService);
     this._logHandler = new LogHandler();
@@ -220,61 +226,57 @@ class Server {
   }
 
   private _apiRoutes (): void {
-    // set routes to paths
     this._app.use("/api/v1/auth", this._authRoute());
     this._app.use("/api/v1/fooditemtemplate", this._fooditemTemplateRoute());
+    this._app.use("/api/v1/fooditemunit", this._fooditemUnitRoute());
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
     this._app.use("/api/v1/log", this._logRoute());
-
-    // Generic Error Handling for all errors which were not handled by the app
-    this._app.use((err: any, req: any, res: any, next: any) => {
-      winston.error(err);
-      const error = new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
-        .addCause(err);
-      res.status(error.statusCode).json(error.forResponse());
-    });
+    this._app.use(this._handleGenericErrors);
   }
 
   private _authRoute (): express.Router {
-    // create new router
     const router: express.Router = express.Router();
-    // init and return auth route
     return new AuthRoute(router, this._authHandler,
-        this._authValidationHandler, this._modelValidationHandler).createRoutes();
+      this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _fooditemTemplateRoute (): express.Router {
-    // create new router
     const router: express.Router = express.Router();
-    // init and return fooditem template route
     return new FoodItemTemplateRoute(router, this._fooditemTemplateHandler,
-        this._authValidationHandler, this._modelValidationHandler).createRoutes();
+      this._authValidationHandler, this._modelValidationHandler).createRoutes();
+  }
+
+  private _fooditemUnitRoute (): express.Router {
+    const router: express.Router = express.Router();
+    return new FoodItemUnitRoute(router, this._fooditemUnitHandler,
+      this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _socobouserRoute (): express.Router {
-    // create new router
     const router: express.Router = express.Router();
-    // init and return socobousers route
     return new SocoboUsersRoute(router, this._socoboUserHandler,
-        this._authValidationHandler, this._modelValidationHandler,
-        this._socobouserImagesUpload, this._socoboUserMiddleware).createRoutes();
+      this._authValidationHandler, this._modelValidationHandler,
+      this._socobouserImagesUpload, this._socoboUserMiddleware).createRoutes();
   }
 
   private _recipeRoute (): express.Router {
-    // create new router
     const router: express.Router = express.Router();
-    // init and return recipe route
     return new RecipeRoute(router, this._recipeUpload, this._recipeHandler,
-        this._authValidationHandler, this._modelValidationHandler,
-        this._recipeMiddleware).createRoutes();
+      this._authValidationHandler, this._modelValidationHandler,
+      this._recipeMiddleware).createRoutes();
   }
 
   private _logRoute (): express.Router {
-    // create new router
     const router: express.Router = express.Router();
-    // init and return logs route
     return new LogRoute(router, this._logHandler, this._authValidationHandler).createRoutes();
+  }
+
+  private _handleGenericErrors (err: any, req: express.Request,
+                                res: express.Response, next: express.NextFunction): void {
+    winston.error(err);
+    const error = new ApiError(ERRORS.INTERNAL_SERVER_ERROR).addCause(err);
+    res.status(error.statusCode).json(error.forResponse());
   }
 
   private _listen (): void {
@@ -284,7 +286,5 @@ class Server {
   }
 }
 
-// creater server class
 const server: Server = Server.bootstrap();
-// export application
 export default server.app;
