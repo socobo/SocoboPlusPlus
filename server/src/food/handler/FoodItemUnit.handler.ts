@@ -16,16 +16,6 @@ export class FoodItemUnitHandler {
     }
   }
 
-  public getAllByFooditemId = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const foodItemId = new Types.ObjectId(req.params.id);
-      const result = await this._db.fooditemUnit.getAllByFooditemId(foodItemId);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
-    }
-  }
-
   public getById = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = new Types.ObjectId(req.params.id);

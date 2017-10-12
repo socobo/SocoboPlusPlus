@@ -15,15 +15,6 @@ export class FoodItemUnitRepository {
     }
   }
 
-  public getAllByFooditemId = async (foodItemId: Types.ObjectId): Promise<FoodItemUnit[] | DbError> => {
-    try {
-      const units = await this._fooditemUnitModel.find({ foodItemId });
-      return units.map(this._transformResult);
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, FoodItemUnitRepository.name, "getAllByFooditemId(..)");
-    }
-  }
-
   public getById = async (id: Types.ObjectId): Promise<FoodItemUnit | DbError> => {
     try {
       const unit = await this._fooditemUnitModel.findOne({_id: id});

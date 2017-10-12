@@ -17,10 +17,6 @@ export class FoodItemUnitRoute {
       this._authValidationHandler.checkToken,
       this._fooditemUnitHandler.getAll);
 
-    this._router.get("/fooditem/:id",
-      this._authValidationHandler.checkToken,
-      this._fooditemUnitHandler.getAllByFooditemId);
-
     this._router.get("/:id",
       this._authValidationHandler.checkToken,
       this._fooditemUnitHandler.getById);
