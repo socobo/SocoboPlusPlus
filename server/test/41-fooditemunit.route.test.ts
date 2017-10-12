@@ -29,13 +29,15 @@ describe("FoodItemUnitRoute - API v1", () => {
     expect(result.body).to.not.null;
   });
 
-  it("GET /api/v1/fooditemunit/:id should return one unit w/ id, name, created & lastModified property", async () => {
+  it("GET /api/v1/fooditemunit/:id should return one unit w/ id, foodItemId, name, created & lastModified property",
+    async () => {
       const id = "59a2f14d7f4daed7367bc676";
       const accessToken = await TestHelper.getToken();
       const result = await TestHelper.getAgent()
         .get(`/api/v1/fooditemunit/${id}`)
         .set("x-access-token", accessToken);
       expect(result.body).to.deep.property("id");
+      expect(result.body).to.deep.property("foodItemId");
       expect(result.body).to.deep.property("name");
       expect(result.body).to.deep.property("created");
       expect(result.body).to.deep.property("lastModified");
@@ -65,10 +67,11 @@ describe("FoodItemUnitRoute - API v1", () => {
       .post(`/api/v1/fooditemunit`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
-      .send({ name: "kilo gramm"});
+      .send({ name: "kilo gramm", foodItemId: "59dfa76eb6a882c2c163c31d" });
 
     expect(result.body.name).to.equal("kilo gramm");
     expect(result.body).to.deep.property("id");
+    expect(result.body).to.deep.property("foodItemId");
     expect(result.body).to.deep.property("name");
     expect(result.body).to.deep.property("created");
     expect(result.body).to.deep.property("lastModified");
