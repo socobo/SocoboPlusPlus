@@ -8,6 +8,7 @@ export const ERROR_MESSAGES: any = {
   "auth.user.not.registerd": "The user with the username/email {0} is not registered yet",
   "auth.wrong.password": "Authentication failed. Wrong password",
   "fooditem.template.not.found": "Fooditem Template with {0} {1} could not be found",
+  "fooditem.unit.not.found": "Fooditem Unit with {0} {1} could not be found",
   "generic.base.not.found": "Resource from {0} with {1} {2} could not be found",
   "internal.error": "Internal server error",
   "internal.error.create.hash": "Error while generating the salt value or password hash",

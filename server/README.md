@@ -7,6 +7,7 @@
 * [API Documentation](#api-documentation)
   * [Auth](#auth)
   * [FoodItemTemplate](#fooditemtemplate)
+  * [FoodItemUnit](#fooditemunit)
   * [Log](#log)
   * [Recipe](#recipe)
   * [SocoboUser](#socobouser)
@@ -65,13 +66,13 @@
 
 ```bash
 #Start a mongo db on the default port which is populated with mock data
-npm run docker:mongodb:d
+npm run docker:db:d
 
 #Start a mongodb terminal client 
-npm run docker:client
+npm run docker:c
 
 # Clean up your containers
-npm run docker:rm
+npm run docker:r
 ```
 
 4. To add new mock data, add a new mongodb-seed section in the docker-compose file
@@ -295,6 +296,146 @@ npm run lint
 
   Path Parameter:
     - id: Fooditem Template id
+
+  Response body:
+    ```json
+    {
+      id: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+### **FoodItemUnit**
+
+- **GET /api/v1/fooditemunit**
+
+  Response body:
+    ```json
+    [
+      {
+        id: string,
+        foodItemId: string,
+        name: string,
+        created: number,
+        lastModified: number
+      },
+      {
+        ...
+      }
+    ]
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **GET /api/v1/fooditemunit/:id**
+
+  Path Parameter:
+    - id: Fooditem Unit id
+
+  Response body:
+    ```json
+    {
+      id: string,
+      foodItemId: string,
+      name: string,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **PUT /api/v1/fooditemunit/:id**
+
+  Path Parameter:
+    - Fooditem Unit id
+
+  Request body:
+    ```json
+    {
+      name: string
+    }
+    ```
+
+  Response body:
+    ```json
+    {
+      id: string,
+      foodItemId: string,
+      name: string,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **POST /api/v1/fooditemunit/**
+
+  Path Parameter:
+    - Fooditem Unit id
+
+  Request body:
+    ```json
+    {
+      name: string,
+      foodItemId: string
+    }
+    ```
+
+  Response body:
+    ```json
+    {
+      id: string,
+      foodItemId: string,
+      name: string,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **DELETE /api/v1/unit/:id**
+
+  Path Parameter:
+    - id: Fooditem Unit id
 
   Response body:
     ```json

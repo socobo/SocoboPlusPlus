@@ -27,9 +27,9 @@ export class FoodItemTemplateHandler {
   }
 
   public updateById = (req: Request, res: Response): void => {
-    const userId: Types.ObjectId = new Types.ObjectId(req.params.id);
-    const updateName: string = req.body.name;
-    this._db.fooditemTemplate.updateById(userId, updateName)
+    const templateId: Types.ObjectId = new Types.ObjectId(req.params.id);
+    const updatedTemplateName: string = req.body.name;
+    this._db.fooditemTemplate.updateById(templateId, updatedTemplateName)
       .then((result: FoodItemTemplate) => res.status(200).json(result))
       .catch((e: any) => res.status(e.statusCode).json(e.forResponse()));
   }

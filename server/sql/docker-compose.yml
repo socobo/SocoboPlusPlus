@@ -13,7 +13,7 @@ services:
     volumes:
       - ./${MOCKDATA_DIR}/:/seed-data
     command:
-      'bash -c "mongoimport --host mongodb --db ${DB} --collection socobouser --drop --file /seed-data/create-socoboUser.json --jsonArray"'
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection socobouser --drop --file /seed-data/create-socobouser.json --jsonArray"'
   mongo-seed-recipe:
     image: mongo
     links:
