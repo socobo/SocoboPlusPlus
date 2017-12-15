@@ -1,6 +1,6 @@
 process.env["NODE_ENV"] = "test";
 
-import * as chai from "chai";
+import { assert, expect } from "chai";
 import * as mocha from "mocha";
 import * as sinon from "sinon";
 import * as winston from "winston";
@@ -35,8 +35,8 @@ describe("Log Service", () => {
 
     const errors: ApiError[] = LogService.getErrors();
 
-    chai.expect(errors).to.include(apiError);
-    chai.expect(errors).to.include(dbError);
+    expect(errors).to.include(apiError);
+    expect(errors).to.include(dbError);
   });
 
   it("Error Log should printed to the console and write to log file", () => {
@@ -45,8 +45,8 @@ describe("Log Service", () => {
       .addSourceMethod("Method1()");
     e.forResponse();
 
-    chai.assert(spy.called);
-    chai.assert(spy.calledWith("error", "Internal server error"));
+    assert(spy.called);
+    assert(spy.calledWith("error", "Internal server error"));
   });
 
   it("Logged errors should contain all needed properties", () => {
@@ -63,8 +63,8 @@ describe("Log Service", () => {
 
     const errors: ApiError[] = LogService.getErrors();
 
-    chai.expect(errors[0]).to.contain.all.keys("timestamp", "error", "message", "source", "sourceMethod");
-    chai.expect(errors[0]).not.to.have.any.keys("query");
-    chai.expect(errors[1]).to.contain.all.keys("timestamp", "error", "message", "source", "sourceMethod", "query");
+    expect(errors[0]).to.contain.all.keys("timestamp", "error", "message", "source", "sourceMethod");
+    expect(errors[0]).not.to.have.any.keys("query");
+    expect(errors[1]).to.contain.all.keys("timestamp", "error", "message", "source", "sourceMethod", "query");
   });
 });
