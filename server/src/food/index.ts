@@ -1,3 +1,4 @@
+export * from "./handler/FoodItemCategory.handler";
 export * from "./handler/FoodItemTemplate.handler";
 export * from "./handler/FoodItemUnit.handler";
 
@@ -14,6 +15,7 @@ export * from "./repositories/FoodItemCategory.repository";
 export * from "./repositories/FoodItemTemplate.repository";
 export * from "./repositories/FoodItemUnit.repository";
 
+export * from "./routes/FoodItemCategory.route";
 export * from "./routes/FoodItemTemplate.route";
 export * from "./routes/FoodItemUnit.route";
 

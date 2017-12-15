@@ -4,14 +4,12 @@ import { IBaseRepository } from "../interfaces/IBase.repository";
 
 export class BaseRepository <T> implements IBaseRepository <T> {
 
-  private _model: Model<Document & T>;
-  private _className: string;
   private _transformFunction: (result: any) => T;
 
-  constructor (model: Model<Document & T>, className: string) {
-    this._model = model;
-    this._className = className;
-  }
+  constructor (
+    private _model: Model<Document & T>,
+    private _className: string
+  ) {}
 
   set transformFunction (func: (result: any) => T) {
     this._transformFunction = func;

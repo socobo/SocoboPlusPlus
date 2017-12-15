@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import { DbError } from "../../app/index";
 
-export interface IBaseRepository<T> {
+export interface IBaseRepository <T> {
   transformFunction: (result: any) => T;
   getAll (): Promise<T[] | DbError>;
   getById (id: Types.ObjectId): Promise<T | DbError>;
