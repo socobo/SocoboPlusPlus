@@ -19,7 +19,7 @@ export class RecipeCategoryRoute {
     this._router.get("/",
       (request, response) => {
         response.json('All categories');
-      }
+      })
 
 
 
