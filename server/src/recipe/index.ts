@@ -6,6 +6,7 @@ export * from "./models/recipe-image";
 export * from "./enums/levels";
 export * from "./repositories/recipe.repository";
 export * from "./routes/recipe.route";
+export * from "./routes/recipe-category.route";
 export * from "./schemas/recipe.schema";
 export * from "./validators/recipe-level.validator";
 export * from "./validators/recipe-steps-order.validator";

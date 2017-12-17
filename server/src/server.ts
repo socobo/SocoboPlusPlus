@@ -28,7 +28,7 @@ import {
 } from "./food/index";
 // recipe
 import {
-  RecipeHandler, RecipeMiddleware, RecipeRoute
+  RecipeHandler, RecipeMiddleware, RecipeRoute, RecipeCategoryRoute
 } from "./recipe/index";
 // socobouser
 import {
@@ -231,6 +231,7 @@ class Server {
     this._app.use("/api/v1/fooditemunit", this._fooditemUnitRoute());
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
+    this._app.use("/api/v1/recipe-categories", this._recipeCategoriesRoute());
     this._app.use("/api/v1/log", this._logRoute());
     this._app.use(this._handleGenericErrors);
   }
@@ -265,6 +266,13 @@ class Server {
     return new RecipeRoute(router, this._recipeUpload, this._recipeHandler,
       this._authValidationHandler, this._modelValidationHandler,
       this._recipeMiddleware).createRoutes();
+  }
+
+  private _recipeCategoriesRoute(): express.Router {
+    const router: express.Router = express.Router();
+    return new RecipeCategoryRoute(router, this._recipeUpload, this._recipeHandler,
+      this._authValidationHandler, this._modelValidationHandler,
+      this._recipeMiddleware).createRoutes()
   }
 
   private _logRoute (): express.Router {
