@@ -24,9 +24,11 @@ export class RecipeCategory implements Validatable {
 
   setTitle = (title: string) => {
     this.title = title;
+    return this;
   }
 
   setDescription = (description: string) => {
     this.description = description;
+    return this;
   }
 }
