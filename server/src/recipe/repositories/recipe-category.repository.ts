@@ -12,7 +12,7 @@ export class RecipeCategoryRepository {
   private _handleNotFound = (foundItem: any, id: string, method: string) => {
     if (!foundItem) {
       throw new DbError(
-        ERRORS.RECIPE_NOT_FOUND.withArgs("ID", id))
+        ERRORS.RECIPE_CATEGORY_NOT_FOUND.withArgs("ID", id))
         .addSource(RecipeCategoryRepository.name)
         .addSourceMethod(method);
     }
@@ -27,19 +27,16 @@ export class RecipeCategoryRepository {
   //   }
   // }
 
-  // public getById = async (id: string): Promise<Recipe | DbError> => {
-  //   try {
-  //     const foundRecipe = await this._recipeModel.findById(id).lean() as Recipe;
-  //     this._handleNotFound(foundRecipe, id, "findById()");
-  //     if (!foundRecipe.images) {
-  //       foundRecipe.images = [];
-  //     }
-  //     return foundRecipe;
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "getById(..)");
-  //   }
-  // }
+  public getById = async (id: string): Promise<Recipe | DbError> => {
+    try {
+      const foundRecipeCategory = await this._recipeCategoriesModel.findById(id).lean() as Recipe;
+      this._handleNotFound(foundRecipeCategory, id, "findById()");
+      return foundRecipeCategory;
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "getById(..)");
+    }
+  }
 
   public getAll = async (): Promise<RecipeCategory[] | DbError> => {
     try {

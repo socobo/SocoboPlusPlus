@@ -10,8 +10,8 @@
     "_id" : {"$oid":"5092ef66b9c6c5139160b4d2"},
     "updatedAt": "2017-08-27T18:48:54.865Z",
     "createdAt": "2017-08-27T18:48:54.865Z",
-    "title": "Category1",
-    "description": "Category1"
+    "title": "Category2",
+    "description": "Category2"
   },
   {
     "_id" : {"$oid":"5092ef66b9c6c5139160b4d3"},

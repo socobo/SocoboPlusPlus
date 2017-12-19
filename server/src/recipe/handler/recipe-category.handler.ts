@@ -21,7 +21,7 @@ export class RecipeCategoryHandler {
 
   public getById = async (req: Request, res: Response) => {
     try {
-      const result = await this._db.recipe.getById(req.params.id);
+      const result = await this._db.recipeCategories.getById(req.params.id);
       res.status(200).json(result);
     } catch (error) {
       this._sendError(res)(error);
@@ -31,9 +31,6 @@ export class RecipeCategoryHandler {
   public getAll = async (req: Request, res: Response) => {
     try {
       const result = await this._db.recipeCategories.getAll();
-      // const result = new RecipeCategory()
-      // .setTitle('TEST')
-      // .setDescription('TEST DESC');
       res.status(200).json(result);
     } catch (error) {
       this._sendError(res)(error);
