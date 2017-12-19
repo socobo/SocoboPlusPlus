@@ -30,10 +30,10 @@ export class RecipeCategoryHandler {
 
   public getAll = async (req: Request, res: Response) => {
     try {
-      // const result = await this._db.recipe.getAll();
-      const result = new RecipeCategory()
-      .setTitle('TEST')
-      .setDescription('TEST DESC');
+      const result = await this._db.recipeCategories.getAll();
+      // const result = new RecipeCategory()
+      // .setTitle('TEST')
+      // .setDescription('TEST DESC');
       res.status(200).json(result);
     } catch (error) {
       this._sendError(res)(error);

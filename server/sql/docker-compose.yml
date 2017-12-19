@@ -22,6 +22,14 @@ services:
       - ./${MOCKDATA_DIR}/:/seed-data
     command:
       'bash -c "mongoimport --host mongodb --db ${DB} --collection recipe --drop --file /seed-data/create-recipe.json --jsonArray"'
+  mongo-seed-recipe-category:
+    image: mongo
+    links:
+      - mongodb
+    volumes:
+      - ./${MOCKDATA_DIR}/:/seed-data
+    command:
+      'bash -c "mongoimport --host mongodb --db ${DB} --collection recipeCategory --drop --file /seed-data/create-recipe-categories.json --jsonArray"'
   mongo-seed-fooditemtemplate:
     image: mongo
     links:
