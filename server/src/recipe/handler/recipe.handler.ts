@@ -1,3 +1,4 @@
+import { RecipeCategory } from './../models/recipe-category';
 import { NextFunction, Request, Response } from "express";
 
 import {
@@ -19,19 +20,67 @@ export class RecipeHandler {
     };
   }
 
+  private _resolveCategory = (recipe: Recipe): Promise<Recipe> => {
+    console.log('id', recipe.categoryId);
+    return this._db.recipeCategories.getById(recipe.categoryId)
+      .then((category: RecipeCategory) => {
+        recipe.category = category;
+        return recipe;
+      })
+  }
+
+  private _resolveAllCategories = (recipes: Recipe[]): Promise<Recipe[]> => {
+    let promises: Promise<Recipe>[] = []
+    recipes.forEach((recipe: Recipe) => {
+      let recipeWithCategoryPromise = undefined;
+      if(recipe.categoryId) {
+        recipeWithCategoryPromise = this._resolveCategory(recipe);
+      } else {
+        recipeWithCategoryPromise = Promise.resolve(recipe);
+      }
+      promises = [...promises, recipeWithCategoryPromise]
+    })
+    return Promise.all(promises);
+  }
+
+  private _mapRecipesToRecipesWithCategory = (recipes: Recipe[]) => {
+    let recipesWithCategory: Recipe[] = [];
+    recipes.forEach((recipe: Recipe) => {
+      recipesWithCategory = [
+        ...recipesWithCategory,
+        new Recipe().clone(recipe)
+          .setCategoryId(undefined)];
+    })
+    return recipesWithCategory;
+  }
+
   public getById = async (req: Request, res: Response) => {
+    const queryPramas = req.query;
     try {
-      const result = await this._db.recipe.getById(req.params.id);
-      res.status(200).json(result);
+      const result = <Recipe> await this._db.recipe.getById(req.params.id);
+      if(queryPramas.hasOwnProperty('resolveCategory') && result.categoryId) {
+        this._resolveCategory(result).then((recipe: Recipe) => {
+          res.status(200).json(recipe);
+        })
+      } else {
+        res.status(200).json(result);
+      }
     } catch (error) {
       this._sendError(res)(error);
     }
   }
 
   public getAll = async (req: Request, res: Response) => {
+    const queryPramas = req.query;
     try {
-      const result = await this._db.recipe.getAll();
-      res.status(200).json(result);
+      const result = <Recipe[]> await this._db.recipe.getAll();
+      if(queryPramas.hasOwnProperty('resolveCategory')) {
+        this._resolveAllCategories(result).then((recipes: Recipe[]) => {
+          res.status(200).json(this._mapRecipesToRecipesWithCategory(recipes));
+        })
+      } else {
+        res.status(200).json(result);
+      }
     } catch (error) {
       this._sendError(res)(error);
     }

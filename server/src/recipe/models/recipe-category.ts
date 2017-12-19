@@ -16,6 +16,9 @@ export class RecipeCategory implements Validatable {
   public description: string;
 
   public clone (recipeCategory: RecipeCategory) {
+    if(!recipeCategory){
+      return undefined;
+    }
     this._id = recipeCategory._id;
     this.title = recipeCategory.title;
     this.description = recipeCategory.description;

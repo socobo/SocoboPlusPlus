@@ -1,3 +1,4 @@
+import { RecipeCategory } from './recipe-category';
 import { IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateIf, ValidateNested} from "class-validator";
 import { Types } from "mongoose";
 
@@ -20,6 +21,10 @@ export class Recipe implements Validatable {
     groups: [ ValidationGroup.RECIPE ]
   })
   public userId: string;
+  public categoryId: string;
+
+  public category: RecipeCategory;
+
   public description: string;
 
   @ValidateNested({
@@ -67,6 +72,8 @@ export class Recipe implements Validatable {
     this.title = recipe.title;
     this.description = recipe.description;
     this.userId = recipe.userId;
+    this.categoryId = recipe.categoryId;
+    this.category = new RecipeCategory().clone(recipe.category);
     this.level = recipe.level;
     this.duration = recipe.duration;
     this.images = [];
@@ -101,6 +108,16 @@ export class Recipe implements Validatable {
 
   public setUserId (userId: string) {
     this.userId = userId;
+    return this;
+  }
+
+  public setCategoryId (categoryId: string) {
+    this.categoryId = categoryId;
+    return this;
+  }
+
+  public setCategory (category: RecipeCategory) {
+    this.category = category;
     return this;
   }
 

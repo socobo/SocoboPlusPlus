@@ -27,7 +27,7 @@ export class RecipeCategoryRepository {
   //   }
   // }
 
-  public getById = async (id: string): Promise<Recipe | DbError> => {
+  public getById = async (id: string): Promise<RecipeCategory | DbError> => {
     try {
       const foundRecipeCategory = await this._recipeCategoriesModel.findById(id).lean() as Recipe;
       this._handleNotFound(foundRecipeCategory, id, "findById()");

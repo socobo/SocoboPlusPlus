@@ -8,7 +8,7 @@ export class Config {
   public static PORT: number = 8282;
   public static NODE_ENV: string = "development";
   public static TOKEN_SECRET: string = "!*sdkfduf487387478478hhuhudf#28458//(/)##+993";
-  public static TOKEN_EXPIRATION: string = "1d";
+  public static TOKEN_EXPIRATION: string = "10d";
   public static TOKEN_ISSUER: string = "socobo";
   public static TOKEN_HEADER: string = "x-access-token";
   public static DEFAULT_USER_IMAGE: string = "socobo_data/placeholder/tmp_user_image.png";

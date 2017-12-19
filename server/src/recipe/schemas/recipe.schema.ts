@@ -34,6 +34,10 @@ export const recipeSchema = new Schema({
   userId: {
     ref: "SocoboUser",
     type: ObjectId
+  },
+  categoryId: {
+    ref: "RecipeCategories",
+    type: ObjectId
   }
 },
 {
