@@ -48,28 +48,19 @@ export class RecipeCategoryRepository {
     }
   }
 
-  // public searchByField = async (fieldName: string, value: string): Promise<Recipe[] | DbError> => {
-  //   try {
-  //     const searchCritiria = { [fieldName]: new RegExp (value, "i") };
-  //     const foundRecipes = await this._recipeModel.find(searchCritiria);
-  //     return foundRecipes;
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "searchByField(..)");
-  //   }
-  // }
+  public update = async (id: string, category: RecipeCategory): Promise<RecipeCategory | DbError> => {
+    try {
+      const foundRecipeCategories = await this._recipeCategoriesModel
+        .findByIdAndUpdate(id, category, { new: true });
+        console.log('found', foundRecipeCategories)
 
-  // public update = async (id: string, recipe: Recipe): Promise<Recipe | DbError> => {
-  //   try {
-  //     const foundRecipe = await this._recipeModel
-  //       .findByIdAndUpdate(id, recipe, { new: true });
-  //     this._handleNotFound(foundRecipe, id, "update()");
-  //     return foundRecipe;
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "update(..)");
-  //   }
-  // }
+      this._handleNotFound(foundRecipeCategories, id, "update()");
+      return foundRecipeCategories;
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "update(..)");
+    }
+  }
 
   // public removeImage = async (id: string, imgId: string): Promise<Recipe | DbError> => {
   //   try {

@@ -28,6 +28,10 @@ export class RecipeCategoryRoute {
       this._authValidationHandler.checkToken,
       this._recipeHandler.save)
 
+    this._router.put("/:id",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.update)
+
     return this._router;
   }
 }

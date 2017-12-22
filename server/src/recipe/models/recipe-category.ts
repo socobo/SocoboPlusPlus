@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 import { Validatable, ValidationGroup } from "../../app/index";
 export class RecipeCategory implements Validatable {
 
-  public _id: Types.ObjectId;
+  public _id: Types.ObjectId | string;
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
@@ -22,6 +22,11 @@ export class RecipeCategory implements Validatable {
     this._id = recipeCategory._id;
     this.title = recipeCategory.title;
     this.description = recipeCategory.description;
+    return this;
+  }
+
+  setId = (id: Types.ObjectId | string) => {
+    this._id = id;
     return this;
   }
 
