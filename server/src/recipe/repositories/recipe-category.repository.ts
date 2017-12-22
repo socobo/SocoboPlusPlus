@@ -29,7 +29,7 @@ export class RecipeCategoryRepository {
 
   public getById = async (id: string): Promise<RecipeCategory | DbError> => {
     try {
-      const foundRecipeCategory = await this._recipeCategoriesModel.findById(id).lean() as Recipe;
+      const foundRecipeCategory = await this._recipeCategoriesModel.findById(id).lean() as RecipeCategory;
       this._handleNotFound(foundRecipeCategory, id, "findById()");
       return foundRecipeCategory;
     } catch (error) {
@@ -62,24 +62,12 @@ export class RecipeCategoryRepository {
     }
   }
 
-  // public removeImage = async (id: string, imgId: string): Promise<Recipe | DbError> => {
-  //   try {
-  //     const updatedRecipe = await this._recipeModel
-  //       .findByIdAndUpdate(id, {$pull: {images: {_id: imgId}}}, { new: true });
-  //     this._handleNotFound(updatedRecipe, id, "removeImage()");
-  //     return updatedRecipe;
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "removeImage(..)");
-  //   }
-  // }
-
-  // public delete = async (id: string): Promise<void | DbError> => {
-  //   try {
-  //     return await this._recipeModel.remove({_id: id});
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "delete(..)");
-  //   }
-  // }
+  public delete = async (id: string): Promise<void | DbError> => {
+    try {
+      return await this._recipeCategoriesModel.remove({_id: id});
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "delete(..)");
+    }
+  }
 }

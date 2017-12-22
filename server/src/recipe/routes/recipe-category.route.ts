@@ -32,6 +32,10 @@ export class RecipeCategoryRoute {
       this._authValidationHandler.checkToken,
       this._recipeHandler.update)
 
+  this._router.delete("/:id",
+      this._authValidationHandler.checkToken,
+      this._recipeHandler.delete)
+
     return this._router;
   }
 }

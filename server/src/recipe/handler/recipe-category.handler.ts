@@ -60,13 +60,13 @@ export class RecipeCategoryHandler {
     }
   }
 
-  // public delete = async (req: Request, res: Response) => {
-  //   try {
-  //     const recipe = await this._db.recipe.getById(req.params.id);
-  //     await this._db.recipe.delete(req.params.id);
-  //     res.status(200).json();
-  //   } catch (error) {
-  //     this._sendError(res)(error);
-  //   }
-  // }
+  public delete = async (req: Request, res: Response) => {
+    try {
+      await this._db.recipeCategories.getById(req.params.id);
+      await this._db.recipeCategories.delete(req.params.id);
+      res.status(200).json();
+    } catch (error) {
+      this._sendError(res)(error);
+    }
+  }
 }
