@@ -18,14 +18,14 @@ export class RecipeCategoryRepository {
     }
   }
 
-  // public save = async (recipe: Recipe): Promise<Recipe | DbError> => {
-  //   try {
-  //     return await new this._recipeModel(recipe).save();
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "save(..)");
-  //   }
-  // }
+  public save = async (category: RecipeCategory): Promise<RecipeCategory | DbError> => {
+    try {
+      return await new this._recipeCategoriesModel(category).save();
+    } catch (error) {
+      winston.error(error);
+      return ErrorUtils.handleDbError(error, RecipeCategoryRepository.name, "save(..)");
+    }
+  }
 
   public getById = async (id: string): Promise<RecipeCategory | DbError> => {
     try {

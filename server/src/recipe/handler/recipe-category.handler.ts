@@ -37,19 +37,16 @@ export class RecipeCategoryHandler {
     }
   }
 
-  // public save = async (req: Request, res: Response) => {
-  //   const recipe: Recipe = new Recipe()
-  //     .clone(req.body as Recipe)
-  //     .removeImageProp();
-
-  //   try {
-  //     await this._db.socobouser.getUserById(recipe.userId);
-  //     const result = await this._db.recipe.save(recipe);
-  //     res.status(201).json(result);
-  //   } catch (error) {
-  //     this._sendError(res)(error);
-  //   }
-  // }
+  public save = async (req: Request, res: Response) => {
+    const category: RecipeCategory = new RecipeCategory()
+      .clone(req.body as RecipeCategory);
+    try {
+      const result = await this._db.recipeCategories.save(category);
+      res.status(201).json(result);
+    } catch (error) {
+      this._sendError(res)(error);
+    }
+  }
 
   // public update = async (req: Request, res: Response) => {
   //   const recipe: Recipe = new Recipe()
