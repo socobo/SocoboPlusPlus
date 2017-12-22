@@ -3,6 +3,7 @@ import { Instance } from "multer";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
 import { AuthValidationHandler } from "../../auth/index";
 import { Recipe, RecipeCategoryHandler, RecipeMiddleware } from "../index";
+import { SocoboUserRoleType } from "../../socobouser/index";
 
 export class RecipeCategoryRoute {
 
@@ -26,14 +27,17 @@ export class RecipeCategoryRoute {
 
     this._router.post("/",
       this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._recipeHandler.save)
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._recipeHandler.update)
 
   this._router.delete("/:id",
       this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._recipeHandler.delete)
 
     return this._router;
