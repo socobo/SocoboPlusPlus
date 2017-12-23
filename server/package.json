@@ -45,7 +45,7 @@
 
     "test": "npm-run-all setup:db:t create test:m",
     "test:bc": "npm-run-all tsc lint test",
-    "test:d": "npm-run-all docker:mongodb:t create test:m",
+    "test:d": "npm-run-all docker:db:t create test:m",
     "test:m": "mocha --reporter spec --compilers ts:ts-node/register 'test/**/*.test.ts'",
 
     "tsc": "tsc",
