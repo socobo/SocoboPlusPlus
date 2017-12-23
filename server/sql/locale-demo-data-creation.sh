@@ -5,7 +5,7 @@ then
 
   mongoimport --db socobo_dev --collection socobouser --drop --file ./data/create-socobouser.json --jsonArray
   mongoimport --db socobo_dev --collection recipe --drop --file ./data/create-recipe.json --jsonArray
-  mongoimport --db socobo_dev --collection recipeCategory --drop --file ./dev/create-recipe-categories.json
+  mongoimport --db socobo_dev --collection recipeCategory --drop --file ./data/create-recipe-categories.json
   # TODO: Add Demo Data: mongoimport --db socobo_dev --collection recipeIngredient --drop --file ./dev/create-recipeIngredient.json
   mongoimport --db socobo_dev --collection fooditemtemplate --drop --file ./data/create-fooditemtemplate.json --jsonArray
   mongoimport --db socobo_dev --collection fooditem --drop --file ./data/create-fooditem.json --jsonArray
@@ -17,7 +17,7 @@ then
 
   mongoimport --db socobo_test --collection socobouser --drop --file ./data/create-socobouser.json --jsonArray
   mongoimport --db socobo_test --collection recipe --drop --file ./data/create-recipe.json --jsonArray
-  mongoimport --db socobo_dev --collection recipeCategory --drop --file ./dev/create-recipe-categories.json
+  mongoimport --db socobo_dev --collection recipeCategory --drop --file ./data/create-recipe-categories.json
   # TODO: Add Demo Data: mongoimport --db socobo_test --collection recipeIngredient --drop --file ./data/create-recipeIngredient.json --jsonArray
   mongoimport --db socobo_test --collection fooditem --drop --file ./data/create-fooditem.json --jsonArray
   mongoimport --db socobo_test --collection fooditemtemplate --drop --file ./data/create-fooditemtemplate.json --jsonArray
