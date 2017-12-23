@@ -56,7 +56,7 @@ const socoboUserModel = mongoose.model<mongoose.Document & SocoboUser>("SocoboUs
 const recipeModel = mongoose.model<mongoose.Document & Recipe>("Recipe",
                                                                recipeSchema,
                                                                "recipe");
-const recipeCategoriesModel = mongoose.model<mongoose.Document & RecipeCategory>("RecipeCategories",
+const recipeCategoriesModel = mongoose.model<mongoose.Document & RecipeCategory>("RecipeCategory",
                                                                recipeCategorySchema,
                                                                "recipeCategory");
 

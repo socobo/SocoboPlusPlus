@@ -9,35 +9,35 @@ import { TestHelper } from "./helper/TestHelper";
 
 describe("RecipeCategoryRoute - API v1", () => {
 
-  it("GET /api/v1/recipe-categories should pass if a token is provided", async () => {
+  it("GET /api/v1/recipecategory should pass if a token is provided", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent()
-      .get("/api/v1/recipe-categories")
+      .get("/api/v1/recipecategory")
       .set("x-access-token", accessToken);
     expect(result.body).to.be.not.null;
     expect(result).to.be.json;
     expect(result).to.be.status(200);
   });
 
-  it("GET /api/v1/recipe-categories should return all categories", async () => {
+  it("GET /api/v1/recipecategory should return all categories", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent()
-      .get("/api/v1/recipe-categories")
+      .get("/api/v1/recipecategory")
       .set("x-access-token", accessToken);
     expect(result.body.length).to.equal(3);
   });
 
-  it("GET /api/v1/recipe-categories/:id should return the category with the provied id", async () => {
+  it("GET /api/v1/recipecategory/:id should return the category with the provied id", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent()
-      .get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1")
+      .get("/api/v1/recipecategory/5092ef66b9c6c5139160b4d1")
       .set("x-access-token", accessToken);
     expect(result.body.title).to.equal("Category 1");
     expect(result.body.description).to.equal("Category 1 Desc");
     expect(result.body._id).to.equal("5092ef66b9c6c5139160b4d1");
   });
 
-  it("POST /api/v1/recipe-categories should crate a new category", async () => {
+  it("POST /api/v1/recipecategory should crate a new category", async () => {
     const accessToken = await TestHelper.getToken();
 
     const requestBody = {
@@ -46,7 +46,7 @@ describe("RecipeCategoryRoute - API v1", () => {
     };
 
     const result = await TestHelper.getAgent()
-      .post("/api/v1/recipe-categories")
+      .post("/api/v1/recipecategory")
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
       .send(requestBody);
@@ -57,7 +57,7 @@ describe("RecipeCategoryRoute - API v1", () => {
     expect(result.body).to.have.property("updatedAt");
   });
 
-  it("POST /api/v1/recipe-categories normal user is not permitted to create a category", async () => {
+  it("POST /api/v1/recipecategory normal user is not permitted to create a category", async () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.User, true);
 
     const requestBody = {
@@ -67,7 +67,7 @@ describe("RecipeCategoryRoute - API v1", () => {
 
     try {
       const result = await TestHelper.getAgent()
-        .post("/api/v1/recipe-categories")
+        .post("/api/v1/recipecategory")
         .set("x-access-token", accessToken)
         .set("Content-Type", "application/json")
         .send(requestBody);
@@ -79,7 +79,7 @@ describe("RecipeCategoryRoute - API v1", () => {
     }
   });
 
-  it("PUT /api/v1/recipe-categories/:id should update the category", async () => {
+  it("PUT /api/v1/recipecategory/:id should update the category", async () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
 
     const requestBody = {
@@ -88,14 +88,14 @@ describe("RecipeCategoryRoute - API v1", () => {
     };
 
     const resultBefore = await TestHelper.getAgent()
-      .get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1")
+      .get("/api/v1/recipecategory/5092ef66b9c6c5139160b4d1")
       .set("x-access-token", accessToken);
 
     expect(resultBefore.body.title).to.equal("Category 1");
     expect(resultBefore.body.description).to.equal("Category 1 Desc");
 
     const result = await TestHelper.getAgent()
-      .put("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1")
+      .put("/api/v1/recipecategory/5092ef66b9c6c5139160b4d1")
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
       .send(requestBody);
@@ -105,7 +105,7 @@ describe("RecipeCategoryRoute - API v1", () => {
     expect(result.body.updatedAt).to.be.not.equal(resultBefore.body.updatedAt);
   });
 
-  it("PUT /api/v1/recipe-categories/:id normal user is not permitted to update a category", async () => {
+  it("PUT /api/v1/recipecategory/:id normal user is not permitted to update a category", async () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.User, true);
 
     const requestBody = {
@@ -115,7 +115,7 @@ describe("RecipeCategoryRoute - API v1", () => {
 
     try {
       const result = await TestHelper.getAgent()
-        .put("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1")
+        .put("/api/v1/recipecategory/5092ef66b9c6c5139160b4d1")
         .set("x-access-token", accessToken)
         .set("Content-Type", "application/json")
         .send(requestBody);
@@ -127,24 +127,24 @@ describe("RecipeCategoryRoute - API v1", () => {
     }
   });
 
-  it("DELETE /api/v1/recipe-categories/:id should delete the category", async () => {
+  it("DELETE /api/v1/recipecategory/:id should delete the category", async () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
 
     const resultBefore = await TestHelper.getAgent()
-      .get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d3")
+      .get("/api/v1/recipecategory/5092ef66b9c6c5139160b4d3")
       .set("x-access-token", accessToken);
 
     expect(resultBefore.body.title).to.equal("Category 3");
     expect(resultBefore.body.description).to.equal("Category 3 Desc");
 
     const result = await TestHelper.getAgent()
-      .del("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d3")
+      .del("/api/v1/recipecategory/5092ef66b9c6c5139160b4d3")
       .set("x-access-token", accessToken);
     expect(result.status).to.equal(200);
 
     try {
       await TestHelper.getAgent()
-        .get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d3")
+        .get("/api/v1/recipecategory/5092ef66b9c6c5139160b4d3")
         .set("x-access-token", accessToken);
     } catch (error) {
       expect(error.status).to.be.eql(404);
@@ -153,12 +153,12 @@ describe("RecipeCategoryRoute - API v1", () => {
     }
   });
 
-  it("DELETE /api/v1/recipe-categories/:id normal user is not permitted to delete a category", async () => {
+  it("DELETE /api/v1/recipecategory/:id normal user is not permitted to delete a category", async () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.User, true);
 
     try {
       const result = await TestHelper.getAgent()
-        .del("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d3")
+        .del("/api/v1/recipecategory/5092ef66b9c6c5139160b4d3")
         .set("x-access-token", accessToken);
     } catch (error) {
       expect(error.status).to.be.eql(403);
