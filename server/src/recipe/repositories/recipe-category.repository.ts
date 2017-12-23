@@ -52,8 +52,6 @@ export class RecipeCategoryRepository {
     try {
       const foundRecipeCategories = await this._recipeCategoriesModel
         .findByIdAndUpdate(id, category, { new: true });
-        console.log('found', foundRecipeCategories)
-
       this._handleNotFound(foundRecipeCategories, id, "update()");
       return foundRecipeCategories;
     } catch (error) {

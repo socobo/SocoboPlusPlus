@@ -28,7 +28,7 @@ import {
 } from "./food/index";
 // recipe
 import {
-  RecipeHandler, RecipeCategoryHandler, RecipeMiddleware, RecipeRoute, RecipeCategoryRoute
+  RecipeCategoryHandler, RecipeCategoryRoute, RecipeHandler, RecipeMiddleware, RecipeRoute
 } from "./recipe/index";
 // socobouser
 import {
@@ -270,12 +270,12 @@ class Server {
       this._recipeMiddleware).createRoutes();
   }
 
-  private _recipeCategoriesRoute(): express.Router {
+  private _recipeCategoriesRoute (): express.Router {
     const router: express.Router = express.Router();
     return new RecipeCategoryRoute(router, this._recipeUpload,
       this._recipeCategoryHandler,
       this._authValidationHandler, this._modelValidationHandler,
-      this._recipeMiddleware).createRoutes()
+      this._recipeMiddleware).createRoutes();
   }
 
   private _logRoute (): express.Router {

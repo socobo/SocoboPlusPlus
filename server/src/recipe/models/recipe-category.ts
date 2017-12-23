@@ -16,7 +16,7 @@ export class RecipeCategory implements Validatable {
   public description: string;
 
   public clone (recipeCategory: RecipeCategory) {
-    if(!recipeCategory){
+    if (!recipeCategory) {
       return undefined;
     }
     this._id = recipeCategory._id;
@@ -25,17 +25,17 @@ export class RecipeCategory implements Validatable {
     return this;
   }
 
-  setId = (id: Types.ObjectId | string) => {
+  public setId = (id: Types.ObjectId | string) => {
     this._id = id;
     return this;
   }
 
-  setTitle = (title: string) => {
+  public setTitle = (title: string) => {
     this.title = title;
     return this;
   }
 
-  setDescription = (description: string) => {
+  public setDescription = (description: string) => {
     this.description = description;
     return this;
   }

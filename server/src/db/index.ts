@@ -6,7 +6,7 @@ import {
   FoodItemTemplate, foodItemTemplateSchema,
   FoodItemUnit, foodItemUnitSchema
 } from "../food/index";
-import { Recipe, RecipeCategory, recipeSchema, recipeCategorySchema } from "../recipe/index";
+import { Recipe, RecipeCategory, recipeCategorySchema, recipeSchema } from "../recipe/index";
 import { SocoboUser, socoboUserSchema } from "../socobouser/index";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
 

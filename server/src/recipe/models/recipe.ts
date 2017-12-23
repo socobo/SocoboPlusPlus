@@ -1,9 +1,9 @@
-import { RecipeCategory } from './recipe-category';
 import { IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateIf, ValidateNested} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
-import { Level, RecipeImage, RecipeStep } from "../index";
+import { Level, RecipeCategory, RecipeImage, RecipeStep } from "../index";
+
 import { IsCorrectRecipeLevelUsed } from "../validators/recipe-level.validator";
 import { AreRecipeStepsOrdered } from "../validators/recipe-steps-order.validator";
 import { AreRecipeStepsUnique } from "../validators/recipe-steps-unique.validator";

@@ -1,11 +1,10 @@
-import { RecipeCategory } from './../models/recipe-category';
 import { NextFunction, Request, Response } from "express";
-
 import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
 } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { Recipe} from "../index";
+import { RecipeCategory } from "./../models/recipe-category";
 
 export class RecipeCategoryHandler {
 

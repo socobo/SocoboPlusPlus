@@ -1,4 +1,4 @@
-import { SocoboUserRoleType } from './../src/socobouser/enums/SocoboUserRoleType';
+import { SocoboUserRoleType } from "./../src/socobouser/enums/SocoboUserRoleType";
 /*tslint:disable:no-unused-expression*/
 
 process.env["NODE_ENV"] = "test";
@@ -11,7 +11,9 @@ describe("RecipeCategoryRoute - API v1", () => {
 
   it("GET /api/v1/recipe-categories should pass if a token is provided", async () => {
     const accessToken = await TestHelper.getToken();
-    const result = await TestHelper.getAgent().get("/api/v1/recipe-categories").set("x-access-token", accessToken);
+    const result = await TestHelper.getAgent()
+      .get("/api/v1/recipe-categories")
+      .set("x-access-token", accessToken);
     expect(result.body).to.be.not.null;
     expect(result).to.be.json;
     expect(result).to.be.status(200);
@@ -19,13 +21,17 @@ describe("RecipeCategoryRoute - API v1", () => {
 
   it("GET /api/v1/recipe-categories should return all categories", async () => {
     const accessToken = await TestHelper.getToken();
-    const result = await TestHelper.getAgent().get("/api/v1/recipe-categories").set("x-access-token", accessToken);
+    const result = await TestHelper.getAgent()
+      .get("/api/v1/recipe-categories")
+      .set("x-access-token", accessToken);
     expect(result.body.length).to.equal(3);
   });
 
   it("GET /api/v1/recipe-categories/:id should return the category with the provied id", async () => {
     const accessToken = await TestHelper.getToken();
-    const result = await TestHelper.getAgent().get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1").set("x-access-token", accessToken);
+    const result = await TestHelper.getAgent()
+      .get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1")
+      .set("x-access-token", accessToken);
     expect(result.body.title).to.equal("Category 1");
     expect(result.body.description).to.equal("Category 1 Desc");
     expect(result.body._id).to.equal("5092ef66b9c6c5139160b4d1");
@@ -35,9 +41,9 @@ describe("RecipeCategoryRoute - API v1", () => {
     const accessToken = await TestHelper.getToken();
 
     const requestBody = {
-      title: "Crated Recipe 1",
-      description: "Created Recipe 1 Desc"
-    }
+      description: "Created Recipe 1 Desc",
+      title: "Crated Recipe 1"
+    };
 
     const result = await TestHelper.getAgent()
       .post("/api/v1/recipe-categories")
@@ -46,22 +52,22 @@ describe("RecipeCategoryRoute - API v1", () => {
       .send(requestBody);
     expect(result.body.title).to.equal(requestBody.title);
     expect(result.body.description).to.equal(requestBody.description);
-    expect(result.body).to.have.property('_id');
-    expect(result.body).to.have.property('createdAt');
-    expect(result.body).to.have.property('updatedAt');
+    expect(result.body).to.have.property("_id");
+    expect(result.body).to.have.property("createdAt");
+    expect(result.body).to.have.property("updatedAt");
   });
 
   it("POST /api/v1/recipe-categories normal user is not permitted to create a category", async () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.User, true);
 
     const requestBody = {
-      title: "Crated Recipe 1",
-      description: "Created Recipe 1 Desc"
-    }
+      description: "Created Recipe 1 Desc",
+      title: "Crated Recipe 1"
+    };
 
     try {
-      const accessToken = await TestHelper.getToken();
-      const result = await TestHelper.getAgent().post("/api/v1/recipe-categories")
+      const result = await TestHelper.getAgent()
+        .post("/api/v1/recipe-categories")
         .set("x-access-token", accessToken)
         .set("Content-Type", "application/json")
         .send(requestBody);
@@ -77,9 +83,9 @@ describe("RecipeCategoryRoute - API v1", () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
 
     const requestBody = {
-      title: "Category 1 UPDATED",
-      description: "Category 1 Desc UPDATED"
-    }
+      description: "Created Recipe 1 Desc UPDATED",
+      title: "Crated Recipe 1 UPDATED"
+    };
 
     const resultBefore = await TestHelper.getAgent()
       .get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1")
@@ -103,13 +109,13 @@ describe("RecipeCategoryRoute - API v1", () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.User, true);
 
     const requestBody = {
-      title: "Category 1 UPDATED",
-      description: "Category 1 Desc UPDATED"
-    }
+      description: "Created Recipe 1 Desc UPDATED",
+      title: "Crated Recipe 1 UPDATED"
+    };
 
     try {
-      const accessToken = await TestHelper.getToken();
-      const result = await TestHelper.getAgent().put("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1")
+      const result = await TestHelper.getAgent()
+        .put("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d1")
         .set("x-access-token", accessToken)
         .set("Content-Type", "application/json")
         .send(requestBody);
@@ -136,10 +142,10 @@ describe("RecipeCategoryRoute - API v1", () => {
       .set("x-access-token", accessToken);
     expect(result.status).to.equal(200);
 
-    try{
-      const resultBefore = await TestHelper.getAgent()
-      .get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d3")
-      .set("x-access-token", accessToken);
+    try {
+      await TestHelper.getAgent()
+        .get("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d3")
+        .set("x-access-token", accessToken);
     } catch (error) {
       expect(error.status).to.be.eql(404);
       const msg = "Recipe category with ID 5092ef66b9c6c5139160b4d3 could not be found";
@@ -147,15 +153,13 @@ describe("RecipeCategoryRoute - API v1", () => {
     }
   });
 
-
   it("DELETE /api/v1/recipe-categories/:id normal user is not permitted to delete a category", async () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.User, true);
 
     try {
-      const accessToken = await TestHelper.getToken();
-      const result = await TestHelper.getAgent().del("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d3")
+      const result = await TestHelper.getAgent()
+        .del("/api/v1/recipe-categories/5092ef66b9c6c5139160b4d3")
         .set("x-access-token", accessToken);
-
     } catch (error) {
       expect(error.status).to.be.eql(403);
       const msg = "The user has unsufficient permission to access the requested resource";

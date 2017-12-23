@@ -1,5 +1,5 @@
-import { RecipeCategory } from './../models/recipe-category';
 import { NextFunction, Request, Response } from "express";
+import { RecipeCategory } from "./../models/recipe-category";
 
 import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
@@ -21,25 +21,21 @@ export class RecipeHandler {
   }
 
   private _resolveCategory = (recipe: Recipe): Promise<Recipe> => {
-    console.log('id', recipe.categoryId);
     return this._db.recipeCategories.getById(recipe.categoryId)
       .then((category: RecipeCategory) => {
         recipe.category = category;
         return recipe;
-      })
+      });
   }
 
   private _resolveAllCategories = (recipes: Recipe[]): Promise<Recipe[]> => {
-    let promises: Promise<Recipe>[] = []
+    let promises: Array<Promise<Recipe>> = [];
     recipes.forEach((recipe: Recipe) => {
-      let recipeWithCategoryPromise = undefined;
-      if(recipe.categoryId) {
-        recipeWithCategoryPromise = this._resolveCategory(recipe);
-      } else {
-        recipeWithCategoryPromise = Promise.resolve(recipe);
-      }
-      promises = [...promises, recipeWithCategoryPromise]
-    })
+      const recipeWithCategoryPromise = recipe.categoryId
+        ? this._resolveCategory(recipe)
+        : Promise.resolve(recipe);
+      promises = [...promises, recipeWithCategoryPromise];
+    });
     return Promise.all(promises);
   }
 
@@ -50,18 +46,18 @@ export class RecipeHandler {
         ...recipesWithCategory,
         new Recipe().clone(recipe)
           .setCategoryId(undefined)];
-    })
+    });
     return recipesWithCategory;
   }
 
   public getById = async (req: Request, res: Response) => {
     const queryPramas = req.query;
     try {
-      const result = <Recipe> await this._db.recipe.getById(req.params.id);
-      if(queryPramas.hasOwnProperty('resolveCategory') && result.categoryId) {
+      const result = await this._db.recipe.getById(req.params.id) as Recipe;
+      if (queryPramas.hasOwnProperty("resolveCategory") && result.categoryId) {
         this._resolveCategory(result).then((recipe: Recipe) => {
           res.status(200).json(recipe);
-        })
+        });
       } else {
         res.status(200).json(result);
       }
@@ -73,11 +69,11 @@ export class RecipeHandler {
   public getAll = async (req: Request, res: Response) => {
     const queryPramas = req.query;
     try {
-      const result = <Recipe[]> await this._db.recipe.getAll();
-      if(queryPramas.hasOwnProperty('resolveCategory')) {
+      const result = await this._db.recipe.getAll() as Recipe[];
+      if (queryPramas.hasOwnProperty("resolveCategory")) {
         this._resolveAllCategories(result).then((recipes: Recipe[]) => {
           res.status(200).json(this._mapRecipesToRecipesWithCategory(recipes));
-        })
+        });
       } else {
         res.status(200).json(result);
       }
