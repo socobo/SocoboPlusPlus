@@ -32,7 +32,6 @@ export class TestHelper {
       const user = (userRole === SocoboUserRoleType.Admin)
         ? { email: "admin2@test.test", password: "password" }
         : { email: "john-doe@test.test", password: "SuperSecurePassword" };
-      console.log('user', user)
       const result = await chai.request(Server).post("/api/v1/auth/login").send(user);
       TestHelper._token = result.body.token;
       return result.body.token;
