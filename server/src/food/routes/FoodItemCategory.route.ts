@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
 import { AuthValidationHandler } from "../../auth/index";
+import { SocoboUserRoleType } from "../../socobouser/index";
 import { FoodItemCategory, FoodItemCategoryHandler } from "../index";
 
 export class FoodItemCategoryRoute {
@@ -27,16 +28,19 @@ export class FoodItemCategoryRoute {
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._modelValidationHandler.validateObject(this._objToValidate, [ValidationGroup.FOODITEMBASE]),
       this._fooditemCategoryHandler.updateById);
 
     this._router.post("/",
       this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._modelValidationHandler.validateObject(this._objToValidate, [ValidationGroup.FOODITEMBASE]),
       this._fooditemCategoryHandler.save);
 
     this._router.delete("/:id",
       this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._fooditemCategoryHandler.deleteById);
 
     return this._router;
