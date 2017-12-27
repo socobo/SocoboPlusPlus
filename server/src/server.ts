@@ -272,10 +272,11 @@ class Server {
 
   private _recipeCategoryRoute (): express.Router {
     const router: express.Router = express.Router();
-    return new RecipeCategoryRoute(router, this._recipeUpload,
+    return new RecipeCategoryRoute(
+      router,
       this._recipeCategoryHandler,
-      this._authValidationHandler, this._modelValidationHandler,
-      this._recipeMiddleware).createRoutes();
+      this._authValidationHandler,
+      this._modelValidationHandler).createRoutes();
   }
 
   private _logRoute (): express.Router {
