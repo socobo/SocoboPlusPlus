@@ -29,7 +29,7 @@ import {
 } from "./food/index";
 // recipe
 import {
-  RecipeHandler, RecipeMiddleware, RecipeRoute
+  RecipeCategoryHandler, RecipeCategoryRoute, RecipeHandler, RecipeMiddleware, RecipeRoute
 } from "./recipe/index";
 // socobouser
 import {
@@ -63,6 +63,7 @@ class Server {
   private _fooditemUnitHandler: FoodItemUnitHandler;
   private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
+  private _recipeCategoryHandler: RecipeCategoryHandler;
   private _logHandler: LogHandler;
 
   constructor () {
@@ -196,6 +197,7 @@ class Server {
     this._fooditemUnitHandler = new FoodItemUnitHandler(db);
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
     this._recipeHandler = new RecipeHandler(db, this._imgService);
+    this._recipeCategoryHandler = new RecipeCategoryHandler(db);
     this._logHandler = new LogHandler();
   }
 
@@ -235,6 +237,7 @@ class Server {
     this._app.use("/api/v1/fooditemunit", this._fooditemUnitRoute());
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
+    this._app.use("/api/v1/recipecategory", this._recipeCategoryRoute());
     this._app.use("/api/v1/log", this._logRoute());
     this._app.use(this._handleGenericErrors);
   }
@@ -275,6 +278,15 @@ class Server {
     return new RecipeRoute(router, this._recipeUpload, this._recipeHandler,
       this._authValidationHandler, this._modelValidationHandler,
       this._recipeMiddleware).createRoutes();
+  }
+
+  private _recipeCategoryRoute (): express.Router {
+    const router: express.Router = express.Router();
+    return new RecipeCategoryRoute(
+      router,
+      this._recipeCategoryHandler,
+      this._authValidationHandler,
+      this._modelValidationHandler).createRoutes();
   }
 
   private _logRoute (): express.Router {

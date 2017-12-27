@@ -7,7 +7,7 @@ import {
   FoodItemTemplate, foodItemTemplateSchema,
   FoodItemUnit, foodItemUnitSchema
 } from "../food/index";
-import { Recipe, recipeSchema } from "../recipe/index";
+import { Recipe, RecipeCategory, recipeCategorySchema, recipeSchema } from "../recipe/index";
 import { SocoboUser, socoboUserSchema } from "../socobouser/index";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
 
@@ -43,24 +43,33 @@ m.connect(getConnectionUrl(), { useMongoClient: true }, (err) => {
 });
 
 const fooditemTemplateModel = m.model<m.Document & FoodItemTemplate>("FoodItemTemplate",
-                                                                     foodItemTemplateSchema,
-                                                                     "fooditemtemplate");
+                                                                    foodItemTemplateSchema,
+                                                                    "fooditemtemplate");
 const fooditemCategoryModel = m.model<m.Document & FoodItemCategory>("FoodItemCategory",
-                                                                     foodItemCategorySchema,
-                                                                     "fooditemcategory");
+                                                                    foodItemCategorySchema,
+                                                                    "fooditemcategory");
 const fooditemUnitModel = m.model<m.Document & FoodItemUnit>("FoodItemUnit",
-                                                             foodItemUnitSchema,
-                                                             "fooditemunit");
+                                                            foodItemUnitSchema,
+                                                            "fooditemunit");
 const fooditemModel = m.model<m.Document & FoodItem>("FoodItem",
-                                                     foodItemSchema,
-                                                     "fooditem");
+                                                    foodItemSchema,
+                                                    "fooditem");
 const socoboUserModel = m.model<m.Document & SocoboUser>("SocoboUser",
-                                                         socoboUserSchema,
-                                                         "socobouser");
+                                                        socoboUserSchema,
+                                                        "socobouser");
 const recipeModel = m.model<m.Document & Recipe>("Recipe",
-                                                 recipeSchema,
-                                                 "recipe");
+                                                recipeSchema,
+                                                "recipe");
+const recipeCategoriesModel = m.model<m.Document & RecipeCategory>("RecipeCategory",
+                                                               recipeCategorySchema,
+                                                               "recipeCategory");
 
-const db = new MongoDbExtension(fooditemTemplateModel, fooditemCategoryModel,
-                                fooditemUnitModel, socoboUserModel, recipeModel);
+const db = new MongoDbExtension(
+  fooditemTemplateModel,
+  fooditemCategoryModel,
+  fooditemUnitModel,
+  socoboUserModel,
+  recipeModel,
+  recipeCategoriesModel);
+
 export = db;

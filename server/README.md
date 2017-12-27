@@ -3,7 +3,7 @@
 * [Requirements](#requirements)
 * [Build](#build-and-run)
 * [Test](#running-tests)
-* [Lint](#running-lint) 
+* [Lint](#running-lint)
 * [API Documentation](#api-documentation)
   * [Auth](#auth)
   * [FoodItemTemplate](#fooditemtemplate)
@@ -61,31 +61,42 @@
 
 1. Install some Docker engine for your system (e.g Docker for Mac)
 
-2. Go to server/sql/dev
-
-3. npm scripts to start the mongodb via docker
+2. npm script to start the mongodb via docker
 
 ```bash
 #Start a mongo db on the default port which is populated with mock data
 npm run docker:db:d
-
-#Start a mongodb terminal client 
-npm run docker:c
-
-# Clean up your containers
-npm run docker:r
 ```
 
-4. To add new mock data, add a new mongodb-seed section in the docker-compose file
+This script starts a mongo db in a docker container and fill it with mock data.
 
-in your terminal
+3. Start your app with npm run start:d
 
-6. 
+4. More
+
+- To add new mock data, add a new mongodb-seed section in the docker-compose file
+
+- Other docker commands to mangage your environment
+
+```bash
+#Start a mongodb terminal client to check your db content
+npm run docker:c
+```
+
+```bash
+# Clean up your containers => removes the started docker containers
+npm run docker:r
+```
 
 ## Running tests
 
 ```bash
 npm test
+```
+
+```bash
+# With docker
+npm run test:d
 ```
 
 ## Running lint
@@ -622,6 +633,10 @@ npm run lint
 
 - **GET /api/v1/recipes**
 
+  Query Parameter:
+
+  - resolveCagegory: If this query parameter is set, the response will not only contain the category id but the complete category data
+
   Response body:
     ```json
     [
@@ -632,6 +647,7 @@ npm run lint
         description: number,
         imageurl: string,
         created: Date,
+        categoryId: string,
         steps: [
           {
             id: number,
@@ -648,7 +664,7 @@ npm run lint
         ...
       }
     ]
-    
+
     ```
 
   Error body:
@@ -660,10 +676,13 @@ npm run lint
     }
     ```
 
-- **GET /api/v1/recipes/:id**
+- **GET /api/v1/recipes/:id?resolveCategory**
 
   Path Parameter:
     - id: Recipe id
+
+  Query Parameter
+    - resolveCagegory: If this query parameter is set, the response will not only contain the category id but the complete category data
 
   Response body:
     ```json
@@ -674,6 +693,7 @@ npm run lint
       description: number,
       imageurl: string,
       created: Date,
+      categoryId: string,
       steps: [
         {
           id: number,
@@ -716,6 +736,7 @@ npm run lint
         description: number,
         imageurl: string,
         created: Date,
+        categoryId: string,
         steps: [
           {
             id: number,
@@ -732,9 +753,9 @@ npm run lint
         ...
       }
     ]
-    
+
     ```
-    
+
   Error body:
     ```json
     {
@@ -763,6 +784,7 @@ npm run lint
       userId?: string,
       description?: string,
       imageurl?: string,
+      categoryId?: string,
       steps?: [
         {
           stepNumber: number,
@@ -785,6 +807,7 @@ npm run lint
       description: string,
       imageurl: string,
       created: Date,
+      categoryId: string,
       steps: [
         {
           id: number,
@@ -839,6 +862,7 @@ npm run lint
       description?: string,
       imageurl?: string,
       created: Date,
+      categoryId: string,
       steps: [
         {
           id: number,
@@ -885,6 +909,7 @@ npm run lint
       description?: string,
       imageurl: string,
       created: Date,
+      categoryId: string,
       steps: [
         {
           id: number,
@@ -914,6 +939,181 @@ npm run lint
 
   Path Parameter:
     - id: The id of the recipe which should be deleted
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+### **Recipe Category**
+
+- **GET /api/v1/recipecategory**
+
+  Response body:
+    ```json
+    [
+    {
+        _id: string,
+        updatedAt: string,
+        createdAt: string,
+        title: string,
+        description: string
+    }
+    ]
+
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **GET /api/v1/recipecategory/:id**
+
+  Path Parameter:
+
+    - id: the category id
+
+  Response body:
+    ```json
+    {
+        _id: string,
+        updatedAt: string,
+        createdAt: string,
+        title: string,
+        description: string
+    }
+
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **POST /api/v1/recipecategory**
+
+  **_This route is only with admin rights accessable!_**
+
+  Request body:
+  ```json
+  {
+    title: string,
+    description: string
+  }
+  ```
+
+  Response body:
+    ```json
+    {
+        _id: string,
+        updatedAt: string,
+        createdAt: string,
+        title: string,
+        description: string
+    }
+
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **PUT /api/v1/recipecategory/:id**
+
+  **_This route is only with admin rights accessable!_**
+
+  Path Parameter:
+
+    - id: the category id
+
+  Request body:
+  ```json
+  {
+    title: string,
+    description: string
+  }
+  ```
+
+  Response body:
+    ```json
+    {
+        _id: string,
+        updatedAt: string,
+        createdAt: string,
+        title: string,
+        description: string
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **DELETE /api/v1/recipecategory/:id**
+
+  **_This route is only with admin rights accessable!_**
+
+  Path Parameter:
+
+    - id: the category id
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+### **SocoboUser**
+
+- **GET /api/v1/socobouser**
+
+  **_This route is only with admin rights accessable!_**
+
+  Response body:
+    ```json
+    [
+      {
+        id: string,
+        username: string,
+        email: string,
+        hasTermsAccepted: boolean,
+        role: string|Role,
+        provider: string|Provider,
+        imageUrl: string,
+        created: number,
+        lastModified: number
+      },
+      {
+        ...
+      }
+    ]
+    ```
 
   Error body:
     ```json

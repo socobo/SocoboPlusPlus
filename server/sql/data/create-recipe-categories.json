@@ -1,0 +1,23 @@
+[
+  {
+    "_id" : {"$oid":"5092ef66b9c6c5139160b4d1"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "title": "Category 1",
+    "description": "Category 1 Desc"
+  },
+  {
+    "_id" : {"$oid":"5092ef66b9c6c5139160b4d2"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "title": "Category 2",
+    "description": "Category 2 Desc"
+  },
+  {
+    "_id" : {"$oid":"5092ef66b9c6c5139160b4d3"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "title": "Category 3",
+    "description": "Category 3 Desc"
+  }
+]

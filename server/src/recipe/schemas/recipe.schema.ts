@@ -2,6 +2,10 @@ import { Schema } from "mongoose";
 const ObjectId = Schema.Types.ObjectId;
 
 export const recipeSchema = new Schema({
+  categoryId: {
+    ref: "RecipeCategories",
+    type: ObjectId
+  },
   description: {
     required: true,
     type: String

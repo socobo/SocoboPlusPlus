@@ -159,6 +159,11 @@ export class ERRORS {
     "recipes.no.image.title",
     400
   );
+  public static RECIPE_CATEGORY_NOT_FOUND = new ErrorType(
+    "40004",
+    "recipe.category.not.found",
+    404
+  );
   public static FOODITEMTEMPLTE_NOT_FOUND = new ErrorType(
     "50001",
     "fooditem.template.not.found",
