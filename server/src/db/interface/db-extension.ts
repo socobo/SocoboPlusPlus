@@ -8,5 +8,5 @@ export interface DbExtension {
   fooditemUnit: FoodItemUnitRepository;
   socobouser: SocoboUserRepository;
   recipe: RecipeRepository;
-  recipeCategories: RecipeCategoryRepository;
+  recipeCategory: RecipeCategoryRepository;
 }

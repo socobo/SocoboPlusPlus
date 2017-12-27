@@ -233,7 +233,7 @@ class Server {
     this._app.use("/api/v1/fooditemunit", this._fooditemUnitRoute());
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
-    this._app.use("/api/v1/recipecategory", this._recipeCategoriesRoute());
+    this._app.use("/api/v1/recipecategory", this._recipeCategoryRoute());
     this._app.use("/api/v1/log", this._logRoute());
     this._app.use(this._handleGenericErrors);
   }
@@ -270,7 +270,7 @@ class Server {
       this._recipeMiddleware).createRoutes();
   }
 
-  private _recipeCategoriesRoute (): express.Router {
+  private _recipeCategoryRoute (): express.Router {
     const router: express.Router = express.Router();
     return new RecipeCategoryRoute(router, this._recipeUpload,
       this._recipeCategoryHandler,

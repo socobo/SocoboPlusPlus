@@ -21,7 +21,7 @@ export class RecipeHandler {
   }
 
   private _resolveCategory = (recipe: Recipe): Promise<Recipe> => {
-    return this._db.recipeCategories.getById(recipe.categoryId)
+    return this._db.recipeCategory.getById(recipe.categoryId)
       .then((category: RecipeCategory) => {
         recipe.category = category;
         return recipe;
