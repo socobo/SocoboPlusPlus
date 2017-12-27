@@ -9,6 +9,11 @@
     "member-ordering": [true, { "order": [ "constructor" ] }],
     "interface-name": false,
     "no-string-literal": false,
-    "prefer-object-spread": false
-  }
+    "prefer-object-spread": false,
+    "no-unused-expression": false,
+    "no-unused-expression-chai": true
+  },
+  "rulesDirectory": [
+    "tslint-no-unused-expression-chai"
+  ]
 }

@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { Validatable } from "../../app/index";
 import { FoodItemBase } from "./FoodItemBase";
 
-export class FoodItemUnit extends FoodItemBase implements Validatable {
+export class FoodItemCategory extends FoodItemBase implements Validatable {
 
   public foodItemId: Types.ObjectId;
 
@@ -11,9 +11,9 @@ export class FoodItemUnit extends FoodItemBase implements Validatable {
     return this;
   }
 
-  public clone = (foodItemUnit: FoodItemUnit): this => {
-    this.foodItemId = foodItemUnit.foodItemId;
-    this.name = foodItemUnit.name;
+  public clone = (foodItemCategory: FoodItemCategory): this => {
+    this.foodItemId = foodItemCategory.foodItemId;
+    this.name = foodItemCategory.name;
     this.createDates();
     return this;
   }

@@ -1,5 +1,3 @@
-/*tslint:disable:no-unused-expression*/
-
 process.env["NODE_ENV"] = "test";
 
 import * as chai from "chai";
@@ -69,5 +67,3 @@ describe("Model Validation Middleware", () => {
     expect(result).to.be.undefined;
   });
 });
-
-/*tslint:enable:no-unused-expression*/

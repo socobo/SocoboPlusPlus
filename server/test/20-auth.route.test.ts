@@ -1,5 +1,3 @@
-/*tslint:disable:no-unused-expression*/
-
 process.env["NODE_ENV"] = "test";
 
 import { expect } from "chai";
@@ -185,5 +183,3 @@ describe("AuthRoute - API v1", () => {
     }
   });
 });
-
-/*tslint:enable:no-unused-expression*/

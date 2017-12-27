@@ -1,58 +1,12 @@
 import { Document, Model, Types } from "mongoose";
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
-import { FoodItemTemplate } from "../index";
+import { BaseRepository, FoodItemTemplate } from "../index";
 
-export class FoodItemTemplateRepository {
+export class FoodItemTemplateRepository extends BaseRepository <FoodItemTemplate> {
 
-  constructor (private _fooditemTemplateModel: Model<Document & FoodItemTemplate>) {}
-
-  public getAll = async (): Promise<FoodItemTemplate[] | DbError> => {
-    try {
-      const templates = await this._fooditemTemplateModel.find({});
-      return templates.map(this._transformResult);
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, FoodItemTemplateRepository.name, "getAll(..)");
-    }
-  }
-
-  public getById = async (id: Types.ObjectId): Promise<FoodItemTemplate | DbError> => {
-    try {
-      const template = await this._fooditemTemplateModel.findOne({_id: id});
-      return this._transformResult(template);
-    } catch (error) {
-      return ErrorUtils.handleDbNotFound(ERRORS.FOODITEMTEMPLTE_NOT_FOUND, error,
-        FoodItemTemplateRepository.name, "getById(..)", "id", id.toString());
-    }
-  }
-
-  public save = async (template: FoodItemTemplate): Promise<Types.ObjectId | DbError> => {
-    try {
-      const createdFooditemTemplate = await this._fooditemTemplateModel.create(template);
-      return createdFooditemTemplate._id;
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, FoodItemTemplateRepository.name, "save(..)");
-    }
-  }
-
-  public updateById = async (id: Types.ObjectId, name: string): Promise<FoodItemTemplate | DbError> => {
-    try {
-      const updateValues = { name, lastModified: Date.now() };
-      const updatedTemplate = await this._fooditemTemplateModel.findByIdAndUpdate({ _id: id},
-                                                                              { $set: updateValues },
-                                                                              { new: true });
-      return this._transformResult(updatedTemplate);
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, FoodItemTemplateRepository.name, "updateById(..)");
-    }
-  }
-
-  public deleteById = async (id: Types.ObjectId): Promise<object | DbError> => {
-    try {
-      await this._fooditemTemplateModel.findByIdAndRemove({_id: id});
-      return { id };
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, FoodItemTemplateRepository.name, "deleteById(..)");
-    }
+  constructor (private _fooditemTemplateModel: Model<Document & FoodItemTemplate>) {
+    super(_fooditemTemplateModel, FoodItemTemplateRepository.name);
+    this.transformFunction = this._transformResult;
   }
 
   private _transformResult = (result: Document & FoodItemTemplate): FoodItemTemplate => {
