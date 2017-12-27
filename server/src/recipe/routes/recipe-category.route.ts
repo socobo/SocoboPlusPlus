@@ -9,38 +9,36 @@ export class RecipeCategoryRoute {
 
   constructor (
     private _router: Router,
-    private _multer: Instance,
-    private _recipeHandler: RecipeCategoryHandler,
+    private _recipeCategoryHandler: RecipeCategoryHandler,
     private _authValidationHandler: AuthValidationHandler,
-    private _modelValidationHandler: ModelValidationHandler,
-    private _recipeMiddleware: RecipeMiddleware) {}
+    private _modelValidationHandler: ModelValidationHandler) {}
 
   public createRoutes (): Router {
 
     this._router.get("/",
       this._authValidationHandler.checkToken,
-      this._recipeHandler.getAll);
+      this._recipeCategoryHandler.getAll);
 
     this._router.get("/:id",
       this._authValidationHandler.checkToken,
-      this._recipeHandler.getById);
+      this._recipeCategoryHandler.getById);
 
     this._router.post("/",
       this._authValidationHandler.checkToken,
       this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._modelValidationHandler.validateObject(new RecipeCategory(), [ValidationGroup.RECIPE]),
-      this._recipeHandler.save);
+      this._recipeCategoryHandler.save);
 
     this._router.put("/:id",
       this._authValidationHandler.checkToken,
       this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._modelValidationHandler.validateObject(new RecipeCategory(), [ValidationGroup.RECIPE]),
-      this._recipeHandler.update);
+      this._recipeCategoryHandler.update);
 
-    this._router.delete("/:id",
+    this._router.delete ("/:id",
       this._authValidationHandler.checkToken,
       this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
-      this._recipeHandler.delete);
+      this._recipeCategoryHandler.delete);
 
     return this._router;
   }

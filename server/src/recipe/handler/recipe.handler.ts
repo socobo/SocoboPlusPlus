@@ -20,12 +20,10 @@ export class RecipeHandler {
     };
   }
 
-  private _resolveCategory = (recipe: Recipe): Promise<Recipe> => {
-    return this._db.recipeCategory.getById(recipe.categoryId)
-      .then((category: RecipeCategory) => {
-        recipe.category = category;
-        return recipe;
-      });
+  private _resolveCategory = async (recipe: Recipe): Promise<Recipe> => {
+    const category = await this._db.recipeCategory.getById(recipe.categoryId) as RecipeCategory;
+    recipe.category = category;
+    return recipe;
   }
 
   private _resolveAllCategories = (recipes: Recipe[]): Promise<Recipe[]> => {
@@ -40,14 +38,10 @@ export class RecipeHandler {
   }
 
   private _mapRecipesToRecipesWithCategory = (recipes: Recipe[]) => {
-    let recipesWithCategory: Recipe[] = [];
-    recipes.forEach((recipe: Recipe) => {
-      recipesWithCategory = [
-        ...recipesWithCategory,
-        new Recipe().clone(recipe)
-          .setCategoryId(undefined)];
+    return recipes.map((recipe: Recipe) => {
+      return new Recipe().clone(recipe)
+      .setCategoryId(undefined);
     });
-    return recipesWithCategory;
   }
 
   public getById = async (req: Request, res: Response) => {
@@ -55,9 +49,8 @@ export class RecipeHandler {
     try {
       const result = await this._db.recipe.getById(req.params.id) as Recipe;
       if (queryPramas.hasOwnProperty("resolveCategory") && result.categoryId) {
-        this._resolveCategory(result).then((recipe: Recipe) => {
-          res.status(200).json(recipe);
-        });
+        const recipe = await this._resolveCategory(result);
+        return res.status(200).json(recipe);
       } else {
         res.status(200).json(result);
       }
@@ -71,9 +64,8 @@ export class RecipeHandler {
     try {
       const result = await this._db.recipe.getAll() as Recipe[];
       if (queryPramas.hasOwnProperty("resolveCategory")) {
-        this._resolveAllCategories(result).then((recipes: Recipe[]) => {
-          res.status(200).json(this._mapRecipesToRecipesWithCategory(recipes));
-        });
+        const recipes = await this._resolveAllCategories(result);
+        return  res.status(200).json(this._mapRecipesToRecipesWithCategory(recipes));
       } else {
         res.status(200).json(result);
       }
