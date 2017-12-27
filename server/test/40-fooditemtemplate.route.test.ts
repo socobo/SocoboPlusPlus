@@ -1,5 +1,3 @@
-/*tslint:disable:no-unused-expression*/
-
 process.env["NODE_ENV"] = "test";
 
 import { expect } from "chai";
@@ -84,5 +82,3 @@ describe("FoodItemTemplateRoute - API v1", () => {
     expect(result.body.id).to.equal(id);
   });
 });
-
-/*tslint:enable:no-unused-expression*/

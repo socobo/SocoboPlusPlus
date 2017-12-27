@@ -1,5 +1,3 @@
-/*tslint:disable:no-unused-expression*/
-
 process.env["NODE_ENV"] = "test";
 
 import { expect } from "chai";
@@ -35,6 +33,54 @@ describe("RecipeRoute - API v1", () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent().get(`/api/v1/recipe/${id}`).set("x-access-token", accessToken);
     expect(result.body.title).to.be.equal("TestData1");
+  });
+
+  it("PUT /api/v1/recipe:id should correctly change the whole recipe", async () => {
+    const id = "59a2ef66b9c6c5139160b4d2";
+    const newRecipe = {
+      description: "ChangedRecipe",
+      duration: 1,
+      level: "BEGINNER",
+      steps: [
+        {
+            stepDescription: "ChangedRecipe",
+            stepNumber: 1,
+            stepTitle: "ChangedRecipe"
+        },
+        {
+            stepDescription: "ChangedRecipe",
+            stepNumber: 2,
+            stepTitle: "ChangedRecipe"
+        }
+      ],
+      title: "ChangedRecipe",
+      userId: "59a2ee5d6b1ad6c629e9b2fc"
+    };
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
+      .set("x-access-token", accessToken)
+      .set("Content-Type", "application/json")
+      .send(newRecipe);
+    expect(result.body.title).to.be.equal("ChangedRecipe");
+    expect(result.body.level).to.be.equal("BEGINNER");
+    expect(result.body.steps[1].stepTitle).to.be.equal("ChangedRecipe");
+  });
+
+  it("PUT /api/v1/recipe:id should correctly change a particular property of the recipe", async () => {
+    const id = "59a2ef66b9c6c5139160b4d3";
+    const newRecipe = {
+      duration: 1,
+      title: "ChangedRecipe"
+    };
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
+      .set("x-access-token", accessToken)
+      .set("Content-Type", "application/json")
+      .send(newRecipe);
+    expect(result.body.title).to.be.equal("ChangedRecipe");
+    expect(result.body.duration).to.be.equal(1);
+    expect(result.body.description).to.be.equal("TestData3");
+    expect(result.body.steps[1].stepTitle).to.be.equal("TestDataStep2");
   });
 
   it("POST /api/v1/recipe should create a new recipe and return it", async () => {
@@ -155,55 +201,4 @@ describe("RecipeRoute - API v1", () => {
     expect(resultAfterDeletion.body.length).to.equal(resultBeforeDeletion.body.length - 1);
 
   });
-
-  it("PUT /api/v1/recipe:id should correctly change the whole recipe", async () => {
-    const id = "59a2ef66b9c6c5139160b4d2";
-    const newRecipe = {
-      description: "ChangedRecipe",
-      duration: 1,
-      level: "BEGINNER",
-      steps: [
-        {
-            stepDescription: "ChangedRecipe",
-            stepNumber: 1,
-            stepTitle: "ChangedRecipe"
-        },
-        {
-            stepDescription: "ChangedRecipe",
-            stepNumber: 2,
-            stepTitle: "ChangedRecipe"
-        }
-      ],
-      title: "ChangedRecipe",
-      userId: "59a2ee5d6b1ad6c629e9b2fc"
-    };
-    const accessToken = await TestHelper.getToken();
-    const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
-      .set("x-access-token", accessToken)
-      .set("Content-Type", "application/json")
-      .send(newRecipe);
-    expect(result.body.title).to.be.equal("ChangedRecipe");
-    expect(result.body.level).to.be.equal("BEGINNER");
-    expect(result.body.steps[1].stepTitle).to.be.equal("ChangedRecipe");
-
-  });
-
-  it("PUT /api/v1/recipe:id should correctly change a particular property of the recipe", async () => {
-    const id = "59a2ef66b9c6c5139160b4d3";
-    const newRecipe = {
-      duration: 1,
-      title: "ChangedRecipe"
-    };
-    const accessToken = await TestHelper.getToken();
-    const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
-      .set("x-access-token", accessToken)
-      .set("Content-Type", "application/json")
-      .send(newRecipe);
-    expect(result.body.title).to.be.equal("ChangedRecipe");
-    expect(result.body.duration).to.be.equal(1);
-    expect(result.body.description).to.be.equal("TestData3");
-    expect(result.body.steps[1].stepTitle).to.be.equal("TestDataStep2");
-  });
 });
-
-/*tslint:enable:no-unused-expression*/

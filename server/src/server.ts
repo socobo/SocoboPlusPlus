@@ -23,6 +23,7 @@ import { Config } from "./config";
 import * as db from "./db/index";
 // fooditem
 import {
+  FoodItemCategoryHandler, FoodItemCategoryRoute,
   FoodItemTemplateHandler, FoodItemTemplateRoute,
   FoodItemUnitHandler, FoodItemUnitRoute
 } from "./food/index";
@@ -58,6 +59,7 @@ class Server {
 
   private _authHandler: AuthHandler;
   private _fooditemTemplateHandler: FoodItemTemplateHandler;
+  private _fooditemCategoryHandler: FoodItemCategoryHandler;
   private _fooditemUnitHandler: FoodItemUnitHandler;
   private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
@@ -191,6 +193,7 @@ class Server {
     this._modelValidationHandler = new ModelValidationHandler(this._modelValidationMiddleware);
     this._authHandler = new AuthHandler(this._authService);
     this._fooditemTemplateHandler = new FoodItemTemplateHandler(db);
+    this._fooditemCategoryHandler = new FoodItemCategoryHandler(db);
     this._fooditemUnitHandler = new FoodItemUnitHandler(db);
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
     this._recipeHandler = new RecipeHandler(db, this._imgService);
@@ -230,6 +233,7 @@ class Server {
   private _apiRoutes (): void {
     this._app.use("/api/v1/auth", this._authRoute());
     this._app.use("/api/v1/fooditemtemplate", this._fooditemTemplateRoute());
+    this._app.use("/api/v1/fooditemcategory", this._fooditemCategoryRoute());
     this._app.use("/api/v1/fooditemunit", this._fooditemUnitRoute());
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
@@ -247,6 +251,12 @@ class Server {
   private _fooditemTemplateRoute (): express.Router {
     const router: express.Router = express.Router();
     return new FoodItemTemplateRoute(router, this._fooditemTemplateHandler,
+      this._authValidationHandler, this._modelValidationHandler).createRoutes();
+  }
+
+  private _fooditemCategoryRoute (): express.Router {
+    const router: express.Router = express.Router();
+    return new FoodItemCategoryRoute(router, this._fooditemCategoryHandler,
       this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 

@@ -37,8 +37,8 @@ describe("RecipeCategoryRoute - API v1", () => {
     expect(result.body._id).to.equal("5092ef66b9c6c5139160b4d1");
   });
 
-  it("POST /api/v1/recipecategory should crate a new category", async () => {
-    const accessToken = await TestHelper.getToken();
+  it("POST /api/v1/recipecategory should create a new category", async () => {
+    const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
 
     const requestBody = {
       description: "Created Recipe 1 Desc",
