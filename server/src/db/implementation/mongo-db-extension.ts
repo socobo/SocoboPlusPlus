@@ -1,3 +1,4 @@
+import { RecipeCrudRepository } from './../../recipe/repositories/recipe-crud.repository';
 import { Document, Model } from "mongoose";
 import {
   FoodItemCategory, FoodItemCategoryRepository,
@@ -38,7 +39,9 @@ export class MongoDbExtension implements DbExtension {
     this.fooditemUnit = new FoodItemUnitRepository(_fooditemUnitModel);
     this.socobouser = new SocoboUserRepository(_socobouserModel);
     this.recipe = new RecipeRepository(_recipeModel),
-    this.recipeCategory = new RecipeCategoryRepository(_recipeCategoryModel),
+    this.recipeCategory = new RecipeCategoryRepository(
+      _recipeCategoryModel,
+      new RecipeCrudRepository<RecipeCategory>(_recipeCategoryModel)),
     this.recipeIngredient = new RecipeIngredientRepository(_recipeIngredientModel);
   }
 }
