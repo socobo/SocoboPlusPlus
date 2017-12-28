@@ -1,3 +1,4 @@
+import { RecipeIngredient } from './recipe/models/recipe-ingredient';
 import "es6-shim";
 
 import * as bodyParser from "body-parser";
@@ -29,7 +30,12 @@ import {
 } from "./food/index";
 // recipe
 import {
-  RecipeCategoryHandler, RecipeCategoryRoute, RecipeHandler, RecipeMiddleware, RecipeRoute
+  RecipeCategoryHandler,
+  RecipeCategoryRoute,
+  RecipeHandler,
+  RecipeIngredientRoute,
+  RecipeMiddleware,
+  RecipeRoute
 } from "./recipe/index";
 // socobouser
 import {
@@ -238,6 +244,7 @@ class Server {
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
     this._app.use("/api/v1/recipecategory", this._recipeCategoryRoute());
+    this._app.use("/api/v1/recipeingredient", this._recipeIngredientRoute());
     this._app.use("/api/v1/log", this._logRoute());
     this._app.use(this._handleGenericErrors);
   }
@@ -283,6 +290,15 @@ class Server {
   private _recipeCategoryRoute (): express.Router {
     const router: express.Router = express.Router();
     return new RecipeCategoryRoute(
+      router,
+      this._recipeCategoryHandler,
+      this._authValidationHandler,
+      this._modelValidationHandler).createRoutes();
+  }
+
+  private _recipeIngredientRoute (): express.Router {
+    const router: express.Router = express.Router();
+    return new RecipeIngredientRoute(
       router,
       this._recipeCategoryHandler,
       this._authValidationHandler,

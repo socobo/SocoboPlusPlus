@@ -1,3 +1,4 @@
+import { RecipeIngredient } from './../recipe/models/recipe-ingredient';
 import * as m from "mongoose";
 import { ApiError, ErrorType, ErrorUtils, LogService } from "../app/index";
 import { Config } from "../config";
@@ -7,7 +8,12 @@ import {
   FoodItemTemplate, foodItemTemplateSchema,
   FoodItemUnit, foodItemUnitSchema
 } from "../food/index";
-import { Recipe, RecipeCategory, recipeCategorySchema, recipeSchema } from "../recipe/index";
+import {
+  Recipe,
+  RecipeCategory,
+  recipeCategorySchema,
+  recipeIngredientSchema,
+  recipeSchema } from "../recipe/index";
 import { SocoboUser, socoboUserSchema } from "../socobouser/index";
 import { MongoDbExtension } from "./implementation/mongo-db-extension";
 
@@ -63,6 +69,9 @@ const recipeModel = m.model<m.Document & Recipe>("Recipe",
 const recipeCategoriesModel = m.model<m.Document & RecipeCategory>("RecipeCategory",
                                                                recipeCategorySchema,
                                                                "recipeCategory");
+const recipeIngredientModel = m.model<m.Document & RecipeIngredient>("RecipeIngredient",
+                                                               recipeIngredientSchema,
+                                                               "recipeIngredient");
 
 const db = new MongoDbExtension(
   fooditemTemplateModel,
@@ -70,6 +79,7 @@ const db = new MongoDbExtension(
   fooditemUnitModel,
   socoboUserModel,
   recipeModel,
-  recipeCategoriesModel);
+  recipeCategoriesModel,
+  recipeIngredientModel);
 
 export = db;
