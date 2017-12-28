@@ -15,7 +15,7 @@ export class RecipeIngredient implements Validatable {
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
   })
-  public fooditemId: string | Types.ObjectId;
+  public fooditemTemplateId: string | Types.ObjectId;
 
   public clone (recipeIngredient: RecipeIngredient) {
     if (!recipeIngredient) {
@@ -23,7 +23,7 @@ export class RecipeIngredient implements Validatable {
     }
     this._id = recipeIngredient._id;
     this.amount = recipeIngredient.amount;
-    this.fooditemId = recipeIngredient.fooditemId;
+    this.fooditemTemplateId = recipeIngredient.fooditemTemplateId;
     return this;
   }
 
@@ -37,8 +37,8 @@ export class RecipeIngredient implements Validatable {
     return this;
   }
 
-  public setFooditemId = (id: string | Types.ObjectId) => {
-    this.fooditemId = id;
+  public setFooditemTemplateId = (id: string | Types.ObjectId) => {
+    this.fooditemTemplateId = id;
     return this;
   }
 }
