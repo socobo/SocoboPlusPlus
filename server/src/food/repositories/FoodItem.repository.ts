@@ -1,9 +1,34 @@
-import { Document, Model } from "mongoose";
-import { DbError } from "../../app/index";
+import { Document, Model, Types } from "mongoose";
+import { DbError, ErrorUtils } from "../../app/index";
 import { FoodItem } from "../index";
+import { BaseRepository } from "./Base.repository";
 
-export class FoodItemRepository {
+export class FoodItemRepository extends BaseRepository <FoodItem> {
 
-  constructor (private _model: Model<Document & FoodItem>) { }
+  constructor (private _fooditemModel: Model<Document & FoodItem>) {
+    super(_fooditemModel, FoodItemRepository.name);
+    this.transformFunction = this._transformResult;
+  }
 
+  public async getAllBySocoboUserId (socoboUserId: Types.ObjectId): Promise<FoodItem[] | DbError> {
+    try {
+      const entities = await this._fooditemModel.find({ socobouser: socoboUserId });
+      return entities.map(this._transformResult);
+    } catch (error) {
+      return ErrorUtils.handleDbError(error, FoodItemRepository.name, "getAllBySocoboUserId(..)");
+    }
+  }
+
+  private _transformResult = (result: Document & FoodItem): FoodItem => {
+    if (!result) { throw new Error("FoodItem not found!"); }
+    const transformedResult = new FoodItem()
+      .setId(result.id)
+      .setFoodItemTemplateId(result.foodItemTemplateId)
+      .setSocoboUserId(result.socoboUserId)
+      .setAmount(result.amount)
+      .setBestBefore(result.bestBefore)
+      .setCreated(result.created)
+      .setLastModified(result.lastModified);
+    return transformedResult;
+  }
 }
