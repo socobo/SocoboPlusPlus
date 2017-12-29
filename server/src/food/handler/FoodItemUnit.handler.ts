@@ -43,11 +43,11 @@ export class FoodItemUnitHandler {
     try {
       const unitId = new Types.ObjectId(req.params.id);
       const foodItemId = req.body.foodItemId;
-      const updatedUnitName = req.body.name;
 
       // TODO:  await this._db.fooditem.getById(foodItemId);
 
-      const result = await this._db.fooditemUnit.updateById(unitId, updatedUnitName);
+      const updateValues = { name: req.body.name, lastModified: Date.now() };
+      const result = await this._db.fooditemUnit.updateById(unitId, updateValues);
       res.status(200).json(result);
     } catch (error) {
       res.status(error.statusCode).json(error.forResponse());

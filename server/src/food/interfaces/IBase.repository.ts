@@ -6,6 +6,6 @@ export interface IBaseRepository <T> {
   getAll (): Promise<T[] | DbError>;
   getById (id: Types.ObjectId): Promise<T | DbError>;
   save (entity: T): Promise<Types.ObjectId | DbError>;
-  updateById (id: Types.ObjectId, name: string): Promise<T | DbError>;
+  updateById (id: Types.ObjectId, updateValues: object): Promise<T | DbError>;
   deleteById (id: Types.ObjectId): Promise<object | DbError>;
 }

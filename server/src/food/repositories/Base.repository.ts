@@ -44,9 +44,8 @@ export class BaseRepository <T> implements IBaseRepository <T> {
     }
   }
 
-  public async updateById (id: Types.ObjectId, name: string): Promise<T | DbError> {
+  public async updateById (id: Types.ObjectId, updateValues: object): Promise<T | DbError> {
     try {
-      const updateValues = { name, lastModified: Date.now() };
       const updatedEntity = await this._model.findByIdAndUpdate({ _id: id},
                                                                 { $set: updateValues },
                                                                 { new: true });
