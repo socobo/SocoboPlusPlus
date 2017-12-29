@@ -18,6 +18,9 @@ export class RecipeImage implements Validatable {
   public title: string;
 
   public clone (image: RecipeImage): RecipeImage {
+    if(!image) {
+      return undefined
+    }
     this.url = image.url;
     this.title = image.title;
     return this;

@@ -31,12 +31,11 @@ export class RecipeIngredientRoute {
 
   this._router.put("/:id",
     this._authValidationHandler.checkToken,
-    this._modelValidationHandler.validateObject(new RecipeIngredient(), [ValidationGroup.RECIPE]),
+    // this._modelValidationHandler.validateObject(new RecipeIngredient(), [ValidationGroup.RECIPE]),
     this._recipeIngredientHandler.update);
 
   this._router.delete ("/:id",
     this._authValidationHandler.checkToken,
-    this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
     this._recipeIngredientHandler.delete);
 
     return this._router;

@@ -68,6 +68,9 @@ export class Recipe implements Validatable {
   public duration: number;
 
   public clone (recipe: Recipe) {
+    if (!recipe) {
+      return undefined;
+    }
     this._id = recipe._id;
     this.title = recipe.title;
     this.description = recipe.description;

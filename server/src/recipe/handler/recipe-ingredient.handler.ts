@@ -95,6 +95,7 @@ export class RecipeIngredientHandler {
       .clone(req.body as RecipeIngredient);
     ingredient.setId(req.params.id);
     try {
+      console.log('TEST', ingredient)
       const result = await this._db.recipeIngredient.update(req.params.id, ingredient);
       res.status(200).json(result);
     } catch (error) {

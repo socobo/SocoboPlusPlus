@@ -15,8 +15,6 @@ export * from "./enums/levels";
 export * from "./repositories/crud.repository";
 export * from "./repositories/recipe-crud.repository";
 export * from "./repositories/recipe.repository";
-export * from "./repositories/recipe-category.repository";
-export * from "./repositories/recipe-ingredient.repository";
 
 export * from "./routes/recipe.route";
 export * from "./routes/recipe-category.route";

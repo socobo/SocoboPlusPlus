@@ -9,10 +9,8 @@ import {
   CrudRepository,
   Recipe,
   RecipeCategory,
-  RecipeCategoryRepository,
   RecipeCrudRepository,
   RecipeIngredient,
-  RecipeIngredientRepository,
   RecipeRepository} from "../../recipe/index";
 import { SocoboUser, SocoboUserRepository } from "../../socobouser/index";
 import { DbExtension } from "../interface/db-extension";

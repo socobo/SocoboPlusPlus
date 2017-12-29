@@ -1,6 +1,6 @@
 import { RecipeCategory } from './../../recipe/models/recipe-category';
 import { FoodItemCategoryRepository, FoodItemTemplateRepository, FoodItemUnitRepository } from "../../food/index";
-import { CrudRepository, RecipeCategoryRepository, RecipeIngredient, RecipeIngredientRepository, RecipeRepository } from "../../recipe/index";
+import { CrudRepository, RecipeIngredient, RecipeRepository } from "../../recipe/index";
 
 import { SocoboUserRepository } from "../../socobouser/index";
 
