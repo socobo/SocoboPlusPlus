@@ -47,9 +47,17 @@ export class RecipeIngredientHandler {
   }
 
   public getById = async (req: Request, res: Response) => {
+    const queryPrams = req.query;
+
     try {
-      const result = await this._db.recipeIngredient.getById(req.params.id);
-      res.status(200).json(result);
+      const ingredient = await this._db.recipeIngredient.getById(req.params.id) as RecipeIngredient;
+      if (queryPrams.hasOwnProperty("resolve") && ingredient.fooditemTemplateId) {
+        const resolvedIngredient = await this._resolveFoodItemTemplate(ingredient);
+        resolvedIngredient.fooditemTemplateId = undefined;
+        return res.status(200).json(resolvedIngredient);
+      } else {
+        res.status(200).json(ingredient);
+      }
     } catch (error) {
       this._sendError(res)(error);
     }

@@ -50,6 +50,7 @@ export class RecipeHandler {
       const result = await this._db.recipe.getById(req.params.id) as Recipe;
       if (queryPramas.hasOwnProperty("resolve") && result.categoryId) {
         const recipe = await this._resolveCategory(result);
+        recipe.categoryId = undefined;
         return res.status(200).json(recipe);
       } else {
         res.status(200).json(result);
