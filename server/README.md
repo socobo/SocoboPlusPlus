@@ -635,7 +635,7 @@ npm run lint
 
   Query Parameter:
 
-  - resolveCagegory: If this query parameter is set, the response will not only contain the category id but the complete category data
+  - resolve: If this query parameter is set, the response will not only contain the category id but the complete category data
 
   Response body:
     ```json
@@ -682,7 +682,7 @@ npm run lint
     - id: Recipe id
 
   Query Parameter
-    - resolveCagegory: If this query parameter is set, the response will not only contain the category id but the complete category data
+    - resolve: If this query parameter is set, the response will not only contain the category id but the complete category data
 
   Response body:
     ```json

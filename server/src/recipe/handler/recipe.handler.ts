@@ -48,7 +48,7 @@ export class RecipeHandler {
     const queryPramas = req.query;
     try {
       const result = await this._db.recipe.getById(req.params.id) as Recipe;
-      if (queryPramas.hasOwnProperty("resolveCategory") && result.categoryId) {
+      if (queryPramas.hasOwnProperty("resolve") && result.categoryId) {
         const recipe = await this._resolveCategory(result);
         return res.status(200).json(recipe);
       } else {
@@ -60,10 +60,10 @@ export class RecipeHandler {
   }
 
   public getAll = async (req: Request, res: Response) => {
-    const queryPramas = req.query;
+    const queryPrams = req.query;
     try {
       const result = await this._db.recipe.getAll() as Recipe[];
-      if (queryPramas.hasOwnProperty("resolveCategory")) {
+      if (queryPrams.hasOwnProperty("resolve")) {
         const recipes = await this._resolveAllCategories(result);
         return  res.status(200).json(this._mapRecipesToRecipesWithCategory(recipes));
       } else {

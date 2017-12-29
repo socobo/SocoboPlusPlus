@@ -2,6 +2,8 @@ import { IsInt, IsNotEmpty} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
+import { FoodItemTemplate } from './../../food/index';
+
 export class RecipeIngredient implements Validatable {
 
   public _id: Types.ObjectId | string;
@@ -16,6 +18,8 @@ export class RecipeIngredient implements Validatable {
     groups: [ ValidationGroup.RECIPE ]
   })
   public fooditemTemplateId: string | Types.ObjectId;
+  public fooditemTemplate: FoodItemTemplate;
+
 
   public clone (recipeIngredient: RecipeIngredient) {
     if (!recipeIngredient) {
@@ -24,6 +28,7 @@ export class RecipeIngredient implements Validatable {
     this._id = recipeIngredient._id;
     this.amount = recipeIngredient.amount;
     this.fooditemTemplateId = recipeIngredient.fooditemTemplateId;
+    this.fooditemTemplate = new FoodItemTemplate().clone(recipeIngredient.fooditemTemplate);
     return this;
   }
 
@@ -39,6 +44,11 @@ export class RecipeIngredient implements Validatable {
 
   public setFooditemTemplateId = (id: string | Types.ObjectId) => {
     this.fooditemTemplateId = id;
+    return this;
+  }
+
+  public setFooditemTemplate = (fit: FoodItemTemplate) => {
+    this.fooditemTemplate = fit;
     return this;
   }
 }

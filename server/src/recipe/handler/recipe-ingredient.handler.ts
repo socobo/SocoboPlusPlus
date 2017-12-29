@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response } from "express";
+import { Types } from "mongoose";
 import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
 } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
+import { FoodItemTemplate } from './../../food/index';
 import { Recipe, RecipeIngredient} from "../index";
+
+const ObjectId = Types.ObjectId;
 
 export class RecipeIngredientHandler {
 
@@ -17,6 +21,31 @@ export class RecipeIngredientHandler {
     };
   }
 
+  private _resolveFoodItemTemplate = async (ingredient: RecipeIngredient): Promise<RecipeIngredient> => {
+    const fit = await this._db.fooditemTemplate
+      .getById(new ObjectId(ingredient.fooditemTemplateId)) as FoodItemTemplate;
+      ingredient.fooditemTemplate = fit;
+    return ingredient;
+  }
+
+  private _resolveAllFoodItemTemplat = (ingredients: RecipeIngredient[]): Promise<RecipeIngredient[]> => {
+    let promises: Array<Promise<RecipeIngredient>> = [];
+    ingredients.forEach((ingredient: RecipeIngredient) => {
+      const ingredientWithCategoryPromise = ingredient.fooditemTemplateId
+        ? this._resolveFoodItemTemplate(ingredient)
+        : Promise.resolve(ingredient);
+      promises = [...promises, ingredientWithCategoryPromise];
+    });
+    return Promise.all(promises);
+  }
+
+  private _mapFooditemTemplateIdToFooditemTemplateWithCategory = (ingredients: RecipeIngredient[]) => {
+    return ingredients.map((ingrediet: RecipeIngredient) => {
+      return new RecipeIngredient().clone(ingrediet)
+      .setFooditemTemplateId(undefined);
+    });
+  }
+
   public getById = async (req: Request, res: Response) => {
     try {
       const result = await this._db.recipeIngredient.getById(req.params.id);
@@ -27,9 +56,16 @@ export class RecipeIngredientHandler {
   }
 
   public getAll = async (req: Request, res: Response) => {
+    const queryPrams = req.query;
+
     try {
-      const result = await this._db.recipeIngredient.getAll();
-      res.status(200).json(result);
+      const result = await this._db.recipeIngredient.getAll() as RecipeIngredient[];
+      if (queryPrams.hasOwnProperty("resolve")) {
+        const recipes = await this._resolveAllFoodItemTemplat(result);
+        return  res.status(200).json(this._mapFooditemTemplateIdToFooditemTemplateWithCategory(recipes));
+      } else {
+        res.status(200).json(result);
+      }
     } catch (error) {
       this._sendError(res)(error);
     }
