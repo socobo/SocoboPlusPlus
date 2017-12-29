@@ -1,5 +1,6 @@
+import { RecipeCategory } from './../../recipe/models/recipe-category';
 import { FoodItemCategoryRepository, FoodItemTemplateRepository, FoodItemUnitRepository } from "../../food/index";
-import { RecipeCategoryRepository, RecipeIngredientRepository, RecipeRepository } from "../../recipe/index";
+import { CrudRepository, RecipeCategoryRepository, RecipeIngredient, RecipeIngredientRepository, RecipeRepository } from "../../recipe/index";
 
 import { SocoboUserRepository } from "../../socobouser/index";
 
@@ -10,6 +11,6 @@ export interface DbExtension {
   fooditemUnit: FoodItemUnitRepository;
   socobouser: SocoboUserRepository;
   recipe: RecipeRepository;
-  recipeCategory: RecipeCategoryRepository;
-  recipeIngredient: RecipeIngredientRepository
+  recipeCategory: CrudRepository<RecipeCategory>;
+  recipeIngredient: CrudRepository<RecipeIngredient>;
 }

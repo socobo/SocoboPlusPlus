@@ -1,18 +1,19 @@
+import { ErrorType } from './../../app/models/errors/error-type';
 import { Document, Model } from "mongoose";
 import * as winston from "winston";
 
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
-import { CrudRepository, Recipe, RecipeCategory, RecipeImage, recipeSchema, RecipeStep } from "../index";
+import { CrudRepository } from "../index";
 
 export class RecipeCrudRepository<T> implements CrudRepository<T> {
 
-  constructor (private _model: Model<Document & T>) {  }
+  constructor (private _model: Model<Document & T>, private _notFoundType: ErrorType) {  }
 
   private _handleNotFound = (foundItem: any, id: string, method: string) => {
     if (!foundItem) {
       throw new DbError(
-        ERRORS.RECIPE_CATEGORY_NOT_FOUND.withArgs("ID", id))
+        this._notFoundType.withArgs("ID", id))
         .addSource(RecipeCrudRepository.name)
         .addSourceMethod(method);
     }
@@ -29,9 +30,9 @@ export class RecipeCrudRepository<T> implements CrudRepository<T> {
 
   public getById = async (id: string): Promise<T | DbError> => {
     try {
-      const foundRecipeCategory = await this._model.findById(id).lean() as T;
-      this._handleNotFound(foundRecipeCategory, id, "findById()");
-      return foundRecipeCategory;
+      const foundItem = await this._model.findById(id).lean() as T;
+      this._handleNotFound(foundItem, id, "findById()");
+      return foundItem;
     } catch (error) {
       winston.error(error);
       return ErrorUtils.handleDbError(error, RecipeCrudRepository.name, "getById(..)");

@@ -1,5 +1,6 @@
 export * from "./handler/recipe.handler";
 export * from "./handler/recipe-category.handler";
+export * from "./handler/recipe-ingredient.handler";
 
 export * from "./middleware/recipe.middleware";
 

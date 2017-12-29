@@ -1,4 +1,4 @@
-import { RecipeCrudRepository } from './../../recipe/repositories/recipe-crud.repository';
+import { ERRORS } from "../../app/models/errors/errors";
 import { Document, Model } from "mongoose";
 import {
   FoodItemCategory, FoodItemCategoryRepository,
@@ -6,9 +6,11 @@ import {
   FoodItemUnit, FoodItemUnitRepository
 } from "../../food/index";
 import {
+  CrudRepository,
   Recipe,
   RecipeCategory,
   RecipeCategoryRepository,
+  RecipeCrudRepository,
   RecipeIngredient,
   RecipeIngredientRepository,
   RecipeRepository} from "../../recipe/index";
@@ -22,8 +24,8 @@ export class MongoDbExtension implements DbExtension {
   public fooditemUnit: FoodItemUnitRepository;
   public socobouser: SocoboUserRepository;
   public recipe: RecipeRepository;
-  public recipeCategory: RecipeCategoryRepository;
-  public recipeIngredient: RecipeIngredientRepository;
+  public recipeCategory: CrudRepository<RecipeCategory>;
+  public recipeIngredient: CrudRepository<RecipeIngredient>;
 
   constructor (
     private _fooditemTemplateModel: Model<Document & FoodItemTemplate>,
@@ -38,10 +40,16 @@ export class MongoDbExtension implements DbExtension {
     this.fooditemCategory = new FoodItemCategoryRepository(_fooditemCategoryModel);
     this.fooditemUnit = new FoodItemUnitRepository(_fooditemUnitModel);
     this.socobouser = new SocoboUserRepository(_socobouserModel);
-    this.recipe = new RecipeRepository(_recipeModel),
-    this.recipeCategory = new RecipeCategoryRepository(
+    this.recipe = new RecipeRepository(
+      _recipeModel,
+      new RecipeCrudRepository(
+      _recipeModel,
+      ERRORS.RECIPE_CATEGORY_NOT_FOUND));
+    this.recipeCategory = new RecipeCrudRepository(
       _recipeCategoryModel,
-      new RecipeCrudRepository<RecipeCategory>(_recipeCategoryModel)),
-    this.recipeIngredient = new RecipeIngredientRepository(_recipeIngredientModel);
+      ERRORS.RECIPE_CATEGORY_NOT_FOUND);
+    this.recipeIngredient = new RecipeCrudRepository(
+      _recipeIngredientModel,
+      ERRORS.RECIPE_INGREDIENT_NOT_FOUND);
   }
 }

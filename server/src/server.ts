@@ -34,6 +34,7 @@ import {
   RecipeCategoryRoute,
   RecipeHandler,
   RecipeIngredientRoute,
+  RecipeIngredientHandler,
   RecipeMiddleware,
   RecipeRoute
 } from "./recipe/index";
@@ -70,6 +71,7 @@ class Server {
   private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
   private _recipeCategoryHandler: RecipeCategoryHandler;
+  private _recipeIngredientHandler: RecipeIngredientHandler;
   private _logHandler: LogHandler;
 
   constructor () {
@@ -204,6 +206,7 @@ class Server {
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
     this._recipeHandler = new RecipeHandler(db, this._imgService);
     this._recipeCategoryHandler = new RecipeCategoryHandler(db);
+    this._recipeIngredientHandler = new RecipeIngredientHandler(db);
     this._logHandler = new LogHandler();
   }
 
@@ -300,7 +303,7 @@ class Server {
     const router: express.Router = express.Router();
     return new RecipeIngredientRoute(
       router,
-      this._recipeCategoryHandler,
+      this._recipeIngredientHandler,
       this._authValidationHandler,
       this._modelValidationHandler).createRoutes();
   }
