@@ -11,6 +11,7 @@ export * from "./models/FoodItemTemplate";
 export * from "./models/FoodItemUnit";
 
 export * from "./repositories/Base.repository";
+export * from "./repositories/FoodItem.repository";
 export * from "./repositories/FoodItemCategory.repository";
 export * from "./repositories/FoodItemTemplate.repository";
 export * from "./repositories/FoodItemUnit.repository";

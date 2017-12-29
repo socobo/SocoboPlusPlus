@@ -5,23 +5,23 @@
     "bestBefore": 1501948817400,
     "created": 1503849392349,
     "lastModified": 1503849392349,
-    "foodItemTemplate_id": {"$oid":"59a2eea98a5a150e9e829409"},
-    "socobousers_id": {"$oid":"59a2ee598ae9b7b45243d503"}
+    "foodItemTemplate_id": "59a2eea98a5a150e9e829409",
+    "socobousers_id": "59a2ee598ae9b7b45243d503"
   },{
     "_id" : {"$oid":"59a2ef67abc417f4a99d55fc"},
     "amount": 4.0,
     "bestBefore": 1501948817400,
     "created": 1503849392349,
     "lastModified": 1503849392349,
-    "foodItemTemplate_id": {"$oid":"59a2eeaaf11f5c403eeb6d06"},
-    "socobousers_id": {"$oid":"59a2ee598ae9b7b45243d503"}
+    "foodItemTemplate_id": "59a2eeaaf11f5c403eeb6d06",
+    "socobousers_id": "59a2ee598ae9b7b45243d503"
   },{
     "_id" : {"$oid":"59a2ef68310b123d61063301"},
     "amount": 1.0,
     "bestBefore": 1501948817400,
     "created": 1503849392349,
     "lastModified": 1503849392349,
-    "foodItemTemplate_id": {"$oid":"59a2eeaaf09a4c43cb92ef0b"},
-    "socobousers_id": {"$oid":"59a2ee598ae9b7b45243d503"}
+    "foodItemTemplate_id": "59a2eeaaf09a4c43cb92ef0b",
+    "socobousers_id": "59a2ee598ae9b7b45243d503"
   }
 ]

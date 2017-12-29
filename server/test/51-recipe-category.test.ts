@@ -1,10 +1,8 @@
-import { SocoboUserRoleType } from "./../src/socobouser/enums/SocoboUserRoleType";
-/*tslint:disable:no-unused-expression*/
-
 process.env["NODE_ENV"] = "test";
 
 import { expect } from "chai";
 import * as mocha from "mocha";
+import { SocoboUserRoleType } from "./../src/socobouser/enums/SocoboUserRoleType";
 import { TestHelper } from "./helper/TestHelper";
 
 describe("RecipeCategoryRoute - API v1", () => {
@@ -167,5 +165,3 @@ describe("RecipeCategoryRoute - API v1", () => {
     }
   });
 });
-
-/*tslint:enable:no-unused-expression*/

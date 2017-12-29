@@ -68,6 +68,7 @@ const db = new MongoDbExtension(
   fooditemTemplateModel,
   fooditemCategoryModel,
   fooditemUnitModel,
+  fooditemModel,
   socoboUserModel,
   recipeModel,
   recipeCategoriesModel);
