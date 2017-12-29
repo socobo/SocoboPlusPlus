@@ -20,6 +20,7 @@ export const recipeSchema = new Schema({
       url: String
     }
   ],
+  ingredients: [String],
   level: {
     required: false,
     type: String

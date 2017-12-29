@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateIf, ValidateNested} from "class-validator";
+import { ArrayMinSize, IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateIf, ValidateNested} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
@@ -32,6 +32,15 @@ export class Recipe implements Validatable {
     groups: [ ValidationGroup.RECIPE ]
   })
   public images: RecipeImage[];
+
+  @IsNotEmpty({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @ArrayMinSize(1, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public ingredients: string[];
+
 
   @AreRecipeStepsUnique({
     groups: [ ValidationGroup.RECIPE ]
@@ -80,6 +89,7 @@ export class Recipe implements Validatable {
     this.level = recipe.level;
     this.duration = recipe.duration;
     this.images = [];
+    this.ingredients = [...recipe.ingredients];
     if (recipe.images) {
       recipe.images.forEach((image: RecipeImage) => {
         this.images.push(new RecipeImage().clone(image));
@@ -131,6 +141,11 @@ export class Recipe implements Validatable {
 
   public setImages (images: RecipeImage[]) {
     this.images = images;
+    return this;
+  }
+
+  public setIngredients (ingredients: string[]) {
+    this.ingredients = [...ingredients];
     return this;
   }
 
