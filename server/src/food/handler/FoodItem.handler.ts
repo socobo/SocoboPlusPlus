@@ -10,18 +10,16 @@ export class FoodItemHandler {
 
   public getAll = async (req: Request, res: Response): Promise<void> => {
     try {
-      const result = await this._db.fooditem.getAll();
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
-    }
-  }
+      let result;
 
-  public getAllBySocoboUser = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const socoboUserId = req.query.socoboUserId;
-      await this._checkIfSocoboUserExists(socoboUserId, "getAllBySocoboUser(..)");
-      const result = await this._db.fooditem.getAllBySocoboUserId(socoboUserId);
+      if (req.query && req.query.hasOwnProperty("socoboUserId")) {
+        const socoboUserId = req.query.socoboUserId;
+        await this._checkIfSocoboUserExists(socoboUserId, "getAll(..)");
+        result = await this._db.fooditem.getAllBySocoboUserId(socoboUserId);
+      } else {
+        result = await this._db.fooditem.getAll();
+      }
+
       res.status(200).json(result);
     } catch (error) {
       res.status(error.statusCode).json(error.forResponse());

@@ -24,6 +24,7 @@ import * as db from "./db/index";
 // fooditem
 import {
   FoodItemCategoryHandler, FoodItemCategoryRoute,
+  FoodItemHandler, FoodItemRoute,
   FoodItemTemplateHandler, FoodItemTemplateRoute,
   FoodItemUnitHandler, FoodItemUnitRoute
 } from "./food/index";
@@ -61,6 +62,7 @@ class Server {
   private _fooditemTemplateHandler: FoodItemTemplateHandler;
   private _fooditemCategoryHandler: FoodItemCategoryHandler;
   private _fooditemUnitHandler: FoodItemUnitHandler;
+  private _fooditemHandler: FoodItemHandler;
   private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
   private _recipeCategoryHandler: RecipeCategoryHandler;
@@ -195,6 +197,7 @@ class Server {
     this._fooditemTemplateHandler = new FoodItemTemplateHandler(db);
     this._fooditemCategoryHandler = new FoodItemCategoryHandler(db);
     this._fooditemUnitHandler = new FoodItemUnitHandler(db);
+    this._fooditemHandler = new FoodItemHandler(db);
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
     this._recipeHandler = new RecipeHandler(db, this._imgService);
     this._recipeCategoryHandler = new RecipeCategoryHandler(db);
@@ -235,6 +238,7 @@ class Server {
     this._app.use("/api/v1/fooditemtemplate", this._fooditemTemplateRoute());
     this._app.use("/api/v1/fooditemcategory", this._fooditemCategoryRoute());
     this._app.use("/api/v1/fooditemunit", this._fooditemUnitRoute());
+    this._app.use("/api/v1/fooditem", this._fooditemRoute());
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
     this._app.use("/api/v1/recipecategory", this._recipeCategoryRoute());
@@ -266,6 +270,12 @@ class Server {
       this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
+  private _fooditemRoute (): express.Router {
+    const router: express.Router = express.Router();
+    return new FoodItemRoute(router, this._fooditemHandler,
+      this._authValidationHandler, this._modelValidationHandler).createRoutes();
+  }
+
   private _socobouserRoute (): express.Router {
     const router: express.Router = express.Router();
     return new SocoboUsersRoute(router, this._socoboUserHandler,
@@ -282,16 +292,14 @@ class Server {
 
   private _recipeCategoryRoute (): express.Router {
     const router: express.Router = express.Router();
-    return new RecipeCategoryRoute(
-      router,
-      this._recipeCategoryHandler,
-      this._authValidationHandler,
-      this._modelValidationHandler).createRoutes();
+    return new RecipeCategoryRoute(router, this._recipeCategoryHandler,
+      this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
   private _logRoute (): express.Router {
     const router: express.Router = express.Router();
-    return new LogRoute(router, this._logHandler, this._authValidationHandler).createRoutes();
+    return new LogRoute(router, this._logHandler,
+      this._authValidationHandler).createRoutes();
   }
 
   private _handleGenericErrors (err: any, req: express.Request,
