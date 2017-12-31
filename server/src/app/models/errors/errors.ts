@@ -174,4 +174,9 @@ export class ERRORS {
     "fooditem.unit.not.found",
     404
   );
+  public static FOODITEM_NOT_FOUND = new ErrorType(
+    "50003",
+    "fooditem.not.found",
+    404
+  );
 }

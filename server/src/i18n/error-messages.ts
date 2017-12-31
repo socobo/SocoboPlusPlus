@@ -7,6 +7,7 @@ export const ERROR_MESSAGES: any = {
   "auth.used.email.or.password": "Email or Username is already registered. Please use another one.",
   "auth.user.not.registerd": "The user with the username/email {0} is not registered yet",
   "auth.wrong.password": "Authentication failed. Wrong password",
+  "fooditem.not.found": "Fooditem with {0} {1} could not be found",
   "fooditem.template.not.found": "Fooditem Template with {0} {1} could not be found",
   "fooditem.unit.not.found": "Fooditem Unit with {0} {1} could not be found",
   "generic.base.not.found": "Resource from {0} with {1} {2} could not be found",

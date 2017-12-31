@@ -20,6 +20,7 @@ export class FoodItemHandler {
   public getAllBySocoboUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const socoboUserId = req.query.socoboUserId;
+      await this._checkIfSocoboUserExists(socoboUserId, "getAllBySocoboUser(..)");
       const result = await this._db.fooditem.getAllBySocoboUserId(socoboUserId);
       res.status(200).json(result);
     } catch (error) {
@@ -41,24 +42,71 @@ export class FoodItemHandler {
     try {
       const item = new FoodItem().clone(req.body);
 
-      const foundUser = await this._db.socobouser.getUserById(String(item.socoboUserId));
-      if (!foundUser) {
-        throw new DbError(ERRORS.USER_NOT_FOUND.withArgs("id", item.socoboUserId.toHexString()))
-          .addSource(FoodItemHandler.name)
-          .addSourceMethod("save(..)");
-      }
-
-      const foundTemplate = await this._db.fooditemTemplate.getById(item.foodItemTemplateId);
-      if (!foundTemplate) {
-        throw new DbError(ERRORS.FOODITEMTEMPLTE_NOT_FOUND.withArgs("id", item.foodItemTemplateId.toHexString()))
-          .addSource(FoodItemHandler.name)
-          .addSourceMethod("save(..)");
-      }
+      await this._checkIfSocoboUserExists(item.socoboUserId.toHexString(), "save(..)");
+      await this._checkIfFoodItemTemplateExists(item.foodItemTemplateId, "save(..)");
 
       const result = await this._db.fooditem.save(item) as Types.ObjectId;
       res.status(201).json(item.setId(result));
     } catch (error) {
       res.status(error.statusCode).json(error.forResponse());
+    }
+  }
+
+  public updateById = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const foodItemId = new Types.ObjectId(req.params.id);
+      const socoboUserId = new Types.ObjectId(req.body.socoboUserId);
+      const foodItemTemplateId = new Types.ObjectId(req.body.foodItemTemplateId);
+
+      await this._checkIfSocoboUserExists(socoboUserId.toHexString(), "updateById(..)");
+      await this._checkIfFoodItemTemplateExists(foodItemTemplateId, "updateById(..)");
+      await this._checkIfFoodItemExists(foodItemId, "updateById(..)");
+
+      const updateValues = { ...req.body, lastModified: Date.now() };
+      const result = await this._db.fooditem.updateById(foodItemId, updateValues);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(error.statusCode).json(error.forResponse());
+    }
+  }
+
+  public deleteById = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const foodItemId = new Types.ObjectId(req.params.id);
+
+      await this._checkIfFoodItemExists(foodItemId, "deleteById(..)");
+
+      const result = await this._db.fooditem.deleteById(foodItemId);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(error.statusCode).json(error.forResponse());
+    }
+  }
+
+  private _checkIfSocoboUserExists = async (id: string, methodName: string) => {
+    const foundUser = await this._db.socobouser.getUserById(id);
+    if (!foundUser) {
+      throw new DbError(ERRORS.USER_NOT_FOUND.withArgs("id", id))
+        .addSource(FoodItemHandler.name)
+        .addSourceMethod(methodName);
+    }
+  }
+
+  private _checkIfFoodItemTemplateExists = async (id: Types.ObjectId, methodName: string) => {
+    const foundTemplate = await this._db.fooditemTemplate.getById(id);
+    if (!foundTemplate) {
+      throw new DbError(ERRORS.FOODITEMTEMPLTE_NOT_FOUND.withArgs("id", id.toHexString()))
+        .addSource(FoodItemHandler.name)
+        .addSourceMethod(methodName);
+    }
+  }
+
+  private _checkIfFoodItemExists = async (id: Types.ObjectId, methodName: string) => {
+    const foundFoundItem = await this._db.fooditem.getById(id);
+    if (!foundFoundItem) {
+      throw new DbError(ERRORS.FOODITEM_NOT_FOUND.withArgs("id", id.toHexString()))
+        .addSource(FoodItemHandler.name)
+        .addSourceMethod(methodName);
     }
   }
 }
