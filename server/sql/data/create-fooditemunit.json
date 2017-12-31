@@ -4,18 +4,18 @@
     "name": "litre",
     "created": 1503849392349,
     "lastModified": 1503849392349,
-    "foodItemId": "59a2ef66b9c6c5139160b4d8"
+    "fooditem_Id": "59a2ef66b9c6c5139160b4d8"
   },{
     "_id" : {"$oid":"59a2f14eae4fedd7d86f2d9b"},
     "name": "millilitre",
     "created": 1503849392349,
     "lastModified": 1503849392349,
-    "foodItemId": "59a2ef67abc417f4a99d55fc"
+    "fooditem_Id": "59a2ef67abc417f4a99d55fc"
   },{
     "_id" : {"$oid":"59dbb22f96a13f5f8bb65914"},
     "name": "gramm",
     "created": 1503849392349,
     "lastModified": 1503849392349,
-    "foodItemId": "59a2ef68310b123d61063301"
+    "fooditem_Id": "59a2ef68310b123d61063301"
   }
 ]

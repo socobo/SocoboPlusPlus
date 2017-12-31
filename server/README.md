@@ -11,6 +11,7 @@
   * [FoodItemUnit](#fooditemunit)
   * [Log](#log)
   * [Recipe](#recipe)
+  * [Recipe Category](#recipe-category)
   * [SocoboUser](#socobouser)
 * [Enums](#enums)
 
@@ -387,6 +388,7 @@ npm run lint
   Request body:
     ```json
     {
+      foodItemId: string,
       name: string
     }
     ```
@@ -419,8 +421,8 @@ npm run lint
   Request body:
     ```json
     {
-      name: string,
-      foodItemId: string
+      foodItemId: string,
+      name: string
     }
     ```
 
@@ -527,6 +529,7 @@ npm run lint
   Request body:
     ```json
     {
+      foodItemId: string,
       name: string
     }
     ```
@@ -559,8 +562,8 @@ npm run lint
   Request body:
     ```json
     {
-      name: string,
-      foodItemId: string
+      foodItemId: string,
+      name: string
     }
     ```
 

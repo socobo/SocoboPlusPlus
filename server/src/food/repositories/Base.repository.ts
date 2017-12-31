@@ -31,7 +31,7 @@ export class BaseRepository <T> implements IBaseRepository <T> {
     } catch (error) {
       return ErrorUtils.handleDbNotFound(
         ERRORS.GENERIC_BASE_NOT_FOUND, error, `${BaseRepository.name}_${this._className}`,
-        "getRoleById(..)", this._className, "id", id.toString());
+        "getById(..)", this._className, "id", id.toString());
     }
   }
 

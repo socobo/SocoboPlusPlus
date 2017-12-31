@@ -56,7 +56,10 @@ describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN", () => {
       .put(`/api/v1/fooditemcategory/${id}`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
-      .send({ name: "ha-milk"});
+      .send({
+        foodItemId: "59a2ef66b9c6c5139160b4d8",
+        name: "ha-milk"
+      });
 
     expect(resultAfter.body.name).to.equal("ha-milk");
     expect(resultAfter.body.name).to.not.equal(resultBefore.body.name);

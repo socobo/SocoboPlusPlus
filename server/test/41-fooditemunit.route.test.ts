@@ -52,7 +52,10 @@ describe("FoodItemUnitRoute - API v1", () => {
       .put(`/api/v1/fooditemunit/${id}`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
-      .send({ name: "litreXYZ"});
+      .send({
+        foodItemId: "59a2ef66b9c6c5139160b4d8",
+        name: "litreXYZ"
+      });
 
     expect(resultAfter.body.name).to.equal("litreXYZ");
     expect(resultAfter.body.name).to.not.equal(resultBefore.body.name);
@@ -65,7 +68,10 @@ describe("FoodItemUnitRoute - API v1", () => {
       .post(`/api/v1/fooditemunit`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
-      .send({ name: "kilo gramm", foodItemId: "59dfa76eb6a882c2c163c31d" });
+      .send({
+        foodItemId: "59a2ef68310b123d61063301",
+        name: "kilo gramm"
+      });
 
     expect(result.body.name).to.equal("kilo gramm");
     expect(result.body).to.deep.property("id");
