@@ -1,4 +1,3 @@
-import { RecipeIngredient } from './../recipe/models/recipe-ingredient';
 import * as m from "mongoose";
 import { ApiError, ErrorType, ErrorUtils, LogService } from "../app/index";
 import { Config } from "../config";

@@ -41,7 +41,6 @@ export class Recipe implements Validatable {
   })
   public ingredients: string[];
 
-
   @AreRecipeStepsUnique({
     groups: [ ValidationGroup.RECIPE ]
   })

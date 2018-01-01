@@ -1,6 +1,6 @@
-import { ErrorType } from './../../app/models/errors/error-type';
 import { Document, Model } from "mongoose";
 import * as winston from "winston";
+import { ErrorType } from "./../../app/models/errors/error-type";
 
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";

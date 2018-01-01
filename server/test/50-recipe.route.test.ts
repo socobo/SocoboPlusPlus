@@ -40,8 +40,8 @@ describe("RecipeRoute - API v1", () => {
     const newRecipe = {
       description: "ChangedRecipe",
       duration: 1,
-      level: "BEGINNER",
       ingredients: ["1234ef66b9c6c5139160b4d1"],
+      level: "BEGINNER",
       steps: [
         {
             stepDescription: "ChangedRecipe",
@@ -71,8 +71,8 @@ describe("RecipeRoute - API v1", () => {
     const id = "59a2ef66b9c6c5139160b4d3";
     const newRecipe = {
       duration: 1,
-      title: "ChangedRecipe",
-      ingredients: ["1234ef66b9c6c5139160b4d1"]
+      ingredients: ["1234ef66b9c6c5139160b4d1"],
+      title: "ChangedRecipe"
     };
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
@@ -89,8 +89,8 @@ describe("RecipeRoute - API v1", () => {
     const recipe = {
       description: "NewRecipe",
       duration: 100,
-      level: "EXPERT",
       ingredients: ["1234ef66b9c6c5139160b4d1"],
+      level: "EXPERT",
       steps: [
         {
             stepDescription: "NewRecipe",
@@ -156,8 +156,8 @@ describe("RecipeRoute - API v1", () => {
     const recipe = {
       description: "NewRecipe",
       duration: 100,
-      level: "EXPERT",
       ingredients: ["1234ef66b9c6c5139160b4d1"],
+      level: "EXPERT",
       steps: [
         {
             stepDescription: "NewRecipe",

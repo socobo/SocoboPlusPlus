@@ -1,4 +1,3 @@
-import { RecipeIngredient } from './recipe/models/recipe-ingredient';
 import "es6-shim";
 
 import * as bodyParser from "body-parser";
@@ -33,8 +32,9 @@ import {
   RecipeCategoryHandler,
   RecipeCategoryRoute,
   RecipeHandler,
-  RecipeIngredientRoute,
+  RecipeIngredient,
   RecipeIngredientHandler,
+  RecipeIngredientRoute,
   RecipeMiddleware,
   RecipeRoute
 } from "./recipe/index";

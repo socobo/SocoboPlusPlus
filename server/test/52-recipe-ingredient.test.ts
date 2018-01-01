@@ -44,13 +44,14 @@ describe("RecipeIngredientRoute - API v1", () => {
       .set("x-access-token", accessToken);
     expect(result.body).to.deep.equal({
       _id : "1234ef66b9c6c5139160b4d1",
-      updatedAt: "2017-08-27T18:48:54.865Z",
-      createdAt: "2017-08-27T18:48:54.865Z",
       amount: 9,
-      fooditemTemplateId: "59a2eeaaf09a4c43cb92ef0b"});
+      createdAt: "2017-08-27T18:48:54.865Z",
+      fooditemTemplateId: "59a2eeaaf09a4c43cb92ef0b",
+      updatedAt: "2017-08-27T18:48:54.865Z"});
   });
 
-  it("GET /api/v1/recipeingredient/:id?resolve should return the ingredient with the provied id and the resolved fooditemtemplate", async () => {
+  it(`GET /api/v1/recipeingredient/:id?resolve should return the ingredient with
+  the provied id and the resolved fooditemtemplate`, async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent()
       .get("/api/v1/recipeingredient/1234ef66b9c6c5139160b4d1")

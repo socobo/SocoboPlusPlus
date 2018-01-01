@@ -2,7 +2,7 @@ import { IsInt, IsNotEmpty} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
-import { FoodItemTemplate } from './../../food/index';
+import { FoodItemTemplate } from "./../../food/index";
 
 export class RecipeIngredient implements Validatable {
 
@@ -19,7 +19,6 @@ export class RecipeIngredient implements Validatable {
   })
   public fooditemTemplateId: string | Types.ObjectId;
   public fooditemTemplate: FoodItemTemplate;
-
 
   public clone (recipeIngredient: RecipeIngredient) {
     if (!recipeIngredient) {

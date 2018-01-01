@@ -4,8 +4,8 @@ import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
 } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
-import { FoodItemTemplate } from './../../food/index';
 import { Recipe, RecipeIngredient} from "../index";
+import { FoodItemTemplate } from "./../../food/index";
 
 const ObjectId = Types.ObjectId;
 
@@ -24,7 +24,7 @@ export class RecipeIngredientHandler {
   private _resolveFoodItemTemplate = async (ingredient: RecipeIngredient): Promise<RecipeIngredient> => {
     const fit = await this._db.fooditemTemplate
       .getById(new ObjectId(ingredient.fooditemTemplateId)) as FoodItemTemplate;
-      ingredient.fooditemTemplate = fit;
+    ingredient.fooditemTemplate = fit;
     return ingredient;
   }
 
@@ -95,7 +95,6 @@ export class RecipeIngredientHandler {
       .clone(req.body as RecipeIngredient);
     ingredient.setId(req.params.id);
     try {
-      console.log('TEST', ingredient)
       const result = await this._db.recipeIngredient.update(req.params.id, ingredient);
       res.status(200).json(result);
     } catch (error) {

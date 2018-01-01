@@ -1,12 +1,12 @@
-import { CrudRepository } from './crud.repository';
 import { Document, Model } from "mongoose";
 import * as winston from "winston";
+import { CrudRepository } from "./crud.repository";
 
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { Recipe, RecipeImage, recipeSchema, RecipeStep } from "../index";
 
-export class RecipeRepository implements CrudRepository<Recipe>{
+export class RecipeRepository implements CrudRepository<Recipe> {
 
   constructor (
     private _recipeModel: Model<Document & Recipe>,
@@ -22,14 +22,6 @@ export class RecipeRepository implements CrudRepository<Recipe>{
   }
 
   public save = async (recipe: Recipe): Promise<Recipe | DbError> => this._crud.save(recipe);
-  // {
-  //   try {
-  //     return await new this._recipeModel(recipe).save();
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeRepository.name, "save(..)");
-  //   }
-  // }
 
   public getById = async (id: string): Promise<Recipe | DbError> => {
     const foundRecipe = await this._crud.getById(id) as Recipe;
@@ -37,17 +29,6 @@ export class RecipeRepository implements CrudRepository<Recipe>{
       foundRecipe.images = [];
     }
     return foundRecipe;
-    // try {
-    //   const foundRecipe = await this._recipeModel.findById(id).lean() as Recipe;
-    //   this._handleNotFound(foundRecipe, id, "findById()");
-    //   if (!foundRecipe.images) {
-    //     foundRecipe.images = [];
-    //   }
-    //   return foundRecipe;
-    // } catch (error) {
-    //   winston.error(error);
-    //   return ErrorUtils.handleDbError(error, RecipeRepository.name, "getById(..)");
-    // }
   }
 
   public getImageById = async (recipeId: string, imageId: string): Promise<RecipeImage | DbError> => {
@@ -64,15 +45,6 @@ export class RecipeRepository implements CrudRepository<Recipe>{
   }
 
   public getAll = async (): Promise<Recipe[] | DbError> => this._crud.getAll();
-  // {
-  //   try {
-  //     const foundRecipes = await this._recipeModel.find();
-  //     return foundRecipes;
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeRepository.name, "getAll(..)");
-  //   }
-  // }
 
   public searchByField = async (fieldName: string, value: string): Promise<Recipe[] | DbError> => {
     try {
@@ -86,18 +58,7 @@ export class RecipeRepository implements CrudRepository<Recipe>{
   }
 
   public update = async (id: string, recipe: Recipe): Promise<Recipe | DbError> =>
-    this._crud.update(id, recipe);
-  // {
-  //   try {
-  //     const foundRecipe = await this._recipeModel
-  //       .findByIdAndUpdate(id, recipe, { new: true });
-  //     this._handleNotFound(foundRecipe, id, "update()");
-  //     return foundRecipe;
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeRepository.name, "update(..)");
-  //   }
-  // }
+    this._crud.update(id, recipe)
 
   public removeImage = async (id: string, imgId: string): Promise<Recipe | DbError> => {
     try {
@@ -112,12 +73,4 @@ export class RecipeRepository implements CrudRepository<Recipe>{
   }
 
   public delete = async (id: string): Promise<void | DbError> => this._crud.delete(id);
-  // {
-  //   try {
-  //     return await this._recipeModel.remove({_id: id});
-  //   } catch (error) {
-  //     winston.error(error);
-  //     return ErrorUtils.handleDbError(error, RecipeRepository.name, "delete(..)");
-  //   }
-  // }
 }
