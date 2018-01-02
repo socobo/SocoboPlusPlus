@@ -11,6 +11,7 @@ import {
   Recipe,
   RecipeCategory,
   recipeCategorySchema,
+  RecipeIngredient,
   recipeIngredientSchema,
   recipeSchema } from "../recipe/index";
 import { SocoboUser, socoboUserSchema } from "../socobouser/index";

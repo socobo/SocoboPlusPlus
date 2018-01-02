@@ -30,6 +30,7 @@
     "serve:w": "nodemon dist/server.js",
     "setup:db:d": "cd ./sql && ./locale-demo-data-creation.sh -d",
     "setup:db:t": "cd ./sql && ./locale-demo-data-creation.sh -t",
+    "start": "npm run start:d",
     "start:p": "npm-run-all create tsc --parallel serve open:b",
     "start:d": "npm-run-all create tsc --parallel tsc:w serve:w",
     "start:m": "brew services start mongodb",
