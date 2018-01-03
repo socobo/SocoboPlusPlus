@@ -12,8 +12,8 @@ export class FoodItemHandler {
     try {
       let result;
 
-      if (req.query && req.query.hasOwnProperty("socoboUserId")) {
-        const socoboUserId = req.query.socoboUserId;
+      if (req.query && req.query.hasOwnProperty("socobouserid")) {
+        const socoboUserId = req.query.socobouserid;
         await this._checkIfSocoboUserExists(socoboUserId, "getAll(..)");
         result = await this._db.fooditem.getAllBySocoboUserId(socoboUserId);
       } else {

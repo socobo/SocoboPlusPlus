@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ModelValidationHandler, ValidationGroup } from "../../app/index";
 import { AuthValidationHandler } from "../../auth/index";
+import { SocoboUserRoleType } from "../../socobouser/index";
 import { FoodItem, FoodItemHandler } from "../index";
 
 export class FoodItemRoute {
@@ -19,6 +20,7 @@ export class FoodItemRoute {
   public createRoutes (): Router {
     this._router.get("/",
       this._authValidationHandler.checkToken,
+      this._authValidationHandler.checkUser(SocoboUserRoleType.Admin),
       this._fooditemHandler.getAll);
 
     this._router.get("/:id",

@@ -10,10 +10,10 @@ export class FoodItemRepository extends BaseRepository <FoodItem> {
     this.transformFunction = this._transformResult;
   }
 
-  public async getAllBySocoboUserId (socoboUserId: Types.ObjectId): Promise<FoodItem[] | DbError> {
+  public getAllBySocoboUserId = async (userId: string): Promise<FoodItem[] | DbError> => {
     try {
-      const entities = await this._fooditemModel.find({ socobouser: socoboUserId });
-      return entities.map(this._transformResult);
+      const entities = await this.getAll() as FoodItem[];
+      return entities.filter((entry: FoodItem) => entry.socoboUserId.toHexString() === userId);
     } catch (error) {
       return ErrorUtils.handleDbError(error, FoodItemRepository.name, "getAllBySocoboUserId(..)");
     }
