@@ -2,10 +2,9 @@ import { Document, Model } from "mongoose";
 import * as winston from "winston";
 import { ErrorType } from "./../../app/models/errors/error-type";
 
-import { DbError, ERRORS, ErrorUtils } from "../../app/index";
+import { ApiError, DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { CrudRepository } from "../index";
-import { ApiError } from '../../app/models/errors/api-error';
 
 export class RecipeCrudRepository<T> implements CrudRepository<T> {
 

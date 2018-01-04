@@ -88,7 +88,7 @@ export class RecipeHandler {
       const error = new ApiError(ERRORS.VAL_INVALID_QUERY_PARAM_FORMAT)
         .addSource(RecipeHandler.name)
         .addSourceMethod("searchByField()");
-        next(error)
+      next(error);
     }
   }
 
@@ -116,7 +116,7 @@ export class RecipeHandler {
       const result = await this._db.recipe.update(req.params.id, recipe);
       res.status(201).json(result);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 

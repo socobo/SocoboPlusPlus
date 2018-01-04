@@ -315,12 +315,10 @@ class Server {
 
   private _handleGenericErrors (err: any, req: express.Request,
                                 res: express.Response, next: express.NextFunction): void {
-    console.log('====>', err)
 
     const error = err instanceof ApiError
       ? err
-      : new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
-        .addCause(err)
+      : new ApiError(ERRORS.INTERNAL_SERVER_ERROR).addCause(err);
 
     res.status(error.statusCode).json(error.forResponse());
   }

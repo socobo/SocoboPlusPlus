@@ -17,7 +17,7 @@ export class RecipeCategoryHandler {
       const result = await this._db.recipeCategory.getById(req.params.id);
       res.status(200).json(result);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -26,7 +26,7 @@ export class RecipeCategoryHandler {
       const result = await this._db.recipeCategory.getAll();
       res.status(200).json(result);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -37,7 +37,7 @@ export class RecipeCategoryHandler {
       const result = await this._db.recipeCategory.save(category);
       res.status(201).json(result);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -49,7 +49,7 @@ export class RecipeCategoryHandler {
       const result = await this._db.recipeCategory.update(req.params.id, category);
       res.status(200).json(result);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -59,7 +59,7 @@ export class RecipeCategoryHandler {
       await this._db.recipeCategory.delete(req.params.id);
       res.status(200).json();
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }

@@ -1,5 +1,5 @@
 import { DbError } from "../../app/index";
-import { ApiError } from '../../app/models/errors/api-error';
+import { ApiError } from "../../app/models/errors/api-error";
 
 export interface CrudRepository<T> {
   save (item: T): Promise<T>;

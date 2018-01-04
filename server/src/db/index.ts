@@ -1,5 +1,5 @@
 import * as m from "mongoose";
-import { ApiError, ErrorType, ErrorUtils, LogService } from "../app/index";
+import { ApiError, ERRORS, ErrorType, ErrorUtils, LogService } from "../app/index";
 import { Config } from "../config";
 import {
   FoodItem, FoodItemCategory,
@@ -44,7 +44,11 @@ const getConnectionUrl = (): string => {
 
 m.connect(getConnectionUrl(), { useMongoClient: true }, (err) => {
   if (err) {
-    return LogService.addError(err.message, ErrorUtils.handleError(err, "InitDatabase", "mongoose.connect(..)"));
+    return LogService.addError(err.message,
+      new ApiError(ERRORS.INTERNAL_SERVER_ERROR)
+        .addSource("InitDatabase")
+        .addSourceMethod("mongoose.connect(..)")
+        .addCause(err));
   }
 });
 
