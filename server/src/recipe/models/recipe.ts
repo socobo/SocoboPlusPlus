@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateIf, ValidateNested} from "class-validator";
+import { ArrayMinSize, IsInt, IsNotEmpty, IsNumber, Length, Min, ValidateIf, ValidateNested} from "class-validator";
 import { Types } from "mongoose";
 
 import { Validatable, ValidationGroup } from "../../app/index";
@@ -32,6 +32,14 @@ export class Recipe implements Validatable {
     groups: [ ValidationGroup.RECIPE ]
   })
   public images: RecipeImage[];
+
+  @IsNotEmpty({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  @ArrayMinSize(1, {
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public ingredients: string[];
 
   @AreRecipeStepsUnique({
     groups: [ ValidationGroup.RECIPE ]
@@ -68,6 +76,9 @@ export class Recipe implements Validatable {
   public duration: number;
 
   public clone (recipe: Recipe) {
+    if (!recipe) {
+      return undefined;
+    }
     this._id = recipe._id;
     this.title = recipe.title;
     this.description = recipe.description;
@@ -76,18 +87,13 @@ export class Recipe implements Validatable {
     this.category = new RecipeCategory().clone(recipe.category);
     this.level = recipe.level;
     this.duration = recipe.duration;
-    this.images = [];
-    if (recipe.images) {
-      recipe.images.forEach((image: RecipeImage) => {
-        this.images.push(new RecipeImage().clone(image));
-      });
-    }
-    this.steps = [];
-    if (recipe.steps) {
-      recipe.steps.forEach((step: RecipeStep) => {
-        this.steps.push(new RecipeStep().clone(step));
-      });
-    }
+    this.ingredients = [...recipe.ingredients];
+    this.images = recipe.images
+      ? recipe.images.map((image: RecipeImage) => new RecipeImage().clone(image))
+      : [];
+    this.steps = recipe.steps
+      ? recipe.steps.map((step: RecipeStep) => new RecipeStep().clone(step))
+      : [];
     return this;
   }
 
@@ -128,6 +134,11 @@ export class Recipe implements Validatable {
 
   public setImages (images: RecipeImage[]) {
     this.images = images;
+    return this;
+  }
+
+  public setIngredients (ingredients: string[]) {
+    this.ingredients = [...ingredients];
     return this;
   }
 

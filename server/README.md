@@ -635,7 +635,7 @@ npm run lint
 
   Query Parameter:
 
-  - resolveCagegory: If this query parameter is set, the response will not only contain the category id but the complete category data
+  - resolve: If this query parameter is set, the response will not only contain the category id but the complete category data
 
   Response body:
     ```json
@@ -646,6 +646,10 @@ npm run lint
         userid: number,
         description: number,
         imageurl: string,
+        ingredients: [
+          ingredientId: string,
+          ...
+        ],
         created: Date,
         categoryId: string,
         steps: [
@@ -676,13 +680,13 @@ npm run lint
     }
     ```
 
-- **GET /api/v1/recipes/:id?resolveCategory**
+- **GET /api/v1/recipes/:id?resolve**
 
   Path Parameter:
     - id: Recipe id
 
   Query Parameter
-    - resolveCagegory: If this query parameter is set, the response will not only contain the category id but the complete category data
+    - resolve: If this query parameter is set, the response will not only contain the category id but the complete category data
 
   Response body:
     ```json
@@ -692,6 +696,10 @@ npm run lint
       userid: number,
       description: number,
       imageurl: string,
+      ingredients: [
+        ingredientId: string,
+        ...
+      ],
       created: Date,
       categoryId: string,
       steps: [
@@ -735,6 +743,10 @@ npm run lint
         userid: number,
         description: number,
         imageurl: string,
+        ingredients: [
+          ingredientId: string,
+          ...
+        ],
         created: Date,
         categoryId: string,
         steps: [
@@ -785,6 +797,10 @@ npm run lint
       description?: string,
       imageurl?: string,
       categoryId?: string,
+      ingredients: [
+        ingredientId: string,
+        ...
+      ],
       steps?: [
         {
           stepNumber: number,
@@ -808,6 +824,10 @@ npm run lint
       imageurl: string,
       created: Date,
       categoryId: string,
+      ingredients: [
+        ingredientId: string,
+        ...
+      ],
       steps: [
         {
           id: number,
@@ -833,6 +853,10 @@ npm run lint
 
 - **POST /api/v1/recipes**
 
+  Special constraints:
+  - At least one ingredient necessary
+  - Steps must be in correct order
+
   Request body:
     ```json
     {
@@ -840,6 +864,10 @@ npm run lint
       userId: string,
       description?: string,
       imageurl?: string,
+      ingredients: [
+        ingredientId: string,
+        ...
+      ],
       steps?: [
         {
           stepNumber: number,
@@ -859,8 +887,12 @@ npm run lint
       id: number,
       userId: number,
       title: string,
-      description?: string,
-      imageurl?: string,
+      description: string,
+      imageurl: string,
+      ingredients: [
+        ingredientId: string,
+        ...
+      ],
       created: Date,
       categoryId: string,
       steps: [
@@ -906,8 +938,12 @@ npm run lint
       id: number,
       title: string,
       userid: number,
-      description?: string,
+      description: string,
       imageurl: string,
+      ingredients: [
+        ingredientId: string,
+        ...
+      ],
       created: Date,
       categoryId: string,
       steps: [
@@ -1079,6 +1115,151 @@ npm run lint
   Path Parameter:
 
     - id: the category id
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+### **Recipe Ingredient**
+
+- **GET /api/v1/recipeingredient**
+
+  Query Parameter:
+
+    - resolve: (no value needed) loads the fooditem template and adds it to
+    the response body instead of the fooditemTemplateId
+
+  Response body:
+    ```json
+    [
+    {
+        _id: string,
+        updatedAt: string,
+        createdAt: string,
+        amount: int,
+        fooditemTemplateId: string
+    }
+    ]
+
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **GET /api/v1/recipeingredient/:id**
+
+  Path Parameter:
+
+    - id: the recipeingredient id
+
+  Query Parameter:
+
+    - resolve: (no value needed) loads the fooditem template and adds it to
+    the response body instead of the fooditemTemplateId
+
+  Response body:
+    ```json
+    {
+        _id: string,
+        updatedAt: string,
+        createdAt: string,
+        amount: int,
+        fooditemTemplateId: string
+    }
+
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **POST /api/v1/recipeingredient**
+
+  Request body:
+    ```json
+    {
+      amount: int,
+      fooditemTemplateId: string
+    }
+    ```
+
+  Response body:
+    ```json
+    {
+        _id: string,
+        updatedAt: string,
+        createdAt: string,
+        amount: int,
+        fooditemTemplateId: string
+    }
+
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **PUT /api/v1/recipeingredient/:id**
+
+  Path Parameter:
+
+    - id: the recipeingredient id
+
+  Request body:
+    ```json
+    {
+      amount: int,
+      fooditemTemplateId: string
+    }
+    ```
+
+  Response body:
+    ```json
+    {
+        _id: string,
+        updatedAt: string,
+        createdAt: string,
+        amount: int,
+        fooditemTemplateId: string
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **DELETE /api/v1/recipeingredient/:id**
+
+
+  Path Parameter:
+
+    - id: the recipeingredient id
 
   Error body:
     ```json

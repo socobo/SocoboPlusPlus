@@ -40,6 +40,7 @@ describe("RecipeRoute - API v1", () => {
     const newRecipe = {
       description: "ChangedRecipe",
       duration: 1,
+      ingredients: ["1234ef66b9c6c5139160b4d1"],
       level: "BEGINNER",
       steps: [
         {
@@ -70,6 +71,7 @@ describe("RecipeRoute - API v1", () => {
     const id = "59a2ef66b9c6c5139160b4d3";
     const newRecipe = {
       duration: 1,
+      ingredients: ["1234ef66b9c6c5139160b4d1"],
       title: "ChangedRecipe"
     };
     const accessToken = await TestHelper.getToken();
@@ -87,6 +89,7 @@ describe("RecipeRoute - API v1", () => {
     const recipe = {
       description: "NewRecipe",
       duration: 100,
+      ingredients: ["1234ef66b9c6c5139160b4d1"],
       level: "EXPERT",
       steps: [
         {
@@ -115,6 +118,7 @@ describe("RecipeRoute - API v1", () => {
   it("POST /api/v1/recipe should fail for wrongly orderd step numbers", async () => {
     const recipe = {
       description: "NewRecipe",
+      ingredients: ["1234ef66b9c6c5139160b4d1"],
       steps: [
         {
             stepDescription: "NewRecipe",
@@ -152,6 +156,7 @@ describe("RecipeRoute - API v1", () => {
     const recipe = {
       description: "NewRecipe",
       duration: 100,
+      ingredients: ["1234ef66b9c6c5139160b4d1"],
       level: "EXPERT",
       steps: [
         {
