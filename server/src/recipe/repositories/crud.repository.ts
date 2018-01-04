@@ -1,4 +1,3 @@
-import { DbError } from "../../app/index";
 import { ApiError } from "../../app/models/errors/api-error";
 
 export interface CrudRepository<T> {

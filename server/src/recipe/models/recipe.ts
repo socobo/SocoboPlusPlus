@@ -87,19 +87,13 @@ export class Recipe implements Validatable {
     this.category = new RecipeCategory().clone(recipe.category);
     this.level = recipe.level;
     this.duration = recipe.duration;
-    this.images = [];
     this.ingredients = [...recipe.ingredients];
-    if (recipe.images) {
-      recipe.images.forEach((image: RecipeImage) => {
-        this.images.push(new RecipeImage().clone(image));
-      });
-    }
-    this.steps = [];
-    if (recipe.steps) {
-      recipe.steps.forEach((step: RecipeStep) => {
-        this.steps.push(new RecipeStep().clone(step));
-      });
-    }
+    this.images = recipe.images
+      ? recipe.images.map((image: RecipeImage) => new RecipeImage().clone(image))
+      : [];
+    this.steps = recipe.steps
+      ? recipe.steps.map((step: RecipeStep) => new RecipeStep().clone(step))
+      : [];
     return this;
   }
 

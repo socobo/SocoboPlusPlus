@@ -18,7 +18,7 @@ export class RecipeIngredient implements Validatable {
     groups: [ ValidationGroup.RECIPE ]
   })
   public fooditemTemplateId: string | Types.ObjectId;
-  public fooditemTemplate: FoodItemTemplate;
+  public fooditemTemplate?: FoodItemTemplate;
 
   public clone (recipeIngredient: RecipeIngredient) {
     if (!recipeIngredient) {
