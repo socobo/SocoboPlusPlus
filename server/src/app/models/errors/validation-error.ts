@@ -17,7 +17,9 @@ export class ValidationError extends ApiError {
 
   public forResponse = () => {
     return {
+      type: this.name,
       message: this.message,
+      cause: this.error.message,
       method: this.sourceMethod,
       source: this.source,
       validationErrors: this.validationErrors

@@ -5,6 +5,7 @@ import { ErrorType } from "./../../app/models/errors/error-type";
 import { DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { CrudRepository } from "../index";
+import { ApiError } from '../../app/models/errors/api-error';
 
 export class RecipeCrudRepository<T> implements CrudRepository<T> {
 
@@ -12,61 +13,29 @@ export class RecipeCrudRepository<T> implements CrudRepository<T> {
 
   private _handleNotFound = (foundItem: any, id: string, method: string) => {
     if (!foundItem) {
-      throw new DbError(
+      throw new ApiError(
         this._notFoundType.withArgs("ID", id))
         .addSource(RecipeCrudRepository.name)
         .addSourceMethod(method);
     }
   }
 
-  public save = async (item: T): Promise<DbError | T> => {
-    try {
-      return await new this._model(item).save();
-    } catch (error) {
-      winston.error(error);
-      return ErrorUtils.handleDbError(error, RecipeCrudRepository.name, "save(..)");
-    }
+  public save = async (item: T): Promise<T> => await new this._model(item).save();
+
+  public getById = async (id: string): Promise<T | ApiError> => {
+    const foundItem = await this._model.findById(id).lean() as T;
+    this._handleNotFound(foundItem, id, "findById()");
+    return foundItem;
   }
 
-  public getById = async (id: string): Promise<T | DbError> => {
-    try {
-      const foundItem = await this._model.findById(id).lean() as T;
-      this._handleNotFound(foundItem, id, "findById()");
-      return foundItem;
-    } catch (error) {
-      winston.error(error);
-      return ErrorUtils.handleDbError(error, RecipeCrudRepository.name, "getById(..)");
-    }
+  public getAll = async (): Promise<T[]> => await this._model.find();
+
+  public update = async (id: string, item: T): Promise<T | ApiError> => {
+    const foundItems = await this._model
+      .findByIdAndUpdate(id, item, { new: true });
+    this._handleNotFound(foundItems, id, "update()");
+    return foundItems;
   }
 
-  public getAll = async (): Promise<T[] | DbError> => {
-    try {
-      const foundItems = await this._model.find();
-      return foundItems;
-    } catch (error) {
-      winston.error(error);
-      return ErrorUtils.handleDbError(error, RecipeCrudRepository.name, "getAll(..)");
-    }
-  }
-
-  public update = async (id: string, item: T): Promise<T | DbError> => {
-    try {
-      const foundItems = await this._model
-        .findByIdAndUpdate(id, item, { new: true });
-      this._handleNotFound(foundItems, id, "update()");
-      return foundItems;
-    } catch (error) {
-      winston.error(error);
-      return ErrorUtils.handleDbError(error, RecipeCrudRepository.name, "update(..)");
-    }
-  }
-
-  public delete = async (id: string): Promise<void | DbError> => {
-    try {
-      return await this._model.remove({_id: id});
-    } catch (error) {
-      winston.error(error);
-      return ErrorUtils.handleDbError(error, RecipeCrudRepository.name, "delete(..)");
-    }
-  }
+  public delete = async (id: string): Promise<void> => await this._model.remove({_id: id});
 }
