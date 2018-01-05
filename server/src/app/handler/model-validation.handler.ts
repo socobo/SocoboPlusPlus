@@ -10,7 +10,7 @@ export class ModelValidationHandler {
     return (req: Request, res: Response, next: NextFunction): void => {
       this._modelValidationMiddleware.validateObject(objectToValidate, req, validationGroups)
         .then(() => next())
-        .catch((e: ValidationError) => res.status(e.statusCode).json(e.forResponse()));
+        .catch(next);
     };
   }
 }

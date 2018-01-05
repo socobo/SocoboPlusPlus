@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { DataType, ImageService, SocoboRequest } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
@@ -11,25 +11,25 @@ export class SocoboUserHandler {
     private _imgService: ImageService
   ) {}
 
-  public getAll = async (req: Request, res: Response): Promise<void> => {
+  public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result: SocoboUser[] = await this._db.socobouser.getAll() as SocoboUser[];
       res.status(200).json(result.map((item: SocoboUser) => item.removePassword()));
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public getById = async (req: Request, res: Response): Promise<void> => {
+  public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result: SocoboUser = await this._db.socobouser.getUserById(req.params.id) as SocoboUser;
       res.status(200).json(result.removePassword());
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public updateById = async (req: Request, res: Response): Promise<void> => {
+  public updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId: string = req.params.id;
       const updateType: SocoboUserUpdateType = req.body.updateType;
@@ -37,11 +37,11 @@ export class SocoboUserHandler {
       const result: SocoboUser = await this._db.socobouser.updateById(userId, updateType, fieldsToUpdate) as SocoboUser;
       res.status(200).json(result.removePassword());
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public uploadById = async (req: SocoboRequest, res: Response): Promise<void> => {
+  public uploadById = async (req: SocoboRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId: string = req.params.id;
       const email: string = req.requestData.decoded.email;
@@ -50,16 +50,16 @@ export class SocoboUserHandler {
       const result: SocoboUser = await this._db.socobouser.updateById(userId, type, {imageUrl: url}) as SocoboUser;
       res.status(200).json(result.removePassword());
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public deleteById = async (req: Request, res: Response): Promise<void> => {
+  public deleteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result: object = await this._db.socobouser.deleteById(req.params.id);
       res.status(200).json(result);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 }

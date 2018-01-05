@@ -1,5 +1,5 @@
 import { Document, Model } from "mongoose";
-import { DbError, ERRORS, ErrorUtils } from "../../app/index";
+import { ApiError, ERRORS, ErrorUtils } from "../../app/index";
 import { SocoboUserUpdateType } from "../enums/SocoboUserUpdateType";
 import { SocoboUser, SocoboUserProviderType, SocoboUserRoleType } from "../index";
 
@@ -7,74 +7,43 @@ export class SocoboUserRepository {
 
   constructor (private _socoboUserModel: Model<Document & SocoboUser>) {}
 
-  public getAll = async (): Promise<SocoboUser[] | DbError> => {
-    try {
+  public getAll = async (): Promise<SocoboUser[]> => {
       const users = await this._socoboUserModel.find({});
       return users.map(this._transformResult);
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "getAll(..)");
-    }
   }
 
-  public getUserById = async (id: string): Promise<SocoboUser | DbError> => {
-    try {
+  public getUserById = async (id: string): Promise<SocoboUser | ApiError> => {
       const user = await this._socoboUserModel.findOne({_id: id});
-      return this._transformResult(user);
-    } catch (error) {
-      return ErrorUtils.handleDbNotFound(ERRORS.USER_NOT_FOUND, error,
-        SocoboUserRepository.name, "getUserById(..)", "id", id.toString());
-    }
+      return this._handleNotFound(user, 'id', id)._transformResult(user);
   }
 
-  public getUserByEmail = async (email: string): Promise<SocoboUser | DbError> => {
-    try {
+  public getUserByEmail = async (email: string): Promise<SocoboUser | ApiError> => {
       const user = await this._socoboUserModel.findOne({ email });
-      return this._transformResult(user);
-    } catch (error) {
-      return ErrorUtils.handleDbNotFound(ERRORS.USER_NOT_FOUND, error,
-        SocoboUserRepository.name, "getUserByEmail(..)", "email", email);
-    }
+      return this._handleNotFound(user, 'email', email)._transformResult(user);
   }
 
-  public getUserByUsername = async (username: string): Promise<SocoboUser | DbError> => {
-    try {
+  public getUserByUsername = async (username: string): Promise<SocoboUser | ApiError> => {
       const user = await this._socoboUserModel.findOne({ username });
-      return this._transformResult(user);
-    } catch (error) {
-      return ErrorUtils.handleDbNotFound(ERRORS.USER_NOT_FOUND, error,
-        SocoboUserRepository.name, "getUserByUsername(..)", "username", username);
-    }
+      return this._handleNotFound(user, 'username', username)._transformResult(user);
   }
 
-  public save = async (user: SocoboUser): Promise<string | DbError> => {
-    try {
+  public save = async (user: SocoboUser): Promise<string> => {
       const createdSocoboUser = await this._socoboUserModel.create(user);
       return createdSocoboUser._id;
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "save(..)");
-    }
   }
 
   public updateById = async (id: string, updateType: SocoboUserUpdateType,
-                             fieldsToUpdate: object): Promise<SocoboUser | DbError> => {
-    try {
+                             fieldsToUpdate: object): Promise<SocoboUser | ApiError> => {
       const checkedFieldsToUpdate = this._checkValidUpdateFields(updateType, fieldsToUpdate);
       const updatedUser = await this._socoboUserModel.findByIdAndUpdate({ _id: id},
                                                                         { $set: checkedFieldsToUpdate },
                                                                         { new: true });
-      return this._transformResult(updatedUser);
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "updateById(..)");
-    }
+      return this._handleNotFound(updatedUser, 'id', id)._transformResult(updatedUser);
   }
 
-  public deleteById = async (id: string): Promise<object | DbError> => {
-    try {
+  public deleteById = async (id: string): Promise<object> => {
       await this._socoboUserModel.findByIdAndRemove({_id: id});
       return { id };
-    } catch (error) {
-      return ErrorUtils.handleDbError(error, SocoboUserRepository.name, "deleteById(..)");
-    }
   }
 
   private _checkValidUpdateFields = (updateType: SocoboUserUpdateType, fieldsToUpdate: object): object => {
@@ -150,8 +119,15 @@ export class SocoboUserRepository {
     return result;
   }
 
+  private _handleNotFound = (result: Document & SocoboUser, field: string, id: string) => {
+    if (!result) { throw new ApiError(ERRORS.USER_NOT_FOUND.withArgs('identifier', id))
+      .addSource(SocoboUserRepository.name)
+      .addSourceMethod('_transformResult()');
+    }
+    return this;
+  }
+
   private _transformResult = (result: Document & SocoboUser): SocoboUser => {
-    if (!result) { throw new Error("SocoboUser not found!"); }
     const tranformedResult: SocoboUser = new SocoboUser()
       .setId(result.id)
       .setUsername(result.username)
