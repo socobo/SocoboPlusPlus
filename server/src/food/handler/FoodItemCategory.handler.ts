@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 import { DbExtension } from "../../db/interface/db-extension";
 import { FoodItemCategory } from "../index";
@@ -39,7 +39,7 @@ export class FoodItemCategoryHandler {
     }
   }
 
-  public updateById = async (req: Request, res: Response): Promise<void> => {
+  public updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const categoryId = new Types.ObjectId(req.params.id);
       const foodItemId = req.body.foodItemId;
@@ -50,17 +50,17 @@ export class FoodItemCategoryHandler {
       const result = await this._db.fooditemCategory.updateById(categoryId, updatedCategoryName);
       res.status(200).json(result);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public deleteById = async (req: Request, res: Response): Promise<void> => {
+  public deleteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const categoryId = new Types.ObjectId(req.params.id);
       const result = await this._db.fooditemCategory.deleteById(categoryId);
       res.status(200).json(result);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 }

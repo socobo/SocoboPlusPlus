@@ -1,5 +1,5 @@
 import { Document, Model, Types } from "mongoose";
-import { DbError, ERRORS, ErrorUtils } from "../../app/index";
+import { ApiError, DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { BaseRepository, FoodItemUnit } from "../index";
 
 export class FoodItemUnitRepository extends BaseRepository <FoodItemUnit> {
@@ -10,7 +10,10 @@ export class FoodItemUnitRepository extends BaseRepository <FoodItemUnit> {
   }
 
   private _transformResult = (result: Document & FoodItemUnit): FoodItemUnit => {
-    if (!result) { throw new Error("FoodItemUnit not found!"); }
+    if (!result) { throw new ApiError(ERRORS.FOODITEMTUNIT_NOT_FOUND)
+      .addSource(FoodItemUnitRepository.name)
+      .addSourceMethod('_transformResult');
+    }
     const transformedResult = new FoodItemUnit()
       .setId(new Types.ObjectId(result.id))
       .setFoodItemId(new Types.ObjectId(result.foodItemId))
