@@ -38,21 +38,24 @@ describe("SocoboUserRoute - API v1", () => {
 
   it("GET /api/v1/socobouser should return all users", async () => {
     const accessToken = await TestHelper.getToken();
-    const result = await TestHelper.getAgent().get("/api/v1/socobouser").set("x-access-token", accessToken);
+    const result = await TestHelper.getAgent().get("/api/v1/socobouser")
+      .set("x-access-token", accessToken);
     expect(result.body.length).to.equal(6);
   });
 
   it("GET /api/v1/socobouser/:id should return one user", async () => {
     const id = "59a2ee5be2c06ab513940b84";
     const accessToken = await TestHelper.getToken();
-    const resultOne = await TestHelper.getAgent().get(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
+    const resultOne = await TestHelper.getAgent().get(`/api/v1/socobouser/${id}`)
+      .set("x-access-token", accessToken);
     expect(resultOne.body).to.not.null;
   });
 
   it("GET /api/v1/socobouser/:id should return one user without password property", async () => {
     const id = "59a2ee5be2c06ab513940b84";
     const accessToken = await TestHelper.getToken();
-    const resultOne = await TestHelper.getAgent().get(`/api/v1/socobouser/${id}`).set("x-access-token", accessToken);
+    const resultOne = await TestHelper.getAgent().get(`/api/v1/socobouser/${id}`)
+      .set("x-access-token", accessToken);
     expect(resultOne.body).to.deep.property("id");
     expect(resultOne.body).to.deep.property("username");
     expect(resultOne.body).to.deep.property("email");

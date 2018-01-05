@@ -14,17 +14,17 @@ export class SocoboUserRepository {
 
   public getUserById = async (id: string): Promise<SocoboUser | ApiError> => {
       const user = await this._socoboUserModel.findOne({_id: id});
-      return this._handleNotFound(user, 'id', id)._transformResult(user);
+      return this._handleNotFound(user, "id", id)._transformResult(user);
   }
 
   public getUserByEmail = async (email: string): Promise<SocoboUser | ApiError> => {
       const user = await this._socoboUserModel.findOne({ email });
-      return this._handleNotFound(user, 'email', email)._transformResult(user);
+      return this._handleNotFound(user, "email", email)._transformResult(user);
   }
 
   public getUserByUsername = async (username: string): Promise<SocoboUser | ApiError> => {
       const user = await this._socoboUserModel.findOne({ username });
-      return this._handleNotFound(user, 'username', username)._transformResult(user);
+      return this._handleNotFound(user, "username", username)._transformResult(user);
   }
 
   public save = async (user: SocoboUser): Promise<string> => {
@@ -38,7 +38,7 @@ export class SocoboUserRepository {
       const updatedUser = await this._socoboUserModel.findByIdAndUpdate({ _id: id},
                                                                         { $set: checkedFieldsToUpdate },
                                                                         { new: true });
-      return this._handleNotFound(updatedUser, 'id', id)._transformResult(updatedUser);
+      return this._handleNotFound(updatedUser, "id", id)._transformResult(updatedUser);
   }
 
   public deleteById = async (id: string): Promise<object> => {
@@ -120,9 +120,9 @@ export class SocoboUserRepository {
   }
 
   private _handleNotFound = (result: Document & SocoboUser, field: string, id: string) => {
-    if (!result) { throw new ApiError(ERRORS.USER_NOT_FOUND.withArgs('identifier', id))
+    if (!result) { throw new ApiError(ERRORS.USER_NOT_FOUND.withArgs("identifier", id))
       .addSource(SocoboUserRepository.name)
-      .addSourceMethod('_transformResult()');
+      .addSourceMethod("_transformResult()");
     }
     return this;
   }

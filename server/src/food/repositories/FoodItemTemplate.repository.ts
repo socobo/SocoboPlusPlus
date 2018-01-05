@@ -12,7 +12,7 @@ export class FoodItemTemplateRepository extends BaseRepository <FoodItemTemplate
   private _transformResult = (result: Document & FoodItemTemplate): FoodItemTemplate => {
     if (!result) { throw new ApiError(ERRORS.FOODITEMTEMPLTE_NOT_FOUND)
       .addSource(FoodItemTemplateRepository.name)
-      .addSourceMethod('_transformResult');
+      .addSourceMethod("_transformResult");
     }
     const tranformedResult: FoodItemTemplate = new FoodItemTemplate()
       .setId(new Types.ObjectId(result.id))

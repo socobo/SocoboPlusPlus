@@ -46,7 +46,8 @@ describe("AuthRoute - API v1", () => {
       const result = await TestHelper.getAgent().post("/api/v1/auth/login").send(user);
     } catch (error) {
       expect(error.status).to.be.eql(404);
-      expect(error.response.body).to.have.property("message", "User with identifier peter672@test.test could not be found");
+      expect(error.response.body).to.have
+        .property("message", "User with identifier peter672@test.test could not be found");
       expect(error.response.body).to.have.property("method", "_transformResult()");
       expect(error.response.body).to.have.property("source", "SocoboUserRepository");
     }
@@ -70,7 +71,8 @@ describe("AuthRoute - API v1", () => {
       const result = await TestHelper.getAgent().post("/api/v1/auth/login").send(user);
     } catch (error) {
       expect(error.status).to.be.eql(404);
-      expect(error.response.body).to.have.property("message", "User with identifier johndoeX@test.test could not be found");
+      expect(error.response.body).to.have
+        .property("message", "User with identifier johndoeX@test.test could not be found");
       expect(error.response.body).to.have.property("method", "_transformResult()");
       expect(error.response.body).to.have.property("source", "SocoboUserRepository");
     }

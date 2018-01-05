@@ -1,7 +1,7 @@
 import { Document, Model, Types } from "mongoose";
+import { ApiError, ERRORS } from "../../app/index";
 import { FoodItemCategory } from "../index";
 import { BaseRepository } from "./Base.repository";
-import { ApiError, ERRORS } from "../../app/index";
 
 export class FoodItemCategoryRepository extends BaseRepository <FoodItemCategory> {
 
@@ -13,7 +13,7 @@ export class FoodItemCategoryRepository extends BaseRepository <FoodItemCategory
   private _transformResult = (result: Document & FoodItemCategory): FoodItemCategory => {
     if (!result) { throw new ApiError(ERRORS.FOODITEMCATEGORY_NOT_FOUND)
       .addSource(FoodItemCategoryRepository.name)
-      .addSourceMethod('_transformResult');
+      .addSourceMethod("_transformResult");
     }
     const transformedResult = new FoodItemCategory()
       .setId(new Types.ObjectId(result.id))
