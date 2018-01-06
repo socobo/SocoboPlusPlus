@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import {
   ApiError, ERRORS, ExtractRequestBodyResult, LoginResponse, SocoboRequest
 } from "../../app/index";
@@ -9,23 +9,23 @@ export class AuthHandler {
 
   constructor (private _authService: AuthService) {}
 
-  public login = async (req: SocoboRequest, res: Response): Promise<void> => {
+  public login = async (req: SocoboRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this._getExtractedRequestBodyResult(req, "login(..)");
       const loginResult = await this._authService.login(result);
       res.status(200).json(loginResult);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public register = async (req: SocoboRequest, res: Response): Promise<void> => {
+  public register = async (req: SocoboRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this._getExtractedRequestBodyResult(req, "register(..)");
       const user = await this._authService.register(result);
       res.status(200).json(user);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 

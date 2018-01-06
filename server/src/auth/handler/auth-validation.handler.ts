@@ -10,30 +10,26 @@ export class AuthValidationHandler {
   public checkRequest = (req: SocoboRequest, res: Response, next: NextFunction): void => {
     this._authValidationMiddleware.checkRequest(req)
       .then(() => next())
-      .catch((e: any) => this._sendErrorResponse(e, res));
+      .catch(next);
   }
 
   public extractBody = (req: SocoboRequest, res: Response, next: NextFunction): void => {
     this._authValidationMiddleware.extractRequestBody(req)
       .then(() => next())
-      .catch((e: any) => this._sendErrorResponse(e, res));
+      .catch(next);
   }
 
   public checkToken = (req: SocoboRequest, res: Response, next: NextFunction): void => {
     this._authValidationMiddleware.checkValidToken(req)
       .then(() => next())
-      .catch((e: any) => this._sendErrorResponse(e, res));
+      .catch(next);
   }
 
   public checkUser = (restrictedRole: SocoboUserRoleType) => {
     return (req: SocoboRequest, res: Response, next: NextFunction): void => {
       this._authValidationMiddleware.checkValidUser(req, restrictedRole)
         .then(() => next())
-        .catch((e: any) => this._sendErrorResponse(e, res));
+        .catch(next);
     };
-  }
-
-  private _sendErrorResponse = (e: any, res: Response): void => {
-    res.status(e.statusCode).json(e.forResponse());
   }
 }

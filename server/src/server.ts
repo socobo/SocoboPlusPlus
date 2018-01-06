@@ -30,7 +30,14 @@ import {
 } from "./food/index";
 // recipe
 import {
-  RecipeCategoryHandler, RecipeCategoryRoute, RecipeHandler, RecipeMiddleware, RecipeRoute
+  RecipeCategoryHandler,
+  RecipeCategoryRoute,
+  RecipeHandler,
+  RecipeIngredient,
+  RecipeIngredientHandler,
+  RecipeIngredientRoute,
+  RecipeMiddleware,
+  RecipeRoute
 } from "./recipe/index";
 // socobouser
 import {
@@ -66,6 +73,7 @@ class Server {
   private _socoboUserHandler: SocoboUserHandler;
   private _recipeHandler: RecipeHandler;
   private _recipeCategoryHandler: RecipeCategoryHandler;
+  private _recipeIngredientHandler: RecipeIngredientHandler;
   private _logHandler: LogHandler;
 
   constructor () {
@@ -201,6 +209,7 @@ class Server {
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
     this._recipeHandler = new RecipeHandler(db, this._imgService);
     this._recipeCategoryHandler = new RecipeCategoryHandler(db);
+    this._recipeIngredientHandler = new RecipeIngredientHandler(db);
     this._logHandler = new LogHandler();
   }
 
@@ -242,6 +251,7 @@ class Server {
     this._app.use("/api/v1/socobouser", this._socobouserRoute());
     this._app.use("/api/v1/recipe", this._recipeRoute());
     this._app.use("/api/v1/recipecategory", this._recipeCategoryRoute());
+    this._app.use("/api/v1/recipeingredient", this._recipeIngredientRoute());
     this._app.use("/api/v1/log", this._logRoute());
     this._app.use(this._handleGenericErrors);
   }
@@ -296,6 +306,15 @@ class Server {
       this._authValidationHandler, this._modelValidationHandler).createRoutes();
   }
 
+  private _recipeIngredientRoute (): express.Router {
+    const router: express.Router = express.Router();
+    return new RecipeIngredientRoute(
+      router,
+      this._recipeIngredientHandler,
+      this._authValidationHandler,
+      this._modelValidationHandler).createRoutes();
+  }
+
   private _logRoute (): express.Router {
     const router: express.Router = express.Router();
     return new LogRoute(router, this._logHandler,
@@ -304,8 +323,11 @@ class Server {
 
   private _handleGenericErrors (err: any, req: express.Request,
                                 res: express.Response, next: express.NextFunction): void {
-    winston.error(err);
-    const error = new ApiError(ERRORS.INTERNAL_SERVER_ERROR).addCause(err);
+
+    const error = err instanceof ApiError
+      ? err
+      : new ApiError(ERRORS.INTERNAL_SERVER_ERROR).addCause(err);
+
     res.status(error.statusCode).json(error.forResponse());
   }
 

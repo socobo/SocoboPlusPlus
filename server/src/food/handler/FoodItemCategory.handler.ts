@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 import { DbError, ERRORS } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
@@ -8,26 +8,26 @@ export class FoodItemCategoryHandler {
 
   constructor (private _db: DbExtension) {}
 
-  public getAll = async (req: Request, res: Response): Promise<void> => {
+  public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this._db.fooditemCategory.getAll();
       res.status(200).json(result);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public getById = async (req: Request, res: Response): Promise<void> => {
+  public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id = new Types.ObjectId(req.params.id);
       const result = await this._db.fooditemCategory.getById(id);
       res.status(200).json(result);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public save = async (req: Request, res: Response): Promise<void> => {
+  public save = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const category = new FoodItemCategory().clone(req.body);
 
@@ -36,11 +36,11 @@ export class FoodItemCategoryHandler {
       const result = await this._db.fooditemCategory.save(category) as Types.ObjectId;
       res.status(201).json(category.setId(result));
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public updateById = async (req: Request, res: Response): Promise<void> => {
+  public updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const categoryId = new Types.ObjectId(req.params.id);
       const foodItemId = new Types.ObjectId(req.body.foodItemId);
@@ -51,17 +51,17 @@ export class FoodItemCategoryHandler {
       const result = await this._db.fooditemCategory.updateById(categoryId, updateValues);
       res.status(200).json(result);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 
-  public deleteById = async (req: Request, res: Response): Promise<void> => {
+  public deleteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const categoryId = new Types.ObjectId(req.params.id);
       const result = await this._db.fooditemCategory.deleteById(categoryId);
       res.status(200).json(result);
     } catch (error) {
-      res.status(error.statusCode).json(error.forResponse());
+      next(error);
     }
   }
 

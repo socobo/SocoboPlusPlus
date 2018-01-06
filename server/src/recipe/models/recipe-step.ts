@@ -25,6 +25,9 @@ export class RecipeStep implements Validatable {
   public stepDescription: string;
 
   public clone (step: RecipeStep): RecipeStep {
+    if (!step) {
+      return undefined;
+    }
     this.stepTitle = step.stepTitle;
     this.stepDescription = step.stepDescription;
     this.stepNumber = step.stepNumber;

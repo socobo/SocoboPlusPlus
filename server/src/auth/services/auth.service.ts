@@ -39,7 +39,7 @@ export class AuthService {
    * LOGIN AND REGISTRATION
    */
   private _getUserFromDatabase = async (isEmailLogin: boolean, usernameOrEmail: string,
-                                        onlyEmailRegistration: boolean): Promise<SocoboUser | DbError> => {
+                                        onlyEmailRegistration: boolean): Promise<SocoboUser | ApiError> => {
     // Registration is only possible with an email address
     // Login is possible with email address or username
     if (onlyEmailRegistration && !isEmailLogin) {

@@ -160,8 +160,13 @@ export class ERRORS {
     400
   );
   public static RECIPE_CATEGORY_NOT_FOUND = new ErrorType(
-    "40004",
+    "40005",
     "recipe.category.not.found",
+    404
+  );
+  public static RECIPE_INGREDIENT_NOT_FOUND = new ErrorType(
+    "40006",
+    "recipe.ingredient.not.found",
     404
   );
   public static FOODITEMTEMPLTE_NOT_FOUND = new ErrorType(
@@ -174,8 +179,13 @@ export class ERRORS {
     "fooditem.unit.not.found",
     404
   );
-  public static FOODITEM_NOT_FOUND = new ErrorType(
+  public static FOODITEMCATEGORY_NOT_FOUND = new ErrorType(
     "50003",
+    "fooditem.category.not.found",
+    404
+  );
+  public static FOODITEM_NOT_FOUND = new ErrorType(
+    "50004",
     "fooditem.not.found",
     404
   );

@@ -18,6 +18,7 @@ describe("Model Validation Middleware", () => {
 
     const recipe: Recipe = new Recipe();
     recipe.title = "";
+    recipe.ingredients = ["1234ef66b9c6c5139160b4d1"];
 
     const req = mocks.createRequest({
       body: recipe
@@ -37,6 +38,7 @@ describe("Model Validation Middleware", () => {
 
     const recipe: Recipe = new Recipe();
     recipe.title = "";
+    recipe.ingredients = ["1234ef66b9c6c5139160b4d1"];
 
     const req = mocks.createRequest({
       body: recipe
@@ -57,6 +59,7 @@ describe("Model Validation Middleware", () => {
     const recipe: Recipe = new Recipe();
     recipe.title = "Test Title";
     recipe.userId = "2";
+    recipe.ingredients = ["1234ef66b9c6c5139160b4d1"];
     recipe.steps = [];
 
     const req = mocks.createRequest({
@@ -65,5 +68,26 @@ describe("Model Validation Middleware", () => {
 
     const result = await new ModelValidationMiddleware().validateObject(new Recipe(), req, [ValidationGroup.RECIPE]);
     expect(result).to.be.undefined;
+  });
+
+  it("validation of a recipe with emtpy ingredients array will be rejected", async () => {
+
+    const recipe: Recipe = new Recipe();
+    recipe.title = "Test Title";
+    recipe.userId = "2";
+    recipe.ingredients = [];
+    recipe.steps = [];
+
+    const req = mocks.createRequest({
+      body: recipe
+    });
+
+    try {
+      const prom = await new ModelValidationMiddleware().validateObject(new Recipe(), req, [ValidationGroup.RECIPE]);
+    } catch (error) {
+      expect(error).to.have.deep.property("validationErrors");
+      expect(error.validationErrors).to.have.length(1);
+      expect(error.validationErrors[0]).to.have.deep.property("property", "ingredients");
+    }
   });
 });

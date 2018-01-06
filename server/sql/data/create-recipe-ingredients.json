@@ -1,0 +1,23 @@
+[
+  {
+    "_id" : {"$oid":"1234ef66b9c6c5139160b4d1"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "amount": 9,
+    "fooditemTemplateId": "59a2eeaaf09a4c43cb92ef0b"
+  },
+  {
+    "_id" : {"$oid":"1234ef66b9c6c5139160b4d2"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "amount": 2,
+    "fooditemTemplateId": "59a2eeaaf09a4c43cb92ef0b"
+  },
+  {
+    "_id" : {"$oid":"1234ef66b9c6c5139160b4d3"},
+    "updatedAt": "2017-08-27T18:48:54.865Z",
+    "createdAt": "2017-08-27T18:48:54.865Z",
+    "amount":  5,
+    "fooditemTemplateId": "59a2eeaaf09a4c43cb92ef0b"
+  }
+]
