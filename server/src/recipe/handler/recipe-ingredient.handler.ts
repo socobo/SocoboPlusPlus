@@ -15,12 +15,6 @@ export class RecipeIngredientHandler {
     private _db: DbExtension
   ) {}
 
-  private _sendError = (res: Response) => {
-    return (error: any) => {
-      res.status(error.statusCode).json(error.forResponse());
-    };
-  }
-
   private _resolveFoodItemTemplate = async (ingredient: RecipeIngredient): Promise<RecipeIngredient> => {
     const fit = await this._db.fooditemTemplate
       .getById(new ObjectId(ingredient.fooditemTemplateId)) as FoodItemTemplate;
@@ -46,7 +40,7 @@ export class RecipeIngredientHandler {
     });
   }
 
-  public getById = async (req: Request, res: Response) => {
+  public getById = async (req: Request, res: Response, next: NextFunction) => {
     const queryPrams = req.query;
 
     try {
@@ -59,11 +53,11 @@ export class RecipeIngredientHandler {
         res.status(200).json(ingredient);
       }
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public getAll = async (req: Request, res: Response) => {
+  public getAll = async (req: Request, res: Response, next: NextFunction) => {
     const queryPrams = req.query;
 
     try {
@@ -75,22 +69,22 @@ export class RecipeIngredientHandler {
         res.status(200).json(result);
       }
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public save = async (req: Request, res: Response) => {
+  public save = async (req: Request, res: Response, next: NextFunction) => {
     const ingredient: RecipeIngredient = new RecipeIngredient()
       .clone(req.body as RecipeIngredient);
     try {
       const result = await this._db.recipeIngredient.save(ingredient);
       res.status(201).json(result);
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public update = async (req: Request, res: Response) => {
+  public update = async (req: Request, res: Response, next: NextFunction) => {
     const ingredient: RecipeIngredient = new RecipeIngredient()
       .clone(req.body as RecipeIngredient);
     ingredient.setId(req.params.id);
@@ -98,17 +92,17 @@ export class RecipeIngredientHandler {
       const result = await this._db.recipeIngredient.update(req.params.id, ingredient);
       res.status(200).json(result);
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public delete = async (req: Request, res: Response) => {
+  public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await this._db.recipeIngredient.getById(req.params.id);
       await this._db.recipeIngredient.delete(req.params.id);
       res.status(200).json();
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 }

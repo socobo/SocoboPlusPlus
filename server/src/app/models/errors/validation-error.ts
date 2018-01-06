@@ -17,9 +17,11 @@ export class ValidationError extends ApiError {
 
   public forResponse = () => {
     return {
+      cause: this.error.message,
       message: this.message,
       method: this.sourceMethod,
       source: this.source,
+      type: this.name,
       validationErrors: this.validationErrors
     };
   }

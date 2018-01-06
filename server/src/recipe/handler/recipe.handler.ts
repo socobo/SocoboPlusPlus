@@ -14,12 +14,6 @@ export class RecipeHandler {
     private _imgService: ImageService
   ) {}
 
-  private _sendError = (res: Response) => {
-    return (error: any) => {
-      res.status(error.statusCode).json(error.forResponse());
-    };
-  }
-
   private _resolveCategory = async (recipe: Recipe): Promise<Recipe> => {
     const category = await this._db.recipeCategory.getById(recipe.categoryId) as RecipeCategory;
     recipe.category = category;
@@ -44,7 +38,7 @@ export class RecipeHandler {
     });
   }
 
-  public getById = async (req: Request, res: Response) => {
+  public getById = async (req: Request, res: Response, next: NextFunction) => {
     const queryPramas = req.query;
     try {
       const result = await this._db.recipe.getById(req.params.id) as Recipe;
@@ -56,11 +50,11 @@ export class RecipeHandler {
         res.status(200).json(result);
       }
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public getAll = async (req: Request, res: Response) => {
+  public getAll = async (req: Request, res: Response, next: NextFunction) => {
     const queryPrams = req.query;
     try {
       const result = await this._db.recipe.getAll() as Recipe[];
@@ -71,11 +65,11 @@ export class RecipeHandler {
         res.status(200).json(result);
       }
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public searchByField = async (req: Request, res: Response) => {
+  public searchByField = async (req: Request, res: Response, next: NextFunction) => {
 
     const queryPramas = req.query;
     const allQueryParams = Object.getOwnPropertyNames(queryPramas);
@@ -88,17 +82,17 @@ export class RecipeHandler {
           .searchByField(firstQueryParam, valueFirstQueryParam);
         res.status(200).json(result);
       } catch (error) {
-        this._sendError(res)(error);
+        next(error);
       }
     } else {
       const error = new ApiError(ERRORS.VAL_INVALID_QUERY_PARAM_FORMAT)
         .addSource(RecipeHandler.name)
         .addSourceMethod("searchByField()");
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public save = async (req: Request, res: Response) => {
+  public save = async (req: Request, res: Response, next: NextFunction) => {
     const recipe: Recipe = new Recipe()
       .clone(req.body as Recipe)
       .removeImageProp();
@@ -108,11 +102,11 @@ export class RecipeHandler {
       const result = await this._db.recipe.save(recipe);
       res.status(201).json(result);
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public update = async (req: Request, res: Response) => {
+  public update = async (req: Request, res: Response, next: NextFunction) => {
     const recipe: Recipe = new Recipe()
       .clone(req.body as Recipe)
       .removeImageProp();
@@ -122,7 +116,7 @@ export class RecipeHandler {
       const result = await this._db.recipe.update(req.params.id, recipe);
       res.status(201).json(result);
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
@@ -136,21 +130,21 @@ export class RecipeHandler {
       req.body = updatedRecipe;
       next();
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public delete = async (req: Request, res: Response) => {
+  public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const recipe = await this._db.recipe.getById(req.params.id);
       await this._db.recipe.delete(req.params.id);
       res.status(200).json();
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public uploadImage = async (req: SocoboRequest, res: Response) => {
+  public uploadImage = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     const userEmail = req.requestData.decoded.email;
     const recipeId = req.params.id;
     const imageTitle = req.query.title;
@@ -163,11 +157,11 @@ export class RecipeHandler {
       await this._db.recipe.update(recipeId, recipe);
       res.status(200).json(recipe);
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
   }
 
-  public deleteImage = async (req: SocoboRequest, res: Response) => {
+  public deleteImage = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     try {
       const image = await this._db.recipe
         .getImageById(req.params.id, req.params.imgId) as RecipeImage;
@@ -175,7 +169,7 @@ export class RecipeHandler {
       await this._db.recipe.removeImage(req.params.id, req.params.imgId);
       res.status(200).json();
     } catch (error) {
-      this._sendError(res)(error);
+      next(error);
     }
 
   }

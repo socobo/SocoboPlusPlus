@@ -51,9 +51,11 @@ export class ApiError extends Error {
   public forResponse = () => {
     LogService.addError(this.message, this);
     return {
+      cause: this.error.message,
       message: this.message,
       method: this.sourceMethod,
-      source: this.source
+      source: this.source,
+      type: this.name
     };
   }
 }
