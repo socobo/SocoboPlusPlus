@@ -35,17 +35,20 @@ describe("FoodItemRoute - API v1", () => {
     expect(result.body).to.not.null;
   });
 
-  // it("GET /api/v1/fooditem/:id should return one category w/ id, foodItemId, name, created & lastModified prop",
-  //   async () => {
-  //     const id = "59a2f0667898dca760b01e56";
-  //     const accessToken = await TestHelper.getToken();
-  //     const result = await TestHelper.getAgent()
-  //       .get(`/api/v1/fooditemcategory/${id}`)
-  //       .set("x-access-token", accessToken);
-  //     expect(result.body).to.deep.property("id");
-  //     expect(result.body).to.deep.property("foodItemId");
-  //     expect(result.body).to.deep.property("name");
-  //     expect(result.body).to.deep.property("created");
-  //     expect(result.body).to.deep.property("lastModified");
-  //   });
+  it(`GET /api/v1/fooditem/:id should return one fooditem
+      w/ id, foodItemTemplateId, socoboUserId, amount, bestBefore, created & lastModified prop`,
+    async () => {
+      const id = "59a2ef66b9c6c5139160b4d8";
+      const accessToken = await TestHelper.getToken();
+      const result = await TestHelper.getAgent()
+        .get(`/api/v1/fooditem/${id}`)
+        .set("x-access-token", accessToken);
+      expect(result.body).to.deep.property("id");
+      expect(result.body).to.deep.property("foodItemTemplateId");
+      expect(result.body).to.deep.property("socoboUserId");
+      expect(result.body).to.deep.property("amount");
+      expect(result.body).to.deep.property("bestBefore");
+      expect(result.body).to.deep.property("created");
+      expect(result.body).to.deep.property("lastModified");
+  });
 });
