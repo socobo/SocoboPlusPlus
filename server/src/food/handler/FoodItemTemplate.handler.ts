@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
+import { DbError, ERRORS } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { FoodItemTemplate } from "../index";
 
@@ -39,7 +40,9 @@ export class FoodItemTemplateHandler {
   public updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const templateId = new Types.ObjectId(req.params.id);
-      const updateValues = { name: req.body.name, lastModified: Date.now() };
+      await this._checkIfFoodItemTemplateExists(templateId, "updateById(..)");
+
+      const updateValues = { ...req.body, lastModified: Date.now() };
       const result = await this._db.fooditemTemplate.updateById(templateId, updateValues);
       res.status(200).json(result);
     } catch (error) {
@@ -50,10 +53,21 @@ export class FoodItemTemplateHandler {
   public deleteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const templateId = new Types.ObjectId(req.params.id);
+      await this._checkIfFoodItemTemplateExists(templateId, "deleteById(..)");
+
       const result = await this._db.fooditemTemplate.deleteById(templateId);
       res.status(200).json(result);
     } catch (error) {
       next(error);
+    }
+  }
+
+  private _checkIfFoodItemTemplateExists = async (id: Types.ObjectId, methodName: string) => {
+    const foundItem = await this._db.fooditemTemplate.getById(id);
+    if (!foundItem) {
+      throw new DbError(ERRORS.FOODITEMTEMPLTE_NOT_FOUND.withArgs("id", id.toHexString()))
+        .addSource(FoodItemTemplateHandler.name)
+        .addSourceMethod(methodName);
     }
   }
 }

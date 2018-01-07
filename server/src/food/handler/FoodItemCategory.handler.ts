@@ -30,9 +30,6 @@ export class FoodItemCategoryHandler {
   public save = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const category = new FoodItemCategory().clone(req.body);
-
-      await this._checkIfFoodItemExists(category.foodItemId, "save(..)");
-
       const result = await this._db.fooditemCategory.save(category) as Types.ObjectId;
       res.status(201).json(category.setId(result));
     } catch (error) {
@@ -43,9 +40,7 @@ export class FoodItemCategoryHandler {
   public updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const categoryId = new Types.ObjectId(req.params.id);
-      const foodItemId = new Types.ObjectId(req.body.foodItemId);
-
-      await this._checkIfFoodItemExists(foodItemId, "updateById(..)");
+      await this._checkIfFoodItemCategoryExists(categoryId, "updateById(..)");
 
       const updateValues = { name: req.body.name, lastModified: Date.now() };
       const result = await this._db.fooditemCategory.updateById(categoryId, updateValues);
@@ -58,6 +53,8 @@ export class FoodItemCategoryHandler {
   public deleteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const categoryId = new Types.ObjectId(req.params.id);
+      await this._checkIfFoodItemCategoryExists(categoryId, "deleteById(..)");
+
       const result = await this._db.fooditemCategory.deleteById(categoryId);
       res.status(200).json(result);
     } catch (error) {
@@ -65,10 +62,10 @@ export class FoodItemCategoryHandler {
     }
   }
 
-  private _checkIfFoodItemExists = async (id: Types.ObjectId, methodName: string) => {
-    const foundFoundItem = await this._db.fooditem.getById(id);
-    if (!foundFoundItem) {
-      throw new DbError(ERRORS.FOODITEM_NOT_FOUND.withArgs("id", id.toHexString()))
+  private _checkIfFoodItemCategoryExists = async (id: Types.ObjectId, methodName: string) => {
+    const foundItem = await this._db.fooditemCategory.getById(id);
+    if (!foundItem) {
+      throw new DbError(ERRORS.FOODITEMCATEGORY_NOT_FOUND.withArgs("id", id.toHexString()))
         .addSource(FoodItemCategoryHandler.name)
         .addSourceMethod(methodName);
     }

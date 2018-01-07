@@ -1,6 +1,10 @@
 import { Schema } from "mongoose";
 
 export const foodItemTemplateSchema = new Schema({
+  categoryIds: [{
+    ref: "FoodItemCategory",
+    type: Schema.Types.ObjectId
+  }],
   created: {
     required: true,
     type: Number
@@ -12,5 +16,9 @@ export const foodItemTemplateSchema = new Schema({
   name: {
     required: true,
     type: String
+  },
+  unitId: {
+    ref: "FoodItemUnit",
+    type: Schema.Types.ObjectId
   }
 });

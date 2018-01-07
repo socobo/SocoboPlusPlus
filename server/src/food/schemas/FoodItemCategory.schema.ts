@@ -5,10 +5,6 @@ export const foodItemCategorySchema = new Schema({
     required: true,
     type: Number
   },
-  foodItemId: {
-    ref: "FoodItem",
-    type: Schema.Types.ObjectId
-  },
   lastModified: {
     required: true,
     type: Number

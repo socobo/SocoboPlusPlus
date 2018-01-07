@@ -11,13 +11,13 @@ export class FoodItemCategoryRepository extends BaseRepository <FoodItemCategory
   }
 
   private _transformResult = (result: Document & FoodItemCategory): FoodItemCategory => {
-    if (!result) { throw new ApiError(ERRORS.FOODITEMCATEGORY_NOT_FOUND)
-      .addSource(FoodItemCategoryRepository.name)
-      .addSourceMethod("_transformResult");
+    if (!result) {
+      throw new ApiError(ERRORS.FOODITEMCATEGORY_NOT_FOUND)
+        .addSource(FoodItemCategoryRepository.name)
+        .addSourceMethod("_transformResult");
     }
     const transformedResult = new FoodItemCategory()
       .setId(new Types.ObjectId(result.id))
-      .setFoodItemId(new Types.ObjectId(result.foodItemId))
       .setName(result.name)
       .setCreated(result.created)
       .setLastModified(result.lastModified);

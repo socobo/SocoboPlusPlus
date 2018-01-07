@@ -94,6 +94,9 @@ export class FoodItem implements Validatable {
   }
 
   public clone = (foodItem: FoodItem): this => {
+    if (!foodItem) {
+      return undefined;
+    }
     this.foodItemTemplateId = foodItem.foodItemTemplateId;
     this.socoboUserId = foodItem.socoboUserId;
     this.amount = foodItem.amount;

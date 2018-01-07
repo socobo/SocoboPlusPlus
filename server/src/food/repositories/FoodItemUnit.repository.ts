@@ -10,13 +10,13 @@ export class FoodItemUnitRepository extends BaseRepository <FoodItemUnit> {
   }
 
   private _transformResult = (result: Document & FoodItemUnit): FoodItemUnit => {
-    if (!result) { throw new ApiError(ERRORS.FOODITEMTUNIT_NOT_FOUND)
-      .addSource(FoodItemUnitRepository.name)
-      .addSourceMethod("_transformResult");
+    if (!result) {
+      throw new ApiError(ERRORS.FOODITEMTUNIT_NOT_FOUND)
+        .addSource(FoodItemUnitRepository.name)
+        .addSourceMethod("_transformResult");
     }
     const transformedResult = new FoodItemUnit()
       .setId(new Types.ObjectId(result.id))
-      .setFoodItemId(new Types.ObjectId(result.foodItemId))
       .setName(result.name)
       .setCreated(result.created)
       .setLastModified(result.lastModified);

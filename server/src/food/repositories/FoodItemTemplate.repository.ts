@@ -10,12 +10,15 @@ export class FoodItemTemplateRepository extends BaseRepository <FoodItemTemplate
   }
 
   private _transformResult = (result: Document & FoodItemTemplate): FoodItemTemplate => {
-    if (!result) { throw new ApiError(ERRORS.FOODITEMTEMPLTE_NOT_FOUND)
-      .addSource(FoodItemTemplateRepository.name)
-      .addSourceMethod("_transformResult");
+    if (!result) {
+      throw new ApiError(ERRORS.FOODITEMTEMPLTE_NOT_FOUND)
+        .addSource(FoodItemTemplateRepository.name)
+        .addSourceMethod("_transformResult");
     }
     const tranformedResult: FoodItemTemplate = new FoodItemTemplate()
       .setId(new Types.ObjectId(result.id))
+      .setCategoryIds(result.categoryIds)
+      .setUnitId(result.unitId)
       .setName(result.name)
       .setCreated(result.created)
       .setLastModified(result.lastModified);

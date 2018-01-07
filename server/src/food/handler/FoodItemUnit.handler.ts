@@ -30,9 +30,6 @@ export class FoodItemUnitHandler {
   public save = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const unit = new FoodItemUnit().clone(req.body);
-
-      await this._checkIfFoodItemExists(unit.foodItemId, "save(..)");
-
       const result = await this._db.fooditemUnit.save(unit) as Types.ObjectId;
       res.status(201).json(unit.setId(result));
     } catch (error) {
@@ -43,9 +40,7 @@ export class FoodItemUnitHandler {
   public updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const unitId = new Types.ObjectId(req.params.id);
-      const foodItemId = new Types.ObjectId(req.body.foodItemId);
-
-      await this._checkIfFoodItemExists(foodItemId, "updateById(..)");
+      await this._checkIfFoodItemUnitExists(unitId, "updateById(..)");
 
       const updateValues = { name: req.body.name, lastModified: Date.now() };
       const result = await this._db.fooditemUnit.updateById(unitId, updateValues);
@@ -58,6 +53,8 @@ export class FoodItemUnitHandler {
   public deleteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const unitId = new Types.ObjectId(req.params.id);
+      await this._checkIfFoodItemUnitExists(unitId, "deleteById(..)");
+
       const result = await this._db.fooditemUnit.deleteById(unitId);
       res.status(200).json(result);
     } catch (error) {
@@ -65,10 +62,10 @@ export class FoodItemUnitHandler {
     }
   }
 
-  private _checkIfFoodItemExists = async (id: Types.ObjectId, methodName: string) => {
-    const foundFoundItem = await this._db.fooditem.getById(id);
-    if (!foundFoundItem) {
-      throw new DbError(ERRORS.FOODITEM_NOT_FOUND.withArgs("id", id.toHexString()))
+  private _checkIfFoodItemUnitExists = async (id: Types.ObjectId, methodName: string) => {
+    const foundItem = await this._db.fooditemUnit.getById(id);
+    if (!foundItem) {
+      throw new DbError(ERRORS.FOODITEMTUNIT_NOT_FOUND.withArgs("id", id.toHexString()))
         .addSource(FoodItemUnitHandler.name)
         .addSourceMethod(methodName);
     }
