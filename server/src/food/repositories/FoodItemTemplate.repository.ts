@@ -11,9 +11,9 @@ export class FoodItemTemplateRepository extends BaseRepository <FoodItemTemplate
 
   private _transformResult = (result: Document & FoodItemTemplate): FoodItemTemplate => {
     if (!result) {
-      throw new ApiError(ERRORS.FOODITEMTEMPLTE_NOT_FOUND)
+      throw new ApiError(ERRORS.FOODITEMTEMPLTE_NOT_FOUND.withArgs("id", "UNKNOWN"))
         .addSource(FoodItemTemplateRepository.name)
-        .addSourceMethod("_transformResult");
+        .addSourceMethod("_transformResult(..)");
     }
     const tranformedResult: FoodItemTemplate = new FoodItemTemplate()
       .setId(new Types.ObjectId(result.id))

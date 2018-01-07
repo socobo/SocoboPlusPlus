@@ -21,7 +21,7 @@ export class BaseRepository <T> implements IBaseRepository <T> {
   }
 
   public async getById (id: Types.ObjectId): Promise<T | ApiError> {
-      const entity = await this._model.findOne({_id: id});
+      const entity = await this._model.findOne({ _id: id });
       return this._transformFunction(entity);
   }
 
@@ -38,7 +38,7 @@ export class BaseRepository <T> implements IBaseRepository <T> {
   }
 
   public async deleteById (id: Types.ObjectId): Promise<object> {
-      await this._model.findByIdAndRemove({_id: id});
+      await this._model.findByIdAndRemove({ _id: id });
       return { id };
   }
 }

@@ -12,9 +12,9 @@ export class FoodItemCategoryRepository extends BaseRepository <FoodItemCategory
 
   private _transformResult = (result: Document & FoodItemCategory): FoodItemCategory => {
     if (!result) {
-      throw new ApiError(ERRORS.FOODITEMCATEGORY_NOT_FOUND)
+      throw new ApiError(ERRORS.FOODITEMCATEGORY_NOT_FOUND.withArgs("id", "UNKNOWN"))
         .addSource(FoodItemCategoryRepository.name)
-        .addSourceMethod("_transformResult");
+        .addSourceMethod("_transformResult(..)");
     }
     const transformedResult = new FoodItemCategory()
       .setId(new Types.ObjectId(result.id))

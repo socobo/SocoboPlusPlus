@@ -28,12 +28,12 @@ describe("FoodItemRoute - API v1", () => {
     expect(result.body.length).to.equal(2);
   });
 
-  // it("GET /api/v1/fooditemcategory/:id should return one category", async () => {
-  //   const id = "59a2f0667898dca760b01e56";
-  //   const accessToken = await TestHelper.getToken();
-  //   const result = await TestHelper.getAgent().get(`/api/v1/fooditem/${id}`).set("x-access-token", accessToken);
-  //   expect(result.body).to.not.null;
-  // });
+  it("GET /api/v1/fooditem/:id should return one fooditem", async () => {
+    const id = "59a2ef66b9c6c5139160b4d8";
+    const accessToken = await TestHelper.getToken();
+    const result = await TestHelper.getAgent().get(`/api/v1/fooditem/${id}`).set("x-access-token", accessToken);
+    expect(result.body).to.not.null;
+  });
 
   // it("GET /api/v1/fooditem/:id should return one category w/ id, foodItemId, name, created & lastModified prop",
   //   async () => {
