@@ -90,7 +90,9 @@ describe("RecipeRoute - API v1", () => {
       description: "NewRecipe",
       duration: 100,
       ingredients: ["1234ef66b9c6c5139160b4d1"],
+      isPublic: true,
       level: "EXPERT",
+      owner: "59a5a4013eeef0c7a9d00640",
       steps: [
         {
             stepDescription: "NewRecipe",
@@ -157,7 +159,9 @@ describe("RecipeRoute - API v1", () => {
       description: "NewRecipe",
       duration: 100,
       ingredients: ["1234ef66b9c6c5139160b4d1"],
+      isPublic: true,
       level: "EXPERT",
+      owner: "59a5a4013eeef0c7a9d00640",
       steps: [
         {
             stepDescription: "NewRecipe",

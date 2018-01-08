@@ -108,9 +108,10 @@ export class Recipe implements Validatable {
     this.steps = recipe.steps
       ? recipe.steps.map((step: RecipeStep) => new RecipeStep().clone(step))
       : [];
-    this.collaborators = [...recipe.collaborators];
+    this.collaborators = recipe.collaborators  ? [...recipe.collaborators] : [];
+
     this.owner = recipe.owner;
-    this.readers = [...recipe.readers];
+    this.readers = recipe.readers ? [...recipe.readers] : [];
     this.isPublic = recipe.isPublic;
     return this;
   }
