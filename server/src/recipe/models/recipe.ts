@@ -75,6 +75,20 @@ export class Recipe implements Validatable {
   })
   public duration: number;
 
+  public collaborators: string[];
+
+  @IsNotEmpty({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public isPublic: boolean;
+
+  @IsNotEmpty({
+    groups: [ ValidationGroup.RECIPE ]
+  })
+  public owner: string;
+
+  public readers: string[];
+
   public clone (recipe: Recipe) {
     if (!recipe) {
       return undefined;
@@ -94,6 +108,10 @@ export class Recipe implements Validatable {
     this.steps = recipe.steps
       ? recipe.steps.map((step: RecipeStep) => new RecipeStep().clone(step))
       : [];
+    this.collaborators = [...recipe.collaborators];
+    this.owner = recipe.owner;
+    this.readers = [...recipe.readers];
+    this.isPublic = recipe.isPublic;
     return this;
   }
 
@@ -154,6 +172,26 @@ export class Recipe implements Validatable {
 
   public setDuration (duration: Level) {
     this.duration = duration;
+    return this;
+  }
+
+  public setOwner (owner: string) {
+    this.owner = owner;
+    return this;
+  }
+
+  public setIsPublic (isPublic: boolean) {
+    this.isPublic = isPublic;
+    return this;
+  }
+
+  public setCollaborators (collaborators: string[]) {
+    this.collaborators = [...collaborators];
+    return this;
+  }
+
+  public setReaders (readers: string[]) {
+    this.readers = [...readers];
     return this;
   }
 }
