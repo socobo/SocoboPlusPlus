@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 import { DbError, ERRORS } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
-import { FoodItemTemplate } from "../index";
+import { FoodItemCategory, FoodItemTemplate, FoodItemUnit } from "../index";
 
 export class FoodItemTemplateHandler {
 
@@ -10,7 +10,9 @@ export class FoodItemTemplateHandler {
 
   public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await this._db.fooditemTemplate.getAll();
+      const result = (req.query && req.query.hasOwnProperty("resolve"))
+        ? await this._db.fooditemTemplate.getAllResolved()
+        : await this._db.fooditemTemplate.getAll();
       res.status(200).json(result);
     } catch (error) {
       next(error);
@@ -20,7 +22,9 @@ export class FoodItemTemplateHandler {
   public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id = new Types.ObjectId(req.params.id);
-      const result = await this._db.fooditemTemplate.getById(id);
+      const result = (req.query && req.query.hasOwnProperty("resolve"))
+        ? await this._db.fooditemTemplate.getByIdResolved(id)
+        : await this._db.fooditemTemplate.getById(id);
       res.status(200).json(result);
     } catch (error) {
       next(error);

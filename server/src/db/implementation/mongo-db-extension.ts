@@ -37,21 +37,16 @@ export class MongoDbExtension implements DbExtension {
     private _recipeCategoryModel: Model<Document & RecipeCategory>,
     private _recipeIngredientModel: Model<Document & RecipeIngredient>
   ) {
-    this.fooditemTemplate = new FoodItemTemplateRepository(_fooditemTemplateModel);
     this.fooditemCategory = new FoodItemCategoryRepository(_fooditemCategoryModel);
     this.fooditemUnit = new FoodItemUnitRepository(_fooditemUnitModel);
+    this.fooditemTemplate = new FoodItemTemplateRepository(_fooditemTemplateModel,
+      this.fooditemCategory, this.fooditemUnit);
     this.fooditem = new FoodItemRepository(_fooditemModel);
     this.socobouser = new SocoboUserRepository(_socobouserModel);
-    this.recipe = new RecipeRepository(
-      _recipeModel,
-      new RecipeCrudRepository(
-      _recipeModel,
-      ERRORS.RECIPE_CATEGORY_NOT_FOUND));
-    this.recipeCategory = new RecipeCrudRepository(
-      _recipeCategoryModel,
-      ERRORS.RECIPE_CATEGORY_NOT_FOUND);
-    this.recipeIngredient = new RecipeCrudRepository(
-      _recipeIngredientModel,
-      ERRORS.RECIPE_INGREDIENT_NOT_FOUND);
+    this.recipe = new RecipeRepository(_recipeModel,
+      new RecipeCrudRepository(_recipeModel, ERRORS.RECIPE_CATEGORY_NOT_FOUND)
+    );
+    this.recipeCategory = new RecipeCrudRepository(_recipeCategoryModel, ERRORS.RECIPE_CATEGORY_NOT_FOUND);
+    this.recipeIngredient = new RecipeCrudRepository(_recipeIngredientModel, ERRORS.RECIPE_INGREDIENT_NOT_FOUND);
   }
 }

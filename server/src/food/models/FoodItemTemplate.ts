@@ -1,7 +1,7 @@
 import { ArrayMinSize, IsMongoId, IsNotEmpty, MinLength } from "class-validator";
 import { Types } from "mongoose";
 import { Validatable, ValidationGroup } from "../../app/index";
-import { FoodItemBase } from "./FoodItemBase";
+import { FoodItemBase, FoodItemCategory, FoodItemUnit } from "../index";
 
 export class FoodItemTemplate extends FoodItemBase implements Validatable {
 
@@ -13,11 +13,13 @@ export class FoodItemTemplate extends FoodItemBase implements Validatable {
     groups: [ ValidationGroup.FOODITEMBASE ]
   })
   public categoryIds: Types.ObjectId[];
+  public categories?: FoodItemCategory[];
 
   @IsMongoId({
     groups: [ ValidationGroup.FOODITEMBASE ]
   })
   public unitId: Types.ObjectId;
+  public unit?: FoodItemUnit;
 
   public setCategoryIds = (categoryIds: Types.ObjectId[]): this => {
     this.categoryIds = categoryIds;
