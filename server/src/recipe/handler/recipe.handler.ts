@@ -5,13 +5,14 @@ import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
 } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
-import { Recipe, RecipeImage} from "../index";
+import { Recipe, RecipeAuthorizationService, RecipeImage} from "../index";
 
 export class RecipeHandler {
 
   constructor (
     private _db: DbExtension,
-    private _imgService: ImageService
+    private _imgService: ImageService,
+    private _recipeAuthService: RecipeAuthorizationService
   ) {}
 
   private _resolveCategory = async (recipe: Recipe): Promise<Recipe> => {
@@ -38,16 +39,17 @@ export class RecipeHandler {
     });
   }
 
-  public getById = async (req: Request, res: Response, next: NextFunction) => {
+  public getById = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     const queryPramas = req.query;
     try {
-      const result = await this._db.recipe.getById(req.params.id) as Recipe;
-      if (queryPramas.hasOwnProperty("resolve") && result.categoryId) {
-        const recipe = await this._resolveCategory(result);
-        recipe.categoryId = undefined;
-        return res.status(200).json(recipe);
+      const recipe = await this._db.recipe.getById(req.params.id) as Recipe;
+      await this._recipeAuthService.readable(req.requestData.decoded.user, recipe);
+      if (queryPramas.hasOwnProperty("resolve") && recipe.categoryId) {
+        const resolvedRecipe = await this._resolveCategory(recipe);
+        resolvedRecipe.categoryId = undefined;
+        return res.status(200).json(resolvedRecipe);
       } else {
-        res.status(200).json(result);
+        res.status(200).json(recipe);
       }
     } catch (error) {
       next(error);
