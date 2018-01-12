@@ -1,6 +1,8 @@
 import { IsMongoId, IsNotEmpty, MinDate, MinLength } from "class-validator";
 import { Types } from "mongoose";
 import { Validatable, ValidationGroup } from "../../app/index";
+import { SocoboUser } from "../../socobouser/index";
+import { FoodItemTemplate } from "../index";
 
 export class FoodItem implements Validatable {
 
@@ -34,6 +36,7 @@ export class FoodItem implements Validatable {
     groups: [ ValidationGroup.FOODITEM ]
   })
   public foodItemTemplateId: Types.ObjectId;
+  public foodItemTemplate?: FoodItemTemplate;
 
   @IsNotEmpty({
     groups: [ ValidationGroup.FOODITEM ]
@@ -50,6 +53,7 @@ export class FoodItem implements Validatable {
     groups: [ ValidationGroup.FOODITEM ]
   })
   public socoboUserId: Types.ObjectId;
+  public socoboUser?: SocoboUser;
 
   public setId = (id: Types.ObjectId): this => {
     this.id = id;

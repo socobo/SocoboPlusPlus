@@ -12,12 +12,23 @@ export class FoodItemHandler {
     try {
       let result;
 
-      if (req.query && req.query.hasOwnProperty("socobouserid")) {
+      if (req.query.hasOwnProperty("socobouserid")) {
         const socoboUserId = req.query.socobouserid;
         await this._checkIfSocoboUserExists(socoboUserId, "getAll(..)");
-        result = await this._db.fooditem.getAllBySocoboUserId(socoboUserId);
+
+        result = (req.query.hasOwnProperty("resolve"))
+          ? result = await this._db.fooditem.getAllBySocoboUserIdResolved(socoboUserId, false)
+          : (req.query.hasOwnProperty("resolve-deep"))
+            ? await this._db.fooditem.getAllBySocoboUserIdResolved(socoboUserId, true)
+            : await this._db.fooditem.getAllBySocoboUserId(socoboUserId);
+
       } else {
-        result = await this._db.fooditem.getAll();
+
+        result = (req.query.hasOwnProperty("resolve"))
+          ? await this._db.fooditem.getAllResolved(false)
+          : (req.query.hasOwnProperty("resolve-deep"))
+            ? await this._db.fooditem.getAllResolved(true)
+            : await this._db.fooditem.getAll();
       }
 
       res.status(200).json(result);
