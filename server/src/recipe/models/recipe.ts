@@ -90,6 +90,7 @@ export class Recipe implements Validatable {
   public readers: string[];
 
   public clone (recipe: Recipe) {
+
     if (!recipe) {
       return undefined;
     }
@@ -101,13 +102,16 @@ export class Recipe implements Validatable {
     this.category = new RecipeCategory().clone(recipe.category);
     this.level = recipe.level;
     this.duration = recipe.duration;
-    this.ingredients = [...recipe.ingredients];
+
+    this.ingredients = recipe.ingredients ? [...recipe.ingredients] : [];
     this.images = recipe.images
       ? recipe.images.map((image: RecipeImage) => new RecipeImage().clone(image))
       : [];
+
     this.steps = recipe.steps
       ? recipe.steps.map((step: RecipeStep) => new RecipeStep().clone(step))
       : [];
+
     this.collaborators = recipe.collaborators  ? [...recipe.collaborators] : [];
 
     this.owner = recipe.owner;

@@ -19,18 +19,17 @@
         }
     ],
     "collaborators": [
-        "59a2ee5d6b1ad6c629e9b2fc",
         "59a2ee598ae9b7b45243d503"
     ],
     "readers": [],
     "owner": "59a5a4013eeef0c7a9d00640",
-    "isPublic": true
+    "isPublic": false
   },
   {
     "_id" : {"$oid":"59a2ef66b9c6c5139160b4d2"},
     "updatedAt": "2017-08-27T18:48:54.865Z",
     "createdAt": "2017-08-27T18:48:54.865Z",
-    "title": "TestData1",
+    "title": "TestData2",
     "description": "TestData1",
     "userId": "59a2ee5d6b1ad6c629e9b2fc",
     "categoryId": "5092ef66b9c6c5139160b4d1",
@@ -86,7 +85,8 @@
     "collaborators": [],
     "readers": [
         "59a2ee5d6b1ad6c629e9b2fc",
-        "59a2ee598ae9b7b45243d503"
+        "59a2ee598ae9b7b45243d503",
+        "59a5a4013eeef0c7a9d00640"
     ],
     "owner": "59a5a4013eeef0c7a9d00640",
     "isPublic": false

@@ -47,8 +47,12 @@ export class RecipeRepository implements CrudRepository<Recipe> {
     return foundRecipes;
   }
 
-  public update = async (id: string, recipe: Recipe): Promise<Recipe | ApiError> =>
-    this._crud.update(id, recipe)
+  public update = async (id: string, recipe: Recipe): Promise<Recipe | ApiError> => {
+    if (!recipe.duration) {
+      delete recipe.duration;
+    }
+    return this._crud.update(id, recipe);
+  }
 
   public removeImage = async (id: string, imgId: string): Promise<Recipe> => {
       const updatedRecipe = await this._recipeModel
