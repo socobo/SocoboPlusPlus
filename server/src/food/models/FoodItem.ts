@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, MinDate, MinLength } from "class-validator";
+import { IsNotEmpty, Min } from "class-validator";
 import { Types } from "mongoose";
 import { Validatable, ValidationGroup } from "../../app/index";
 import { SocoboUser } from "../../socobouser/index";
@@ -6,20 +6,14 @@ import { FoodItemTemplate } from "../index";
 
 export class FoodItem implements Validatable {
 
-  @IsMongoId({
-    groups: [ ValidationGroup.FOODITEM ]
-  })
   public id: Types.ObjectId;
 
-  @MinLength(1, {
+  @Min(1, {
     groups: [ ValidationGroup.FOODITEM ]
   })
   public amount: number;
 
   @IsNotEmpty({
-    groups: [ ValidationGroup.FOODITEM ]
-  })
-  @MinDate(this.created, {
     groups: [ ValidationGroup.FOODITEM ]
   })
   public bestBefore: number;
@@ -32,24 +26,15 @@ export class FoodItem implements Validatable {
   @IsNotEmpty({
     groups: [ ValidationGroup.FOODITEM ]
   })
-  @IsMongoId({
-    groups: [ ValidationGroup.FOODITEM ]
-  })
   public foodItemTemplateId: Types.ObjectId;
   public foodItemTemplate?: FoodItemTemplate;
 
   @IsNotEmpty({
     groups: [ ValidationGroup.FOODITEM ]
   })
-  @MinDate(this.created, {
-    groups: [ ValidationGroup.FOODITEM ]
-  })
   public lastModified: number;
 
   @IsNotEmpty({
-    groups: [ ValidationGroup.FOODITEM ]
-  })
-  @IsMongoId({
     groups: [ ValidationGroup.FOODITEM ]
   })
   public socoboUserId: Types.ObjectId;
