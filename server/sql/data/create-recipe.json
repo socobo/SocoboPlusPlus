@@ -18,11 +18,8 @@
             "stepNumber": 2
         }
     ],
-    "collaborators": [
-        "59a2ee598ae9b7b45243d503",
-        "59a2ee598ae9b7b45243d503"
-    ],
-    "readers": [],
+    "collaborators": [],
+    "readers": ["59a2ee5d6b1ad6c629e9b2fc"],
     "owner": "59a5a4013eeef0c7a9d00640",
     "isPublic": false
   },
@@ -87,9 +84,7 @@
         "59a2ee598ae9b7b45243d503"
     ],
     "readers": [
-        "59a2ee5d6b1ad6c629e9b2fc",
-        "59a2ee598ae9b7b45243d503",
-        "59a5a4013eeef0c7a9d00640"
+        "59a2ee5d6b1ad6c629e9b2fc"
     ],
     "owner": "59a5a4013eeef0c7a9d00640",
     "isPublic": false

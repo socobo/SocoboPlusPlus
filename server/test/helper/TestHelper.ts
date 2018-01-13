@@ -39,4 +39,29 @@ export class TestHelper {
       return error;
     }
   }
+
+  public static getTokenForEmailAndPassword = async (
+    email: string,
+    password: string,
+    shouldOverrideToken: boolean = false, useTokenAsPw = true): Promise<string|any> => {
+
+    if (shouldOverrideToken) {
+    TestHelper._token = null;
+    }
+
+    if (TestHelper._token) {
+    return TestHelper._token;
+    }
+    try {
+      const result = await chai.request(Server)
+      .post("/api/v1/auth/login").send({ email, password })
+      .query({
+        token: useTokenAsPw
+      });
+      TestHelper._token = result.body.token;
+      return result.body.token;
+    } catch (error) {
+      return error;
+    }
+  }
 }

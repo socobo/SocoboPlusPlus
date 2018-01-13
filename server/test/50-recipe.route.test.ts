@@ -3,21 +3,28 @@ process.env["NODE_ENV"] = "test";
 import { expect } from "chai";
 import * as mocha from "mocha";
 
-import { SocoboUserRoleType } from "../src/socobouser/index";
+import { SocoboUser, SocoboUserRoleType } from "../src/socobouser/index";
 import { TestHelper } from "./helper/TestHelper";
 
 describe("RecipeRoute - API v1", () => {
 
   it("GET /api/v1/recipe should pass if a token is provided", async () => {
-    const accessToken = await TestHelper.getToken();
+    const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
     const result = await TestHelper.getAgent().get("/api/v1/recipe").set("x-access-token", accessToken);
     expect(result.body).to.be.not.null;
     expect(result).to.be.json;
     expect(result).to.be.status(200);
   });
 
+  it("GET /api/v1/recipe should only get the allowed recipes", async () => {
+    const accessToken = await TestHelper
+    .getToken(SocoboUserRoleType.User, true);
+    const result = await TestHelper.getAgent().get("/api/v1/recipe").set("x-access-token", accessToken);
+    expect(result.body.length).to.equal(2);
+  });
+
   it("GET /api/v1/recipe should return all recipes", async () => {
-    const accessToken = await TestHelper.getToken();
+    const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
     const result = await TestHelper.getAgent().get("/api/v1/recipe").set("x-access-token", accessToken);
     expect(result.body.length).to.equal(3);
   });
@@ -31,10 +38,58 @@ describe("RecipeRoute - API v1", () => {
   });
 
   it("GET /api/v1/recipe/:id should return one recipe", async () => {
-    const id = "59a2ef66b9c6c5139160b4d1";
+    const id = "59a2ef66b9c6c5139160b4d2";
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent().get(`/api/v1/recipe/${id}`).set("x-access-token", accessToken);
-    expect(result.body.title).to.be.equal("TestData1");
+    expect(result.body.title).to.be.equal("TestData2");
+  });
+
+  it("GET /api/v1/recipe/:id should fail if user has no read permission", async () => {
+    const id = "59a2ef66b9c6c5139160b4d1";
+    const accessToken = await TestHelper.getToken(SocoboUserRoleType.User, true);
+    try {
+      const result = await TestHelper.getAgent().get(`/api/v1/recipe/${id}`).set("x-access-token", accessToken);
+    } catch (error) {
+      expect(error.status).to.be.eql(403);
+      const msg = "You are not allowed to access this resource";
+      expect(error.response.body).to.have.property("message", msg);
+    }
+  });
+
+  it("PUT /api/v1/recipe:id should fail if user as no edit permission", async () => {
+    const id = "59a2ef66b9c6c5139160b4d1";
+    const newRecipe = {
+      description: "ChangedRecipe",
+      duration: 1,
+      ingredients: ["1234ef66b9c6c5139160b4d1"],
+      level: "BEGINNER",
+      steps: [
+        {
+            stepDescription: "ChangedRecipe",
+            stepNumber: 1,
+            stepTitle: "ChangedRecipe"
+        },
+        {
+            stepDescription: "ChangedRecipe",
+            stepNumber: 2,
+            stepTitle: "ChangedRecipe"
+        }
+      ],
+      title: "ChangedRecipe",
+      userId: "59a2ee5d6b1ad6c629e9b2fc"
+    };
+    const accessToken = await TestHelper
+      .getTokenForEmailAndPassword("admin", "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga", true);
+    try {
+      const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
+        .set("x-access-token", accessToken)
+        .set("Content-Type", "application/json")
+        .send(newRecipe);
+    } catch (error) {
+      expect(error.status).to.be.eql(403);
+      const msg = "You are not allowed to access this resource";
+      expect(error.response.body).to.have.property("message", msg);
+    }
   });
 
   it("PUT /api/v1/recipe:id should correctly change the whole recipe", async () => {
@@ -197,9 +252,23 @@ describe("RecipeRoute - API v1", () => {
     }
   });
 
+  it("DELETE /api/v1/recipe:id should be forbidden for non owners", async () => {
+    const id = "59a2ef66b9c6c5139160b4d1";
+    const accessToken = await TestHelper
+      .getTokenForEmailAndPassword("admin", "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga", true);
+    try {
+      const result = await TestHelper.getAgent().del(`/api/v1/recipe/${id}`)
+        .set("x-access-token", accessToken);
+    } catch (error) {
+      expect(error.status).to.be.eql(403);
+      const msg = "You are not allowed to access this resource";
+      expect(error.response.body).to.have.property("message", msg);
+    }
+  });
+
   it("DELETE /api/v1/recipe:id should delete the recipe", async () => {
     const id = "59a2ef66b9c6c5139160b4d1";
-    const accessToken = await TestHelper.getToken();
+    const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
     const resultBeforeDeletion = await TestHelper.getAgent()
       .get("/api/v1/recipe")
       .set("x-access-token", accessToken);

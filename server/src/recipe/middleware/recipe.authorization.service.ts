@@ -14,12 +14,8 @@ export class RecipeAuthorizationService {
   ) {}
 
   private _requestCurrentUser = async (userFromToken: SocoboUser): Promise<SocoboUser> => {
-    console.log('fetch user')
-
     let user: SocoboUser;
     try {
-      console.log('mail', userFromToken.email)
-
       user = await this._db.socobouser.getUserByEmail(userFromToken.email) as SocoboUser;
 
     } catch (error) {
@@ -35,7 +31,6 @@ export class RecipeAuthorizationService {
   }
 
   private _throwAuthError = () => {
-    console.log('throw error')
     throw new ApiError(ERRORS.REICPE_AUTHORIZATION)
       .addSource(RecipeAuthorizationService.name)
       .addSourceMethod("_throwAuthError()");
@@ -64,6 +59,7 @@ export class RecipeAuthorizationService {
 
   public editable = async (userFromToken: SocoboUser, recipe: Recipe) => {
     const user = await this._requestCurrentUser(userFromToken);
+
     return this._isEditable(user.id, recipe) || this._throwAuthError();
   }
 
