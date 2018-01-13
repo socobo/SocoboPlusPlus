@@ -9,9 +9,11 @@
   * [FoodItemTemplate](#fooditemtemplate)
   * [FoodItemCategory](#fooditemcategory)
   * [FoodItemUnit](#fooditemunit)
+  * [FoodItem](#fooditem)
   * [Log](#log)
   * [Recipe](#recipe)
   * [Recipe Category](#recipe-category)
+  * [Recipe Ingredient](#recipe-ingredient)
   * [SocoboUser](#socobouser)
 * [Enums](#enums)
 
@@ -195,11 +197,16 @@ npm run lint
 
 - **GET /api/v1/fooditemtemplate**
 
+  Query Parameter:
+  - resolve: If this query parameter is set, the response will not only contain the category ids and unit id, but the complete category and unit data
+
   Response body:
     ```json
     [
       {
         id: string,
+        categoryIds: [string],
+        unitId: string,
         name: string,
         created: number,
         lastModified: number
@@ -224,10 +231,15 @@ npm run lint
   Path Parameter:
     - id: Fooditem Template id
 
+  Query Parameter:
+  - resolve: If this query parameter is set, the response will not only contain the category ids and unit id, but the complete category and unit data
+
   Response body:
     ```json
     {
       id: string,
+      categoryIds: [string],
+      unitId: string,
       name: string,
       created: number,
       lastModified: number
@@ -251,7 +263,10 @@ npm run lint
   Request body:
     ```json
     {
-      name: string
+      categoryIds: [string],
+      unitId: string,
+      name: string,
+      created: number
     }
     ```
 
@@ -259,6 +274,8 @@ npm run lint
     ```json
     {
       id: string,
+      categoryIds: [string],
+      unitId: string,
       name: string,
       created: number,
       lastModified: number
@@ -282,6 +299,8 @@ npm run lint
   Request body:
     ```json
     {
+      categoryIds: [string],
+      unitId: string,
       name: string
     }
     ```
@@ -290,6 +309,8 @@ npm run lint
     ```json
     {
       id: string,
+      categoryIds: [string],
+      unitId: string,
       name: string,
       created: number,
       lastModified: number
@@ -313,7 +334,7 @@ npm run lint
   Response body:
     ```json
     {
-      id: number
+      id: string
     }
     ```
 
@@ -454,7 +475,7 @@ npm run lint
   Response body:
     ```json
     {
-      id: number
+      id: string
     }
     ```
 
@@ -595,7 +616,323 @@ npm run lint
   Response body:
     ```json
     {
-      id: number
+      id: string
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+### **FoodItem**
+
+- **GET /api/v1/fooditem**
+
+  Query Parameter:
+  - socobouserid: If this query parameter is set, the response will only contain the food items for the specfic user
+
+  Response body:
+    ```json
+    [
+      {
+        id: string,
+        foodItemTemplateId: string,
+        socoboUserId: string,
+        amount: string,
+        bestBefore: number,
+        created: number,
+        lastModified: number
+      },
+      {
+        ...
+      }
+    ]
+    ```
+
+    Query Parameter:
+    - resolve: If this query parameter is set, the response will not only contain the template and user ids, but the complete template and user data
+
+    ```json
+    [
+      {
+        id: string,
+        foodItemTemplate: {
+          id: string,
+          categoryIds: [string],
+          unitId: string,
+          name: string,
+          created: number,
+          lastModified: number
+        },
+        socoboUser: {
+          id: string,
+          username: string,
+          email: string,
+          hasTermsAccepted: boolean,
+          role: string|Role,
+          provider: string|Provider,
+          imageUrl: string,
+          created: number,
+          lastModified: number
+        },
+        amount: string,
+        bestBefore: number,
+        created: number,
+        lastModified: number
+      },
+      {
+        ...
+      }
+    ]
+    ```
+
+    Query Parameter:
+    - resolve-deep: If this query parameter is set, the response will not only contain the template and user ids, but the complete template w/ complete categories and unit data and user data
+
+    ```json
+    [
+      {
+        id: string,
+        foodItemTemplate: {
+          id: string,
+          categories: [
+            {
+              id: string,
+              name: string,
+              created: number,
+              lastModified: number
+            },
+            {
+              ...
+            }
+          ],
+          unit: {
+            id: string,
+            name: string,
+            created: number,
+            lastModified: number
+          },
+          name: string,
+          created: number,
+          lastModified: number
+        },
+        socoboUser: {
+          id: string,
+          username: string,
+          email: string,
+          hasTermsAccepted: boolean,
+          role: string|Role,
+          provider: string|Provider,
+          imageUrl: string,
+          created: number,
+          lastModified: number
+        },
+        amount: string,
+        bestBefore: number,
+        created: number,
+        lastModified: number
+      },
+      {
+        ...
+      }
+    ]
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **GET /api/v1/fooditem/:id**
+
+  Path Parameter:
+    - id: Fooditem id
+
+  Response body:
+    ```json
+    {
+      id: string,
+      foodItemTemplateId: string,
+      socoboUserId: string,
+      amount: string,
+      bestBefore: number,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+    Query Parameter:
+    - resolve: If this query parameter is set, the response will not only contain the template and user ids, but the complete template and user data
+
+    ```json
+    {
+      id: string,
+      foodItemTemplate: {
+        id: string,
+        categoryIds: [string],
+        unitId: string,
+        name: string,
+        created: number,
+        lastModified: number
+      },
+      socoboUser: {
+        id: string,
+        username: string,
+        email: string,
+        hasTermsAccepted: boolean,
+        role: string|Role,
+        provider: string|Provider,
+        imageUrl: string,
+        created: number,
+        lastModified: number
+      },
+      amount: string,
+      bestBefore: number,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+    Query Parameter:
+    - resolve-deep: If this query parameter is set, the response will not only contain the template and user ids, but the complete template w/ complete categories and unit data and user data
+
+    ```json
+    {
+      id: string,
+      foodItemTemplate: {
+        id: string,
+        categories: [
+          {
+            id: string,
+            name: string,
+            created: number,
+            lastModified: number
+          },
+          {
+            ...
+          }
+        ],
+        unit: {
+          id: string,
+          name: string,
+          created: number,
+          lastModified: number
+        },
+        name: string,
+        created: number,
+        lastModified: number
+      },
+      socoboUser: {
+        id: string,
+        username: string,
+        email: string,
+        hasTermsAccepted: boolean,
+        role: string|Role,
+        provider: string|Provider,
+        imageUrl: string,
+        created: number,
+        lastModified: number
+      },
+      amount: string,
+      bestBefore: number,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+- **PUT /api/v1/fooditem/:id**
+
+  Path Parameter:
+    - Fooditem id
+
+  Request body:
+    ```json
+    {
+      foodItemTemplateId: string,
+      socoboUserId: string,
+      amount: string,
+      bestBefore: number,
+      created: number
+    }
+    ```
+
+  Response body:
+    ```json
+    {
+      id: string,
+      foodItemTemplateId: string,
+      socoboUserId: string,
+      amount: string,
+      bestBefore: number,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **POST /api/v1/fooditem/**
+
+  Path Parameter:
+    - Fooditem id
+
+  Request body:
+    ```json
+    {
+      foodItemTemplateId: string,
+      socoboUserId: string,
+      amount: string,
+      bestBefore: number
+    }
+    ```
+
+  Response body:
+    ```json
+    {
+      id: string,
+      foodItemTemplateId: string,
+      socoboUserId: string,
+      amount: string,
+      bestBefore: number,
+      created: number,
+      lastModified: number
+    }
+    ```
+
+  Error body:
+    ```json
+    {
+      message: string,
+      method: string,
+      source: string
+    }
+    ```
+
+- **DELETE /api/v1/fooditem/:id**
+
+  Path Parameter:
+    - id: Fooditem id
+
+  Response body:
+    ```json
+    {
+      id: string
     }
     ```
 
@@ -1463,7 +1800,7 @@ npm run lint
   Response body:
     ```json
     {
-      id: number
+      id: string
     }
     ```
 
