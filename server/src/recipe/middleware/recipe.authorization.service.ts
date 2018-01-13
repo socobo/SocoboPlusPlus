@@ -64,9 +64,7 @@ export class RecipeAuthorizationService {
 
   public editable = async (userFromToken: SocoboUser, recipe: Recipe) => {
     const user = await this._requestCurrentUser(userFromToken);
-    console.log('editable', this._isEditable(user.id, recipe))
-    this._throwAuthError();
-    return this._isEditable(user.id, recipe);
+    return this._isEditable(user.id, recipe) || this._throwAuthError();
   }
 
   public readableRecipes = async (userFromToken: SocoboUser, recipes: Recipe[]) => {

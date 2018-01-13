@@ -2,6 +2,8 @@ process.env["NODE_ENV"] = "test";
 
 import { expect } from "chai";
 import * as mocha from "mocha";
+
+import { SocoboUserRoleType } from "../src/socobouser/index";
 import { TestHelper } from "./helper/TestHelper";
 
 describe("RecipeRoute - API v1", () => {
@@ -57,7 +59,7 @@ describe("RecipeRoute - API v1", () => {
       title: "ChangedRecipe",
       userId: "59a2ee5d6b1ad6c629e9b2fc"
     };
-    const accessToken = await TestHelper.getToken();
+    const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
     const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
@@ -74,7 +76,7 @@ describe("RecipeRoute - API v1", () => {
       ingredients: ["1234ef66b9c6c5139160b4d1"],
       title: "ChangedRecipe"
     };
-    const accessToken = await TestHelper.getToken();
+    const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
     const result = await TestHelper.getAgent().put(`/api/v1/recipe/${id}`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
