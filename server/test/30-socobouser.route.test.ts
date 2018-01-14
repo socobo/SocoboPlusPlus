@@ -13,6 +13,7 @@ describe("SocoboUserRoute - API v1", () => {
   // User 1 PW: SuperSecurePassword
   // User 2 PW: SuperMegaSecure
   // User 3 PW: password
+  // User 4 PW: password
 
   it("GET /api/v1/socobouser should fail if user is not an admin", async () => {
     try {
