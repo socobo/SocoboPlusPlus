@@ -14,9 +14,9 @@ export class AuthService {
     private _cryptoUtils: CryptoUtils
   ) { }
 
-  public login = async (erbr: ExtractRequestBodyResult, pwIsToken: boolean): Promise<LoginResponse> => {
+  public login = async (erbr: ExtractRequestBodyResult): Promise<LoginResponse> => {
     const foundUser = await this._getUserFromDatabase(erbr.isEmailLogin, erbr.usernameOrEmail, false) as SocoboUser;
-    await this._cryptoUtils.comparePasswords(erbr.password, foundUser.password, pwIsToken);
+    await this._cryptoUtils.comparePasswords(erbr.password, foundUser.password);
     return await this._createLoginResult(foundUser);
   }
 

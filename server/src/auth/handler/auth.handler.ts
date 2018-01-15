@@ -12,8 +12,7 @@ export class AuthHandler {
   public login = async (req: SocoboRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this._getExtractedRequestBodyResult(req, "login(..)");
-      const pwIsToken = req.query.token;
-      const loginResult = await this._authService.login(result, pwIsToken);
+      const loginResult = await this._authService.login(result);
       res.status(200).json(loginResult);
     } catch (error) {
       next(error);

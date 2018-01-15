@@ -17,9 +17,7 @@ export class RecipeAuthorizationService {
     let user: SocoboUser;
     try {
       user = await this._db.socobouser.getUserByEmail(userFromToken.email) as SocoboUser;
-
     } catch (error) {
-
       const apiError = error as ApiError;
       if (apiError.statusCode === 404) {
         user = await this._db.socobouser.getUserByUsername(userFromToken.username) as SocoboUser;

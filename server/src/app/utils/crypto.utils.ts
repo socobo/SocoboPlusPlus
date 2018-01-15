@@ -16,8 +16,8 @@ export class CryptoUtils {
     }
   }
 
-  public comparePasswords = async (firstPw: string, secondPw: string, pwIsToken: boolean): Promise<void> => {
-    const result = pwIsToken ? firstPw === secondPw : await bcrypt.compare(firstPw, secondPw);
+  public comparePasswords = async (firstPw: string, secondPw: string): Promise<void> => {
+    const result = bcrypt.compare(firstPw, secondPw);
     if (!result) {
       throw new ApiError(ERRORS.AUTH_WRONG_PASSWORD)
         .addSource(CryptoUtils.name)

@@ -82,6 +82,7 @@ export class RecipeHandler {
 
     if (firstQueryParam && valueFirstQueryParam) {
       try {
+        const all = await this._db.recipe.getAll();
         const searchedRecipes = await this._db.recipe
           .searchByField(firstQueryParam, valueFirstQueryParam);
         const result = await this._recipeAuthService

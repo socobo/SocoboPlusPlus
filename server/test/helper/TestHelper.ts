@@ -1,7 +1,10 @@
 import * as chai from "chai";
 import chaiHttp = require("chai-http");
+import * as db from "../../src/db/index";
+import { Recipe, RecipeCategory, RecipeIngredient } from "../../src/recipe/index";
 import { SocoboUserRoleType } from "../../src/socobouser/index";
 import Server from "./../../src/server";
+import { recipeCategories, recipeIngredients, recipes } from "./index";
 
 chai.use(chaiHttp);
 
@@ -63,5 +66,52 @@ export class TestHelper {
     } catch (error) {
       return error;
     }
+  }
+
+  public static setUpRecipesDb = () => {
+
+    const cat1 = new RecipeCategory().clone(recipeCategories[0] as any);
+    const cat2 = new RecipeCategory().clone(recipeCategories[1] as any);
+    const cat3 = new RecipeCategory().clone(recipeCategories[2] as any);
+
+    const ingr1 = new RecipeIngredient().clone(recipeIngredients[0] as any);
+    const ingr2 = new RecipeIngredient().clone(recipeIngredients[1] as any);
+    const ingr3 = new RecipeIngredient().clone(recipeIngredients[2] as any);
+
+    const recipe1 = new Recipe().clone(recipes[0] as any);
+    const recipe2 = new Recipe().clone(recipes[1] as any);
+    const recipe3 = new Recipe().clone(recipes[2] as any);
+
+    return Promise.all([
+      db.recipe.deleteAll(),
+      db.recipeCategory.deleteAll(),
+      db.recipeIngredient.deleteAll()
+    ]).catch((error) => {
+      throw new Error("Clearing recipe collections failed");
+    }).then(() => {
+      return Promise.all([
+        Promise.all([
+          db.recipeCategory.save(cat1),
+          db.recipeCategory.save(cat2),
+          db.recipeCategory.save(cat3)
+        ]).catch(() => {
+          throw new Error("Saving recipe categories failed");
+        }),
+        Promise.all([
+          db.recipeIngredient.save(ingr1),
+          db.recipeIngredient.save(ingr2),
+          db.recipeIngredient.save(ingr3)
+        ]).catch(() => {
+          throw new Error("Saving recipe ingreidents failed");
+        }),
+        Promise.all([
+          db.recipe.save(recipe1),
+          db.recipe.save(recipe2),
+          db.recipe.save(recipe3)
+        ]).catch(() => {
+          throw new Error("Saving recipes failed");
+        })
+      ]);
+    });
   }
 }

@@ -8,6 +8,10 @@ import { TestHelper } from "./helper/TestHelper";
 
 describe("RecipeRoute - API v1", () => {
 
+  beforeEach(async () => {
+    await TestHelper.setUpRecipesDb();
+  });
+
   it("GET /api/v1/recipe should pass if a token is provided", async () => {
     const accessToken = await TestHelper.getToken(SocoboUserRoleType.Admin, true);
     const result = await TestHelper.getAgent().get("/api/v1/recipe").set("x-access-token", accessToken);
@@ -19,7 +23,8 @@ describe("RecipeRoute - API v1", () => {
   it("GET /api/v1/recipe should only get the allowed recipes", async () => {
     const accessToken = await TestHelper
     .getToken(SocoboUserRoleType.User, true);
-    const result = await TestHelper.getAgent().get("/api/v1/recipe").set("x-access-token", accessToken);
+    const result = await TestHelper.getAgent()
+      .get("/api/v1/recipe").set("x-access-token", accessToken);
     expect(result.body.length).to.equal(2);
   });
 
@@ -254,9 +259,10 @@ describe("RecipeRoute - API v1", () => {
 
   it("DELETE /api/v1/recipe:id should be forbidden for non owners", async () => {
     const id = "59a2ef66b9c6c5139160b4d1";
-    const accessToken = await TestHelper
-      .getTokenForEmailAndPassword("admin", "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga", true);
+
     try {
+      const accessToken = await TestHelper
+      .getTokenForEmailAndPassword("admin", "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga", true);
       const result = await TestHelper.getAgent().del(`/api/v1/recipe/${id}`)
         .set("x-access-token", accessToken);
     } catch (error) {

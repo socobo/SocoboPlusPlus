@@ -25,6 +25,7 @@ export const recipeSchema = new Schema({
     }
   ],
   ingredients: [String],
+  isPublic: Boolean,
   level: {
     required: false,
     type: String

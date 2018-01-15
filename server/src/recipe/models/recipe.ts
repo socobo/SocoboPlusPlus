@@ -23,7 +23,7 @@ export class Recipe implements Validatable {
   public userId: string;
   public categoryId: string;
 
-  public category: RecipeCategory;
+  public category?: RecipeCategory;
 
   public description: string;
 
@@ -31,7 +31,7 @@ export class Recipe implements Validatable {
     each: true,
     groups: [ ValidationGroup.RECIPE ]
   })
-  public images: RecipeImage[];
+  public images?: RecipeImage[];
 
   @IsNotEmpty({
     groups: [ ValidationGroup.RECIPE ]
@@ -62,7 +62,7 @@ export class Recipe implements Validatable {
   @IsCorrectRecipeLevelUsed({
     groups: [ ValidationGroup.RECIPE ]
   })
-  public level: Level;
+  public level?: Level;
 
   @ValidateIf((o) => !!o.duration, {
     groups: [ ValidationGroup.RECIPE ]
@@ -73,7 +73,7 @@ export class Recipe implements Validatable {
   @Min(0, {
     groups: [ ValidationGroup.RECIPE ]
   })
-  public duration: number;
+  public duration?: number;
 
   public collaborators: string[];
 
