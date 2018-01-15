@@ -9,6 +9,10 @@ import { TestHelper } from "./helper/TestHelper";
 
 describe("RecipeIngredientRoute - API v1", () => {
 
+  beforeEach(() => {
+    return TestHelper.setUpRecipesDb();
+  });
+
   it("GET /api/v1/recipeingredient should pass if a token is provided", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent()
@@ -42,12 +46,9 @@ describe("RecipeIngredientRoute - API v1", () => {
     const result = await TestHelper.getAgent()
       .get("/api/v1/recipeingredient/1234ef66b9c6c5139160b4d1")
       .set("x-access-token", accessToken);
-    expect(result.body).to.deep.equal({
-      _id : "1234ef66b9c6c5139160b4d1",
-      amount: 9,
-      createdAt: "2017-08-27T18:48:54.865Z",
-      fooditemTemplateId: "59a2eeaaf09a4c43cb92ef0b",
-      updatedAt: "2017-08-27T18:48:54.865Z"});
+    expect(result.body._id).to.equal("1234ef66b9c6c5139160b4d1");
+    expect(result.body.amount).to.equal(9);
+    expect(result.body.fooditemTemplateId).to.equal("59a2eeaaf09a4c43cb92ef0b");
   });
 
   it(`GET /api/v1/recipeingredient/:id?resolve should return the ingredient with

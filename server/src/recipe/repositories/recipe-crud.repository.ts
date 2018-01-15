@@ -37,4 +37,6 @@ export class RecipeCrudRepository<T> implements CrudRepository<T> {
   }
 
   public delete = async (id: string): Promise<void> => await this._model.remove({_id: id});
+
+  public deleteAll = async (): Promise<void> => await this._model.remove({});
 }

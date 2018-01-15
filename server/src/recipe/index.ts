@@ -2,6 +2,7 @@ export * from "./handler/recipe.handler";
 export * from "./handler/recipe-category.handler";
 export * from "./handler/recipe-ingredient.handler";
 
+export * from "./middleware/recipe.authorization.service";
 export * from "./middleware/recipe.middleware";
 
 export * from "./models/recipe";

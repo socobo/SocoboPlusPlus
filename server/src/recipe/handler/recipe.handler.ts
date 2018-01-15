@@ -5,13 +5,14 @@ import {
   ApiError, DataType, DbError, ERRORS, ImageService, SocoboRequest, ValidationError
 } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
-import { Recipe, RecipeImage} from "../index";
+import { Recipe, RecipeAuthorizationService, RecipeImage} from "../index";
 
 export class RecipeHandler {
 
   constructor (
     private _db: DbExtension,
-    private _imgService: ImageService
+    private _imgService: ImageService,
+    private _recipeAuthService: RecipeAuthorizationService
   ) {}
 
   private _resolveCategory = async (recipe: Recipe): Promise<Recipe> => {
@@ -38,26 +39,29 @@ export class RecipeHandler {
     });
   }
 
-  public getById = async (req: Request, res: Response, next: NextFunction) => {
+  public getById = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     const queryPramas = req.query;
     try {
-      const result = await this._db.recipe.getById(req.params.id) as Recipe;
-      if (queryPramas.hasOwnProperty("resolve") && result.categoryId) {
-        const recipe = await this._resolveCategory(result);
-        recipe.categoryId = undefined;
-        return res.status(200).json(recipe);
+      const recipe = await this._db.recipe.getById(req.params.id) as Recipe;
+      await this._recipeAuthService.readable(req.requestData.decoded, recipe);
+      if (queryPramas.hasOwnProperty("resolve") && recipe.categoryId) {
+        const resolvedRecipe = await this._resolveCategory(recipe);
+        resolvedRecipe.categoryId = undefined;
+        return res.status(200).json(resolvedRecipe);
       } else {
-        res.status(200).json(result);
+        res.status(200).json(recipe);
       }
     } catch (error) {
       next(error);
     }
   }
 
-  public getAll = async (req: Request, res: Response, next: NextFunction) => {
+  public getAll = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     const queryPrams = req.query;
     try {
-      const result = await this._db.recipe.getAll() as Recipe[];
+      const allRecipes = await this._db.recipe.getAll() as Recipe[];
+      const result = await this._recipeAuthService
+        .readableRecipes(req.requestData.decoded, allRecipes);
       if (queryPrams.hasOwnProperty("resolve")) {
         const recipes = await this._resolveAllCategories(result);
         return  res.status(200).json(this._mapRecipesToRecipesWithCategory(recipes));
@@ -69,7 +73,7 @@ export class RecipeHandler {
     }
   }
 
-  public searchByField = async (req: Request, res: Response, next: NextFunction) => {
+  public searchByField = async (req: SocoboRequest, res: Response, next: NextFunction) => {
 
     const queryPramas = req.query;
     const allQueryParams = Object.getOwnPropertyNames(queryPramas);
@@ -78,8 +82,11 @@ export class RecipeHandler {
 
     if (firstQueryParam && valueFirstQueryParam) {
       try {
-        const result = await this._db.recipe
+        const all = await this._db.recipe.getAll();
+        const searchedRecipes = await this._db.recipe
           .searchByField(firstQueryParam, valueFirstQueryParam);
+        const result = await this._recipeAuthService
+          .readableRecipes(req.requestData.decoded, searchedRecipes);
         res.status(200).json(result);
       } catch (error) {
         next(error);
@@ -96,7 +103,6 @@ export class RecipeHandler {
     const recipe: Recipe = new Recipe()
       .clone(req.body as Recipe)
       .removeImageProp();
-
     try {
       await this._db.socobouser.getUserById(recipe.userId);
       const result = await this._db.recipe.save(recipe);
@@ -106,7 +112,7 @@ export class RecipeHandler {
     }
   }
 
-  public update = async (req: Request, res: Response, next: NextFunction) => {
+  public update = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     const recipe: Recipe = new Recipe()
       .clone(req.body as Recipe)
       .removeImageProp();
@@ -120,12 +126,13 @@ export class RecipeHandler {
     }
   }
 
-  public merge = async (req: Request, res: Response, next: NextFunction) => {
+  public merge = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     const requestBody = req.body;
     // Remove id, because a different id than in the db would cause problems
     delete requestBody._id;
     try {
-      const recipe = await this._db.recipe.getById(req.params.id);
+      const recipe = await this._db.recipe.getById(req.params.id) as Recipe;
+      await this._recipeAuthService.editable(req.requestData.decoded, recipe);
       const updatedRecipe = {...recipe, ...requestBody};
       req.body = updatedRecipe;
       next();
@@ -134,9 +141,10 @@ export class RecipeHandler {
     }
   }
 
-  public delete = async (req: Request, res: Response, next: NextFunction) => {
+  public delete = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     try {
-      const recipe = await this._db.recipe.getById(req.params.id);
+      const recipe = await this._db.recipe.getById(req.params.id) as Recipe;
+      await this._recipeAuthService.owner(req.requestData.decoded, recipe);
       await this._db.recipe.delete(req.params.id);
       res.status(200).json();
     } catch (error) {
@@ -149,10 +157,13 @@ export class RecipeHandler {
     const recipeId = req.params.id;
     const imageTitle = req.query.title;
     try {
+
+      const recipe = await this._db.recipe.getById(recipeId) as Recipe;
+      await this._recipeAuthService.editable(req.requestData.decoded, recipe);
+
       const url = await this._imgService.persistImage(
         req.file.filename, DataType.RECIPE_IMAGE, userEmail);
 
-      const recipe: any = await this._db.recipe.getById(recipeId);
       recipe.images.push(new RecipeImage().setUrl(url).setTitle(req.query.title));
       await this._db.recipe.update(recipeId, recipe);
       res.status(200).json(recipe);
@@ -163,6 +174,8 @@ export class RecipeHandler {
 
   public deleteImage = async (req: SocoboRequest, res: Response, next: NextFunction) => {
     try {
+      const recipe = await this._db.recipe.getById(req.params.id) as Recipe;
+      await this._recipeAuthService.editable(req.requestData.decoded, recipe);
       const image = await this._db.recipe
         .getImageById(req.params.id, req.params.imgId) as RecipeImage;
       await this._imgService.deleteImage(image.url);

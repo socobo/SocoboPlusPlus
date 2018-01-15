@@ -6,4 +6,5 @@ export interface CrudRepository<T> {
   getAll (): Promise<T[]>;
   update (id: string, item: T): Promise<T | ApiError>;
   delete (id: string): Promise<void>;
+  deleteAll (): Promise<void>;
 }
