@@ -35,6 +35,7 @@ export class FoodItemTemplate extends FoodItemBase implements Validatable {
     if (!foodItemTemplate) {
       return undefined;
     }
+    this._id = foodItemTemplate._id ? foodItemTemplate._id : undefined;
     this.categoryIds = [...foodItemTemplate.categoryIds],
     this.unitId = foodItemTemplate.unitId,
     this.name = foodItemTemplate.name;

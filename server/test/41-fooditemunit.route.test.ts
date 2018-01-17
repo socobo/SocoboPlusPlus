@@ -6,6 +6,10 @@ import { TestHelper } from "./helper/TestHelper";
 
 describe("FoodItemUnitRoute - API v1", () => {
 
+  beforeEach(async () => {
+    await TestHelper.setUpFoodItemsDb();
+  });
+
   it("GET /api/v1/fooditemunit should pass if a token is provided", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent().get("/api/v1/fooditemunit").set("x-access-token", accessToken);

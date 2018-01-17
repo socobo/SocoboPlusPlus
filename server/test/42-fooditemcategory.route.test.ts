@@ -7,6 +7,10 @@ import { TestHelper } from "./helper/TestHelper";
 
 describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN AND USER", () => {
 
+  beforeEach(async () => {
+    await TestHelper.setUpFoodItemsDb();
+  });
+
   it("GET /api/v1/fooditemcategory should pass if a token is provided", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent().get("/api/v1/fooditemcategory").set("x-access-token", accessToken);
@@ -43,6 +47,10 @@ describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN AND USER", () => {
 });
 
 describe("FoodItemCategoryRoute - API v1 - REQUEST AS ADMIN", () => {
+
+  beforeEach(async () => {
+    await TestHelper.setUpFoodItemsDb();
+  });
 
   it("PUT /api/v1/fooditemcategory/:id should update the category and return the modified as ADMIN", async () => {
     const id = "59a2f0667898dca760b01e56";
@@ -122,6 +130,10 @@ describe("FoodItemCategoryRoute - API v1 - REQUEST AS ADMIN", () => {
 });
 
 describe("FoodItemCategoryRoute - API v1 - REQUEST AS USER", () => {
+
+  beforeEach(async () => {
+    await TestHelper.setUpFoodItemsDb();
+  });
 
   it("PUT /api/v1/fooditemcategory/:id should fail to update a category as USER", async () => {
     try {

@@ -29,7 +29,7 @@ export class SocoboUserRepository {
 
   public save = async (user: SocoboUser): Promise<string> => {
     const createdSocoboUser = await new this._socoboUserModel(user).save();
-    return createdSocoboUser._id;
+    return createdSocoboUser.id;
   }
 
   public updateById = async (id: string, updateType: SocoboUserUpdateType,

@@ -1,5 +1,5 @@
 import { Document, Model, Types } from "mongoose";
-import { DbError, ErrorUtils } from "../../app/index";
+import { ApiError, DbError, ERRORS, ErrorUtils } from "../../app/index";
 import { SocoboUser, SocoboUserRepository } from "../../socobouser/index";
 import { FoodItem, FoodItemTemplate, FoodItemTemplateRepository } from "../index";
 import { BaseRepository } from "./Base.repository";
@@ -49,6 +49,8 @@ export class FoodItemRepository extends BaseRepository <FoodItem> {
     entity.foodItemTemplateId = undefined;
 
     const user = await this._socobouserRepo.getUserById(entity.socoboUserId.toHexString()) as SocoboUser;
+    delete user.password;
+
     entity.socoboUser = user;
     entity.socoboUserId = undefined;
 
@@ -56,7 +58,11 @@ export class FoodItemRepository extends BaseRepository <FoodItem> {
   }
 
   private _transformResult = (result: Document & FoodItem): FoodItem => {
-    if (!result) { throw new Error("FoodItem not found!"); }
+    if (!result) {
+      throw new ApiError(ERRORS.FOODITEM_NOT_FOUND.withArgs("id", "UNKNOWN"))
+        .addSource(FoodItemRepository.name)
+        .addSourceMethod("_transformResult(..)");
+    }
     const transformedResult = new FoodItem()
       .setId(result.id)
       .setFoodItemTemplateId(result.foodItemTemplateId)

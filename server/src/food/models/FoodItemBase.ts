@@ -4,6 +4,7 @@ import { ValidationGroup } from "../../app/index";
 
 export class FoodItemBase {
 
+  protected _id: Types.ObjectId;
   public id: Types.ObjectId;
 
   @IsNotEmpty({

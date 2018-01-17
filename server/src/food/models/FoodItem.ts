@@ -6,6 +6,7 @@ import { FoodItemTemplate } from "../index";
 
 export class FoodItem implements Validatable {
 
+  private _id: Types.ObjectId;
   public id: Types.ObjectId;
 
   @Min(1, {
@@ -86,6 +87,7 @@ export class FoodItem implements Validatable {
     if (!foodItem) {
       return undefined;
     }
+    this._id = foodItem._id ? foodItem._id : undefined;
     this.foodItemTemplateId = new Types.ObjectId(foodItem.foodItemTemplateId);
     this.socoboUserId = new Types.ObjectId(foodItem.socoboUserId);
     this.amount = foodItem.amount;

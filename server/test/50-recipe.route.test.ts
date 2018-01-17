@@ -9,6 +9,7 @@ import { TestHelper } from "./helper/TestHelper";
 describe("RecipeRoute - API v1", () => {
 
   beforeEach(async () => {
+    await TestHelper.setUpSocoboUsersDb();
     await TestHelper.setUpRecipesDb();
   });
 
