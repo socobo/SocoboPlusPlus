@@ -8,42 +8,42 @@ export class SocoboUserRepository {
   constructor (private _socoboUserModel: Model<Document & SocoboUser>) {}
 
   public getAll = async (): Promise<SocoboUser[]> => {
-      const users = await this._socoboUserModel.find({});
-      return users.map(this._transformResult);
+    const users = await this._socoboUserModel.find({});
+    return users.map(this._transformResult);
   }
 
   public getUserById = async (id: string): Promise<SocoboUser | ApiError> => {
-      const user = await this._socoboUserModel.findOne({_id: id});
-      return this._handleNotFound(user, "id", id)._transformResult(user);
+    const user = await this._socoboUserModel.findOne({_id: id});
+    return this._handleNotFound(user, "id", id)._transformResult(user);
   }
 
   public getUserByEmail = async (email: string): Promise<SocoboUser | ApiError> => {
-      const user = await this._socoboUserModel.findOne({ email });
-      return this._handleNotFound(user, "email", email)._transformResult(user);
+    const user = await this._socoboUserModel.findOne({ email });
+    return this._handleNotFound(user, "email", email)._transformResult(user);
   }
 
   public getUserByUsername = async (username: string): Promise<SocoboUser | ApiError> => {
-      const user = await this._socoboUserModel.findOne({ username });
-      return this._handleNotFound(user, "username", username)._transformResult(user);
+    const user = await this._socoboUserModel.findOne({ username });
+    return this._handleNotFound(user, "username", username)._transformResult(user);
   }
 
   public save = async (user: SocoboUser): Promise<string> => {
-      const createdSocoboUser = await this._socoboUserModel.create(user);
-      return createdSocoboUser._id;
+    const createdSocoboUser = await this._socoboUserModel.create(user);
+    return createdSocoboUser._id;
   }
 
   public updateById = async (id: string, updateType: SocoboUserUpdateType,
                              fieldsToUpdate: object): Promise<SocoboUser | ApiError> => {
-      const checkedFieldsToUpdate = this._checkValidUpdateFields(updateType, fieldsToUpdate);
-      const updatedUser = await this._socoboUserModel.findByIdAndUpdate({ _id: id},
-                                                                        { $set: checkedFieldsToUpdate },
-                                                                        { new: true });
-      return this._handleNotFound(updatedUser, "id", id)._transformResult(updatedUser);
+    const checkedFieldsToUpdate = this._checkValidUpdateFields(updateType, fieldsToUpdate);
+    const updatedUser = await this._socoboUserModel.findByIdAndUpdate({ _id: id},
+                                                                      { $set: checkedFieldsToUpdate },
+                                                                      { new: true });
+    return this._handleNotFound(updatedUser, "id", id)._transformResult(updatedUser);
   }
 
   public deleteById = async (id: string): Promise<object> => {
-      await this._socoboUserModel.findByIdAndRemove({_id: id});
-      return { id };
+    await this._socoboUserModel.findByIdAndRemove({_id: id});
+    return { id };
   }
 
   private _checkValidUpdateFields = (updateType: SocoboUserUpdateType, fieldsToUpdate: object): object => {

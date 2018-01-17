@@ -4,7 +4,11 @@ import * as db from "../../src/db/index";
 import { Recipe, RecipeCategory, RecipeIngredient } from "../../src/recipe/index";
 import { SocoboUserRoleType } from "../../src/socobouser/index";
 import Server from "./../../src/server";
-import { recipeCategories, recipeIngredients, recipes } from "./index";
+import {
+  recipeCategories, recipeIngredients, recipes,
+  testFooditemCategories, testFoodItems, testFooditemTemplates, testFooditemUnits
+} from "./data/index";
+import { Promise } from "mongoose";
 
 chai.use(chaiHttp);
 
@@ -43,24 +47,19 @@ export class TestHelper {
     }
   }
 
-  public static getTokenForEmailAndPassword = async (
-    email: string,
-    password: string,
-    shouldOverrideToken: boolean = false, useTokenAsPw = true): Promise<string|any> => {
+  public static getTokenForEmailAndPassword = async (email: string, password: string,
+                                                     shouldOverrideToken: boolean = false): Promise<string|any> => {
 
     if (shouldOverrideToken) {
-    TestHelper._token = null;
+      TestHelper._token = null;
     }
 
     if (TestHelper._token) {
-    return TestHelper._token;
+      return TestHelper._token;
     }
+
     try {
-      const result = await chai.request(Server)
-      .post("/api/v1/auth/login").send({ email, password })
-      .query({
-        token: useTokenAsPw
-      });
+      const result = await chai.request(Server).post("/api/v1/auth/login").send({ email, password });
       TestHelper._token = result.body.token;
       return result.body.token;
     } catch (error) {
@@ -102,7 +101,7 @@ export class TestHelper {
           db.recipeIngredient.save(ingr2),
           db.recipeIngredient.save(ingr3)
         ]).catch(() => {
-          throw new Error("Saving recipe ingreidents failed");
+          throw new Error("Saving recipe ingredients failed");
         }),
         Promise.all([
           db.recipe.save(recipe1),
@@ -112,6 +111,50 @@ export class TestHelper {
           throw new Error("Saving recipes failed");
         })
       ]);
+    });
+  }
+
+  public static setUpFoodItemsDb = async (): Promise<void> => {
+
+    try {
+      await db.fooditemCategory.deleteAll();
+      await db.fooditemUnit.deleteAll();
+      await db.fooditemTemplate.deleteAll();
+      await db.fooditem.deleteAll();
+    } catch (error) {
+      throw new Error("Clearing fooditem collections failed. " + JSON.stringify(error));
+    }
+
+    await Promise.all(
+      testFooditemCategories.map(async (cat) => {
+        return await db.fooditemCategory.save(cat);
+      })
+    ).catch((error) => {
+      throw new Error("Saving fooditem categories failed. " + JSON.stringify(error));
+    });
+
+    await Promise.all(
+      testFooditemUnits.map(async (unit) => {
+        return await db.fooditemUnit.save(unit);
+      })
+    ).catch((error) => {
+      throw new Error("Saving fooditem units failed. " + JSON.stringify(error));
+    });
+
+    await Promise.all(
+      testFooditemTemplates.map(async (templ) => {
+        return await db.fooditemTemplate.save(templ);
+      })
+    ).catch((error) => {
+      throw new Error("Saving fooditem templates failed. " + JSON.stringify(error));
+    });
+
+    await Promise.all(
+      testFoodItems.map(async (item) => {
+        return await db.fooditem.save(item);
+      })
+    ).catch((error) => {
+      throw new Error("Saving fooditems failed. " + JSON.stringify(error));
     });
   }
 }

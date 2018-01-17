@@ -16,29 +16,33 @@ export class BaseRepository <T> implements IBaseRepository <T> {
   }
 
   public async getAll (): Promise<T[] | ApiError> {
-      const entities = await this._model.find({});
-      return entities.map(this._transformFunction);
+    const entities = await this._model.find({});
+    return entities.map(this._transformFunction);
   }
 
   public async getById (id: Types.ObjectId): Promise<T | ApiError> {
-      const entity = await this._model.findOne({ _id: id });
-      return this._transformFunction(entity);
+    const entity = await this._model.findOne({ _id: id });
+    return this._transformFunction(entity);
   }
 
   public async save (entity: T): Promise<Types.ObjectId> {
-      const createdEntity = await this._model.create(entity);
-      return createdEntity._id;
+    const createdEntity = await this._model.create(entity);
+    return createdEntity._id;
   }
 
   public async updateById (id: Types.ObjectId, updateValues: object): Promise<T | ApiError> {
-      const updatedEntity = await this._model.findByIdAndUpdate({ _id: id},
-                                                                { $set: updateValues },
-                                                                { new: true });
-      return this._transformFunction(updatedEntity);
+    const updatedEntity = await this._model.findByIdAndUpdate({ _id: id},
+                                                              { $set: updateValues },
+                                                              { new: true });
+    return this._transformFunction(updatedEntity);
   }
 
   public async deleteById (id: Types.ObjectId): Promise<object> {
-      await this._model.findByIdAndRemove({ _id: id });
-      return { id };
+    await this._model.findByIdAndRemove({ _id: id });
+    return { id };
+  }
+
+  public async deleteAll (): Promise<void> {
+    await this._model.remove({});
   }
 }

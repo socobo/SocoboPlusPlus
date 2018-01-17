@@ -8,4 +8,5 @@ export interface IBaseRepository <T> {
   save (entity: T): Promise<Types.ObjectId | ApiError>;
   updateById (id: Types.ObjectId, updateValues: object): Promise<T | ApiError>;
   deleteById (id: Types.ObjectId): Promise<object | ApiError>;
+  deleteAll (): Promise<void>;
 }
