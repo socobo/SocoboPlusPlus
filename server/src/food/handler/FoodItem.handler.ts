@@ -70,10 +70,10 @@ export class FoodItemHandler {
   public updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const foodItemId = new Types.ObjectId(req.params.id);
-      const socoboUserId = new Types.ObjectId(req.body.socoboUserId);
       const foodItemTemplateId = new Types.ObjectId(req.body.foodItemTemplateId);
+      const socoboUserId = req.body.socoboUserId;
 
-      await this._checkIfSocoboUserExists(socoboUserId.toHexString(), "updateById(..)");
+      await this._checkIfSocoboUserExists(socoboUserId, "updateById(..)");
       await this._checkIfFoodItemTemplateExists(foodItemTemplateId, "updateById(..)");
       await this._checkIfFoodItemExists(foodItemId, "updateById(..)");
 

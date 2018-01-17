@@ -86,8 +86,8 @@ export class FoodItem implements Validatable {
     if (!foodItem) {
       return undefined;
     }
-    this.foodItemTemplateId = foodItem.foodItemTemplateId;
-    this.socoboUserId = foodItem.socoboUserId;
+    this.foodItemTemplateId = new Types.ObjectId(foodItem.foodItemTemplateId);
+    this.socoboUserId = new Types.ObjectId(foodItem.socoboUserId);
     this.amount = foodItem.amount;
     this.bestBefore = foodItem.bestBefore;
     this.createDates();
