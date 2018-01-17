@@ -19,6 +19,8 @@ describe("Model Validation Middleware", () => {
     const recipe: Recipe = new Recipe();
     recipe.title = "";
     recipe.ingredients = ["1234ef66b9c6c5139160b4d1"];
+    recipe.owner = "59a5a4013eeef0c7a9d00640";
+    recipe.isPublic = true;
 
     const req = mocks.createRequest({
       body: recipe
@@ -39,6 +41,8 @@ describe("Model Validation Middleware", () => {
     const recipe: Recipe = new Recipe();
     recipe.title = "";
     recipe.ingredients = ["1234ef66b9c6c5139160b4d1"];
+    recipe.owner = "59a5a4013eeef0c7a9d00640";
+    recipe.isPublic = true;
 
     const req = mocks.createRequest({
       body: recipe
@@ -61,6 +65,8 @@ describe("Model Validation Middleware", () => {
     recipe.userId = "2";
     recipe.ingredients = ["1234ef66b9c6c5139160b4d1"];
     recipe.steps = [];
+    recipe.owner = "59a5a4013eeef0c7a9d00640";
+    recipe.isPublic = true;
 
     const req = mocks.createRequest({
       body: recipe
@@ -77,6 +83,8 @@ describe("Model Validation Middleware", () => {
     recipe.userId = "2";
     recipe.ingredients = [];
     recipe.steps = [];
+    recipe.owner = "59a5a4013eeef0c7a9d00640";
+    recipe.isPublic = true;
 
     const req = mocks.createRequest({
       body: recipe

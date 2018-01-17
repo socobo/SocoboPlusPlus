@@ -30,6 +30,7 @@ import {
 } from "./food/index";
 // recipe
 import {
+  RecipeAuthorizationService,
   RecipeCategoryHandler,
   RecipeCategoryRoute,
   RecipeHandler,
@@ -56,6 +57,7 @@ class Server {
 
   private _authService: AuthService;
   private _imgService: ImageService;
+  private _recipeAuthService: RecipeAuthorizationService;
 
   private _authValidationMiddleware: AuthValidationMiddleware;
   private _modelValidationMiddleware: ModelValidationMiddleware;
@@ -207,7 +209,8 @@ class Server {
     this._fooditemUnitHandler = new FoodItemUnitHandler(db);
     this._fooditemHandler = new FoodItemHandler(db);
     this._socoboUserHandler = new SocoboUserHandler(db, this._imgService);
-    this._recipeHandler = new RecipeHandler(db, this._imgService);
+    this._recipeAuthService = new RecipeAuthorizationService(db);
+    this._recipeHandler = new RecipeHandler(db, this._imgService, this._recipeAuthService);
     this._recipeCategoryHandler = new RecipeCategoryHandler(db);
     this._recipeIngredientHandler = new RecipeIngredientHandler(db);
     this._logHandler = new LogHandler();

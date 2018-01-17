@@ -21,6 +21,7 @@ export const ERROR_MESSAGES: any = {
   "internal.no.password.hash": "No password hash",
   "recipe.category.not.found": "Recipe category with {0} {1} could not be found",
   "recipe.field.not.found": "Recipes have no field {0}",
+  "recipe.forbidden": "You are not allowed to access this resource",
   "recipe.ingredient.not.found": "Recipe ingredient with {0} {1} could not be found",
   "recipe.not.found": "Recipe with {0} {1} could not be found",
   "recipes.empty": "No recipes available",

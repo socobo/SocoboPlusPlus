@@ -29,8 +29,8 @@ export class RecipeRoute {
       this._recipeHandler.searchByField);
 
     this._router.put("/:id",
-      this._recipeHandler.merge,
       this._authValidationHandler.checkToken,
+      this._recipeHandler.merge,
       this._modelValidationHandler.validateObject(new Recipe(), [ValidationGroup.RECIPE]),
       this._recipeHandler.update);
 

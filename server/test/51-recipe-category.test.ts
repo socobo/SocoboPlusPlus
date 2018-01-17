@@ -7,6 +7,10 @@ import { TestHelper } from "./helper/TestHelper";
 
 describe("RecipeCategoryRoute - API v1", () => {
 
+  beforeEach(() => {
+    return TestHelper.setUpRecipesDb();
+  });
+
   it("GET /api/v1/recipecategory should pass if a token is provided", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent()
