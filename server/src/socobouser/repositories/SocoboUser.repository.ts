@@ -46,6 +46,10 @@ export class SocoboUserRepository {
     return { id };
   }
 
+  public deleteAll = async (): Promise<void> => {
+    await this._socoboUserModel.remove({});
+  }
+
   private _checkValidUpdateFields = (updateType: SocoboUserUpdateType, fieldsToUpdate: object): object => {
     const result: {[x: string]: any} = {};
 

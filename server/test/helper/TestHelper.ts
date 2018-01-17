@@ -6,9 +6,9 @@ import { SocoboUserRoleType } from "../../src/socobouser/index";
 import Server from "./../../src/server";
 import {
   recipeCategories, recipeIngredients, recipes,
-  testFooditemCategories, testFoodItems, testFooditemTemplates, testFooditemUnits
+  testFooditemCategories, testFoodItems, testFooditemTemplates, testFooditemUnits,
+  testSocoboUsers
 } from "./data/index";
-import { Promise } from "mongoose";
 
 chai.use(chaiHttp);
 
@@ -67,6 +67,50 @@ export class TestHelper {
     }
   }
 
+  public static setUpFoodItemsDb = async (): Promise<void> => {
+
+    try {
+      await db.fooditemCategory.deleteAll();
+      await db.fooditemUnit.deleteAll();
+      await db.fooditemTemplate.deleteAll();
+      await db.fooditem.deleteAll();
+    } catch (error) {
+      throw new Error("Clearing fooditem collections failed. " + JSON.stringify(error));
+    }
+
+    await Promise.all(
+      testFooditemCategories.map(async (cat) => {
+        return await db.fooditemCategory.save(cat);
+      })
+    ).catch((error) => {
+      throw new Error("Saving fooditem categories failed. " + JSON.stringify(error));
+    });
+
+    await Promise.all(
+      testFooditemUnits.map(async (unit) => {
+        return await db.fooditemUnit.save(unit);
+      })
+    ).catch((error) => {
+      throw new Error("Saving fooditem units failed. " + JSON.stringify(error));
+    });
+
+    await Promise.all(
+      testFooditemTemplates.map(async (templ) => {
+        return await db.fooditemTemplate.save(templ);
+      })
+    ).catch((error) => {
+      throw new Error("Saving fooditem templates failed. " + JSON.stringify(error));
+    });
+
+    await Promise.all(
+      testFoodItems.map(async (item) => {
+        return await db.fooditem.save(item);
+      })
+    ).catch((error) => {
+      throw new Error("Saving fooditems failed. " + JSON.stringify(error));
+    });
+  }
+
   public static setUpRecipesDb = () => {
 
     const cat1 = new RecipeCategory().clone(recipeCategories[0] as any);
@@ -114,47 +158,20 @@ export class TestHelper {
     });
   }
 
-  public static setUpFoodItemsDb = async (): Promise<void> => {
+  public static setUpSocoboUsersDb = async (): Promise<void> => {
 
     try {
-      await db.fooditemCategory.deleteAll();
-      await db.fooditemUnit.deleteAll();
-      await db.fooditemTemplate.deleteAll();
-      await db.fooditem.deleteAll();
+      await db.socobouser.deleteAll();
     } catch (error) {
-      throw new Error("Clearing fooditem collections failed. " + JSON.stringify(error));
+      throw new Error("Clearing socobouser collection failed. " + JSON.stringify(error));
     }
 
     await Promise.all(
-      testFooditemCategories.map(async (cat) => {
-        return await db.fooditemCategory.save(cat);
+      testSocoboUsers.map(async (user) => {
+        return await db.socobouser.save(user);
       })
     ).catch((error) => {
-      throw new Error("Saving fooditem categories failed. " + JSON.stringify(error));
-    });
-
-    await Promise.all(
-      testFooditemUnits.map(async (unit) => {
-        return await db.fooditemUnit.save(unit);
-      })
-    ).catch((error) => {
-      throw new Error("Saving fooditem units failed. " + JSON.stringify(error));
-    });
-
-    await Promise.all(
-      testFooditemTemplates.map(async (templ) => {
-        return await db.fooditemTemplate.save(templ);
-      })
-    ).catch((error) => {
-      throw new Error("Saving fooditem templates failed. " + JSON.stringify(error));
-    });
-
-    await Promise.all(
-      testFoodItems.map(async (item) => {
-        return await db.fooditem.save(item);
-      })
-    ).catch((error) => {
-      throw new Error("Saving fooditems failed. " + JSON.stringify(error));
+      throw new Error("Saving socobouser categories failed. " + JSON.stringify(error));
     });
   }
 }
