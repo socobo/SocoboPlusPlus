@@ -28,7 +28,7 @@ export class SocoboUserRepository {
   }
 
   public save = async (user: SocoboUser): Promise<string> => {
-    const createdSocoboUser = await this._socoboUserModel.create(user);
+    const createdSocoboUser = await new this._socoboUserModel(user).save();
     return createdSocoboUser._id;
   }
 

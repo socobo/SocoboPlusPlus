@@ -8,7 +8,7 @@ const socobousers = [
     hasTermsAccepted: true,
     imageUrl: "socobo_data/placeholder/tmp_user_image.png",
     lastModified: 1484401066602,
-    password: "$2a$10$3Zmu33SdHvByHW5vdIJafu45eKybWeSe9lnL6EdSlDzTiWLCAHdUC",
+    password: "$2a$10$3Zmu33SdHvByHW5vdIJafu45eKybWeSe9lnL6EdSlDzTiWLCAHdUC", // SuperSecurePassword
     provider: "EMAIL",
     role: "USER",
     username: "john-doe@test.test"
@@ -19,7 +19,7 @@ const socobousers = [
     hasTermsAccepted: true,
     imageUrl: "socobo_data/placeholder/tmp_user_image.png",
     lastModified: 1484401066602,
-    password: "$2a$10$CuivooymnRoJrfUQi6i3BOfRMGomihRxSymdhhkKmZLQubMjWglzK",
+    password: "$2a$10$CuivooymnRoJrfUQi6i3BOfRMGomihRxSymdhhkKmZLQubMjWglzK", // SuperMegaSecure
     provider: "USERNAME",
     role: "USER",
     username: "MaxMustermann"
@@ -30,7 +30,7 @@ const socobousers = [
     hasTermsAccepted: true,
     imageUrl: "socobo_data/placeholder/admin_image.png",
     lastModified: 1484401066602,
-    password: "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga",
+    password: "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga", // password
     provider: "USERNAME",
     role: "ADMIN",
     username: "admin"
@@ -41,7 +41,7 @@ const socobousers = [
     hasTermsAccepted: true,
     imageUrl: "socobo_data/placeholder/admin_image.png",
     lastModified: 1484401066602,
-    password: "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga",
+    password: "$2a$10$twfsBw9Ljl9kjFSvuhyAUOqpEJla0yHhVkeZo4VdTa03./KCjX5ga", // password
     provider: "EMAIL",
     role: "ADMIN",
     username: "admin2@test.test"

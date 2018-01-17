@@ -26,7 +26,7 @@ export class BaseRepository <T> implements IBaseRepository <T> {
   }
 
   public async save (entity: T): Promise<Types.ObjectId> {
-    const createdEntity = await this._model.create(entity);
+    const createdEntity = await new this._model(entity).save();
     return createdEntity._id;
   }
 

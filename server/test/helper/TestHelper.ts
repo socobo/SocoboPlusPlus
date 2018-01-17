@@ -173,5 +173,6 @@ export class TestHelper {
     ).catch((error) => {
       throw new Error("Saving socobouser categories failed. " + JSON.stringify(error));
     });
+
   }
 }
