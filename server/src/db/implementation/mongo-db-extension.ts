@@ -1,7 +1,8 @@
 import { Document, Model } from "mongoose";
 import { ERRORS } from "../../app/models/errors/errors";
 import {
-  FoodItemCategory, FoodItemCategoryRepository,
+  FoodItem, FoodItemCategory,
+  FoodItemCategoryRepository, FoodItemRepository,
   FoodItemTemplate, FoodItemTemplateRepository,
   FoodItemUnit, FoodItemUnitRepository
 } from "../../food/index";
@@ -20,6 +21,7 @@ export class MongoDbExtension implements DbExtension {
   public fooditemTemplate: FoodItemTemplateRepository;
   public fooditemCategory: FoodItemCategoryRepository;
   public fooditemUnit: FoodItemUnitRepository;
+  public fooditem: FoodItemRepository;
   public socobouser: SocoboUserRepository;
   public recipe: RecipeRepository;
   public recipeCategory: CrudRepository<RecipeCategory>;
@@ -29,25 +31,23 @@ export class MongoDbExtension implements DbExtension {
     private _fooditemTemplateModel: Model<Document & FoodItemTemplate>,
     private _fooditemCategoryModel: Model<Document & FoodItemCategory>,
     private _fooditemUnitModel: Model<Document & FoodItemUnit>,
+    private _fooditemModel: Model<Document & FoodItem>,
     private _socobouserModel: Model<Document & SocoboUser>,
     private _recipeModel: Model<Document & Recipe>,
     private _recipeCategoryModel: Model<Document & RecipeCategory>,
     private _recipeIngredientModel: Model<Document & RecipeIngredient>
   ) {
-    this.fooditemTemplate = new FoodItemTemplateRepository(_fooditemTemplateModel);
+    this.socobouser = new SocoboUserRepository(_socobouserModel);
     this.fooditemCategory = new FoodItemCategoryRepository(_fooditemCategoryModel);
     this.fooditemUnit = new FoodItemUnitRepository(_fooditemUnitModel);
-    this.socobouser = new SocoboUserRepository(_socobouserModel);
-    this.recipe = new RecipeRepository(
-      _recipeModel,
-      new RecipeCrudRepository(
-      _recipeModel,
-      ERRORS.RECIPE_CATEGORY_NOT_FOUND));
-    this.recipeCategory = new RecipeCrudRepository(
-      _recipeCategoryModel,
-      ERRORS.RECIPE_CATEGORY_NOT_FOUND);
-    this.recipeIngredient = new RecipeCrudRepository(
-      _recipeIngredientModel,
-      ERRORS.RECIPE_INGREDIENT_NOT_FOUND);
+    this.fooditemTemplate = new FoodItemTemplateRepository(_fooditemTemplateModel,
+      this.fooditemCategory, this.fooditemUnit);
+    this.fooditem = new FoodItemRepository(_fooditemModel,
+      this.fooditemTemplate, this.socobouser);
+    this.recipe = new RecipeRepository(_recipeModel,
+      new RecipeCrudRepository(_recipeModel, ERRORS.RECIPE_CATEGORY_NOT_FOUND)
+    );
+    this.recipeCategory = new RecipeCrudRepository(_recipeCategoryModel, ERRORS.RECIPE_CATEGORY_NOT_FOUND);
+    this.recipeIngredient = new RecipeCrudRepository(_recipeIngredientModel, ERRORS.RECIPE_INGREDIENT_NOT_FOUND);
   }
 }

@@ -7,6 +7,10 @@ import { TestHelper } from "./helper/TestHelper";
 
 describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN AND USER", () => {
 
+  beforeEach(async () => {
+    await TestHelper.setUpFoodItemsDb();
+  });
+
   it("GET /api/v1/fooditemcategory should pass if a token is provided", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent().get("/api/v1/fooditemcategory").set("x-access-token", accessToken);
@@ -18,7 +22,7 @@ describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN AND USER", () => {
   it("GET /api/v1/fooditemcategory should return all categories", async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent().get("/api/v1/fooditemcategory").set("x-access-token", accessToken);
-    expect(result.body.length).to.equal(3);
+    expect(result.body.length).to.equal(5);
   });
 
   it("GET /api/v1/fooditemcategory/:id should return one category", async () => {
@@ -36,14 +40,17 @@ describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN AND USER", () => {
         .get(`/api/v1/fooditemcategory/${id}`)
         .set("x-access-token", accessToken);
       expect(result.body).to.deep.property("id");
-      expect(result.body).to.deep.property("foodItemId");
       expect(result.body).to.deep.property("name");
       expect(result.body).to.deep.property("created");
       expect(result.body).to.deep.property("lastModified");
     });
 });
 
-describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN", () => {
+describe("FoodItemCategoryRoute - API v1 - REQUEST AS ADMIN", () => {
+
+  beforeEach(async () => {
+    await TestHelper.setUpFoodItemsDb();
+  });
 
   it("PUT /api/v1/fooditemcategory/:id should update the category and return the modified as ADMIN", async () => {
     const id = "59a2f0667898dca760b01e56";
@@ -56,11 +63,29 @@ describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN", () => {
       .put(`/api/v1/fooditemcategory/${id}`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
-      .send({ name: "ha-milk"});
+      .send({ name: "ha-milk" });
 
     expect(resultAfter.body.name).to.equal("ha-milk");
     expect(resultAfter.body.name).to.not.equal(resultBefore.body.name);
     expect(resultAfter.body.lastModified).to.not.equal(resultBefore.body.lastModified);
+  });
+
+  it("PUT /api/v1/fooditemcategory/:id should fail if the category id is unknown", async () => {
+    try {
+      const id = "59a2f0667898dca760b01f60";
+      const accessToken = await TestHelper.getToken();
+      const result = await TestHelper.getAgent()
+        .put(`/api/v1/fooditemcategory/${id}`)
+        .set("x-access-token", accessToken)
+        .set("Content-Type", "application/json")
+        .send({ name: "ha-milk extra" });
+    } catch (error) {
+      const errorBody = error.response.body;
+      const errorMessage = "Fooditem Category with id UNKNOWN could not be found";
+      expect(errorBody).to.have.deep.property("message", errorMessage);
+      expect(errorBody).to.have.deep.property("method", "_transformResult(..)");
+      expect(errorBody).to.have.deep.property("source", "FoodItemCategoryRepository");
+    }
   });
 
   it("POST /api/v1/fooditemcategory should save a new category and return it AS ADMIN", async () => {
@@ -69,11 +94,10 @@ describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN", () => {
       .post(`/api/v1/fooditemcategory`)
       .set("x-access-token", accessToken)
       .set("Content-Type", "application/json")
-      .send({ name: "choco milk", foodItemId: "59a2ef66b9c6c5139160b4d8" });
+      .send({ name: "choco milk" });
 
     expect(result.body.name).to.equal("choco milk");
     expect(result.body).to.deep.property("id");
-    expect(result.body).to.deep.property("foodItemId");
     expect(result.body).to.deep.property("name");
     expect(result.body).to.deep.property("created");
     expect(result.body).to.deep.property("lastModified");
@@ -87,9 +111,29 @@ describe("FoodItemCategoryRoute - API v1 - PASS AS ADMIN", () => {
       .set("x-access-token", accessToken);
     expect(result.body.id).to.equal(id);
   });
+
+  it("DELETE /api/v1/fooditemcategory/:id should fail if the unit id is unknown", async () => {
+    try {
+      const id = "59a2f0667898dca760b01f60";
+      const accessToken = await TestHelper.getToken();
+      const result = await TestHelper.getAgent()
+        .del(`/api/v1/fooditemcategory/${id}`)
+        .set("x-access-token", accessToken);
+    } catch (error) {
+      const errorBody = error.response.body;
+      const errorMessage = "Fooditem Category with id UNKNOWN could not be found";
+      expect(errorBody).to.have.deep.property("message", errorMessage);
+      expect(errorBody).to.have.deep.property("method", "_transformResult(..)");
+      expect(errorBody).to.have.deep.property("source", "FoodItemCategoryRepository");
+    }
+  });
 });
 
-describe("FoodItemCategoryRoute - API v1 - FAIL AS USER", () => {
+describe("FoodItemCategoryRoute - API v1 - REQUEST AS USER", () => {
+
+  beforeEach(async () => {
+    await TestHelper.setUpFoodItemsDb();
+  });
 
   it("PUT /api/v1/fooditemcategory/:id should fail to update a category as USER", async () => {
     try {

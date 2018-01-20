@@ -5,6 +5,7 @@ import { SocoboUserProviderType, SocoboUserRoleType, SocoboUserUpdateType } from
 export class SocoboUser implements Validatable {
 
   private _updateType: SocoboUserUpdateType;
+  private _id: string;
 
   public id: string;
 
@@ -161,6 +162,8 @@ export class SocoboUser implements Validatable {
 
   public clone = (obj: any): this => {
     const tmp = obj.hasOwnProperty("fieldsToUpdate") ? obj.fieldsToUpdate : obj;
+    this._id = tmp.hasOwnProperty("_id") ? tmp._id : undefined;
+    this.id = tmp.hasOwnProperty("id") ? tmp.id : undefined;
     this.username = tmp.username;
     this.email = tmp.email;
     this.password = tmp.password;

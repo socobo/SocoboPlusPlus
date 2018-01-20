@@ -3,19 +3,26 @@
     "_id" : {"$oid":"59a2f0667898dca760b01e56"},
     "name": "h-milk",
     "created": 1503849392349,
-    "lastModified": 1503849392349,
-    "foodItem_id": "59a2ef66b9c6c5139160b4d8"
+    "lastModified": 1503849392349
   },{
     "_id" : {"$oid":"59a2f07e5db28c0e121d48d2"},
     "name": "raw milk",
     "created": 1503849392349,
-    "lastModified": 1503849392349,
-    "foodItem_id": "59a2ef66b9c6c5139160b4d8"
+    "lastModified": 1503849392349
   },{
     "_id" : {"$oid":"59a2f080218278a691dc5d41"},
     "name": "gen-milk",
     "created": 1503849392349,
-    "lastModified": 1503849392349,
-    "foodItem_id": "59a2ef66b9c6c5139160b4d8"
+    "lastModified": 1503849392349
+  },{
+    "_id" : {"$oid":"5a51d4db54bafd29f86b6430"},
+    "name": "medium",
+    "created": 1515312439753,
+    "lastModified": 1515312439753
+  },{
+    "_id" : {"$oid":"5a51d558a199eb3f69569942"},
+    "name": "wheat",
+    "created": 1515312519829,
+    "lastModified": 1515312519829
   }
 ]

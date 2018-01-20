@@ -1,3 +1,4 @@
+export * from "./handler/FoodItem.handler";
 export * from "./handler/FoodItemCategory.handler";
 export * from "./handler/FoodItemTemplate.handler";
 export * from "./handler/FoodItemUnit.handler";
@@ -11,10 +12,12 @@ export * from "./models/FoodItemTemplate";
 export * from "./models/FoodItemUnit";
 
 export * from "./repositories/Base.repository";
+export * from "./repositories/FoodItem.repository";
 export * from "./repositories/FoodItemCategory.repository";
 export * from "./repositories/FoodItemTemplate.repository";
 export * from "./repositories/FoodItemUnit.repository";
 
+export * from "./routes/FoodItem.route";
 export * from "./routes/FoodItemCategory.route";
 export * from "./routes/FoodItemTemplate.route";
 export * from "./routes/FoodItemUnit.route";

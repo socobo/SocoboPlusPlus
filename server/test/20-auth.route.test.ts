@@ -6,6 +6,10 @@ import { TestHelper } from "./helper/TestHelper";
 
 describe("AuthRoute - API v1", () => {
 
+  beforeEach(async () => {
+    await TestHelper.setUpSocoboUsersDb();
+  });
+
   it("POST /api/v1/login as ADMIN w/ EMAIL should create a token and return the user", async () => {
     const user = { email: "admin", password: "password" };
     const result = await TestHelper.getAgent().post("/api/v1/auth/login").send(user);

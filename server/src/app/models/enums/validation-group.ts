@@ -4,4 +4,5 @@ export class ValidationGroup {
   public static REGISTRATION: string = "registration";
   public static USER: string = "user";
   public static FOODITEMBASE = "fooditembase";
+  public static FOODITEM = "fooditem";
 }

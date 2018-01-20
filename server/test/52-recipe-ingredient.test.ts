@@ -52,7 +52,7 @@ describe("RecipeIngredientRoute - API v1", () => {
   });
 
   it(`GET /api/v1/recipeingredient/:id?resolve should return the ingredient with
-  the provied id and the resolved fooditemtemplate`, async () => {
+      the provied id and the resolved fooditemtemplate`, async () => {
     const accessToken = await TestHelper.getToken();
     const result = await TestHelper.getAgent()
       .get("/api/v1/recipeingredient/1234ef66b9c6c5139160b4d1")

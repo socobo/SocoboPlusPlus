@@ -4,15 +4,11 @@ import { FoodItemBase } from "./FoodItemBase";
 
 export class FoodItemUnit extends FoodItemBase implements Validatable {
 
-  public foodItemId: Types.ObjectId;
-
-  public setFoodItemId = (id: Types.ObjectId): this => {
-    this.foodItemId = id;
-    return this;
-  }
-
   public clone = (foodItemUnit: FoodItemUnit): this => {
-    this.foodItemId = foodItemUnit.foodItemId;
+    if (!foodItemUnit) {
+      return undefined;
+    }
+    this._id = foodItemUnit._id ? foodItemUnit._id : undefined;
     this.name = foodItemUnit.name;
     this.createDates();
     return this;

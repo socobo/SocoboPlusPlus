@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
+import { DbError, ERRORS } from "../../app/index";
 import { DbExtension } from "../../db/interface/db-extension";
 import { FoodItemCategory } from "../index";
 
@@ -29,9 +30,6 @@ export class FoodItemCategoryHandler {
   public save = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const category = new FoodItemCategory().clone(req.body);
-
-      // TODO:  await this._db.fooditem.getById(category.foodItemId);
-
       const result = await this._db.fooditemCategory.save(category) as Types.ObjectId;
       res.status(201).json(category.setId(result));
     } catch (error) {
@@ -42,12 +40,10 @@ export class FoodItemCategoryHandler {
   public updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const categoryId = new Types.ObjectId(req.params.id);
-      const foodItemId = req.body.foodItemId;
-      const updatedCategoryName = req.body.name;
+      await this._checkIfFoodItemCategoryExists(categoryId, "updateById(..)");
 
-      // TODO:  await this._db.fooditem.getById(foodItemId);
-
-      const result = await this._db.fooditemCategory.updateById(categoryId, updatedCategoryName);
+      const updateValues = { name: req.body.name, lastModified: Date.now() };
+      const result = await this._db.fooditemCategory.updateById(categoryId, updateValues);
       res.status(200).json(result);
     } catch (error) {
       next(error);
@@ -57,10 +53,21 @@ export class FoodItemCategoryHandler {
   public deleteById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const categoryId = new Types.ObjectId(req.params.id);
+      await this._checkIfFoodItemCategoryExists(categoryId, "deleteById(..)");
+
       const result = await this._db.fooditemCategory.deleteById(categoryId);
       res.status(200).json(result);
     } catch (error) {
       next(error);
+    }
+  }
+
+  private _checkIfFoodItemCategoryExists = async (id: Types.ObjectId, methodName: string) => {
+    const foundItem = await this._db.fooditemCategory.getById(id);
+    if (!foundItem) {
+      throw new DbError(ERRORS.FOODITEMCATEGORY_NOT_FOUND.withArgs("id", id.toHexString()))
+        .addSource(FoodItemCategoryHandler.name)
+        .addSourceMethod(methodName);
     }
   }
 }
